@@ -121,24 +121,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
 
-          {/* Theme toggle button */}
-          <button
-            onClick={toggleTheme}
-            title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'white',
-              fontSize: '1.5rem',
-              cursor: 'pointer',
-              padding: '0.5rem',
-              transition: 'opacity 0.2s'
-            }}
-            onMouseOver={(e) => e.currentTarget.style.opacity = '0.8'}
-            onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
-          >
-            {isDark ? '☀️' : '🌙'}
-          </button>
+          {/* Theme toggle switch */}
+          <label className="switch icon" title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}>
+            <input
+              type="checkbox"
+              checked={isDark}
+              onChange={toggleTheme}
+            />
+            <span>
+              <i>{isDark ? 'dark_mode' : 'light_mode'}</i>
+            </span>
+          </label>
 
           {/* Avatar / Loading skeleton */}
           <div style={{ position: 'relative' }}>
