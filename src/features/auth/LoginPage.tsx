@@ -1,11 +1,30 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { fetchAuthUser } from '../../utils/auth';
+
 export default function LoginPage() {
+  const navigate = useNavigate();
+  const [checking, setChecking] = useState(true);
+
+  useEffect(() => {
+    fetchAuthUser().then(user => {
+      if (user) {
+        navigate('/dashboard', { replace: true });
+      } else {
+        setChecking(false);
+      }
+    });
+  }, [navigate]);
+
   const handleGoogleLogin = () => {
-    window.location.href = '/.auth/login/google';
+    window.location.href = '/.auth/login/google?post_login_redirect_uri=/dashboard';
   };
 
   const handleFacebookLogin = () => {
-    window.location.href = '/.auth/login/facebook';
+    window.location.href = '/.auth/login/facebook?post_login_redirect_uri=/dashboard';
   };
+
+  if (checking) return null;
 
   return (
     <div style={{
@@ -13,21 +32,21 @@ export default function LoginPage() {
       justifyContent: 'center',
       alignItems: 'center',
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: 'var(--background)',
       padding: '1rem'
     }}>
       <article style={{
         padding: '3rem',
         borderRadius: '12px',
-        background: 'white',
+        background: 'var(--surface)',
         boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
         maxWidth: '400px',
         textAlign: 'center'
       }}>
-        <h1 style={{ marginTop: 0, marginBottom: '0.5rem', color: '#333' }}>
+        <h1 style={{ marginTop: 0, marginBottom: '0.5rem', color: 'var(--on-surface)' }}>
           Rentesrente Kalkulator
         </h1>
-        <p style={{ color: '#666', marginBottom: '2rem' }}>
+        <p style={{ color: 'var(--on-surface)', opacity: 0.7, marginBottom: '2rem' }}>
           Logg inn for å bruke kalkulatoren
         </p>
 
@@ -37,10 +56,10 @@ export default function LoginPage() {
             style={{
               padding: '1rem',
               fontSize: '1rem',
-              border: 'none',
+              border: '1px solid rgba(0,0,0,0.1)',
               borderRadius: '8px',
-              background: '#fff',
-              color: '#333',
+              background: 'var(--surface-variant)',
+              color: 'var(--on-surface-variant)',
               fontWeight: 'bold',
               cursor: 'pointer',
               display: 'flex',

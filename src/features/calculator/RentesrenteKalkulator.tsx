@@ -9,18 +9,43 @@ export default function RentesrenteKalkulator() {
   const [månedligBeløp, setMånedligBeløp] = useState(1000);
   const [rente, setRente] = useState(5);
   const [år, setÅr] = useState(10);
+  const [error, setError] = useState<string | null>(null);
 
   const summary = useMemo(() => {
-    return getSummaryValues(startbeløp, månedligBeløp, rente, år);
+    try {
+      setError(null);
+      return getSummaryValues(startbeløp, månedligBeløp, rente, år);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Calculation error';
+      setError(message);
+      return { sluttverdi: 0, totalSpart: 0, renteinntekt: 0 };
+    }
   }, [startbeløp, månedligBeløp, rente, år]);
 
   const yearlyData = useMemo(() => {
-    return calculateCompoundInterest(startbeløp, månedligBeløp, rente, år);
+    try {
+      return calculateCompoundInterest(startbeløp, månedligBeløp, rente, år);
+    } catch {
+      return [];
+    }
   }, [startbeløp, månedligBeløp, rente, år]);
 
   return (
     <article style={{ padding: '2rem' }}>
       <h2>Rentesrente Kalkulator</h2>
+
+      {error && (
+        <div style={{
+          padding: '1rem',
+          marginBottom: '2rem',
+          background: 'var(--error-container)',
+          border: '1px solid var(--error)',
+          borderRadius: '4px',
+          color: 'var(--on-error-container)'
+        }}>
+          {error}
+        </div>
+      )}
 
       {/* Inputs */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2rem' }}>

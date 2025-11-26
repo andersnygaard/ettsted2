@@ -1,5 +1,10 @@
 # Finans App - Azure Deployment with EasyAuth (Google + Facebook)
 
+**Deployment Tier: Free (F1)**
+- No cost to deploy and test
+- Limited to 1 GB storage and shared compute
+- Upgrade to B1 or higher for production use
+
 ## Prerequisites
 
 - Azure CLI installed and logged in (`az login`)
@@ -22,11 +27,18 @@ az group create --name finans-rg --location norwayeast
 
 ---
 
-## Step 2: Create App Service Plan
+## Step 2: Create App Service Plan (Free Tier)
 
 ```bash
-az appservice plan create --name finans-plan --resource-group finans-rg --location norwayeast --sku B1 --is-linux
+az appservice plan create --name finans-plan --resource-group finans-rg --location norwayeast --sku F1 --is-linux
 ```
+
+**Free Tier Limits:**
+- 1 GB storage
+- Shared compute (no dedicated instances)
+- No custom domains
+- No SSL/TLS certificates
+- Suitable for development & testing
 
 ---
 
@@ -93,7 +105,7 @@ Result: `finans.azurewebsites.net`
 ### 6.1 Enable Authentication
 
 ```bash
-az webapp auth update --name finans --resource-group finans-rg --enabled true --action RedirectToLoginPage --token-store true
+az webapp auth update --name finans --resource-group finans-rg --enabled true --unauthenticated-client-action RedirectToLoginPage --token-store true
 ```
 
 ### 6.2 Add Google Provider
@@ -141,44 +153,55 @@ az webapp auth update --name finans --resource-group finans-rg --redirect-provid
 ### 7.1 Configure Deployment Settings
 
 ```bash
-az webapp config appsettings set --name finans --resource-group finans-rg --settings WEBSITE_RUN_FROM_PACKAGE=1 SCM_DO_BUILD_DURING_DEPLOYMENT=true
+az webapp config appsettings set --name finans --resource-group finans-rg --settings SCM_DO_BUILD_DURING_DEPLOYMENT=false
 ```
 
-### 7.2 Build Application
+### 7.2 Build & Package
 
-```bash
-npm run build
-```
-
-### 7.3 Create Deployment Package (Windows)
+Run `package.bat` to:
+1. Build React app via Vite (`npm run build`)
+2. Copy `server.js` to dist folder
+3. Generate minimal `package.json` for Node runtime
+4. Create `deploy.zip` containing entire deployable app
 
 ```cmd
-cd dist && tar -acf ../deploy.zip * && cd ..
+package.bat
 ```
 
-### 7.4 Deploy via CLI
+**What gets packaged:**
+- `dist/` - Built React assets (index.html, JS, CSS)
+- `server.js` - Node HTTP server serving static files
+- `package.json` - Minimal config with `"start": "node server.js"`
 
+### 7.3 Deploy
+
+Run `deploy.bat` to push zip to Azure:
+
+```cmd
+deploy.bat
+```
+
+**Equivalent CLI:**
 ```bash
 az webapp deploy --name finans --resource-group finans-rg --src-path deploy.zip --type zip
 ```
 
-### Alternative: Deploy via package.bat/deploy.bat
+### 7.4 Manual Commands (Alternative)
 
-Create `package.bat`:
-```batch
-@echo off
-call npm run build
-cd dist
-tar -acf ../deploy.zip *
-cd ..
-echo Package created: deploy.zip
+Build only:
+```bash
+npm run build
 ```
 
-Create `deploy.bat`:
-```batch
-@echo off
-call az webapp deploy --name finans --resource-group finans-rg --src-path deploy.zip --type zip
-echo Deployment complete: https://finans.azurewebsites.net
+Package manually:
+```cmd
+copy server.js dist\server.js
+cd dist && tar -acf ..\deploy.zip * && cd ..
+```
+
+Deploy manually:
+```bash
+az webapp deploy --name finans --resource-group finans-rg --src-path deploy.zip --type zip
 ```
 
 ---
@@ -241,6 +264,73 @@ az webapp log tail --name finans --resource-group finans-rg
 ### View Detailed Logs
 ```bash
 az webapp log download --name finans --resource-group finans-rg --log-file logs.zip
+```
+
+---
+
+## Application Logging
+
+Enable diagnostic logging to troubleshoot app issues.
+
+### Enable via CLI
+
+Enable application logging (filesystem):
+```bash
+az webapp log config --name finans --resource-group finans-rg --application-logging filesystem --level information
+```
+
+Enable web server logging:
+```bash
+az webapp log config --name finans --resource-group finans-rg --web-server-logging filesystem
+```
+
+Set log retention (days):
+```bash
+az webapp log config --name finans --resource-group finans-rg --application-logging filesystem --level information --detailed-error-messages true --failed-request-tracing true
+```
+
+**Log levels**: `error`, `warning`, `information`, `verbose`
+
+### Enable via Portal
+
+1. Navigate to **Azure Portal** → **App Services** → **finans** → **Monitoring** → **App Service logs**
+2. Configure:
+   - **Application Logging (Filesystem)**: **On**
+   - **Level**: Select **Information** (or **Verbose** for more detail)
+   - **Application Logging (Blob)**: **Off** (unless long-term storage needed)
+   - **Web server logging**: **File System**
+   - **Quota (MB)**: `100`
+   - **Retention Period (Days)**: `7`
+   - **Detailed error messages**: **On**
+   - **Failed request tracing**: **On**
+3. Click **Save**
+
+### View Logs
+
+Stream live logs:
+```bash
+az webapp log tail --name finans --resource-group finans-rg
+```
+
+Download log files:
+```bash
+az webapp log download --name finans --resource-group finans-rg --log-file logs.zip
+```
+
+View logs via Portal:
+1. Navigate to **Azure Portal** → **App Services** → **finans** → **Monitoring** → **Log stream**
+2. Select **Application logs** or **Web server logs** from dropdown
+
+### Check Current Log Config
+
+```bash
+az webapp log show --name finans --resource-group finans-rg
+```
+
+### Disable Logging
+
+```bash
+az webapp log config --name finans --resource-group finans-rg --application-logging off --web-server-logging off
 ```
 
 ---

@@ -18,7 +18,18 @@ export default function UserInfo() {
     fetch('/.auth/me')
       .then((res) => res.json())
       .then((data) => {
-        setUser(data.clientPrincipal || data);
+        const authData = data?.[0];
+        if (authData) {
+          const getClaim = (type: string) =>
+            authData.user_claims?.find((c: {typ: string; val: string}) => c.typ.endsWith(type))?.val;
+          setUser({
+            identityProvider: authData.provider_name,
+            userId: authData.user_id,
+            userDetails: authData.user_id,
+            givenName: getClaim('givenname'),
+            familyName: getClaim('surname'),
+          });
+        }
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -39,12 +50,12 @@ export default function UserInfo() {
 
   // Get profile image from provider
   const getProfileImage = (): string | null => {
-    const emailClaim = user.claims?.find((c) => c.typ === 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress');
-    if (!emailClaim) return null;
+    // Use user ID as seed instead of email (privacy)
+    if (!user.userId) return null;
 
-    // Use gravatar for generic profile image
-    const email = emailClaim.val.toLowerCase();
-    return `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`;
+    // Hash userId to avoid exposing it directly
+    const seed = Math.abs(user.userId.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)).toString();
+    return `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`;
   };
 
   const profileImage = getProfileImage();

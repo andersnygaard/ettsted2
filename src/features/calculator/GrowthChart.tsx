@@ -2,16 +2,26 @@ import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import type { YearData } from './compound';
 import { formatNOK } from './format';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface GrowthChartProps {
   data: YearData[];
 }
 
 export default function GrowthChart({ data }: GrowthChartProps) {
+  const { isDark } = useTheme();
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
     if (!svgRef.current || data.length === 0) return;
+
+    // Get theme-aware colors
+    const colors = {
+      line: getComputedStyle(document.body).getPropertyValue('--chart-line').trim(),
+      bg: getComputedStyle(document.body).getPropertyValue('--chart-bg').trim(),
+      text: getComputedStyle(document.body).getPropertyValue('--on-surface').trim(),
+      surface: getComputedStyle(document.body).getPropertyValue('--surface').trim()
+    };
 
     const margin = { top: 20, right: 30, bottom: 30, left: 70 };
     const width = 800 - margin.left - margin.right;
@@ -61,7 +71,7 @@ export default function GrowthChart({ data }: GrowthChartProps) {
       .append('path')
       .datum(data)
       .attr('fill', 'none')
-      .attr('stroke', '#2196F3')
+      .attr('stroke', colors.line)
       .attr('stroke-width', 3)
       .attr('d', line);
 
@@ -75,7 +85,7 @@ export default function GrowthChart({ data }: GrowthChartProps) {
       .attr('cx', (d) => xScale(d.year))
       .attr('cy', (d) => yScale(d.balance))
       .attr('r', 4)
-      .attr('fill', '#2196F3')
+      .attr('fill', colors.line)
       .on('mouseover', function (event, d) {
         d3.select(this).attr('r', 6);
         tooltip.style('opacity', 1);
@@ -94,13 +104,14 @@ export default function GrowthChart({ data }: GrowthChartProps) {
       .select('body')
       .append('div')
       .style('position', 'absolute')
-      .style('background', 'rgba(0, 0, 0, 0.8)')
-      .style('color', 'white')
+      .style('background', colors.surface)
+      .style('color', colors.text)
       .style('padding', '8px 12px')
       .style('border-radius', '4px')
       .style('font-size', '12px')
       .style('opacity', 0)
-      .style('pointer-events', 'none');
+      .style('pointer-events', 'none')
+      .style('box-shadow', '0 2px 8px rgba(0,0,0,0.2)');
 
     // X-axis
     svg
@@ -110,7 +121,7 @@ export default function GrowthChart({ data }: GrowthChartProps) {
       .append('text')
       .attr('x', width / 2)
       .attr('y', 40)
-      .attr('fill', 'black')
+      .attr('fill', colors.text)
       .style('text-anchor', 'middle')
       .text('År');
 
@@ -122,17 +133,17 @@ export default function GrowthChart({ data }: GrowthChartProps) {
       .attr('transform', 'rotate(-90)')
       .attr('x', -height / 2)
       .attr('y', -50)
-      .attr('fill', 'black')
+      .attr('fill', colors.text)
       .style('text-anchor', 'middle')
       .text('Balanse (kr)');
 
     return () => {
       tooltip.remove();
     };
-  }, [data]);
+  }, [data, isDark]);
 
   return (
-    <div style={{ background: '#f5f5f5', padding: '1rem', borderRadius: '8px' }}>
+    <div style={{ background: 'var(--chart-bg)', padding: '1rem', borderRadius: '8px' }}>
       <h3 style={{ marginTop: 0 }}>Vekst over tid</h3>
       <svg ref={svgRef}></svg>
     </div>

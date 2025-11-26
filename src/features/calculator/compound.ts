@@ -15,6 +15,20 @@ export function calculateCompoundInterest(
   rentePercent: number,
   år: number
 ): YearData[] {
+  // Validate inputs
+  if (!Number.isFinite(startbeløp) || startbeløp < 0) {
+    throw new Error('startbeløp must be a non-negative finite number');
+  }
+  if (!Number.isFinite(månedligBeløp) || månedligBeløp < 0) {
+    throw new Error('månedligBeløp must be a non-negative finite number');
+  }
+  if (!Number.isFinite(rentePercent) || rentePercent < 0 || rentePercent > 100) {
+    throw new Error('rentePercent must be between 0 and 100');
+  }
+  if (!Number.isInteger(år) || år < 1 || år > 100) {
+    throw new Error('år must be an integer between 1 and 100');
+  }
+
   const monthlyRate = rentePercent / 100 / 12;
 
   const data: YearData[] = [];
@@ -65,6 +79,11 @@ export function getSummaryValues(
   år: number
 ): SummaryValues {
   const data = calculateCompoundInterest(startbeløp, månedligBeløp, rentePercent, år);
+
+  if (data.length === 0) {
+    throw new Error('No data available for summary');
+  }
+
   const lastYear = data[data.length - 1];
 
   return {

@@ -2,16 +2,26 @@ import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import type { YearData } from './compound';
 import { formatNOK } from './format';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface BreakdownChartProps {
   data: YearData[];
 }
 
 export default function BreakdownChart({ data }: BreakdownChartProps) {
+  const { isDark } = useTheme();
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
     if (!svgRef.current || data.length === 0) return;
+
+    // Get theme-aware colors
+    const colors = {
+      principal: getComputedStyle(document.body).getPropertyValue('--chart-principal').trim(),
+      interest: getComputedStyle(document.body).getPropertyValue('--chart-interest').trim(),
+      text: getComputedStyle(document.body).getPropertyValue('--on-surface').trim(),
+      surface: getComputedStyle(document.body).getPropertyValue('--surface').trim()
+    };
 
     const margin = { top: 20, right: 30, bottom: 30, left: 70 };
     const width = 800 - margin.left - margin.right;
@@ -43,7 +53,7 @@ export default function BreakdownChart({ data }: BreakdownChartProps) {
     // Color scale
     const color = d3.scaleOrdinal<string, string>()
       .domain(['principal', 'interest'])
-      .range(['#1976D2', '#2ecc71']);
+      .range([colors.principal, colors.interest]);
 
     // Add grid
     svg
@@ -108,13 +118,14 @@ export default function BreakdownChart({ data }: BreakdownChartProps) {
       .select('body')
       .append('div')
       .style('position', 'absolute')
-      .style('background', 'rgba(0, 0, 0, 0.8)')
-      .style('color', 'white')
+      .style('background', colors.surface)
+      .style('color', colors.text)
       .style('padding', '8px 12px')
       .style('border-radius', '4px')
       .style('font-size', '12px')
       .style('opacity', 0)
-      .style('pointer-events', 'none');
+      .style('pointer-events', 'none')
+      .style('box-shadow', '0 2px 8px rgba(0,0,0,0.2)');
 
     // X-axis
     svg
@@ -124,7 +135,7 @@ export default function BreakdownChart({ data }: BreakdownChartProps) {
       .append('text')
       .attr('x', width / 2)
       .attr('y', 40)
-      .attr('fill', 'black')
+      .attr('fill', colors.text)
       .style('text-anchor', 'middle')
       .text('År');
 
@@ -136,7 +147,7 @@ export default function BreakdownChart({ data }: BreakdownChartProps) {
       .attr('transform', 'rotate(-90)')
       .attr('x', -height / 2)
       .attr('y', -50)
-      .attr('fill', 'black')
+      .attr('fill', colors.text)
       .style('text-anchor', 'middle')
       .text('Beløp (kr)');
 
@@ -164,15 +175,16 @@ export default function BreakdownChart({ data }: BreakdownChartProps) {
       .attr('x', width - 24)
       .attr('y', 9.5)
       .attr('dy', '0.32em')
+      .attr('fill', colors.text)
       .text((d) => (d === 'principal' ? 'Spart' : 'Renteinntekt'));
 
     return () => {
       tooltip.remove();
     };
-  }, [data]);
+  }, [data, isDark]);
 
   return (
-    <div style={{ background: '#f5f5f5', padding: '1rem', borderRadius: '8px' }}>
+    <div style={{ background: 'var(--chart-bg)', padding: '1rem', borderRadius: '8px' }}>
       <h3 style={{ marginTop: 0 }}>Fordeling: Spart vs Renteinntekt</h3>
       <svg ref={svgRef}></svg>
     </div>

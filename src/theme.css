@@ -1,0 +1,22 @@
+/* Custom CSS variables for dark mode */
+
+/* Smooth transitions for theme switching */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Chart colors - light mode */
+:root {
+  --chart-line: #2196F3;
+  --chart-principal: #1976D2;
+  --chart-interest: #2ecc71;
+  --chart-bg: #f5f5f5;
+}
+
+/* Chart colors - dark mode */
+body.dark {
+  --chart-line: #82b1ff;
+  --chart-principal: #64b5f6;
+  --chart-interest: #66bb6a;
+  --chart-bg: #1e1e1e;
+}

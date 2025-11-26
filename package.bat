@@ -1,25 +1,33 @@
 @echo off
-REM Build and package the React app for Azure deployment
-echo Building application...
+echo === Building React App ===
 call npm run build
-if %errorlevel% neq 0 (
-  echo Build failed!
-  exit /b 1
+if %ERRORLEVEL% neq 0 (
+    echo Build failed
+    exit /b 1
 )
 
-echo.
-echo Creating deployment package...
+echo === Creating package.json for deployment ===
+(
+echo {
+echo   "name": "finans-app",
+echo   "version": "1.0.0",
+echo   "type": "module",
+echo   "main": "server.js",
+echo   "scripts": {
+echo     "start": "node server.js"
+echo   }
+echo }
+) > dist\package.json
+
+echo === Copying server.js ===
+copy server.js dist\server.js
+
+echo === Creating deploy.zip ===
+if not exist deploy mkdir deploy
+if exist deploy\deploy.zip del deploy\deploy.zip
 cd dist
-tar -acf ../deploy.zip *
+tar -acf ..\deploy\deploy.zip *
 cd ..
 
-if exist deploy.zip (
-  echo.
-  echo Package created successfully: deploy.zip
-  echo.
-  echo Next step: run deploy.bat to deploy to Azure
-) else (
-  echo.
-  echo Failed to create deployment package!
-  exit /b 1
-)
+echo === Done ===
+echo Package created: deploy\deploy.zip
