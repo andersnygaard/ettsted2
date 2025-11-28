@@ -1,35 +1,29 @@
 {
-  "name": "finans-app",
+  "name": "finans",
+  "version": "1.0.0",
+  "description": "Portfolio and wealth tracking application for monthly monitoring of investments and net worth",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "dev": "pnpm --parallel --filter frontend --filter backend dev",
+    "build": "pnpm --recursive build",
+    "lint": "pnpm --recursive lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "test:e2e": "pnpm --filter e2e test"
   },
-  "dependencies": {
-    "@types/d3": "^7.4.3",
-    "beercss": "^3.12.13",
-    "d3": "^7.9.0",
-    "material-dynamic-colors": "^1.1.2",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "react-router-dom": "^7.9.6"
-  },
+  "keywords": [
+    "portfolio",
+    "finance",
+    "investment",
+    "FIRE",
+    "wealth-tracking"
+  ],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
-    "@types/node": "^24.10.1",
-    "@types/react": "^19.2.5",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.1",
-    "eslint": "^9.39.1",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-react-refresh": "^0.4.24",
-    "globals": "^16.5.0",
-    "typescript": "~5.9.3",
-    "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4"
+    "prettier": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
   }
 }

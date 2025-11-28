@@ -1,17 +1,12 @@
 {
   "permissions": {
     "allow": [
+      "Bash(cat:*)",
+      "Bash(dir)",
+      "Bash(pnpm install)",
       "Bash(git add:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nUpdate README.md\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(gh issue:*)",
-      "Bash(npm run build:*)",
-      "mcp__playwright__browser_navigate",
-      "WebSearch",
-      "WebFetch(domain:stackoverflow.com)",
-      "Bash(npm install react-router-dom)",
-      "Bash(move \"C:\\code\\ettsted2\\src\\components\\RentesrenteKalkulator.tsx\" \"C:\\code\\ettsted2\\src\\features\\calculator\"\" && move \"C:codeettsted2srccomponentsGrowthChart.tsx\" \"C:codeettsted2srcfeaturescalculator\"\")",
-      "Bash(move \"C:\\code\\ettsted2\\src\\components\\BreakdownChart.tsx\" \"C:\\code\\ettsted2\\src\\features\\calculator\"\" && move \"C:codeettsted2srcutilscompound.ts\" \"C:codeettsted2srcfeaturescalculator\"\")",
-      "Bash(move \"C:\\code\\ettsted2\\src\\utils\\format.ts\" \"C:\\code\\ettsted2\\src\\features\\calculator\"\")"
+      "Bash(git commit:*)",
+      "Bash(git push)"
     ],
     "deny": [],
     "ask": []

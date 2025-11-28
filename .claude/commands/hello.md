@@ -1,1 +1,0 @@
-Say "Hello, World!" to the user in a friendly way.

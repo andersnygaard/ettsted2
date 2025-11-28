@@ -1,24 +1,61 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+build/
+**/dist/
+**/build/
+storybook-static/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+**/.env
+**/.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
 # Logs
 logs
 *.log
 npm-debug.log*
+pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Testing
+coverage/
+.nyc_output/
+*.lcov
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Azure
+.azure/
+**/. azure/
+
+# CosmosDB Emulator
+CosmosDB.Emulator/
+**/CosmosDB.Emulator/
+
+# Temporary files
+*.tmp
+temp/
+tmp/
+
+# OS files
+Thumbs.db
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+
+# Misc
+*.bak
+*.cache
+.cache/
