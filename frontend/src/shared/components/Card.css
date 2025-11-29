@@ -1,0 +1,15 @@
+.card {
+  background: var(--warm-white);
+  border-radius: 2px;
+  padding: 28px;
+}
+
+.card--hoverable {
+  cursor: pointer;
+  transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.card--hoverable:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.06);
+}

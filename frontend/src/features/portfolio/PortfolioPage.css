@@ -1,0 +1,55 @@
+/**
+ * Portfolio Page Styles
+ *
+ * Based on Nordic Minimal design system.
+ */
+
+.portfolio-page {
+  padding: 48px 0;
+  min-height: calc(100vh - 120px);
+}
+
+.portfolio-page .container--wide {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* Table container */
+.portfolio-page .table-container {
+  background: var(--warm-white);
+  border-radius: 2px;
+  overflow: hidden;
+  opacity: 0;
+  animation: fadeUp 0.5s ease forwards;
+  animation-delay: 0.1s;
+}
+
+/* Animations */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+  .portfolio-page .container--wide {
+    max-width: 1200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .portfolio-page {
+    padding: 24px 0;
+  }
+
+  .portfolio-page .container--wide {
+    padding: 0 20px;
+  }
+}

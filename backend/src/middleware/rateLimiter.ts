@@ -1,0 +1,109 @@
+import rateLimit from 'express-rate-limit';
+import { config } from '../config/environment';
+import { logger } from '../utils/logger';
+
+/**
+ * Rate limiter middleware configurations
+ *
+ * Protects API endpoints from abuse by limiting the number of requests
+ * per IP address within a time window.
+ */
+
+/**
+ * General rate limiter for all API endpoints
+ * Default: 100 requests per minute per IP
+ */
+export const generalRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: config.rateLimitGeneral, // configurable via env var
+  message: {
+    error: {
+      message: 'Too many requests from this IP, please try again later',
+      code: 'RATE_LIMIT_EXCEEDED'
+    },
+    success: false
+  },
+  standardHeaders: true, // Return rate limit info in `RateLimit-*` headers
+  legacyHeaders: false, // Disable `X-RateLimit-*` headers
+  handler: (req, res) => {
+    logger.warn('Rate limit exceeded', {
+      ip: req.ip,
+      path: req.path,
+      limit: config.rateLimitGeneral
+    });
+
+    res.status(429).json({
+      error: {
+        message: 'Too many requests from this IP, please try again later',
+        code: 'RATE_LIMIT_EXCEEDED'
+      },
+      success: false
+    });
+  }
+});
+
+/**
+ * Calculator rate limiter for expensive computational endpoints
+ * Default: 10 requests per minute per IP
+ */
+export const calculatorRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: config.rateLimitCalculator,
+  message: {
+    error: {
+      message: 'Calculator endpoint rate limit exceeded, please try again later',
+      code: 'CALCULATOR_RATE_LIMIT_EXCEEDED'
+    },
+    success: false
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => {
+    logger.warn('Calculator rate limit exceeded', {
+      ip: req.ip,
+      path: req.path,
+      limit: config.rateLimitCalculator
+    });
+
+    res.status(429).json({
+      error: {
+        message: 'Calculator endpoint rate limit exceeded, please try again later',
+        code: 'CALCULATOR_RATE_LIMIT_EXCEEDED'
+      },
+      success: false
+    });
+  }
+});
+
+/**
+ * LLM rate limiter for AI-powered data import endpoints
+ * Default: 20 requests per minute per IP
+ */
+export const llmRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: config.rateLimitLLM,
+  message: {
+    error: {
+      message: 'LLM endpoint rate limit exceeded, please try again later',
+      code: 'LLM_RATE_LIMIT_EXCEEDED'
+    },
+    success: false
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => {
+    logger.warn('LLM rate limit exceeded', {
+      ip: req.ip,
+      path: req.path,
+      limit: config.rateLimitLLM
+    });
+
+    res.status(429).json({
+      error: {
+        message: 'LLM endpoint rate limit exceeded, please try again later',
+        code: 'LLM_RATE_LIMIT_EXCEEDED'
+      },
+      success: false
+    });
+  }
+});

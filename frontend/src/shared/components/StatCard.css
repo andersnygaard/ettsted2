@@ -1,0 +1,57 @@
+/**
+ * StatCard Component Styles
+ * Based on Nordic Minimal design system
+ */
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 24px 20px;
+  background: var(--warm-white);
+  border-radius: 2px;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Value - Large number using serif font */
+.stat-card__value {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--charcoal);
+  line-height: 1.2;
+}
+
+/* Label - Small caps, muted color */
+.stat-card__label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Clickable variant - lift on hover */
+.stat-card--clickable {
+  cursor: pointer;
+  transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.stat-card--clickable:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+}
+
+.stat-card--clickable:active {
+  transform: translateY(-2px);
+}
+
+/* Focus state for accessibility */
+.stat-card--clickable:focus {
+  outline: 2px solid var(--muted-sage);
+  outline-offset: 2px;
+}

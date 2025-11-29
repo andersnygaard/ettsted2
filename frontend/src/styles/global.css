@@ -1,0 +1,112 @@
+/* Import design tokens */
+@import './tokens.css';
+
+/* Import animations */
+@import './animations.css';
+
+/* Import BeerCSS */
+@import 'beercss/dist/cdn/beer.min.css';
+
+/* Global styles and overrides */
+:root {
+  --primary-color: #1976d2;
+  --secondary-color: #dc004e;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  color: var(--charcoal);
+  background-color: var(--bone);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Grain texture overlay - Nordic Minimal aesthetic */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: var(--opacity-grain);
+  pointer-events: none;
+  z-index: var(--z-grain);
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-light);
+  color: var(--charcoal);
+  margin: 0;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: var(--font-size-2xl);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+h2 {
+  font-size: var(--font-size-xl);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+h3 {
+  font-size: var(--font-size-lg);
+}
+
+h4, h5, h6 {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Monospace elements - for numbers, data, and code */
+code, pre, kbd, samp,
+.mono {
+  font-family: var(--font-mono);
+  font-weight: var(--font-weight-regular);
+}
+
+code {
+  background-color: rgba(44, 44, 44, 0.05);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9em;
+}
+
+pre {
+  background-color: rgba(44, 44, 44, 0.05);
+  padding: var(--space-md);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+/* Utility classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.error-text {
+  color: var(--error);
+}
+
+.success-text {
+  color: var(--primary);
+}

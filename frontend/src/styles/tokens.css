@@ -1,0 +1,141 @@
+/**
+ * Design Tokens - Nordic Minimal Design System
+ *
+ * Foundational CSS custom properties for the finans application.
+ * Based on the Nordic Minimal aesthetic with warm, muted tones and elegant typography.
+ */
+
+:root {
+  /* ============================================
+     COLORS - Nordic Minimal Palette
+     ============================================ */
+
+  /* Primary backgrounds */
+  --bone: #F5F2ED;              /* Primary background - warm, muted base */
+  --warm-white: #FDFCFA;        /* Cards, elevated surfaces - soft white */
+
+  /* Text colors */
+  --charcoal: #2C2C2C;          /* Primary text - deep, readable gray */
+  --text-secondary: #6B6B6B;    /* Secondary text, labels - muted gray */
+
+  /* Accent colors */
+  --muted-sage: #8B9A7D;        /* Positive values, savings - calm green */
+  --soft-terracotta: #C4A484;   /* Accent - warm terracotta */
+  --pale-blue: #B8C5D0;         /* Secondary accent - soft blue */
+  --gold: #C9A962;              /* Milestone highlights - warm gold */
+
+  /* Semantic colors */
+  --positive: #5A7D5A;          /* Positive changes, growth - darker sage */
+  --negative: #9D6B5A;          /* Negative changes, debt - muted red */
+
+  /* Borders */
+  --border: rgba(44, 44, 44, 0.08);       /* Subtle borders */
+  --border-strong: rgba(44, 44, 44, 0.15); /* More visible borders */
+
+
+  /* ============================================
+     TYPOGRAPHY
+     ============================================ */
+
+  /* Font families */
+  --font-heading: 'Cormorant Garamond', serif;  /* Elegant serif for headings and large numbers */
+  --font-body: 'DM Sans', sans-serif;           /* Clean sans-serif for body text */
+  --font-mono: 'JetBrains Mono', monospace;     /* Monospace for numbers and data */
+
+  /* Font sizes */
+  --font-size-xs: 11px;          /* Small caps, labels */
+  --font-size-sm: 12px;          /* Secondary text, captions */
+  --font-size-base: 14px;        /* Base text size */
+  --font-size-md: 15px;          /* Body text, descriptions */
+  --font-size-lg: 22px;          /* Section titles */
+  --font-size-xl: 32px;          /* Stat values */
+  --font-size-2xl: 44px;         /* Page headings */
+  --font-size-3xl: 48px;         /* Milestone values */
+  --font-size-hero: 84px;        /* Hero numbers */
+
+  /* Font weights */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  /* Letter spacing */
+  --letter-spacing-tight: -0.02em;   /* Large headings */
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.05em;     /* Navigation */
+  --letter-spacing-wider: 0.1em;     /* Small labels */
+  --letter-spacing-widest: 0.12em;   /* Hero labels */
+  --letter-spacing-extra: 0.15em;    /* Logo */
+
+
+  /* ============================================
+     SPACING
+     ============================================ */
+
+  --space-xs: 8px;               /* Tight spacing */
+  --space-sm: 12px;              /* Small spacing */
+  --space-md: 16px;              /* Medium spacing */
+  --space-lg: 20px;              /* Large spacing */
+  --space-xl: 24px;              /* Extra large spacing */
+  --space-2xl: 32px;             /* Section padding */
+  --space-3xl: 40px;             /* Card padding */
+  --space-4xl: 48px;             /* Container padding */
+  --space-5xl: 64px;             /* Page sections */
+  --space-6xl: 80px;             /* Large sections */
+
+
+  /* ============================================
+     LAYOUT
+     ============================================ */
+
+  /* Container widths */
+  --container-max-width: 1200px;      /* Standard max width */
+  --container-narrow: 900px;          /* Focused pages */
+  --container-tight: 600px;           /* Very focused content */
+
+  /* Border radius */
+  --radius-sm: 2px;                   /* Minimal, consistent radius */
+  --radius-md: 4px;                   /* Progress bars */
+  --radius-full: 50%;                 /* Circular elements */
+
+
+  /* ============================================
+     TRANSITIONS & ANIMATIONS
+     ============================================ */
+
+  --transition-fast: 0.2s ease;       /* Quick interactions */
+  --transition-medium: 0.3s ease;     /* Standard transitions */
+  --transition-slow: 0.6s ease;       /* Page load animations */
+
+
+  /* ============================================
+     SHADOWS
+     ============================================ */
+
+  --shadow-sm: 0 8px 24px rgba(0, 0, 0, 0.04);      /* Subtle lift */
+  --shadow-md: 0 16px 48px rgba(0, 0, 0, 0.06);     /* Hover elevation */
+  --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.08);     /* Modal, overlays */
+
+
+  /* ============================================
+     OPACITY
+     ============================================ */
+
+  --opacity-grain: 0.03;              /* Grain texture overlay */
+  --opacity-muted: 0.5;               /* Muted text on dark backgrounds */
+  --opacity-subtle: 0.6;              /* Subtle text */
+  --opacity-medium: 0.12;             /* Background overlays */
+  --opacity-strong: 0.15;             /* Stronger overlays */
+
+
+  /* ============================================
+     Z-INDEX LAYERS
+     ============================================ */
+
+  --z-base: 1;                        /* Base layer */
+  --z-dropdown: 100;                  /* Dropdowns */
+  --z-sticky: 200;                    /* Sticky elements */
+  --z-modal: 500;                     /* Modals */
+  --z-overlay: 900;                   /* Overlays */
+  --z-grain: 1000;                    /* Grain texture (always on top) */
+}

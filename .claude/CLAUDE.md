@@ -45,6 +45,12 @@
 - **Pattern**: Page Object Model
 - **Focus**: Critical user flows (login, portfolio tracking, calculations)
 
+### Development Tools
+- **Playwright MCP**: Browser automation via Model Context Protocol for visual inspection during development
+  - Navigate to pages, capture snapshots, interact with elements
+  - Use for verifying UI implementations match design drafts
+  - Inspect rendered components and layouts in real browser
+
 ---
 
 ## Database & Data Layer
@@ -113,10 +119,319 @@
 /backend           - Express API server
 /components        - Shared component library
 /e2e               - Playwright E2E tests
-/docs              - Project documentation
 package.json       - Root workspace configuration
 pnpm-workspace.yaml - pnpm workspace config
 .claude/           - Claude Code configuration
+.docs/             - All documentation (reserved folder)
+.task-board/       - Backlog tasks and planning board (reserved folder)
+```
+
+### Reserved Folders
+
+**.docs/**
+- **Purpose**: Central location for all project documentation
+- **Content**: Technical docs, architecture decisions, guides, and reference materials
+- **Management**: Keep documentation organized and accessible
+
+**.task-board/**
+- **Purpose**: Task backlog and planning board
+- **Content**: Feature requests, bugs, improvements, and project planning
+- **Management**: Track work items and maintain development roadmap
+
+---
+
+## Design System
+
+### Design Drafts
+The approved design is documented in static HTML/CSS files for reference during implementation:
+- **Location**: [.docs/design-drafts/](.docs/design-drafts/)
+- **Approved Design**: Nordic Minimal (draft-1-*)
+
+### Design Aesthetic: Nordic Minimal
+Scandinavian-inspired design with warm, muted tones and elegant typography. Clean, spacious layouts with subtle texture overlay.
+
+### Color Palette
+```css
+:root {
+  --bone: #F5F2ED;           /* Primary background */
+  --warm-white: #FDFCFA;     /* Cards, elevated surfaces */
+  --charcoal: #2C2C2C;       /* Primary text */
+  --muted-sage: #8B9A7D;     /* Positive values, savings */
+  --soft-terracotta: #C4A484; /* Accent */
+  --pale-blue: #B8C5D0;      /* Secondary accent */
+  --text-secondary: #6B6B6B; /* Muted text */
+  --gold: #C9A962;           /* Milestone highlights */
+  --positive: #5A7D5A;       /* Positive changes */
+  --negative: #9D6B5A;       /* Negative changes */
+  --border: rgba(44, 44, 44, 0.08);
+}
+```
+
+### Typography
+- **Headings**: Cormorant Garamond (serif, light weight)
+- **Body**: DM Sans (sans-serif)
+- **Numbers/Data**: JetBrains Mono (monospace)
+
+### Visual Elements
+- Subtle grain texture overlay on all pages (SVG noise filter)
+- Fade-up animations on page load
+- Hover states with subtle background shifts and lift effect
+- Cards with minimal border-radius (2px)
+- Consistent spacing: 48px/64px/80px sections
+
+---
+
+## Application Structure
+
+### Navigation Flow
+```
+┌─────────┐    ┌────────────┐    ┌─────────┐    ┌───────┐    ┌──────────┐    ┌──────────────┐
+│ Oversikt│ →  │ Portefølje │ →  │ Sparing │ →  │ Gjeld │ →  │ Pensjon  │ →  │ Kalkulatorer │
+│ (home)  │    │ (data hub) │    │ (F.I.R.E)│   │ (debt)│    │(pension) │    │  (tools)     │
+└─────────┘    └────────────┘    └─────────┘    └───────┘    └──────────┘    └──────────────┘
+```
+
+### Shared Layout Components
+
+**Header** (all pages)
+- Logo: "finans" (Cormorant Garamond, lowercase, letter-spacing)
+- Navigation: 6 tabs with active state
+- Avatar: User initials in circle
+
+**Page Structure**
+- Container: max-width 1200px (900px for focused pages)
+- Page header: Title + subtitle
+- Content sections with consistent spacing
+
+---
+
+## Pages & Components
+
+### 1. Oversikt (Dashboard)
+**File**: [draft-1-nordic-minimal.html](.docs/design-drafts/draft-1-nordic-minimal.html)
+
+**Purpose**: High-level financial overview and entry point to all sections.
+
+**Components**:
+| Component | Description | Data |
+|-----------|-------------|------|
+| `PageHeader` | Greeting + current month | "God morgen, {name}" / "November 2024" |
+| `HeroNumber` | Large centered value with change badge | Netto formue, +X.XX% denne måneden |
+| `QuickStatsGrid` | 4 clickable stat cards | Sum sparing, Sum gjeld, Pensjon, Sparerate |
+| `MilestoneCard` | Dark card with progress bar | Target milestone (e.g., 1M), progress %, remaining |
+| `SectionLinks` | 3 navigation cards with arrows | Portefølje, Sparing & F.I.R.E., Kalkulatorer |
+
+**User Flow**: Landing page → Quick overview → Navigate to detail pages
+
+---
+
+### 2. Portefølje (Portfolio)
+**File**: [draft-1-portfolio.html](.docs/design-drafts/draft-1-portfolio.html)
+
+**Purpose**: Central data entry and historical view of all accounts.
+
+**Components**:
+| Component | Description | Data |
+|-----------|-------------|------|
+| `Breadcrumb` | Navigation path | Oversikt → Portefølje |
+| `PageHeader` | Title + action buttons | "Portefølje", Eksporter, + Ny måned |
+| `TableHeader` | Title + controls | "Månedlig historikk", year filter, search |
+| `SpreadsheetTable` | Main data table with collapsible groups | Monthly snapshots with account values |
+| `TableFooter` | Info + toggles + pagination | "Viser X av Y måneder", column toggles, page nav |
+
+**Table Structure**:
+```
+┌──────┬─────────────────────────────────────────┬───────────────┬────────────────┐
+│ Dato │ SPARING (collapsible)                   │ GJELD         │ PENSJON        │
+│      ├─────────┬─────────┬─────┬─────┬────┬────┼───────┬───────┼──────┬─────────┤
+│      │Nordnet  │Bouvet   │Yolo │Firi │Kron│S/K │SBanken│Sum    │Arb.  │Sum      │
+│      │ASK      │ASK      │     │     │    │    │       │gjeld  │giver │pensjon  │
+└──────┴─────────┴─────────┴─────┴─────┴────┴────┴───────┴───────┴──────┴─────────┘
+```
+
+**Features**:
+- Sticky date column (first column always visible)
+- Collapsible column groups (click header to toggle)
+- Gold milestone highlights (★) for threshold crossings
+- Column visibility toggles in footer
+- Norwegian number formatting (space as thousands separator)
+
+**Account Categories**:
+| Category | Color | Accounts |
+|----------|-------|----------|
+| Sparing | `#5a6d7a` | Investment accounts, savings accounts |
+| Gjeld | `#8a7060` | Loans, mortgages |
+| Pensjon | `#6a7a60` | Employer pension, NAV |
+
+---
+
+### 3. Sparing (Savings & F.I.R.E.)
+**File**: [draft-1-sparing.html](.docs/design-drafts/draft-1-sparing.html)
+
+**Purpose**: Track savings progress and F.I.R.E. journey.
+
+**Components**:
+| Component | Description | Data |
+|-----------|-------------|------|
+| `PageHeader` | Title + subtitle | "Sparing", "Din vei mot økonomisk frihet" |
+| `HeroNumber` | Large centered value | Sum sparing, +X.XX% i {year} |
+| `StatsRow` | 3 stat cards | Sparerate %, Siste måned %, Måneder fri |
+| `FireSection` | F.I.R.E. progress panel | Title, progress bar, 4 key metrics |
+| `ChartSection` | Line/area chart | Spareutvikling over time |
+
+**F.I.R.E. Metrics**:
+- Firetall: Target wealth for FI (e.g., 6.4M)
+- Min. pensjonsalder: Earliest retirement age
+- År til årslønn: Years until savings = annual salary
+- Årlig uttak (4%): Annual withdrawal at 4% rule
+
+---
+
+### 4. Gjeld (Debt)
+**File**: [draft-1-gjeld.html](.docs/design-drafts/draft-1-gjeld.html)
+
+**Purpose**: Track debt and coverage progress.
+
+**Components**:
+| Component | Description | Data |
+|-----------|-------------|------|
+| `PageHeader` | Title + subtitle | "Gjeld", "Oversikt over lån og nedbetaling" |
+| `HeroNumber` | Large centered value | Sum gjeld, -X kr denne måneden |
+| `DekningSection` | Donut chart + info | Coverage %, remaining amount, explanation |
+| `LoansList` | List of active loans | Loan name, interest rate, term, balance |
+| `ChartSection` | Area chart | Gjeldsutvikling (declining trend) |
+
+**Dekning (Coverage)**: Shows how much of debt is covered by savings. At 100%, user has zero net debt.
+
+---
+
+### 5. Pensjon (Pension)
+**File**: [draft-1-pensjon.html](.docs/design-drafts/draft-1-pensjon.html)
+
+**Purpose**: Track pension savings and projections.
+
+**Components**:
+| Component | Description | Data |
+|-----------|-------------|------|
+| `PageHeader` | Title + subtitle | "Pensjon", "Oppspart pensjon og fremtidig utbetaling" |
+| `HeroNumber` | Large centered value | Sum pensjon, "Estimert ved pensjonering" |
+| `BreakdownCards` | 2 cards side by side | Arbeidsgiver (70%), NAV (30%) |
+| `OtpSection` | Progress bar | OTP som prosent av total |
+| `ChartSection` | Stacked area chart | Pensjonsutvikling (Arbeidsgiver vs NAV) |
+
+**Pension Sources**:
+- Arbeidsgiver: Employer pension (OTP - obligatorisk tjenestepensjon)
+- NAV: Government pension
+
+---
+
+### 6. Kalkulatorer (Calculators)
+**File**: [draft-1-kalkulatorer.html](.docs/design-drafts/draft-1-kalkulatorer.html)
+
+**Purpose**: Financial calculation tools.
+
+**Components**:
+| Component | Description | Data |
+|-----------|-------------|------|
+| `PageHeader` | Centered title + subtitle | "Kalkulatorer", "Verktøy for å planlegge din økonomi" |
+| `CalculatorGrid` | 2x2 grid of calculator cards | 4 calculator options |
+
+**Calculators**:
+| Calculator | Icon | Description |
+|------------|------|-------------|
+| Renters rente | 📈 | Compound interest calculator |
+| F.I.R.E. kalkulator | 🎯 | Time to financial independence |
+| Lånekalkulator | 🏠 | Monthly payments and total interest |
+| Monte Carlo | 🎲 | Retirement scenario simulations |
+
+---
+
+## Data Flow
+
+### Monthly Snapshot Entry
+```
+1. User clicks "+ Ny måned" on Portfolio page
+2. Modal/form opens for new month entry
+3. User enters values for each account
+4. System calculates totals (Sum sparing, Sum gjeld, Sum pensjon)
+5. System detects milestone crossings → marks with gold
+6. Data saved to CosmosDB
+7. All pages update with new data
+```
+
+### Calculated Values
+| Value | Formula | Used On |
+|-------|---------|---------|
+| Netto formue | Sum sparing - Sum gjeld | Oversikt |
+| Dekning | Sum sparing / Sum gjeld × 100 | Gjeld |
+| Sparerate | (Inntekt - Utgifter) / Inntekt × 100 | Oversikt, Sparing |
+| Firetall | Årlige utgifter × 25 | Sparing |
+| Måneder fri | Sum sparing / Månedlige utgifter | Sparing |
+
+### Milestone Detection
+```typescript
+// Check if value crosses threshold for first time
+function detectMilestone(currentValue: number, previousValue: number): number | null {
+  const thresholds = [
+    // 10k increments up to 100k
+    10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
+    // 100k increments up to 1M
+    100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000,
+    // 1M increments beyond
+    1000000, 2000000, 3000000, ...
+  ];
+
+  for (const threshold of thresholds) {
+    if (previousValue < threshold && currentValue >= threshold) {
+      return threshold; // First crossing of this threshold
+    }
+  }
+  return null;
+}
+```
+
+---
+
+## Component Patterns
+
+### HeroNumber
+Large, centered value with optional change indicator.
+```
+┌─────────────────────────────────────┐
+│          LABEL (small caps)         │
+│         1 234 567 kr                │
+│         (huge Cormorant)            │
+│      ┌──────────────────┐           │
+│      │ +2.33% denne mnd │           │
+│      └──────────────────┘           │
+└─────────────────────────────────────┘
+```
+
+### StatCard
+Clickable card with value and label.
+```
+┌─────────────────┐
+│   970 194 kr    │  ← Cormorant, 32px
+│   Sum sparing   │  ← Small caps, secondary
+└─────────────────┘
+```
+
+### ProgressBar
+Horizontal progress with labels.
+```
+┌─────────────────────────────────────┐
+│ [████████████████████░░░] 97%       │
+│ Gjenstår: 29 806 kr                 │
+└─────────────────────────────────────┘
+```
+
+### CollapsibleGroup
+Table column group that collapses to show only total.
+```
+Expanded:                          Collapsed:
+┌─────┬─────┬─────┬───────┐       ┌───────┐
+│Col1 │Col2 │Col3 │ Total │  →    │ Total │
+└─────┴─────┴─────┴───────┘       └───────┘
 ```
 
 ---
@@ -862,14 +1177,42 @@ pnpm --filter backend dev
 pnpm --filter components storybook
 ```
 
+### Visual Development with Playwright MCP
+
+Use Playwright MCP tools during development to visually inspect and verify implementations:
+
+**Common workflows:**
+- **Verify design implementation**: Navigate to a page and capture snapshot to compare against design drafts
+- **Debug layout issues**: Inspect element positioning, spacing, and responsive behavior
+- **Test interactions**: Click buttons, fill forms, verify state changes
+- **Cross-browser checks**: Verify rendering consistency
+
+**Available MCP tools:**
+- `browser_navigate` - Open a URL in the browser
+- `browser_snapshot` - Capture accessibility tree (preferred for understanding page structure)
+- `browser_take_screenshot` - Capture visual screenshot
+- `browser_click` - Click on elements
+- `browser_type` - Type text into inputs
+- `browser_fill_form` - Fill multiple form fields
+
+**Example workflow:**
+```
+1. Start frontend dev server: pnpm --filter frontend dev
+2. Use browser_navigate to open http://localhost:5173
+3. Use browser_snapshot to see page structure
+4. Compare against design draft in .docs/design-drafts/
+5. Iterate on implementation
+```
+
 ### Adding a New Feature
 
 1. Create feature folder in `/frontend/src/features/<feature-name>/`
 2. Build components (reuse shared components from `/components`)
 3. Create Zustand store if needed for client state
 4. Use TanStack Query for API calls
-5. Add Playwright test for critical user path
-6. Update Storybook if creating new shared components
+5. **Use Playwright MCP to visually verify implementation matches design**
+6. Add Playwright test for critical user path
+7. Update Storybook if creating new shared components
 
 ### Adding a New API Endpoint
 

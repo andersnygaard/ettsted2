@@ -1,0 +1,78 @@
+/**
+ * SectionLink Component Styles
+ * Based on Nordic Minimal design system
+ *
+ * Navigation card with title, subtitle, and arrow indicator.
+ * Hover lift effect with smooth transitions.
+ */
+
+.section-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xl);
+  padding: var(--space-2xl);
+  background: var(--warm-white);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+/* Content wrapper - flex column for title and subtitle */
+.section-link__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  flex: 1;
+}
+
+/* Title - large serif font */
+.section-link__title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-regular);
+  color: var(--charcoal);
+  line-height: 1.2;
+}
+
+/* Subtitle - small caps, muted color */
+.section-link__subtitle {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wider);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Arrow indicator */
+.section-link__arrow {
+  font-size: var(--font-size-lg);
+  color: var(--muted-sage);
+  font-weight: var(--font-weight-regular);
+  flex-shrink: 0;
+  transition: transform var(--transition-medium);
+}
+
+/* Hover state - lift and arrow moves right */
+.section-link:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.section-link:hover .section-link__arrow {
+  transform: translateX(4px);
+}
+
+/* Active state - subtle press effect */
+.section-link:active {
+  transform: translateY(-2px);
+}
+
+/* Focus state for accessibility */
+.section-link:focus {
+  outline: 2px solid var(--muted-sage);
+  outline-offset: 2px;
+}

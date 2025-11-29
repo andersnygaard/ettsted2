@@ -1,0 +1,139 @@
+/**
+ * Table Header Styles
+ * Based on Nordic Minimal design from draft-1-portfolio.html
+ * Header for table sections with controls for filtering and search
+ */
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2xl);
+  gap: var(--space-lg);
+}
+
+/* Title */
+.table-header__title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-light);
+  color: var(--charcoal);
+  margin: 0;
+  line-height: 1.2;
+  flex: 0 0 auto;
+}
+
+/* Controls container - flex row with gap */
+.table-header__controls {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  flex: 0 1 auto;
+}
+
+/* Year dropdown select */
+.table-header__select {
+  padding: 8px 12px;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-body);
+  color: var(--charcoal);
+  background-color: var(--warm-white);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%232C2C2C' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 28px;
+}
+
+.table-header__select:hover {
+  border-color: var(--charcoal);
+  background-color: var(--bone);
+}
+
+.table-header__select:focus {
+  outline: none;
+  border-color: var(--charcoal);
+  box-shadow: 0 0 0 2px rgba(44, 44, 44, 0.1);
+}
+
+.table-header__select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Search input */
+.table-header__search {
+  padding: 8px 12px;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-body);
+  color: var(--charcoal);
+  background-color: var(--warm-white);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  min-width: 140px;
+}
+
+.table-header__search::placeholder {
+  color: var(--text-secondary);
+}
+
+.table-header__search:hover {
+  border-color: var(--charcoal);
+  background-color: var(--bone);
+}
+
+.table-header__search:focus {
+  outline: none;
+  border-color: var(--charcoal);
+  background-color: var(--warm-white);
+  box-shadow: 0 0 0 2px rgba(44, 44, 44, 0.1);
+}
+
+.table-header__search:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: var(--space-xl);
+  }
+
+  .table-header__controls {
+    width: 100%;
+  }
+
+  .table-header__select,
+  .table-header__search {
+    flex: 1;
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .table-header {
+    margin-bottom: var(--space-lg);
+  }
+
+  .table-header__title {
+    font-size: 18px;
+  }
+
+  .table-header__controls {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .table-header__select,
+  .table-header__search {
+    width: 100%;
+  }
+}

@@ -1,0 +1,128 @@
+/**
+ * App Header Styles
+ * Based on Nordic Minimal design from draft-1-nordic-minimal.html
+ */
+
+.app-header {
+  padding: var(--space-2xl) 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--warm-white);
+}
+
+.app-header__container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-4xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Logo */
+.app-header__logo {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: var(--font-weight-light);
+  letter-spacing: var(--letter-spacing-extra);
+  text-transform: lowercase;
+  text-decoration: none;
+  color: var(--charcoal);
+  transition: opacity var(--transition-fast);
+}
+
+.app-header__logo:hover {
+  opacity: 0.7;
+}
+
+/* Navigation */
+.app-header__nav {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.app-header__nav-item {
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  transition: color var(--transition-fast);
+  font-weight: var(--font-weight-regular);
+  position: relative;
+}
+
+.app-header__nav-item:hover {
+  color: var(--charcoal);
+}
+
+.app-header__nav-item.active {
+  color: var(--charcoal);
+}
+
+/* Optional: Add underline to active nav item */
+.app-header__nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--charcoal);
+}
+
+/* User Avatar */
+.app-header__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--pale-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--charcoal);
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.app-header__avatar:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .app-header__nav {
+    gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header__container {
+    padding: 0 var(--space-lg);
+  }
+
+  .app-header__nav {
+    gap: 16px;
+  }
+
+  .app-header__nav-item {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-header {
+    padding: var(--space-lg) 0;
+  }
+
+  .app-header__logo {
+    font-size: 20px;
+  }
+
+  .app-header__nav {
+    display: none; /* Hide on mobile - would need hamburger menu */
+  }
+}

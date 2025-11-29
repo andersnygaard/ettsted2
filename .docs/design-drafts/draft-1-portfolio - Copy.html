@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finans - Porteføljeoversikt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bone: #F5F2ED;
+      --warm-white: #FDFCFA;
+      --charcoal: #2C2C2C;
+      --muted-sage: #8B9A7D;
+      --soft-terracotta: #C4A484;
+      --pale-blue: #B8C5D0;
+      --text-secondary: #6B6B6B;
+      --border: rgba(44, 44, 44, 0.08);
+      --border-strong: rgba(44, 44, 44, 0.15);
+      --positive: #5A7D5A;
+      --negative: #9D6B5A;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bone);
+      color: var(--charcoal);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* Subtle grain texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* Header */
+    header {
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      text-transform: lowercase;
+      text-decoration: none;
+      color: var(--charcoal);
+    }
+
+    nav {
+      display: flex;
+      gap: 48px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover, nav a.active {
+      color: var(--charcoal);
+    }
+
+    .user-area {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--pale-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* Main Content */
+    main {
+      padding: 60px 0;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .breadcrumb a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .breadcrumb a:hover {
+      color: var(--charcoal);
+    }
+
+    .breadcrumb span {
+      color: var(--charcoal);
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 48px;
+    }
+
+    .page-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-header p {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      font-size: 12px;
+      font-family: inherit;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 2px;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      color: var(--charcoal);
+    }
+
+    .btn-secondary:hover {
+      background: var(--warm-white);
+      border-color: var(--charcoal);
+    }
+
+    .btn-primary {
+      background: var(--charcoal);
+      color: var(--warm-white);
+      border: 1px solid var(--charcoal);
+    }
+
+    .btn-primary:hover {
+      background: #1a1a1a;
+    }
+
+    /* Summary Cards */
+    .summary-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .summary-card {
+      background: var(--warm-white);
+      padding: 24px;
+      border-radius: 2px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .summary-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.05);
+    }
+
+    .summary-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+
+    .summary-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 400;
+    }
+
+    .summary-change {
+      font-size: 11px;
+      margin-top: 8px;
+      color: var(--muted-sage);
+    }
+
+    .summary-change.negative {
+      color: var(--soft-terracotta);
+    }
+
+    /* Table Container */
+    .table-container {
+      background: var(--warm-white);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 400;
+    }
+
+    .table-controls {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .filter-select {
+      padding: 10px 16px;
+      font-size: 12px;
+      font-family: inherit;
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--charcoal);
+      cursor: pointer;
+      border-radius: 2px;
+    }
+
+    .search-input {
+      padding: 10px 16px;
+      font-size: 12px;
+      font-family: inherit;
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--charcoal);
+      width: 200px;
+      border-radius: 2px;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    /* Spreadsheet Table */
+    .spreadsheet-wrapper {
+      overflow-x: auto;
+    }
+
+    .spreadsheet {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .spreadsheet th {
+      position: sticky;
+      top: 0;
+      background: var(--bone);
+      text-align: right;
+      padding: 16px 20px;
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      border-bottom: 2px solid var(--border-strong);
+      white-space: nowrap;
+    }
+
+    .spreadsheet th:first-child {
+      text-align: left;
+      position: sticky;
+      left: 0;
+      z-index: 10;
+    }
+
+    .spreadsheet th.section-header {
+      background: var(--charcoal);
+      color: var(--warm-white);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      padding: 10px 20px;
+    }
+
+    .spreadsheet td {
+      padding: 14px 20px;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      white-space: nowrap;
+      transition: background 0.15s ease;
+    }
+
+    .spreadsheet td:first-child {
+      text-align: left;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      position: sticky;
+      left: 0;
+      background: var(--warm-white);
+      z-index: 5;
+    }
+
+    .spreadsheet tr:hover td {
+      background: rgba(139, 154, 125, 0.06);
+    }
+
+    .spreadsheet tr:hover td:first-child {
+      background: rgba(139, 154, 125, 0.1);
+    }
+
+    .spreadsheet tr.highlight td {
+      background: rgba(139, 154, 125, 0.08);
+    }
+
+    .spreadsheet tr.highlight td:first-child {
+      background: rgba(139, 154, 125, 0.12);
+      border-left: 3px solid var(--muted-sage);
+    }
+
+    /* Column Groups */
+    .col-accounts {
+      border-right: 2px solid var(--border-strong);
+    }
+
+    .col-sparing {
+      background: rgba(184, 197, 208, 0.08);
+    }
+
+    .spreadsheet th.col-sparing {
+      background: rgba(184, 197, 208, 0.2);
+    }
+
+    /* Date styling */
+    .date-cell {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--charcoal);
+    }
+
+    .date-cell .year {
+      display: block;
+      font-size: 10px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* Value styling */
+    .value-positive {
+      color: var(--positive);
+    }
+
+    .value-negative {
+      color: var(--negative);
+    }
+
+    .value-muted {
+      color: var(--text-secondary);
+    }
+
+    .value-total {
+      font-weight: 500;
+      color: var(--charcoal);
+    }
+
+    /* Row indicator for "start" */
+    .row-marker {
+      display: inline-block;
+      padding: 2px 8px;
+      background: var(--muted-sage);
+      color: var(--warm-white);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-left: 8px;
+      border-radius: 1px;
+    }
+
+    /* Table Footer */
+    .table-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 32px;
+      border-top: 1px solid var(--border);
+      background: var(--bone);
+    }
+
+    .table-info {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .pagination {
+      display: flex;
+      gap: 8px;
+    }
+
+    .pagination button {
+      padding: 8px 14px;
+      font-size: 12px;
+      font-family: inherit;
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--charcoal);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 2px;
+    }
+
+    .pagination button:hover {
+      background: var(--warm-white);
+    }
+
+    .pagination button.active {
+      background: var(--charcoal);
+      color: var(--warm-white);
+      border-color: var(--charcoal);
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .summary-card {
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    .summary-card:nth-child(1) { animation-delay: 0.1s; }
+    .summary-card:nth-child(2) { animation-delay: 0.15s; }
+    .summary-card:nth-child(3) { animation-delay: 0.2s; }
+    .summary-card:nth-child(4) { animation-delay: 0.25s; }
+    .summary-card:nth-child(5) { animation-delay: 0.3s; }
+
+    .table-container {
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+      animation-delay: 0.4s;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+      .summary-row {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="draft-1-nordic-minimal.html" class="logo">finans</a>
+      <nav>
+        <a href="draft-1-nordic-minimal.html">Oversikt</a>
+        <a href="#" class="active">Portefølje</a>
+        <a href="#">Kalkulatorer</a>
+        <a href="#">Historikk</a>
+      </nav>
+      <div class="user-area">
+        <div class="avatar">AN</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="draft-1-nordic-minimal.html">Oversikt</a>
+        <span>→</span>
+        <span>Alle kontoer</span>
+      </div>
+
+      <div class="page-header">
+        <div>
+          <h1>Porteføljeoversikt</h1>
+          <p>Månedlige verdier for alle kontoer og sparing</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+            </svg>
+            Eksporter
+          </button>
+          <button class="btn btn-primary">
+            <span>+</span> Ny måned
+          </button>
+        </div>
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-card">
+          <div class="summary-label">Siste verdi</div>
+          <div class="summary-value">806 400 kr</div>
+          <div class="summary-change">Mars 2025</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-label">Total sparing</div>
+          <div class="summary-value">8 934 kr</div>
+          <div class="summary-change">Denne måneden</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-label">Nordnet Total</div>
+          <div class="summary-value">450 493 kr</div>
+          <div class="summary-change">+12,4% siste år</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-label">Firi</div>
+          <div class="summary-value">2 634 kr</div>
+          <div class="summary-change negative">-8,2% siste måned</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-label">Kron</div>
+          <div class="summary-value">344 371 kr</div>
+          <div class="summary-change">+2,1% siste måned</div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <div class="table-header">
+          <div class="table-title">Månedlig historikk</div>
+          <div class="table-controls">
+            <select class="filter-select">
+              <option>Alle år</option>
+              <option>2025</option>
+              <option>2024</option>
+              <option>2023</option>
+              <option>2022</option>
+            </select>
+            <input type="text" class="search-input" placeholder="Søk i data...">
+          </div>
+        </div>
+
+        <div class="spreadsheet-wrapper">
+          <table class="spreadsheet">
+            <thead>
+              <tr>
+                <th>Dato</th>
+                <th>Nordnet ASK</th>
+                <th>Bouvet ASK</th>
+                <th>Mathilde ASK</th>
+                <th>Yolo</th>
+                <th class="col-accounts">Nordnet Total</th>
+                <th>Firi</th>
+                <th>Kron</th>
+                <th class="col-sparing">Skatt/Aksjelkjøp</th>
+                <th class="col-sparing">Fleksilån saldo</th>
+                <th class="col-sparing">Total sparing</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="date-cell">01.03.2025</div></td>
+                <td>218 037,00</td>
+                <td>144 566,00</td>
+                <td>-</td>
+                <td>86 890,00</td>
+                <td class="col-accounts value-total">450 493,00</td>
+                <td>2 634,50</td>
+                <td>344 371,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">8 934,86</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.02.2025</div></td>
+                <td>214 137,00</td>
+                <td>164 404,00</td>
+                <td>-</td>
+                <td class="value-positive">81 225,00</td>
+                <td class="col-accounts value-total">460 766,00</td>
+                <td>2 077,13</td>
+                <td>351 156,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">38 718,00</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.01.2025</div></td>
+                <td>208 716,00</td>
+                <td>155 588,00</td>
+                <td>-</td>
+                <td>76 878,00</td>
+                <td class="col-accounts value-total">441 182,00</td>
+                <td>981,49</td>
+                <td>330 720,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">24 980,74</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.12.2024</div></td>
+                <td>231 399,00</td>
+                <td>116 131,00</td>
+                <td>-</td>
+                <td>77 931,00</td>
+                <td class="col-accounts value-total">425 461,00</td>
+                <td>-</td>
+                <td>326 450,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">20 237,35</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.11.2024</div></td>
+                <td>236 088,00</td>
+                <td>109 575,00</td>
+                <td>-</td>
+                <td>77 207,00</td>
+                <td class="col-accounts value-total">422 870,00</td>
+                <td>-</td>
+                <td class="value-positive">310 177,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">27 737,00</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.10.2024</div></td>
+                <td>228 329,00</td>
+                <td>112 133,00</td>
+                <td>-</td>
+                <td>73 112,00</td>
+                <td class="col-accounts value-total">413 574,00</td>
+                <td>-</td>
+                <td>294 773,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">36 737,35</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.09.2024</div></td>
+                <td>224 695,00</td>
+                <td>113 412,00</td>
+                <td>-</td>
+                <td>75 380,00</td>
+                <td class="col-accounts value-total">413 487,00</td>
+                <td>-</td>
+                <td>281 367,00</td>
+                <td class="col-sparing">12 500,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">15 254,56</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.08.2024</div></td>
+                <td>226 863,00</td>
+                <td>102 059,00</td>
+                <td>-</td>
+                <td>75 868,00</td>
+                <td class="col-accounts value-total">404 790,00</td>
+                <td>-</td>
+                <td>280 155,00</td>
+                <td class="col-sparing">10 000,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">15 526,22</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.07.2024</div></td>
+                <td>223 008,00</td>
+                <td class="value-positive">101 420,00</td>
+                <td>-</td>
+                <td class="value-positive">70 837,00</td>
+                <td class="col-accounts value-total">395 265,00</td>
+                <td>-</td>
+                <td>256 441,00</td>
+                <td class="col-sparing">5 000,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">15 276,22</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.06.2024</div></td>
+                <td>212 896,00</td>
+                <td>80 499,00</td>
+                <td>-</td>
+                <td>69 197,00</td>
+                <td class="col-accounts value-total">362 592,00</td>
+                <td>-</td>
+                <td>246 964,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">15 276,22</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.05.2024</div></td>
+                <td>216 088,00</td>
+                <td>75 806,00</td>
+                <td>-</td>
+                <td>60 843,00</td>
+                <td class="col-accounts value-total">352 737,00</td>
+                <td>-</td>
+                <td class="value-positive">244 410,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">15 276,22</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.04.2024</div></td>
+                <td>216 429,00</td>
+                <td>76 917,00</td>
+                <td>-</td>
+                <td>67 416,00</td>
+                <td class="col-accounts value-total">360 762,00</td>
+                <td>-</td>
+                <td>198 252,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">15 276,22</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.03.2024</div></td>
+                <td>216 012,00</td>
+                <td>78 276,00</td>
+                <td>-</td>
+                <td>66 540,00</td>
+                <td class="col-accounts value-total">360 828,00</td>
+                <td>-</td>
+                <td class="value-positive">130 739,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">13 287,19</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.02.2024</div></td>
+                <td>210 142,00</td>
+                <td>76 670,00</td>
+                <td>-</td>
+                <td>64 286,00</td>
+                <td class="col-accounts value-total">351 098,00</td>
+                <td>-</td>
+                <td>92 623,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">24 175,00</td>
+              </tr>
+              <tr class="highlight">
+                <td>
+                  <div class="date-cell">01.01.2024<span class="row-marker">start</span></div>
+                </td>
+                <td>201 170,00</td>
+                <td class="value-positive">75 682,00</td>
+                <td>-</td>
+                <td>67 698,00</td>
+                <td class="col-accounts value-total">344 550,00</td>
+                <td>-</td>
+                <td>78 728,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">29 620,45</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.12.2023</div></td>
+                <td>194 729,00</td>
+                <td>43 449,00</td>
+                <td>-</td>
+                <td>64 725,00</td>
+                <td class="col-accounts value-total">302 903,00</td>
+                <td>-</td>
+                <td>76 006,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">37 371,00</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.11.2023</div></td>
+                <td>182 406,00</td>
+                <td>40 744,00</td>
+                <td>-</td>
+                <td>61 829,00</td>
+                <td class="col-accounts value-total">284 979,00</td>
+                <td>-</td>
+                <td>63 706,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">39 924,68</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.10.2023</div></td>
+                <td>188 151,00</td>
+                <td>42 078,00</td>
+                <td>-</td>
+                <td>67 573,00</td>
+                <td class="col-accounts value-total">297 802,00</td>
+                <td>-</td>
+                <td>60 801,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">37 593,24</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.10.2022<span class="row-marker">start</span></div></td>
+                <td>168 831,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>51 809,00</td>
+                <td class="col-accounts value-total">220 640,00</td>
+                <td>-</td>
+                <td>23 975,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing value-total">12 477,00</td>
+              </tr>
+              <tr>
+                <td><div class="date-cell">01.09.2022</div></td>
+                <td>175 584,24</td>
+                <td>-</td>
+                <td>-</td>
+                <td>53 881,36</td>
+                <td class="col-accounts value-total">229 465,60</td>
+                <td>-</td>
+                <td>15 000,00</td>
+                <td class="col-sparing">-</td>
+                <td class="col-sparing">15 000,00</td>
+                <td class="col-sparing value-total">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-footer">
+          <div class="table-info">Viser 20 av 35 måneder</div>
+          <div class="pagination">
+            <button>← Forrige</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>Neste →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
