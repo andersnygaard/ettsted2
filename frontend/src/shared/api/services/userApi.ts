@@ -14,6 +14,7 @@ export interface User {
   updatedAt: string;
   profile?: {
     monthlySalary?: number;
+    monthlySavings?: number;
     annualExpenses?: number;
     birthYear?: number;
     plannedRetirementAge?: number;
@@ -59,12 +60,12 @@ export const userApi = {
   /**
    * First-time user setup
    *
-   * Initialize user profile with username and email
+   * Initialize user profile with nickname and email
    *
    * @param data Setup data
    * @returns Created user
    */
-  setup: async (data: { username: string; email?: string }): Promise<User> => {
+  setup: async (data: { nickname: string; email?: string }): Promise<User> => {
     const response = await client.post<ApiResponse<User>>('/users/me/setup', data);
     return response.data.data;
   },
@@ -88,6 +89,7 @@ export const userApi = {
    */
   updateProfile: async (profile: Partial<{
     monthlySalary: number;
+    monthlySavings: number;
     annualExpenses: number;
     birthYear: number;
     plannedRetirementAge: number;

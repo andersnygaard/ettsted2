@@ -49,11 +49,12 @@ function calculateCategorySum(accounts: Account[], category: AssetCategory): num
 
 /**
  * Calculate net worth from accounts
+ * Note: Gjeld values are stored as negative numbers, so we ADD them
  */
 function calculateNetWorth(accounts: Account[]): number {
   const sumSparing = calculateCategorySum(accounts, 'sparing');
   const sumGjeld = calculateCategorySum(accounts, 'gjeld');
-  return sumSparing - sumGjeld;
+  return sumSparing + sumGjeld; // gjeld is already negative
 }
 
 /**
@@ -99,9 +100,9 @@ async function fetchDashboardData(): Promise<DashboardData> {
     const sumSparing = calculateCategorySum(latest.accounts, 'sparing');
     const sumGjeld = calculateCategorySum(latest.accounts, 'gjeld');
     const pensjon = calculateCategorySum(latest.accounts, 'pensjon');
-    const netWorth = sumSparing - sumGjeld;
+    const netWorth = sumSparing + sumGjeld; // gjeld is already negative
 
-    // Calculate monthly change percentage
+    // Calculate monthly change percentage (based on net worth)
     let monthlyChange = 0;
     if (previous) {
       const previousNetWorth = calculateNetWorth(previous.accounts);

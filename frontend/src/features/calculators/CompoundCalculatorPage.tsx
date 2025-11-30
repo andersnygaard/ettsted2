@@ -1,7 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart } from '@/shared/components';
 import type { StackedDataPoint, Series } from '@/shared/components';
 import { formatCurrency, formatNumber } from '@/shared/utils/numberFormat';
+import { useSparingData } from '@/features/sparing/useSparingData';
+import { useUser } from '@/shared/hooks/useUser';
 import './CompoundCalculatorPage.css';
 
 /**
@@ -75,12 +77,34 @@ function calculateCompoundInterest(inputs: CompoundInputs): CompoundResult {
 }
 
 function CompoundCalculatorPage() {
+  const { data: sparingData } = useSparingData();
+  const { data: user } = useUser();
+
   const [inputs, setInputs] = useState<CompoundInputs>({
     initialAmount: 0,
-    monthlyDeposit: 5000,
+    monthlyDeposit: 0,
     annualRate: 7,
     years: 10,
   });
+
+  // Set defaults from user profile and portfolio data when loaded
+  useEffect(() => {
+    const updates: Partial<CompoundInputs> = {};
+
+    // Set initial amount from sum sparing (0 if no portfolio data)
+    if (sparingData && inputs.initialAmount === 0) {
+      updates.initialAmount = sparingData.sumSparing ?? 0;
+    }
+
+    // Set monthly deposit from user profile, fallback to 5000
+    if (inputs.monthlyDeposit === 0) {
+      updates.monthlyDeposit = user?.profile?.monthlySavings || 5000;
+    }
+
+    if (Object.keys(updates).length > 0) {
+      setInputs((prev) => ({ ...prev, ...updates }));
+    }
+  }, [sparingData?.sumSparing, user?.profile?.monthlySavings]);
 
   const result = useMemo(() => calculateCompoundInterest(inputs), [inputs]);
 
@@ -134,12 +158,25 @@ function CompoundCalculatorPage() {
               onChange={(v) => updateInput('monthlyDeposit', v)}
               suffix="kr"
             />
-            <NumberInput
-              label="Årlig avkastning"
-              value={inputs.annualRate}
-              onChange={(v) => updateInput('annualRate', v)}
-              suffix="%"
-            />
+            <div className="slider-input">
+              <div className="slider-input__header">
+                <span className="slider-input__label">Årlig avkastning</span>
+                <span className="slider-input__value">{formatNumber(inputs.annualRate, 1)}%</span>
+              </div>
+              <input
+                type="range"
+                className="slider-input__track"
+                min={2}
+                max={20}
+                step={0.1}
+                value={inputs.annualRate}
+                onChange={(e) => updateInput('annualRate', parseFloat(e.target.value))}
+              />
+              <div className="slider-input__range">
+                <span>2%</span>
+                <span>20%</span>
+              </div>
+            </div>
             <div className="slider-input">
               <div className="slider-input__header">
                 <span className="slider-input__label">Antall år</span>

@@ -1,0 +1,231 @@
+.accounts-modal__content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 400px;
+}
+
+.accounts-modal__error {
+  padding: 12px 16px;
+  background-color: rgba(157, 107, 90, 0.1);
+  border: 1px solid var(--negative);
+  border-radius: 4px;
+  color: var(--negative);
+  font-size: 14px;
+}
+
+.accounts-modal__section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.accounts-modal__section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.accounts-modal__section-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.accounts-modal__add-btn {
+  background: none;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--muted-sage);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+}
+
+.accounts-modal__add-btn:hover {
+  background-color: rgba(139, 154, 125, 0.1);
+}
+
+.accounts-modal__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.accounts-modal__item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background-color: var(--bone);
+  border-radius: 4px;
+  transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  cursor: grab;
+}
+
+.accounts-modal__item:active {
+  cursor: grabbing;
+}
+
+.accounts-modal__item--inactive {
+  opacity: 0.5;
+}
+
+.accounts-modal__item--dragging {
+  opacity: 0.5;
+  transform: scale(0.98);
+}
+
+.accounts-modal__item--drag-over {
+  box-shadow: 0 -2px 0 0 var(--muted-sage);
+}
+
+.accounts-modal__item-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.accounts-modal__drag-handle {
+  font-size: 14px;
+  line-height: 1;
+  padding: 4px;
+  color: var(--text-secondary);
+  cursor: grab;
+  user-select: none;
+  letter-spacing: -2px;
+}
+
+.accounts-modal__drag-handle:active {
+  cursor: grabbing;
+}
+
+.accounts-modal__input {
+  flex: 1;
+  padding: 8px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--charcoal);
+  background-color: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  transition: border-color 0.15s ease;
+}
+
+.accounts-modal__input:focus {
+  outline: none;
+  border-color: var(--pale-blue);
+}
+
+.accounts-modal__input::placeholder {
+  color: var(--text-secondary);
+}
+
+.accounts-modal__toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.accounts-modal__toggle input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.accounts-modal__toggle-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.accounts-modal__remove-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  line-height: 1;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: color 0.15s ease;
+}
+
+.accounts-modal__remove-btn:hover {
+  color: var(--negative);
+}
+
+.accounts-modal__loan-details {
+  display: flex;
+  gap: 12px;
+  padding-left: 40px;
+}
+
+.accounts-modal__loan-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.accounts-modal__loan-field label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.accounts-modal__loan-field input {
+  padding: 6px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--charcoal);
+  background-color: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  width: 100%;
+}
+
+.accounts-modal__loan-field input:focus {
+  outline: none;
+  border-color: var(--pale-blue);
+}
+
+.accounts-modal__loan-field input::placeholder {
+  color: var(--text-secondary);
+  font-family: 'DM Sans', sans-serif;
+}
+
+.accounts-modal__loan-field input::-webkit-outer-spin-button,
+.accounts-modal__loan-field input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.accounts-modal__loan-field input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.accounts-modal__empty {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-style: italic;
+  padding: 8px 0;
+}
+
+.accounts-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}

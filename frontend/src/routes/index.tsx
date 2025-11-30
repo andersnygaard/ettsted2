@@ -2,7 +2,6 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from '../shared/components/Layout';
 import ProtectedRoute from '../features/auth/ProtectedRoute';
-import { useAuth } from '../features/auth/useAuth';
 
 // Lazy load page components for code splitting
 const HomePage = lazy(() => import('../features/dashboard/HomePage'));
@@ -28,23 +27,13 @@ function LoadingFallback() {
   );
 }
 
-// Conditional home page component
-function HomePageRouter() {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return <LoadingFallback />;
-  }
-
-  return isAuthenticated ? <DashboardPage /> : <HomePage />;
-}
 
 function AppRoutes() {
   return (
     <Suspense fallback={<LoadingFallback />}>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<HomePageRouter />} />
+          <Route index element={<HomePage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="onboarding" element={<OnboardingPage />} />
           <Route

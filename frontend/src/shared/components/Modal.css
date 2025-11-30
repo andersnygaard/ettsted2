@@ -22,8 +22,7 @@
 .modal {
   background: var(--warm-white);
   border-radius: var(--radius-sm);
-  max-width: 500px;
-  width: 90%;
+  width: auto;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: var(--shadow-lg);

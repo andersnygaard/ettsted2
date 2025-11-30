@@ -23,6 +23,7 @@ export interface ProfileModalProps {
 export function ProfileModal({ isOpen, onClose, profile, onSaved }: ProfileModalProps) {
   const [formData, setFormData] = useState<Partial<UserProfile>>({
     monthlySalary: 0,
+    monthlySavings: 0,
     annualExpenses: 0,
     birthYear: 1990,
     plannedRetirementAge: 67,
@@ -35,6 +36,7 @@ export function ProfileModal({ isOpen, onClose, profile, onSaved }: ProfileModal
     if (isOpen && profile) {
       setFormData({
         monthlySalary: profile.monthlySalary,
+        monthlySavings: profile.monthlySavings,
         annualExpenses: profile.annualExpenses,
         birthYear: profile.birthYear,
         plannedRetirementAge: profile.plannedRetirementAge,
@@ -123,6 +125,13 @@ export function ProfileModal({ isOpen, onClose, profile, onSaved }: ProfileModal
             label="Månedlig inntekt"
             value={formData.monthlySalary}
             onChange={handleNumberChange('monthlySalary')}
+            suffix="kr"
+          />
+
+          <NumberInput
+            label="Månedlig sparing"
+            value={formData.monthlySavings}
+            onChange={handleNumberChange('monthlySavings')}
             suffix="kr"
           />
 

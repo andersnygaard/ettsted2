@@ -7,6 +7,7 @@
  * Features:
  * - Month selection using DateInput (always 1st of month)
  * - Account value inputs grouped by category (Sparing, Gjeld, Pensjon)
+ * - Dynamic accounts from user.accounts configuration
  * - Form validation (required date, valid numbers)
  * - API mutation for creating snapshot
  * - Loading state and error handling
@@ -14,8 +15,11 @@
  * Based on Nordic Minimal design system.
  */
 
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Modal, Button, DateInput, NumberInput } from '@/shared/components';
+import { useAuth } from '@/features/auth/useAuth';
+import type { AccountConfig } from '@/features/auth/types';
+import { useCreateSnapshot } from './usePortfolioData';
 import './NewMonthModal.css';
 
 export interface NewMonthModalProps {
@@ -24,68 +28,81 @@ export interface NewMonthModalProps {
   onSuccess?: () => void;
 }
 
-/**
- * Account structure for the form
- */
-interface AccountFormData {
-  // Sparing
-  nordnetAsk: number | undefined;
-  bouvetAsk: number | undefined;
-  yolo: number | undefined;
-  firi: number | undefined;
-  kron: number | undefined;
-  skattKjop: number | undefined;
+type CategoryType = 'sparing' | 'gjeld' | 'pensjon';
 
-  // Gjeld
-  sbanken: number | undefined;
+const CATEGORY_LABELS: Record<CategoryType, string> = {
+  sparing: 'Sparing',
+  gjeld: 'Gjeld',
+  pensjon: 'Pensjon',
+};
 
-  // Pensjon
-  arbeidsgiver: number | undefined;
-}
+// Map category to default assetClass for snapshot
+const CATEGORY_TO_ASSET_CLASS: Record<CategoryType, string> = {
+  sparing: 'aksjer',
+  gjeld: 'gjeld',
+  pensjon: 'pensjon',
+};
 
 /**
  * Form validation errors
  */
 interface FormErrors {
   date?: string;
-  accounts?: Partial<Record<keyof AccountFormData, string>>;
+  general?: string;
 }
 
 export function NewMonthModal({ isOpen, onClose, onSuccess }: NewMonthModalProps) {
-  // Form state
+  const { user } = useAuth();
+  const createSnapshot = useCreateSnapshot();
+
+  // Form state - dynamic based on user accounts
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  const [formData, setFormData] = useState<AccountFormData>({
-    nordnetAsk: undefined,
-    bouvetAsk: undefined,
-    yolo: undefined,
-    firi: undefined,
-    kron: undefined,
-    skattKjop: undefined,
-    sbanken: undefined,
-    arbeidsgiver: undefined,
-  });
+  const [formData, setFormData] = useState<Record<string, number | undefined>>({});
   const [errors, setErrors] = useState<FormErrors>({});
-  const [isLoading, setIsLoading] = useState(false);
+
+  // Group accounts by category
+  const accountsByCategory = useMemo(() => {
+    if (!user?.accounts) return {} as Record<CategoryType, AccountConfig[]>;
+
+    const categories: CategoryType[] = ['sparing', 'gjeld', 'pensjon'];
+    const grouped = {} as Record<CategoryType, AccountConfig[]>;
+
+    categories.forEach((category) => {
+      grouped[category] = user.accounts!
+        .filter((acc) => acc.category === category && acc.isActive)
+        .sort((a, b) => a.sortOrder - b.sortOrder);
+    });
+
+    return grouped;
+  }, [user?.accounts]);
+
+  // Reset form when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedDate(new Date());
+      setFormData({});
+      setErrors({});
+    }
+  }, [isOpen]);
 
   /**
    * Handle account value change
    */
-  const handleAccountChange = (account: keyof AccountFormData, value: number | undefined) => {
+  const handleAccountChange = (accountId: string, value: number | undefined) => {
     setFormData((prev) => ({
       ...prev,
-      [account]: value,
+      [accountId]: value,
     }));
+  };
 
-    // Clear error for this field if it exists
-    if (errors.accounts?.[account]) {
-      setErrors((prev) => ({
-        ...prev,
-        accounts: {
-          ...prev.accounts,
-          [account]: undefined,
-        },
-      }));
-    }
+  /**
+   * Format date as dd.MM.yyyy
+   */
+  const formatDate = (date: Date): string => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
   };
 
   /**
@@ -99,9 +116,6 @@ export function NewMonthModal({ isOpen, onClose, onSuccess }: NewMonthModalProps
       newErrors.date = 'Dato er påkrevd';
     }
 
-    // No account validation - all fields are optional
-    // Users can enter values for only the accounts they have
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -110,20 +124,30 @@ export function NewMonthModal({ isOpen, onClose, onSuccess }: NewMonthModalProps
    * Submit form data to API
    */
   const submitForm = async () => {
-    if (!validateForm()) {
+    if (!validateForm() || !user?.accounts) {
       return;
     }
 
-    setIsLoading(true);
+    // Build accounts array for snapshot
+    const accounts = user.accounts
+      .filter((acc) => acc.isActive && formData[acc.id] !== undefined)
+      .map((acc) => ({
+        id: acc.id,
+        name: acc.name,
+        assetClass: CATEGORY_TO_ASSET_CLASS[acc.category as CategoryType] || 'aksjer',
+        value: acc.category === 'gjeld'
+          ? -(formData[acc.id] || 0) // Store gjeld as negative
+          : (formData[acc.id] || 0),
+      }));
+
+    // Calculate total net worth
+    const totalNetWorth = accounts.reduce((sum, acc) => sum + acc.value, 0);
 
     try {
-      // TODO: Replace with actual API mutation
-      // For now, just simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      console.log('Creating new month snapshot:', {
-        date: selectedDate,
-        accounts: formData,
+      await createSnapshot.mutateAsync({
+        date: formatDate(selectedDate!),
+        accounts,
+        totalNetWorth,
       });
 
       // Call success callback
@@ -134,10 +158,8 @@ export function NewMonthModal({ isOpen, onClose, onSuccess }: NewMonthModalProps
     } catch (error) {
       console.error('Failed to create snapshot:', error);
       setErrors({
-        date: 'En feil oppstod. Vennligst prøv igjen.',
+        general: 'En feil oppstod. Vennligst prøv igjen.',
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -154,20 +176,14 @@ export function NewMonthModal({ isOpen, onClose, onSuccess }: NewMonthModalProps
    */
   const handleClose = () => {
     setSelectedDate(new Date());
-    setFormData({
-      nordnetAsk: undefined,
-      bouvetAsk: undefined,
-      yolo: undefined,
-      firi: undefined,
-      kron: undefined,
-      skattKjop: undefined,
-      sbanken: undefined,
-      arbeidsgiver: undefined,
-    });
+    setFormData({});
     setErrors({});
-    setIsLoading(false);
     onClose();
   };
+
+  const isLoading = createSnapshot.isPending;
+
+  const categories: CategoryType[] = ['sparing', 'gjeld', 'pensjon'];
 
   return (
     <Modal
@@ -196,6 +212,13 @@ export function NewMonthModal({ isOpen, onClose, onSuccess }: NewMonthModalProps
       }
     >
       <form onSubmit={handleSubmit} className="new-month-modal__form">
+        {/* General error */}
+        {errors.general && (
+          <div className="new-month-modal__error" role="alert">
+            {errors.general}
+          </div>
+        )}
+
         {/* Date selection */}
         <div className="new-month-modal__section">
           <DateInput
@@ -210,74 +233,35 @@ export function NewMonthModal({ isOpen, onClose, onSuccess }: NewMonthModalProps
           />
         </div>
 
-        {/* Sparing section */}
-        <div className="new-month-modal__section">
-          <h3 className="new-month-modal__section-title">Sparing</h3>
-          <div className="new-month-modal__fields">
-            <NumberInput
-              value={formData.nordnetAsk}
-              onChange={(value) => handleAccountChange('nordnetAsk', value)}
-              label="Nordnet ASK"
-              disabled={isLoading}
-            />
-            <NumberInput
-              value={formData.bouvetAsk}
-              onChange={(value) => handleAccountChange('bouvetAsk', value)}
-              label="Bouvet ASK"
-              disabled={isLoading}
-            />
-            <NumberInput
-              value={formData.yolo}
-              onChange={(value) => handleAccountChange('yolo', value)}
-              label="Yolo"
-              disabled={isLoading}
-            />
-            <NumberInput
-              value={formData.firi}
-              onChange={(value) => handleAccountChange('firi', value)}
-              label="Firi"
-              disabled={isLoading}
-            />
-            <NumberInput
-              value={formData.kron}
-              onChange={(value) => handleAccountChange('kron', value)}
-              label="Kron"
-              disabled={isLoading}
-            />
-            <NumberInput
-              value={formData.skattKjop}
-              onChange={(value) => handleAccountChange('skattKjop', value)}
-              label="Skatt/Kjøp"
-              disabled={isLoading}
-            />
-          </div>
-        </div>
+        {/* Dynamic account sections */}
+        {categories.map((category) => {
+          const categoryAccounts = accountsByCategory[category] || [];
+          if (categoryAccounts.length === 0) return null;
 
-        {/* Gjeld section */}
-        <div className="new-month-modal__section">
-          <h3 className="new-month-modal__section-title">Gjeld</h3>
-          <div className="new-month-modal__fields">
-            <NumberInput
-              value={formData.sbanken}
-              onChange={(value) => handleAccountChange('sbanken', value)}
-              label="SBanken"
-              disabled={isLoading}
-            />
-          </div>
-        </div>
+          return (
+            <div key={category} className="new-month-modal__section">
+              <h3 className="new-month-modal__section-title">{CATEGORY_LABELS[category]}</h3>
+              <div className="new-month-modal__fields">
+                {categoryAccounts.map((account) => (
+                  <NumberInput
+                    key={account.id}
+                    value={formData[account.id]}
+                    onChange={(value) => handleAccountChange(account.id, value)}
+                    label={account.name}
+                    disabled={isLoading}
+                  />
+                ))}
+              </div>
+            </div>
+          );
+        })}
 
-        {/* Pensjon section */}
-        <div className="new-month-modal__section">
-          <h3 className="new-month-modal__section-title">Pensjon</h3>
-          <div className="new-month-modal__fields">
-            <NumberInput
-              value={formData.arbeidsgiver}
-              onChange={(value) => handleAccountChange('arbeidsgiver', value)}
-              label="Arbeidsgiver"
-              disabled={isLoading}
-            />
+        {/* Empty state if no accounts */}
+        {!user?.accounts || user.accounts.filter((a) => a.isActive).length === 0 ? (
+          <div className="new-month-modal__empty">
+            <p>Ingen kontoer konfigurert. Gå til "Mitt oppsett" for å legge til kontoer.</p>
           </div>
-        </div>
+        ) : null}
       </form>
     </Modal>
   );

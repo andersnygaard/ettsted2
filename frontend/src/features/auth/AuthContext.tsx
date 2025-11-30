@@ -38,8 +38,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (import.meta.env.VITE_APP_ENV === 'development') {
           setUser({
             id: 'dev-user-123',
-            username: 'devuser',
+            nickname: 'devuser',
             email: 'dev@example.com',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            profile: {
+              monthlySalary: 0,
+              annualExpenses: 0,
+              birthYear: 1990,
+              plannedRetirementAge: 67,
+            },
+            accounts: [],
           });
         } else {
           setUser(null);

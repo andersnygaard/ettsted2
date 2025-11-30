@@ -235,6 +235,57 @@
 }
 
 /* ========================================
+   Inline Cell Editing
+   ======================================== */
+
+/* Editable cell hover indicator */
+.cell-editable {
+  cursor: pointer;
+}
+
+.cell-editable:hover {
+  background: rgba(184, 197, 208, 0.2) !important;
+  outline: 1px solid var(--pale-blue);
+  outline-offset: -1px;
+}
+
+/* Cell in editing mode */
+.cell-editing {
+  padding: 4px !important;
+  background: var(--warm-white) !important;
+}
+
+/* Cell input field */
+.cell-input {
+  width: 100%;
+  padding: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-align: right;
+  border: 1px solid var(--pale-blue);
+  border-radius: 2px;
+  background: var(--warm-white);
+  color: var(--charcoal);
+  outline: none;
+}
+
+.cell-input:focus {
+  border-color: var(--muted-sage);
+  box-shadow: 0 0 0 2px rgba(139, 154, 125, 0.2);
+}
+
+/* Remove number input spinners */
+.cell-input::-webkit-outer-spin-button,
+.cell-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.cell-input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* ========================================
    Hidden Columns
    ======================================== */
 

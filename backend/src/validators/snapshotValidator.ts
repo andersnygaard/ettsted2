@@ -140,10 +140,11 @@ function validateAccount(
     };
   }
 
-  if (acc.value < 0) {
+  // Allow negative values only for gjeld (debt) accounts
+  if (acc.value < 0 && acc.assetClass !== 'gjeld') {
     return {
       valid: false,
-      error: `Account value at index ${index} cannot be negative`,
+      error: `Account value at index ${index} cannot be negative (except for gjeld)`,
       details: { index, field: 'value', value: acc.value }
     };
   }
@@ -585,10 +586,11 @@ export function validateUpdateAccountRequest(
       return;
     }
 
-    if (updates.value < 0) {
+    // Allow negative values only for gjeld (debt) accounts
+    if (updates.value < 0 && updates.assetClass !== 'gjeld') {
       res.status(400).json({
         error: {
-          message: 'Value cannot be negative',
+          message: 'Value cannot be negative (except for gjeld)',
           code: 'VALIDATION_ERROR',
           details: { field: 'value', value: updates.value }
         },

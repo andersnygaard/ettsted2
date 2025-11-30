@@ -1,5 +1,7 @@
 import { PageHeader, HeroNumber, StackedAreaChart, StackedDataPoint, Series } from '@/shared/components';
+import { PensjonSkeleton } from '@/shared/components/skeletons';
 import { formatCurrency } from '@/shared/utils/numberFormat';
+import { usePensjonData } from './usePensjonData';
 import { BreakdownCards, BreakdownItem } from './BreakdownCards';
 import { OtpSection } from './OtpSection';
 import './PensjonPage.css';
@@ -13,45 +15,76 @@ import './PensjonPage.css';
  * Based on Nordic Minimal design from draft-1-pensjon.html
  */
 function PensjonPage() {
-  // Placeholder data for testing (will be replaced with API data)
-  const pensjonData = {
-    sumPensjon: 3848757,
-    arbeidsgiver: 2694130,
-    nav: 1154627,
-    otpPercentage: 45,
-  };
+  const { data: pensjonData, isLoading, error } = usePensjonData();
 
-  const arbeidsgiverPercent = Math.round((pensjonData.arbeidsgiver / pensjonData.sumPensjon) * 100);
-  const navPercent = Math.round((pensjonData.nav / pensjonData.sumPensjon) * 100);
+  if (isLoading) {
+    return <PensjonSkeleton />;
+  }
 
-  // Breakdown items
+  if (error) {
+    return (
+      <main className="pensjon-page">
+        <div className="container container--narrow">
+          <p>Feil ved lasting av pensjonsdata. Prøv igjen senere.</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (!pensjonData || pensjonData.sumPensjon === 0) {
+    return (
+      <main className="pensjon-page">
+        <div className="container container--narrow">
+          <PageHeader
+            title="Pensjon"
+            subtitle="Oppspart pensjon og fremtidig utbetaling"
+          />
+          <p>Ingen pensjonsdata tilgjengelig. Legg til pensjonskontoer i porteføljen.</p>
+        </div>
+      </main>
+    );
+  }
+
+  // Calculate arbeidsgiver vs NAV from breakdown
+  const arbeidsgiverItem = pensjonData.breakdown.find(b =>
+    b.name.toLowerCase().includes('arbeidsgiver')
+  );
+  const navItem = pensjonData.breakdown.find(b =>
+    b.name.toLowerCase().includes('folketrygd') ||
+    b.name.toLowerCase().includes('nav')
+  );
+
+  const arbeidsgiver = arbeidsgiverItem?.amount || 0;
+  const nav = navItem?.amount || 0;
+  const arbeidsgiverPercent = arbeidsgiverItem?.percent || 0;
+  const navPercent = navItem?.percent || 0;
+
+  // Breakdown items for cards
   const breakdownItems: BreakdownItem[] = [
     {
       icon: '🏢',
       iconLabel: 'Arbeidsgiver',
-      value: pensjonData.arbeidsgiver,
+      value: arbeidsgiver,
       label: 'Pensjon arbeidsgiver',
-      percentage: arbeidsgiverPercent,
+      percentage: Math.round(arbeidsgiverPercent),
       variant: 'arbeidsgiver',
     },
     {
       icon: '🏛️',
       iconLabel: 'NAV',
-      value: pensjonData.nav,
+      value: nav,
       label: 'Pensjon NAV',
-      percentage: navPercent,
+      percentage: Math.round(navPercent),
       variant: 'nav',
     },
   ];
 
-  // Chart data - pension development over time
-  const chartData: StackedDataPoint[] = [
-    { date: new Date(2020, 0, 1), arbeidsgiver: 1200000, nav: 600000 },
-    { date: new Date(2021, 0, 1), arbeidsgiver: 1500000, nav: 720000 },
-    { date: new Date(2022, 0, 1), arbeidsgiver: 1900000, nav: 850000 },
-    { date: new Date(2023, 0, 1), arbeidsgiver: 2300000, nav: 1000000 },
-    { date: new Date(2024, 0, 1), arbeidsgiver: 2694130, nav: 1154627 },
-  ];
+  // Chart data from history
+  const chartData: StackedDataPoint[] = pensjonData.history.map(h => ({
+    date: h.date,
+    arbeidsgiver: h.arbeidsgiver,
+    nav: h.folketrygden,
+  }));
 
   const chartSeries: Series[] = [
     { key: 'arbeidsgiver', color: 'var(--pale-blue)', label: 'Arbeidsgiver' },
@@ -69,12 +102,12 @@ function PensjonPage() {
         <HeroNumber
           label="Sum pensjon"
           value={formatCurrency(pensjonData.sumPensjon)}
-          changeLabel="Estimert ved pensjonering"
+          changeLabel={`Estimert ved pensjonering: ${formatCurrency(pensjonData.estimatedAtRetirement)}`}
         />
 
         <BreakdownCards items={breakdownItems} />
 
-        <OtpSection percentage={pensjonData.otpPercentage} trend="up" />
+        <OtpSection percentage={Math.round(pensjonData.otpPercent)} trend="up" />
 
         <StackedAreaChart
           data={chartData}

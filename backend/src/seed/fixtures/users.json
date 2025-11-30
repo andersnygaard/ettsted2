@@ -3,23 +3,23 @@
     "id": "dev-user-123",
     "nickname": "Anders",
     "email": "dev@example.com",
-    "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-11-01T00:00:00.000Z",
+    "createdAt": "2021-01-01T00:00:00.000Z",
+    "updatedAt": "2024-12-01T00:00:00.000Z",
     "profile": {
       "monthlySalary": 65000,
       "annualExpenses": 450000,
-      "birthYear": 1988,
-      "plannedRetirementAge": 55,
-      "fireNumber": 11250000
+      "birthYear": 1982,
+      "plannedRetirementAge": 57,
+      "fireNumber": 12500000
     },
     "accounts": [
       {
-        "id": "acc-nordnet-ask",
-        "name": "Nordnet ASK",
+        "id": "acc-nordnet",
+        "name": "Nordnet",
         "category": "sparing",
         "isActive": true,
         "sortOrder": 1,
-        "createdAt": "2024-01-01T00:00:00.000Z"
+        "createdAt": "2021-01-01T00:00:00.000Z"
       },
       {
         "id": "acc-kron",
@@ -27,7 +27,7 @@
         "category": "sparing",
         "isActive": true,
         "sortOrder": 2,
-        "createdAt": "2024-01-01T00:00:00.000Z"
+        "createdAt": "2021-01-01T00:00:00.000Z"
       },
       {
         "id": "acc-firi",
@@ -43,7 +43,7 @@
         "category": "sparing",
         "isActive": true,
         "sortOrder": 4,
-        "createdAt": "2024-01-01T00:00:00.000Z"
+        "createdAt": "2021-01-01T00:00:00.000Z"
       },
       {
         "id": "acc-huslan",
@@ -51,11 +51,24 @@
         "category": "gjeld",
         "isActive": true,
         "sortOrder": 1,
-        "createdAt": "2024-01-01T00:00:00.000Z",
+        "createdAt": "2021-01-01T00:00:00.000Z",
         "loanDetails": {
           "interestRate": 5.2,
           "remainingYears": 22,
           "originalAmount": 3500000
+        }
+      },
+      {
+        "id": "acc-studielan",
+        "name": "Studielån",
+        "category": "gjeld",
+        "isActive": true,
+        "sortOrder": 2,
+        "createdAt": "2021-01-01T00:00:00.000Z",
+        "loanDetails": {
+          "interestRate": 5.5,
+          "remainingYears": 20,
+          "originalAmount": 200000
         }
       },
       {
@@ -64,7 +77,7 @@
         "category": "pensjon",
         "isActive": true,
         "sortOrder": 1,
-        "createdAt": "2024-01-01T00:00:00.000Z"
+        "createdAt": "2021-01-01T00:00:00.000Z"
       },
       {
         "id": "acc-folketrygden",
@@ -72,7 +85,7 @@
         "category": "pensjon",
         "isActive": true,
         "sortOrder": 2,
-        "createdAt": "2024-01-01T00:00:00.000Z"
+        "createdAt": "2021-01-01T00:00:00.000Z"
       }
     ]
   }

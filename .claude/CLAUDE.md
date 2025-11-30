@@ -97,27 +97,30 @@
 }
 ```
 
-**Container: `snapshots`**
+**Container: `portfolios`**
 - **Partition Key**: `/userId`
-- **Documents**: Monthly snapshots with account balances
+- **Documents**: Monthly snapshots with denormalized account data
 ```typescript
 {
-  id: string              // snapshotId
+  id: string              // snapshotId (e.g., "snap-2024-01")
   userId: string
-  date: Date              // First day of month (UTC)
-  createdAt: Date
-  updatedAt: Date
-  balances: [             // Only balances, references account by ID
+  date: string            // "dd.MM.yyyy" format (e.g., "01.01.2024")
+  accounts: [             // Denormalized account data per snapshot
     {
-      accountId: string   // FK → User.accounts[].id
-      balance: number     // Value in NOK
+      id: string          // Account identifier (e.g., "acc-nordnet")
+      name: string        // Display name (e.g., "Nordnet")
+      assetClass: string  // "aksjer", "fond", "krypto", "bankkonto", "gjeld", "pensjon"
+      value: number       // Value in NOK (negative for debt)
     }
   ]
+  totalNetWorth: number   // Sum of all account values
+  createdAt: Date
+  updatedAt: Date
 }
 ```
 
 ### Design Rationale
-- **Normalized accounts**: Account config stored once in User, balances reference by ID
+- **Denormalized snapshots**: Each snapshot stores full account data for historical accuracy
 - **Category-based**: Three categories (sparing, gjeld, pensjon) for grouping
 - **Co-location**: All user data in same partition (userId) for fast queries
 - **Optimistic updates**: No immutable history - users can edit any snapshot

@@ -270,6 +270,55 @@ export function validateUpdateRequest(
     }
   }
 
+  // Validate accounts if provided
+  if (updates.accounts !== undefined) {
+    if (!Array.isArray(updates.accounts)) {
+      res.status(400).json({
+        error: {
+          message: 'Accounts must be an array',
+          code: 'VALIDATION_ERROR',
+          details: { field: 'accounts', type: typeof updates.accounts }
+        },
+        success: false
+      });
+      return;
+    }
+
+    // Validate each account
+    const validCategories = ['sparing', 'gjeld', 'pensjon'];
+    const errors: { index: number; field: string; message: string }[] = [];
+
+    updates.accounts.forEach((account: any, index: number) => {
+      if (!account.id || typeof account.id !== 'string') {
+        errors.push({ index, field: 'id', message: 'Account id is required and must be a string' });
+      }
+      if (!account.name || typeof account.name !== 'string') {
+        errors.push({ index, field: 'name', message: 'Account name is required and must be a string' });
+      }
+      if (!account.category || !validCategories.includes(account.category)) {
+        errors.push({ index, field: 'category', message: `Category must be one of: ${validCategories.join(', ')}` });
+      }
+      if (typeof account.isActive !== 'boolean') {
+        errors.push({ index, field: 'isActive', message: 'isActive must be a boolean' });
+      }
+      if (typeof account.sortOrder !== 'number') {
+        errors.push({ index, field: 'sortOrder', message: 'sortOrder must be a number' });
+      }
+    });
+
+    if (errors.length > 0) {
+      res.status(400).json({
+        error: {
+          message: 'Invalid accounts data',
+          code: 'VALIDATION_ERROR',
+          details: errors
+        },
+        success: false
+      });
+      return;
+    }
+  }
+
   logger.debug('Update request validation passed', { fields: updateFields });
   next();
 }

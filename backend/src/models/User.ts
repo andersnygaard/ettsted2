@@ -22,6 +22,11 @@ export interface UserProfile {
   monthlySalary: number;
 
   /**
+   * Monthly savings amount for calculator defaults (optional)
+   */
+  monthlySavings?: number;
+
+  /**
    * Annual expenses used for F.I.R.E. calculations
    */
   annualExpenses: number;

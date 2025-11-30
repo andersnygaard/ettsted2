@@ -208,12 +208,25 @@ function FireCalculatorPage() {
               onChange={(v) => updateInput('currentAge', v)}
               suffix="år"
             />
-            <NumberInput
-              label="Forventet avkastning"
-              value={inputs.expectedReturn}
-              onChange={(v) => updateInput('expectedReturn', v)}
-              suffix="%"
-            />
+            <div className="slider-input">
+              <div className="slider-input__header">
+                <span className="slider-input__label">Forventet avkastning</span>
+                <span className="slider-input__value">{formatNumber(inputs.expectedReturn, 1)}%</span>
+              </div>
+              <input
+                type="range"
+                className="slider-input__track"
+                min={2}
+                max={20}
+                step={0.1}
+                value={inputs.expectedReturn}
+                onChange={(e) => updateInput('expectedReturn', parseFloat(e.target.value))}
+              />
+              <div className="slider-input__range">
+                <span>2%</span>
+                <span>20%</span>
+              </div>
+            </div>
           </Card>
 
           <Card className="calculator-results animate-fade-up animate-delay-2">

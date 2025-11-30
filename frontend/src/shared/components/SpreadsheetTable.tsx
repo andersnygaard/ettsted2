@@ -8,9 +8,10 @@
  * - Milestone highlighting (gold stars for threshold crossings)
  * - Norwegian number formatting
  * - Row hover effects
+ * - Inline cell editing
  */
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { formatNumber } from '@/shared/utils/numberFormat';
 import './SpreadsheetTable.css';
 
@@ -27,11 +28,21 @@ export interface ColumnGroup {
   columns: Column[];
 }
 
+export interface CellChangeEvent {
+  rowId: string; // Snapshot ID
+  columnId: string; // Account ID
+  value: number;
+}
+
 export interface SpreadsheetTableProps {
   columnGroups: ColumnGroup[];
   data: Record<string, any>[];
   dateKey: string;
+  rowIdKey?: string; // Key for row identifier (snapshot ID), defaults to 'id'
   milestones?: Record<string, number[]>; // Map of column ID -> array of milestone values crossed
+  initialCollapsedGroups?: string[]; // Group IDs to collapse by default
+  onCellChange?: (event: CellChangeEvent) => void; // Callback when cell value changes
+  editingDisabled?: boolean; // Disable inline editing
 }
 
 /**
@@ -79,9 +90,28 @@ export function SpreadsheetTable({
   columnGroups,
   data,
   dateKey,
+  rowIdKey = 'id',
   milestones = {},
+  initialCollapsedGroups = [],
+  onCellChange,
+  editingDisabled = false,
 }: SpreadsheetTableProps) {
-  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
+    () => new Set(initialCollapsedGroups)
+  );
+
+  // Editing state: { rowIndex, columnId } or null
+  const [editingCell, setEditingCell] = useState<{ rowIndex: number; columnId: string } | null>(null);
+  const [editValue, setEditValue] = useState<string>('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Focus input when editing starts
+  useEffect(() => {
+    if (editingCell && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [editingCell]);
 
   /**
    * Toggle the collapsed state of a column group
@@ -96,6 +126,125 @@ export function SpreadsheetTable({
       }
       return next;
     });
+  };
+
+  /**
+   * Start editing a cell
+   */
+  const startEditing = (rowIndex: number, columnId: string, currentValue: any) => {
+    if (editingDisabled || !onCellChange) return;
+
+    setEditingCell({ rowIndex, columnId });
+    // Convert value to string for input, handle undefined/null
+    const valueStr = currentValue !== undefined && currentValue !== null
+      ? String(currentValue)
+      : '';
+    setEditValue(valueStr);
+  };
+
+  /**
+   * Save the edited value
+   */
+  const saveEdit = () => {
+    if (!editingCell || !onCellChange) return;
+
+    const row = data[editingCell.rowIndex];
+    const rowId = row[rowIdKey];
+    const newValue = parseFloat(editValue) || 0;
+    const oldValue = row[editingCell.columnId];
+
+    // Only save if value changed
+    if (newValue !== oldValue) {
+      onCellChange({
+        rowId,
+        columnId: editingCell.columnId,
+        value: newValue,
+      });
+    }
+
+    setEditingCell(null);
+    setEditValue('');
+  };
+
+  /**
+   * Cancel editing
+   */
+  const cancelEdit = () => {
+    setEditingCell(null);
+    setEditValue('');
+  };
+
+  /**
+   * Get all editable cells as flat array of { rowIndex, columnId }
+   */
+  const getEditableCells = () => {
+    const cells: { rowIndex: number; columnId: string }[] = [];
+
+    data.forEach((_, rowIndex) => {
+      columnGroups.forEach((group) => {
+        if (collapsedGroups.has(group.id)) return; // Skip collapsed groups
+        group.columns.forEach((col) => {
+          if (!col.isTotal) {
+            cells.push({ rowIndex, columnId: col.id });
+          }
+        });
+      });
+    });
+
+    return cells;
+  };
+
+  /**
+   * Navigate to next/previous editable cell
+   */
+  const navigateToCell = (direction: 'next' | 'prev') => {
+    if (!editingCell) return;
+
+    const cells = getEditableCells();
+    const currentIndex = cells.findIndex(
+      (c) => c.rowIndex === editingCell.rowIndex && c.columnId === editingCell.columnId
+    );
+
+    if (currentIndex === -1) return;
+
+    let nextIndex: number;
+    if (direction === 'next') {
+      nextIndex = currentIndex + 1;
+      if (nextIndex >= cells.length) return; // At end, just save
+    } else {
+      nextIndex = currentIndex - 1;
+      if (nextIndex < 0) return; // At start, just save
+    }
+
+    const nextCell = cells[nextIndex];
+    const nextRow = data[nextCell.rowIndex];
+    const nextValue = nextRow[nextCell.columnId];
+
+    // Save current edit first
+    saveEdit();
+
+    // Start editing next cell
+    setEditingCell(nextCell);
+    const valueStr = nextValue !== undefined && nextValue !== null
+      ? String(nextValue)
+      : '';
+    setEditValue(valueStr);
+  };
+
+  /**
+   * Handle keyboard events in edit mode
+   */
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      saveEdit();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      cancelEdit();
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      navigateToCell(e.shiftKey ? 'prev' : 'next');
+    }
   };
 
   return (
@@ -198,14 +347,30 @@ export function SpreadsheetTable({
                 // Show all columns when expanded
                 return group.columns.map((col, index) => {
                   const isLastInGroup = index === group.columns.length - 1;
+                  const isEditing = editingCell?.rowIndex === rowIndex && editingCell?.columnId === col.id;
+                  const isEditable = !col.isTotal && onCellChange && !editingDisabled;
+
                   return (
                     <td
                       key={col.id}
                       className={`col-${group.id} ${col.isTotal ? 'col-total' : ''} ${
                         isLastInGroup ? 'col-group-end' : ''
-                      }`}
+                      } ${isEditable ? 'cell-editable' : ''} ${isEditing ? 'cell-editing' : ''}`}
+                      onClick={() => !col.isTotal && startEditing(rowIndex, col.id, row[col.id])}
                     >
-                      {formatCell(row[col.id], milestones[col.id])}
+                      {isEditing ? (
+                        <input
+                          ref={inputRef}
+                          type="number"
+                          className="cell-input"
+                          value={editValue}
+                          onChange={(e) => setEditValue(e.target.value)}
+                          onBlur={saveEdit}
+                          onKeyDown={handleKeyDown}
+                        />
+                      ) : (
+                        formatCell(row[col.id], milestones[col.id])
+                      )}
                     </td>
                   );
                 });

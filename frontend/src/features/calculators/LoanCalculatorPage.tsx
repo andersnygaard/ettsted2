@@ -1,7 +1,8 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart } from '@/shared/components';
 import type { StackedDataPoint } from '@/shared/components';
 import { formatCurrency, formatNumber } from '@/shared/utils/numberFormat';
+import { useGjeldData } from '@/features/gjeld/useGjeldData';
 import './CompoundCalculatorPage.css'; // Reuse shared calculator styles
 import './LoanCalculatorPage.css';
 
@@ -212,12 +213,21 @@ function calculateSerialLoan(
 }
 
 function LoanCalculatorPage() {
+  const { data: gjeldData } = useGjeldData();
+
   const [inputs, setInputs] = useState<LoanInputs>({
     loanAmount: 3000000,
     interestRate: 4.5,
     termYears: 25,
     loanType: 'annuity',
   });
+
+  // Update loan amount when gjeld data loads
+  useEffect(() => {
+    if (gjeldData?.sumGjeld && gjeldData.sumGjeld > 0) {
+      setInputs(prev => ({ ...prev, loanAmount: gjeldData.sumGjeld }));
+    }
+  }, [gjeldData?.sumGjeld]);
 
   const result = useMemo(() => calculateLoan(inputs), [inputs]);
 

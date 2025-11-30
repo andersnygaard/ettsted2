@@ -1,167 +1,745 @@
 [
   {
+    "id": "snap-2021-12",
+    "userId": "dev-user-123",
+    "date": "01.12.2021",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 200000 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 400000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 98000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1200000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -200000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 500000 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 550000 }
+    ],
+    "totalNetWorth": 348000
+  },
+  {
+    "id": "snap-2022-01",
+    "userId": "dev-user-123",
+    "date": "01.01.2022",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 208500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 407200 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 102000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1196000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -199000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 505300 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 555200 }
+    ],
+    "totalNetWorth": 383200
+  },
+  {
+    "id": "snap-2022-02",
+    "userId": "dev-user-123",
+    "date": "01.02.2022",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 198000 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 395500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 99500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1192000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -198000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 510600 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 560400 }
+    ],
+    "totalNetWorth": 374000
+  },
+  {
+    "id": "snap-2022-03",
+    "userId": "dev-user-123",
+    "date": "01.03.2022",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 192500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 388000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 101000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1188000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -197000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 515900 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 565600 }
+    ],
+    "totalNetWorth": 378000
+  },
+  {
+    "id": "snap-2022-04",
+    "userId": "dev-user-123",
+    "date": "01.04.2022",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 205200 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 402500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 97500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1184000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -196000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 521200 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 570800 }
+    ],
+    "totalNetWorth": 417200
+  },
+  {
+    "id": "snap-2022-05",
+    "userId": "dev-user-123",
+    "date": "01.05.2022",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 195800 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 392000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 103500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1180000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -195000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 526500 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 576000 }
+    ],
+    "totalNetWorth": 418800
+  },
+  {
+    "id": "snap-2022-06",
+    "userId": "dev-user-123",
+    "date": "01.06.2022",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 185500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 380200 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 98000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1176000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -194000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 531800 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 581200 }
+    ],
+    "totalNetWorth": 406700
+  },
+  {
+    "id": "snap-2022-07",
+    "userId": "dev-user-123",
+    "date": "01.07.2022",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 198200 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 395500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 102500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1172000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -193000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 537100 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 586400 }
+    ],
+    "totalNetWorth": 454700
+  },
+  {
+    "id": "snap-2022-08",
+    "userId": "dev-user-123",
+    "date": "01.08.2022",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 210500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 408800 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 99000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1168000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -192000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 542400 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 591600 }
+    ],
+    "totalNetWorth": 492300
+  },
+  {
+    "id": "snap-2022-09",
+    "userId": "dev-user-123",
+    "date": "01.09.2022",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 198800 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 395200 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 104000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1164000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -191000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 547700 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 596800 }
+    ],
+    "totalNetWorth": 487500
+  },
+  {
+    "id": "snap-2022-10",
+    "userId": "dev-user-123",
+    "date": "01.10.2022",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 188500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 385000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 97500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1160000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -190000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 553000 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 602000 }
+    ],
+    "totalNetWorth": 476000
+  },
+  {
+    "id": "snap-2022-11",
+    "userId": "dev-user-123",
+    "date": "01.11.2022",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 205200 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 402500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 101500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1156000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -189000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 558300 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 607200 }
+    ],
+    "totalNetWorth": 529700
+  },
+  {
+    "id": "snap-2022-12",
+    "userId": "dev-user-123",
+    "date": "01.12.2022",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 218500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 418000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 98500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1152000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -188000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 563600 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 612400 }
+    ],
+    "totalNetWorth": 571000
+  },
+  {
+    "id": "snap-2023-01",
+    "userId": "dev-user-123",
+    "date": "01.01.2023",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 232500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 435000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 103000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1148000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -187000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 568900 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 617600 }
+    ],
+    "totalNetWorth": 622000
+  },
+  {
+    "id": "snap-2023-02",
+    "userId": "dev-user-123",
+    "date": "01.02.2023",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 245800 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 450200 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 99500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1144000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -186000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 574200 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 622800 }
+    ],
+    "totalNetWorth": 662500
+  },
+  {
+    "id": "snap-2023-03",
+    "userId": "dev-user-123",
+    "date": "01.03.2023",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 238200 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 442500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 102000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1140000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -185000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 579500 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 628000 }
+    ],
+    "totalNetWorth": 665200
+  },
+  {
+    "id": "snap-2023-04",
+    "userId": "dev-user-123",
+    "date": "01.04.2023",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 255500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 462000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 97000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1136000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -184000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 584800 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 633200 }
+    ],
+    "totalNetWorth": 712500
+  },
+  {
+    "id": "snap-2023-05",
+    "userId": "dev-user-123",
+    "date": "01.05.2023",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 268800 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 478500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 101500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1132000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -183000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 590100 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 638400 }
+    ],
+    "totalNetWorth": 762300
+  },
+  {
+    "id": "snap-2023-06",
+    "userId": "dev-user-123",
+    "date": "01.06.2023",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 282200 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 495000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 98500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1128000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -182000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 595400 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 643600 }
+    ],
+    "totalNetWorth": 804700
+  },
+  {
+    "id": "snap-2023-07",
+    "userId": "dev-user-123",
+    "date": "01.07.2023",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 295500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 510200 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 103000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1124000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -181000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 600700 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 648800 }
+    ],
+    "totalNetWorth": 853200
+  },
+  {
+    "id": "snap-2023-08",
+    "userId": "dev-user-123",
+    "date": "01.08.2023",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 288000 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 502500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 99500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1120000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -180000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 606000 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 654000 }
+    ],
+    "totalNetWorth": 850000
+  },
+  {
+    "id": "snap-2023-09",
+    "userId": "dev-user-123",
+    "date": "01.09.2023",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 305200 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 522000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 102000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1116000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -179000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 611300 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 659200 }
+    ],
+    "totalNetWorth": 904700
+  },
+  {
+    "id": "snap-2023-10",
+    "userId": "dev-user-123",
+    "date": "01.10.2023",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 318500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 538500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 98000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1112000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -178000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 616600 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 664400 }
+    ],
+    "totalNetWorth": 946000
+  },
+  {
+    "id": "snap-2023-11",
+    "userId": "dev-user-123",
+    "date": "01.11.2023",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 332800 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 555000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 101500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1108000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -177000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 621900 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 669600 }
+    ],
+    "totalNetWorth": 995800
+  },
+  {
+    "id": "snap-2023-12",
+    "userId": "dev-user-123",
+    "date": "01.12.2023",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 348500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 572000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 97500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1104000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -176000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 627200 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 674800 }
+    ],
+    "totalNetWorth": 1040000
+  },
+  {
     "id": "snap-2024-01",
     "userId": "dev-user-123",
     "date": "01.01.2024",
     "accounts": [
-      { "id": "acc-nordnet-ask", "name": "Nordnet ASK", "assetClass": "aksjer", "value": 450000 },
-      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 85000 },
-      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 25000 },
-      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 120000 },
-      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2850000 },
-      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 380000 },
-      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 165000 }
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 362200 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 588500 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 5000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 102000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1100000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -175000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 632500 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 680000 }
     ],
-    "totalNetWorth": -1625000
+    "totalNetWorth": 1095200
   },
   {
     "id": "snap-2024-02",
     "userId": "dev-user-123",
     "date": "01.02.2024",
     "accounts": [
-      { "id": "acc-nordnet-ask", "name": "Nordnet ASK", "assetClass": "aksjer", "value": 468000 },
-      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 92000 },
-      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 31000 },
-      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 135000 },
-      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2835000 },
-      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 392000 },
-      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 170000 }
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 375500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 605000 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 8500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 98500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1096000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -174000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 637800 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 685200 }
     ],
-    "totalNetWorth": -1547000
+    "totalNetWorth": 1140500
   },
   {
     "id": "snap-2024-03",
     "userId": "dev-user-123",
     "date": "01.03.2024",
     "accounts": [
-      { "id": "acc-nordnet-ask", "name": "Nordnet ASK", "assetClass": "aksjer", "value": 485000 },
-      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 98000 },
-      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 42000 },
-      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 142000 },
-      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2820000 },
-      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 405000 },
-      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 175000 }
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 388800 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 620500 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 12000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 101000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1092000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -173000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 643100 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 690400 }
     ],
-    "totalNetWorth": -1473000
+    "totalNetWorth": 1190800
   },
   {
     "id": "snap-2024-04",
     "userId": "dev-user-123",
     "date": "01.04.2024",
     "accounts": [
-      { "id": "acc-nordnet-ask", "name": "Nordnet ASK", "assetClass": "aksjer", "value": 510000 },
-      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 105000 },
-      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 38000 },
-      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 155000 },
-      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2805000 },
-      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 418000 },
-      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 180000 }
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 378200 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 608000 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 10500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 97500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1088000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -172000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 648400 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 695600 }
     ],
-    "totalNetWorth": -1399000
+    "totalNetWorth": 1178200
   },
   {
     "id": "snap-2024-05",
     "userId": "dev-user-123",
     "date": "01.05.2024",
     "accounts": [
-      { "id": "acc-nordnet-ask", "name": "Nordnet ASK", "assetClass": "aksjer", "value": 528000 },
-      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 112000 },
-      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 35000 },
-      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 168000 },
-      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2790000 },
-      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 432000 },
-      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 185000 }
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 395500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 628500 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 14000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 102500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1084000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -171000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 653700 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 700800 }
     ],
-    "totalNetWorth": -1330000
+    "totalNetWorth": 1240000
   },
   {
     "id": "snap-2024-06",
     "userId": "dev-user-123",
     "date": "01.06.2024",
     "accounts": [
-      { "id": "acc-nordnet-ask", "name": "Nordnet ASK", "assetClass": "aksjer", "value": 545000 },
-      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 118000 },
-      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 32000 },
-      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 175000 },
-      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2775000 },
-      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 445000 },
-      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 190000 }
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 408800 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 645000 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 18500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 99000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1080000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -170000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 659000 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 706000 }
     ],
-    "totalNetWorth": -1270000
+    "totalNetWorth": 1286300
   },
   {
     "id": "snap-2024-07",
     "userId": "dev-user-123",
     "date": "01.07.2024",
     "accounts": [
-      { "id": "acc-nordnet-ask", "name": "Nordnet ASK", "assetClass": "aksjer", "value": 562000 },
-      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 125000 },
-      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 28000 },
-      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 182000 },
-      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2760000 },
-      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 458000 },
-      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 195000 }
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 398200 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 632500 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 16000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 103500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1076000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -169000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 664300 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 711200 }
     ],
-    "totalNetWorth": -1210000
+    "totalNetWorth": 1280700
   },
   {
     "id": "snap-2024-08",
     "userId": "dev-user-123",
     "date": "01.08.2024",
     "accounts": [
-      { "id": "acc-nordnet-ask", "name": "Nordnet ASK", "assetClass": "aksjer", "value": 580000 },
-      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 132000 },
-      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 34000 },
-      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 190000 },
-      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2745000 },
-      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 472000 },
-      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 200000 }
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 415500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 652000 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 19500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 98500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1072000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -168000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 669600 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 716400 }
     ],
-    "totalNetWorth": -1137000
+    "totalNetWorth": 1331500
   },
   {
     "id": "snap-2024-09",
     "userId": "dev-user-123",
     "date": "01.09.2024",
     "accounts": [
-      { "id": "acc-nordnet-ask", "name": "Nordnet ASK", "assetClass": "aksjer", "value": 595000 },
-      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 138000 },
-      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 38000 },
-      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 198000 },
-      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2730000 },
-      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 485000 },
-      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 205000 }
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 428800 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 668500 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 22000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 101000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1068000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -167000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 674900 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 721600 }
     ],
-    "totalNetWorth": -1071000
+    "totalNetWorth": 1381800
   },
   {
     "id": "snap-2024-10",
     "userId": "dev-user-123",
     "date": "01.10.2024",
     "accounts": [
-      { "id": "acc-nordnet-ask", "name": "Nordnet ASK", "assetClass": "aksjer", "value": 612000 },
-      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 145000 },
-      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 42000 },
-      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 205000 },
-      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2715000 },
-      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 498000 },
-      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 210000 }
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 442200 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 685000 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 20500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 97000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1064000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -166000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 680200 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 726800 }
     ],
-    "totalNetWorth": -1003000
+    "totalNetWorth": 1421700
   },
   {
     "id": "snap-2024-11",
     "userId": "dev-user-123",
     "date": "01.11.2024",
     "accounts": [
-      { "id": "acc-nordnet-ask", "name": "Nordnet ASK", "assetClass": "aksjer", "value": 635000 },
-      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 152000 },
-      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 48000 },
-      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 212000 },
-      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2700000 },
-      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 512000 },
-      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 215000 }
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 455500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 702000 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 23500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 102000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1060000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -165000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 685500 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 732000 }
     ],
-    "totalNetWorth": -926000
+    "totalNetWorth": 1475500
+  },
+  {
+    "id": "snap-2024-12",
+    "userId": "dev-user-123",
+    "date": "01.12.2024",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 468800 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 718500 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 25000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 98500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1056000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -164000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 690800 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 737200 }
+    ],
+    "totalNetWorth": 1518800
+  },
+  {
+    "id": "snap-2025-01",
+    "userId": "dev-user-123",
+    "date": "01.01.2025",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 478200 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 730000 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 22500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 103000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1052000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -163000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 696100 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 742400 }
+    ],
+    "totalNetWorth": 1557200
+  },
+  {
+    "id": "snap-2025-02",
+    "userId": "dev-user-123",
+    "date": "01.02.2025",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 485500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 738500 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 24000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 99500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1048000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -162000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 701400 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 747600 }
+    ],
+    "totalNetWorth": 1586500
+  },
+  {
+    "id": "snap-2025-03",
+    "userId": "dev-user-123",
+    "date": "01.03.2025",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 475800 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 728000 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 21500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 102000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1044000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -161000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 706700 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 752800 }
+    ],
+    "totalNetWorth": 1581800
+  },
+  {
+    "id": "snap-2025-04",
+    "userId": "dev-user-123",
+    "date": "01.04.2025",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 488200 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 742500 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 23000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 97500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1040000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -160000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 712000 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 758000 }
+    ],
+    "totalNetWorth": 1621200
+  },
+  {
+    "id": "snap-2025-05",
+    "userId": "dev-user-123",
+    "date": "01.05.2025",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 482500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 735000 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 20500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 101500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1036000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -159000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 717300 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 763200 }
+    ],
+    "totalNetWorth": 1625000
+  },
+  {
+    "id": "snap-2025-06",
+    "userId": "dev-user-123",
+    "date": "01.06.2025",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 495800 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 750500 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 22500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 98000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1032000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -158000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 722600 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 768400 }
+    ],
+    "totalNetWorth": 1667800
+  },
+  {
+    "id": "snap-2025-07",
+    "userId": "dev-user-123",
+    "date": "01.07.2025",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 508200 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 765000 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 24500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 102500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1028000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -157000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 727900 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 773600 }
+    ],
+    "totalNetWorth": 1716700
+  },
+  {
+    "id": "snap-2025-08",
+    "userId": "dev-user-123",
+    "date": "01.08.2025",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 498500 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 752500 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 22000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 99000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1024000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -156000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 733200 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 778800 }
+    ],
+    "totalNetWorth": 1704000
+  },
+  {
+    "id": "snap-2025-09",
+    "userId": "dev-user-123",
+    "date": "01.09.2025",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 488800 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 740000 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 20000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 103000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1020000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -155000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 738500 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 784000 }
+    ],
+    "totalNetWorth": 1699300
+  },
+  {
+    "id": "snap-2025-10",
+    "userId": "dev-user-123",
+    "date": "01.10.2025",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 495200 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 748000 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 23500 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 98500 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1012000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -153000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 743800 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 789200 }
+    ],
+    "totalNetWorth": 1733200
+  },
+  {
+    "id": "snap-2025-11",
+    "userId": "dev-user-123",
+    "date": "01.11.2025",
+    "accounts": [
+      { "id": "acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 500000 },
+      { "id": "acc-kron", "name": "Kron", "assetClass": "fond", "value": 750000 },
+      { "id": "acc-firi", "name": "Firi", "assetClass": "krypto", "value": 25000 },
+      { "id": "acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 100000 },
+      { "id": "acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -1004000 },
+      { "id": "acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -150000 },
+      { "id": "acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 755000 },
+      { "id": "acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 800000 }
+    ],
+    "totalNetWorth": 1776000
   }
 ]

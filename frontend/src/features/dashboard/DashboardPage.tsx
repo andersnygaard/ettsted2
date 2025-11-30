@@ -7,7 +7,7 @@ import './DashboardPage.css';
 function DashboardPage() {
   const { user } = useAuth();
   const { data: dashboardData, isLoading, error } = useDashboardData();
-  const firstName = user?.username?.split(' ')[0] || 'bruker';
+  const firstName = user?.nickname?.split(' ')[0] || 'bruker';
 
   // Use dashboard data if available, otherwise use empty state
   const data = dashboardData || {

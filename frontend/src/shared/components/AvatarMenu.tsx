@@ -5,6 +5,7 @@ import './AvatarMenu.css';
 export interface AvatarMenuProps {
   initials: string;
   onProfileClick: () => void;
+  onAccountsClick: () => void;
   onLogout: () => void;
 }
 
@@ -14,7 +15,7 @@ export interface AvatarMenuProps {
  * Shows user avatar with a dropdown menu containing profile and logout options.
  * Menu closes on outside click or Escape key.
  */
-export function AvatarMenu({ initials, onProfileClick, onLogout }: AvatarMenuProps) {
+export function AvatarMenu({ initials, onProfileClick, onAccountsClick, onLogout }: AvatarMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -52,6 +53,11 @@ export function AvatarMenu({ initials, onProfileClick, onLogout }: AvatarMenuPro
     onProfileClick();
   };
 
+  const handleAccountsClick = () => {
+    setIsOpen(false);
+    onAccountsClick();
+  };
+
   const handleLogoutClick = () => {
     setIsOpen(false);
     onLogout();
@@ -84,6 +90,22 @@ export function AvatarMenu({ initials, onProfileClick, onLogout }: AvatarMenuPro
               </svg>
             </span>
             Min informasjon
+          </button>
+          <button
+            className="avatar-menu__item"
+            onClick={handleAccountsClick}
+            role="menuitem"
+            type="button"
+          >
+            <span className="avatar-menu__icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="3" width="7" height="7" />
+                <rect x="14" y="3" width="7" height="7" />
+                <rect x="14" y="14" width="7" height="7" />
+                <rect x="3" y="14" width="7" height="7" />
+              </svg>
+            </span>
+            Mitt oppsett
           </button>
           <div className="avatar-menu__divider" />
           <button

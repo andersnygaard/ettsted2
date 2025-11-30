@@ -59,6 +59,7 @@
   font-weight: 400;
   color: var(--charcoal);
   line-height: 1.1;
+  white-space: nowrap;
 }
 
 /* Result breakdown list */
@@ -233,7 +234,7 @@
 .slider-input {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .slider-input__header {

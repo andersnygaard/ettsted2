@@ -6,67 +6,120 @@ function HomePage() {
   const { user, isAuthenticated, login } = useAuth();
 
   return (
-    <div className="home-page">
-      <div className="home-page__content">
-        <article className="home-page__welcome-card">
-          <h3>Velkommen til Finans</h3>
-          <p>Din personlige plattform for portefølje og formue tracking</p>
+    <div className="landing-page">
+      {/* Hero Section */}
+      <section className="landing-hero">
+        <div className="landing-hero__content">
+          <span className="landing-hero__label">Portefølje & Formue Tracking</span>
+          <h1 className="landing-hero__title">
+            Ta kontroll over<br />din økonomi
+          </h1>
+          <p className="landing-hero__subtitle">
+            Spor investeringer, visualiser formue, og planlegg din vei mot økonomisk frihet.
+          </p>
 
           {isAuthenticated ? (
-            <>
-              <p className="home-page__greeting">Hei, {user?.username}!</p>
-              <div className="home-page__actions">
-                <Link to="/dashboard" className="home-page__btn home-page__btn--primary">
-                  <i>dashboard</i>
-                  <span>Gå til Dashboard</span>
-                </Link>
-                <Link to="/portfolio" className="home-page__btn home-page__btn--secondary">
-                  <i>account_balance</i>
-                  <span>Se Portefølje</span>
-                </Link>
-              </div>
-            </>
+            <div className="landing-hero__actions">
+              <Link to="/dashboard" className="landing-btn landing-btn--primary">
+                <i>dashboard</i>
+                <span>Gå til Dashboard</span>
+              </Link>
+              <Link to="/portfolio" className="landing-btn landing-btn--secondary">
+                <i>account_balance</i>
+                <span>Se Portefølje</span>
+              </Link>
+            </div>
           ) : (
-            <>
-              <p>Logg inn for å komme i gang med å tracke din portefølje.</p>
-              <div className="home-page__actions">
-                <button
-                  className="home-page__btn home-page__btn--primary"
-                  onClick={() => login('google')}
-                >
-                  <i>login</i>
-                  <span>Logg inn med Google</span>
-                </button>
-                <button
-                  className="home-page__btn home-page__btn--secondary"
-                  onClick={() => login('facebook')}
-                >
-                  <i>login</i>
-                  <span>Logg inn med Facebook</span>
-                </button>
-              </div>
-            </>
+            <div className="landing-hero__actions">
+              <button
+                className="landing-btn landing-btn--primary"
+                onClick={() => login('google')}
+              >
+                <i>login</i>
+                <span>Logg inn med Google</span>
+              </button>
+              <button
+                className="landing-btn landing-btn--secondary"
+                onClick={() => login('facebook')}
+              >
+                <i>login</i>
+                <span>Logg inn med Facebook</span>
+              </button>
+            </div>
           )}
-        </article>
+        </div>
+      </section>
 
-        <div className="home-page__features">
-          <article className="home-page__feature-card">
-            <i>trending_up</i>
-            <h6>Track Portefølje</h6>
-            <p>Følg med på investeringer på tvers av aksjer, fond, krypto og mer</p>
+      {/* Features Section */}
+      <section className="landing-features">
+        <span className="landing-features__label">Funksjoner</span>
+        <h2 className="landing-features__title">Alt du trenger for å spore formuen</h2>
+
+        <div className="landing-features__grid">
+          <article className="landing-feature-card">
+            <div className="landing-feature-card__icon">
+              <i>trending_up</i>
+            </div>
+            <h3>Portefølje</h3>
+            <p>Følg med på investeringer på tvers av aksjer, fond, krypto og mer. Se total netto formue over tid.</p>
           </article>
-          <article className="home-page__feature-card">
-            <i>calculate</i>
-            <h6>Finansielle Kalkulatorer</h6>
-            <p>Bruk kraftige verktøy for renters rente og Monte Carlo simuleringer</p>
+
+          <article className="landing-feature-card">
+            <div className="landing-feature-card__icon">
+              <i>savings</i>
+            </div>
+            <h3>Sparing & F.I.R.E.</h3>
+            <p>Track sparerate og følg din vei mot økonomisk uavhengighet med F.I.R.E. beregninger.</p>
           </article>
-          <article className="home-page__feature-card">
-            <i>insights</i>
-            <h6>Visualiseringer</h6>
-            <p>Se din formue vokse med interaktive grafer og prognoser</p>
+
+          <article className="landing-feature-card">
+            <div className="landing-feature-card__icon">
+              <i>account_balance</i>
+            </div>
+            <h3>Gjeld</h3>
+            <p>Hold oversikt over lån og se hvor mye av gjelden din som er dekket av sparingen.</p>
+          </article>
+
+          <article className="landing-feature-card">
+            <div className="landing-feature-card__icon">
+              <i>calculate</i>
+            </div>
+            <h3>Kalkulatorer</h3>
+            <p>Kraftige verktøy for renters rente, låneberegning og Monte Carlo simuleringer.</p>
+          </article>
+
+          <article className="landing-feature-card">
+            <div className="landing-feature-card__icon">
+              <i>elderly</i>
+            </div>
+            <h3>Pensjon</h3>
+            <p>Se oppspart pensjon og fremtidige projeksjoner basert på arbeidsgiver og folketrygden.</p>
+          </article>
+
+          <article className="landing-feature-card">
+            <div className="landing-feature-card__icon">
+              <i>insights</i>
+            </div>
+            <h3>Visualiseringer</h3>
+            <p>Interaktive grafer og prognoser som viser formuens utvikling og fremtidige mål.</p>
           </article>
         </div>
-      </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="landing-cta">
+        <h2 className="landing-cta__title">Klar til å starte?</h2>
+        <p className="landing-cta__subtitle">Gratis å bruke. Ingen kredittkort nødvendig.</p>
+        {!isAuthenticated && (
+          <button
+            className="landing-btn landing-btn--primary landing-btn--large"
+            onClick={() => login('google')}
+          >
+            <i>rocket_launch</i>
+            <span>Kom i gang</span>
+          </button>
+        )}
+      </section>
     </div>
   );
 }

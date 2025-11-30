@@ -75,6 +75,10 @@ export const userProfileSchema = z.object({
     .number()
     .nonnegative('Monthly salary cannot be negative')
     .optional(),
+  monthlySavings: z
+    .number()
+    .nonnegative('Monthly savings cannot be negative')
+    .optional(),
   annualExpenses: z
     .number()
     .nonnegative('Annual expenses cannot be negative')
@@ -98,6 +102,28 @@ export const userProfileSchema = z.object({
 });
 
 /**
+ * Loan details schema (for gjeld accounts)
+ */
+export const loanDetailsSchema = z.object({
+  interestRate: z.number().nonnegative('Interest rate cannot be negative'),
+  remainingYears: z.number().int().nonnegative('Remaining years cannot be negative'),
+  originalAmount: z.number().nonnegative('Original amount cannot be negative').optional()
+});
+
+/**
+ * Account config schema (user's account configurations)
+ */
+export const accountConfigSchema = z.object({
+  id: z.string().min(1, 'Account id is required'),
+  name: z.string().min(1, 'Account name is required').max(100, 'Account name must be at most 100 characters'),
+  category: z.enum(['sparing', 'gjeld', 'pensjon'], { errorMap: () => ({ message: 'Category must be sparing, gjeld, or pensjon' }) }),
+  isActive: z.boolean(),
+  sortOrder: z.number().int().nonnegative('Sort order cannot be negative'),
+  createdAt: z.string().optional(),
+  loanDetails: loanDetailsSchema.optional()
+});
+
+/**
  * User update schema
  */
 export const userUpdateSchema = z
@@ -114,7 +140,8 @@ export const userUpdateSchema = z
       .regex(USERNAME_REGEX, 'Nickname can only contain letters, numbers, and underscores')
       .optional(),
     profile: userProfileSchema.optional(),
-    preferences: z.record(z.unknown()).optional()
+    preferences: z.record(z.unknown()).optional(),
+    accounts: z.array(accountConfigSchema).optional()
   })
   .refine((data) => Object.keys(data).length > 0, {
     message: 'At least one field to update is required'
@@ -126,6 +153,7 @@ export const userUpdateSchema = z
 
 /**
  * Account schema (embedded in snapshots)
+ * Allows negative values only for gjeld (debt) accounts
  */
 export const accountSchema = z.object({
   id: z.string().optional(), // Auto-generated if not provided
@@ -139,16 +167,22 @@ export const accountSchema = z.object({
     .max(50, 'Asset class must be at most 50 characters'),
   value: z
     .number()
-    .finite('Value must be a finite number')
-    .nonnegative('Value cannot be negative'),
+    .finite('Value must be a finite number'),
   notes: z
     .string()
     .max(500, 'Notes must be at most 500 characters')
     .optional()
-});
+}).refine(
+  (data) => data.value >= 0 || data.assetClass === 'gjeld',
+  {
+    message: 'Value cannot be negative (except for gjeld)',
+    path: ['value']
+  }
+);
 
 /**
  * Account update schema (all fields optional)
+ * Allows negative values only for gjeld (debt) accounts
  */
 export const accountUpdateSchema = z
   .object({
@@ -165,7 +199,6 @@ export const accountUpdateSchema = z
     value: z
       .number()
       .finite('Value must be a finite number')
-      .nonnegative('Value cannot be negative')
       .optional(),
     notes: z
       .string()
@@ -174,7 +207,20 @@ export const accountUpdateSchema = z
   })
   .refine((data) => Object.keys(data).length > 0, {
     message: 'At least one field to update is required'
-  });
+  })
+  .refine(
+    (data) => {
+      // Allow negative values only for gjeld accounts
+      if (data.value !== undefined && data.value < 0) {
+        return data.assetClass === 'gjeld';
+      }
+      return true;
+    },
+    {
+      message: 'Value cannot be negative (except for gjeld)',
+      path: ['value']
+    }
+  );
 
 // ============================================================================
 // SNAPSHOT SCHEMAS

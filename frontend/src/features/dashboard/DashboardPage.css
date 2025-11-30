@@ -73,9 +73,12 @@
 /* Quick Stats Grid */
 .quick-stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
   margin-bottom: 80px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .quick-stat {
@@ -106,6 +109,7 @@
   font-weight: 400;
   margin-bottom: 8px;
   color: var(--charcoal);
+  white-space: nowrap;
 }
 
 .quick-stat-label {
@@ -113,6 +117,7 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 /* Milestone Section */
@@ -234,10 +239,6 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .quick-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .section-links {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -260,15 +261,17 @@
     font-size: 32px;
   }
 
-  .quick-stats {
-    grid-template-columns: 1fr;
-  }
-
   .section-links {
     grid-template-columns: 1fr;
   }
 
   .section-link:nth-child(3) {
     grid-column: span 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .quick-stats {
+    grid-template-columns: 1fr;
   }
 }

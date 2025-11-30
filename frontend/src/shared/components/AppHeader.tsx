@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../features/auth/useAuth';
 import { AvatarMenu } from './AvatarMenu';
 import { ProfileModal } from './ProfileModal';
+import { AccountsModal } from './AccountsModal';
 import './AppHeader.css';
 
 /**
@@ -15,10 +16,11 @@ export default function AppHeader() {
   const location = useLocation();
   const { user, logout, refreshUser } = useAuth();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isAccountsModalOpen, setIsAccountsModalOpen] = useState(false);
 
   // Navigation items with paths
   const navItems = [
-    { label: 'Oversikt', path: '/' },
+    { label: 'Oversikt', path: '/dashboard' },
     { label: 'Portefølje', path: '/portfolio' },
     { label: 'Sparing', path: '/sparing' },
     { label: 'Gjeld', path: '/gjeld' },
@@ -26,24 +28,24 @@ export default function AppHeader() {
     { label: 'Kalkulatorer', path: '/kalkulatorer' },
   ];
 
-  // Check if a path is active (exact match for home, starts-with for others)
+  // Check if a path is active
   const isActive = (path: string) => {
-    if (path === '/') {
-      return location.pathname === '/';
+    if (path === '/dashboard') {
+      return location.pathname === '/dashboard';
     }
     return location.pathname.startsWith(path);
   };
 
-  // Get user initials from username or fallback to "AN"
+  // Get user initials from nickname or fallback to "AN"
   const getUserInitials = () => {
-    if (!user || !user.username) {
+    if (!user || !user.nickname) {
       return 'AN';
     }
-    const parts = user.username.split(' ');
+    const parts = user.nickname.split(' ');
     if (parts.length >= 2) {
       return (parts[0][0] + parts[1][0]).toUpperCase();
     }
-    return user.username.slice(0, 2).toUpperCase();
+    return user.nickname.slice(0, 2).toUpperCase();
   };
 
   return (
@@ -70,6 +72,7 @@ export default function AppHeader() {
             <AvatarMenu
               initials={getUserInitials()}
               onProfileClick={() => setIsProfileModalOpen(true)}
+              onAccountsClick={() => setIsAccountsModalOpen(true)}
               onLogout={logout}
             />
           </div>
@@ -80,6 +83,13 @@ export default function AppHeader() {
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}
         profile={user?.profile}
+        onSaved={refreshUser}
+      />
+
+      <AccountsModal
+        isOpen={isAccountsModalOpen}
+        onClose={() => setIsAccountsModalOpen(false)}
+        accounts={user?.accounts}
         onSaved={refreshUser}
       />
     </>

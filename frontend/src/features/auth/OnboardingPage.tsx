@@ -3,12 +3,12 @@ import { useMutation } from '@tanstack/react-query';
 import client from '../../shared/api/client';
 
 export default function OnboardingPage() {
-  const [username, setUsername] = useState('');
+  const [nickname, setNickname] = useState('');
   const [error, setError] = useState('');
 
   const setupUserMutation = useMutation({
-    mutationFn: async (username: string) => {
-      const response = await client.post('/users/me/setup', { username });
+    mutationFn: async (nickname: string) => {
+      const response = await client.post('/users/me/setup', { nickname });
       return response.data;
     },
     onSuccess: () => {
@@ -28,14 +28,14 @@ export default function OnboardingPage() {
     e.preventDefault();
     setError('');
 
-    // Validate username
-    const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
-    if (!usernameRegex.test(username)) {
+    // Validate nickname
+    const nicknameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+    if (!nicknameRegex.test(nickname)) {
       setError('Brukernavnet må være 3-20 tegn og kan kun inneholde bokstaver, tall og understrek');
       return;
     }
 
-    setupUserMutation.mutate(username);
+    setupUserMutation.mutate(nickname);
   };
 
   return (
@@ -52,8 +52,8 @@ export default function OnboardingPage() {
               <div className="field label border">
                 <input
                   type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={nickname}
+                  onChange={(e) => setNickname(e.target.value)}
                   placeholder="brukernavn"
                   pattern="[a-zA-Z0-9_]{3,20}"
                   required
@@ -74,7 +74,7 @@ export default function OnboardingPage() {
               <button
                 type="submit"
                 className="button large-elevate"
-                disabled={setupUserMutation.isPending || !username}
+                disabled={setupUserMutation.isPending || !nickname}
               >
                 {setupUserMutation.isPending ? (
                   <>

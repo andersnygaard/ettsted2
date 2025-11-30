@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import {
   Breadcrumb,
   PageHeader,
@@ -6,8 +6,11 @@ import {
   SpreadsheetTable,
   TableHeader,
   TableFooter,
+  PortfolioSkeleton,
 } from '@/shared/components';
-import type { ColumnGroup, ColumnToggle } from '@/shared/components';
+import type { Column, ColumnGroup, ColumnToggle, CellChangeEvent } from '@/shared/components';
+import { useAuth } from '@/features/auth/useAuth';
+import { usePortfolioData, useUpdateSnapshot } from './usePortfolioData';
 import { NewMonthModal } from './NewMonthModal';
 import './PortfolioPage.css';
 
@@ -25,228 +28,26 @@ import './PortfolioPage.css';
  * Based on Nordic Minimal design system.
  */
 
-// Define column groups structure
-const columnGroups: ColumnGroup[] = [
-  {
-    id: 'sparing',
-    label: 'Sparing',
-    color: '#5a6d7a',
-    columns: [
-      { id: 'nordnetAsk', label: 'Nordnet ASK' },
-      { id: 'bouvetAsk', label: 'Bouvet ASK' },
-      { id: 'yolo', label: 'Yolo' },
-      { id: 'firi', label: 'Firi' },
-      { id: 'kron', label: 'Kron' },
-      { id: 'skattKjop', label: 'Skatt/Kjøp' },
-      { id: 'sumSparing', label: 'Sum sparing', isTotal: true },
-    ],
-  },
-  {
-    id: 'gjeld',
-    label: 'Gjeld',
-    color: '#8a7060',
-    columns: [
-      { id: 'sbanken', label: 'SBanken' },
-      { id: 'sumGjeld', label: 'Sum gjeld', isTotal: true },
-    ],
-  },
-  {
-    id: 'pensjon',
-    label: 'Pensjon',
-    color: '#6a7a60',
-    columns: [
-      { id: 'arbeidsgiver', label: 'Arbeidsgiver' },
-      { id: 'sumPensjon', label: 'Sum pensjon', isTotal: true },
-    ],
-  },
-];
+// Category colors for column groups
+const CATEGORY_COLORS: Record<string, string> = {
+  sparing: '#5a6d7a',
+  gjeld: '#8a7060',
+  pensjon: '#6a7a60',
+};
 
-// Mock data for portfolio table (12 months)
-const mockPortfolioData = [
-  {
-    date: '01.03.2025',
-    nordnetAsk: 218037,
-    bouvetAsk: 144566,
-    yolo: 86890,
-    firi: 2634,
-    kron: 344371,
-    skattKjop: null,
-    sumSparing: 796498,
-    sbanken: 798450,
-    sumGjeld: 798450,
-    arbeidsgiver: 2850000,
-    sumPensjon: 3920000,
-  },
-  {
-    date: '01.02.2025',
-    nordnetAsk: 214137,
-    bouvetAsk: 164404,
-    yolo: 81225,
-    firi: 2077,
-    kron: 351156,
-    skattKjop: null,
-    sumSparing: 812999,
-    sbanken: 805200,
-    sumGjeld: 805200,
-    arbeidsgiver: 2820000,
-    sumPensjon: 3890000,
-  },
-  {
-    date: '01.01.2025',
-    nordnetAsk: 208716,
-    bouvetAsk: 155588,
-    yolo: 76878,
-    firi: 981,
-    kron: 330720,
-    skattKjop: null,
-    sumSparing: 772883,
-    sbanken: 811900,
-    sumGjeld: 811900,
-    arbeidsgiver: 2790000,
-    sumPensjon: 3848757,
-  },
-  {
-    date: '01.12.2024',
-    nordnetAsk: 231399,
-    bouvetAsk: 116131,
-    yolo: 77931,
-    firi: null,
-    kron: 326450,
-    skattKjop: null,
-    sumSparing: 751911,
-    sbanken: 818600,
-    sumGjeld: 818600,
-    arbeidsgiver: 2760000,
-    sumPensjon: 3810000,
-  },
-  {
-    date: '01.11.2024',
-    nordnetAsk: 236088,
-    bouvetAsk: 109575,
-    yolo: 77207,
-    firi: null,
-    kron: 310177,
-    skattKjop: null,
-    sumSparing: 733047,
-    sbanken: 823751,
-    sumGjeld: 823751,
-    arbeidsgiver: 2730000,
-    sumPensjon: 3780000,
-  },
-  {
-    date: '01.10.2024',
-    nordnetAsk: 228329,
-    bouvetAsk: 112133,
-    yolo: 73112,
-    firi: null,
-    kron: 294773,
-    skattKjop: null,
-    sumSparing: 708347,
-    sbanken: 830400,
-    sumGjeld: 830400,
-    arbeidsgiver: 2700000,
-    sumPensjon: 3750000,
-  },
-  {
-    date: '01.09.2024',
-    nordnetAsk: 224695,
-    bouvetAsk: 113412,
-    yolo: 75380,
-    firi: null,
-    kron: 281367,
-    skattKjop: 12500,
-    sumSparing: 707354,
-    sbanken: 837100,
-    sumGjeld: 837100,
-    arbeidsgiver: 2670000,
-    sumPensjon: 3720000,
-  },
-  {
-    date: '01.08.2024',
-    nordnetAsk: 226863,
-    bouvetAsk: 102059,
-    yolo: 75868,
-    firi: null,
-    kron: 280155,
-    skattKjop: 10000,
-    sumSparing: 694945,
-    sbanken: 843800,
-    sumGjeld: 843800,
-    arbeidsgiver: 2640000,
-    sumPensjon: 3690000,
-  },
-  {
-    date: '01.07.2024',
-    nordnetAsk: 223008,
-    bouvetAsk: 101420,
-    yolo: 70837,
-    firi: null,
-    kron: 256441,
-    skattKjop: 5000,
-    sumSparing: 656706,
-    sbanken: 850500,
-    sumGjeld: 850500,
-    arbeidsgiver: 2610000,
-    sumPensjon: 3660000,
-  },
-  {
-    date: '01.06.2024',
-    nordnetAsk: 212896,
-    bouvetAsk: 80499,
-    yolo: 69197,
-    firi: null,
-    kron: 246964,
-    skattKjop: null,
-    sumSparing: 609556,
-    sbanken: 857200,
-    sumGjeld: 857200,
-    arbeidsgiver: 2580000,
-    sumPensjon: 3630000,
-  },
-  {
-    date: '01.01.2024',
-    nordnetAsk: 201170,
-    bouvetAsk: 75682,
-    yolo: 67698,
-    firi: null,
-    kron: 78728,
-    skattKjop: null,
-    sumSparing: 423278,
-    sbanken: 920000,
-    sumGjeld: 920000,
-    arbeidsgiver: 2400000,
-    sumPensjon: 3400000,
-  },
-  {
-    date: '01.10.2022',
-    nordnetAsk: 168831,
-    bouvetAsk: null,
-    yolo: 51809,
-    firi: null,
-    kron: 23975,
-    skattKjop: null,
-    sumSparing: 244615,
-    sbanken: 1050000,
-    sumGjeld: 1050000,
-    arbeidsgiver: 1800000,
-    sumPensjon: 2600000,
-  },
-];
-
-// Extract unique years from mock data
-const getAvailableYears = (data: typeof mockPortfolioData): number[] => {
-  const years = new Set<number>();
-  data.forEach((row) => {
-    const parts = row.date.split('.');
-    const year = parseInt(parts[2], 10);
-    years.add(year);
-  });
-  return Array.from(years).sort((a, b) => b - a); // Descending order
+const CATEGORY_LABELS: Record<string, string> = {
+  sparing: 'Sparing',
+  gjeld: 'Gjeld',
+  pensjon: 'Pensjon',
 };
 
 const ITEMS_PER_PAGE = 12;
 
 export default function PortfolioPage() {
+  const { user } = useAuth();
+  const { data: portfolioData, isLoading, error } = usePortfolioData();
+  const updateSnapshot = useUpdateSnapshot();
+
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [searchValue, setSearchValue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -255,12 +56,86 @@ export default function PortfolioPage() {
   );
   const [isNewMonthModalOpen, setIsNewMonthModalOpen] = useState(false);
 
-  // Get available years
-  const availableYears = useMemo(() => getAvailableYears(mockPortfolioData), []);
+  // Generate column groups from user accounts
+  const columnGroups = useMemo((): ColumnGroup[] => {
+    if (!user?.accounts) return [];
+
+    const categories: ('sparing' | 'gjeld' | 'pensjon')[] = ['sparing', 'gjeld', 'pensjon'];
+
+    return categories.map((category) => {
+      const categoryAccounts = user.accounts!
+        .filter((acc) => acc.category === category && acc.isActive)
+        .sort((a, b) => a.sortOrder - b.sortOrder);
+
+      const columns: Column[] = categoryAccounts.map((acc) => ({
+        id: acc.id,
+        label: acc.name,
+      }));
+
+      // Add sum column
+      columns.push({
+        id: `sum${category.charAt(0).toUpperCase() + category.slice(1)}`,
+        label: `Sum ${CATEGORY_LABELS[category].toLowerCase()}`,
+        isTotal: true,
+      });
+
+      return {
+        id: category,
+        label: CATEGORY_LABELS[category],
+        color: CATEGORY_COLORS[category],
+        columns,
+      };
+    });
+  }, [user?.accounts]);
+
+  // Transform portfolio data for table display
+  const tableData = useMemo(() => {
+    if (!portfolioData || !user?.accounts) return [];
+
+    return portfolioData.map((row) => {
+      const rowData: Record<string, any> = {
+        id: row.id, // Snapshot ID for editing
+        date: row.date,
+      };
+
+      // Map each account value
+      row.accounts.forEach((acc) => {
+        // Find matching account config by name (accounts in snapshots use name, not id)
+        const accountConfig = user.accounts!.find(
+          (cfg) => cfg.name.toLowerCase() === acc.name.toLowerCase()
+        );
+        if (accountConfig) {
+          // Display gjeld as positive (stored as negative in DB)
+          rowData[accountConfig.id] = accountConfig.category === 'gjeld'
+            ? Math.abs(acc.value)
+            : acc.value;
+        }
+      });
+
+      // Add category totals
+      rowData.sumSparing = row.totals.sparing;
+      rowData.sumGjeld = row.totals.gjeld;
+      rowData.sumPensjon = row.totals.pensjon;
+
+      return rowData;
+    });
+  }, [portfolioData, user?.accounts]);
+
+  // Get available years from data
+  const availableYears = useMemo(() => {
+    if (!tableData.length) return [];
+    const years = new Set<number>();
+    tableData.forEach((row) => {
+      const parts = row.date.split('.');
+      const year = parseInt(parts[2], 10);
+      years.add(year);
+    });
+    return Array.from(years).sort((a, b) => b - a);
+  }, [tableData]);
 
   // Filter data by year and search
   const filteredData = useMemo(() => {
-    let filtered = [...mockPortfolioData];
+    let filtered = [...tableData];
 
     // Filter by year
     if (selectedYear !== null) {
@@ -280,7 +155,7 @@ export default function PortfolioPage() {
     }
 
     return filtered;
-  }, [selectedYear, searchValue]);
+  }, [tableData, selectedYear, searchValue]);
 
   // Pagination
   const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
@@ -324,19 +199,154 @@ export default function PortfolioPage() {
     visibleGroups.has(group.id)
   );
 
-  const handleExport = () => {
-    // TODO: Implement export functionality
-    console.log('Exporting portfolio data...');
-  };
+  /**
+   * Export portfolio data as CSV for Excel
+   * Uses semicolon delimiter for Norwegian Excel compatibility
+   */
+  const handleExport = useCallback(() => {
+    if (!tableData.length || !columnGroups.length) return;
+
+    // Build header row: Dato + all account columns + sum columns
+    const headers: string[] = ['Dato'];
+    const columnIds: string[] = [];
+
+    columnGroups.forEach((group) => {
+      group.columns.forEach((col) => {
+        headers.push(col.label);
+        columnIds.push(col.id);
+      });
+    });
+
+    // Build data rows
+    const rows: string[][] = tableData.map((row) => {
+      const values: string[] = [row.date];
+      columnIds.forEach((colId) => {
+        const value = row[colId];
+        // Format numbers: replace . with , for Norwegian Excel
+        if (typeof value === 'number') {
+          values.push(value.toString().replace('.', ','));
+        } else {
+          values.push(value?.toString() ?? '');
+        }
+      });
+      return values;
+    });
+
+    // Build CSV with semicolon delimiter (Norwegian Excel)
+    const csvContent = [
+      headers.join(';'),
+      ...rows.map((row) => row.join(';')),
+    ].join('\r\n');
+
+    // Add UTF-8 BOM for Excel compatibility
+    const BOM = '\uFEFF';
+    const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    // Trigger download
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `portefolje-${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }, [tableData, columnGroups]);
 
   const handleAddNewMonth = () => {
     setIsNewMonthModalOpen(true);
   };
 
   const handleNewMonthSuccess = () => {
-    // TODO: Refresh data from API
-    console.log('New month created successfully! Refreshing data...');
+    // Data refreshes automatically via TanStack Query invalidation
   };
+
+  /**
+   * Handle inline cell edit
+   * Updates the snapshot with the new account value
+   */
+  const handleCellChange = useCallback(
+    (event: CellChangeEvent) => {
+      if (!portfolioData || !user?.accounts) return;
+
+      // Find the snapshot
+      const snapshot = portfolioData.find((s) => s.id === event.rowId);
+      if (!snapshot) return;
+
+      // Find the account config to get the name
+      const accountConfig = user.accounts.find((acc) => acc.id === event.columnId);
+      if (!accountConfig) return;
+
+      // Update the accounts array
+      const updatedAccounts = snapshot.accounts.map((acc) => {
+        if (acc.name.toLowerCase() === accountConfig.name.toLowerCase()) {
+          // Handle gjeld: store as negative
+          const newValue = accountConfig.category === 'gjeld'
+            ? -Math.abs(event.value)
+            : event.value;
+          return { ...acc, value: newValue };
+        }
+        return acc;
+      });
+
+      // Check if account exists, if not add it
+      const accountExists = updatedAccounts.some(
+        (acc) => acc.name.toLowerCase() === accountConfig.name.toLowerCase()
+      );
+      if (!accountExists) {
+        updatedAccounts.push({
+          id: accountConfig.id,
+          name: accountConfig.name,
+          assetClass: accountConfig.category,
+          value: accountConfig.category === 'gjeld' ? -Math.abs(event.value) : event.value,
+        });
+      }
+
+      // Calculate new total
+      const totalNetWorth = updatedAccounts.reduce((sum, acc) => sum + acc.value, 0);
+
+      // Update snapshot
+      updateSnapshot.mutate({
+        id: event.rowId,
+        data: {
+          accounts: updatedAccounts,
+          totalNetWorth,
+        },
+      });
+    },
+    [portfolioData, user?.accounts, updateSnapshot]
+  );
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <main className="portfolio-page">
+        <div className="container container--wide">
+          <PortfolioSkeleton />
+        </div>
+      </main>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <main className="portfolio-page">
+        <div className="container container--wide">
+          <Breadcrumb
+            items={[
+              { label: 'Oversikt', path: '/' },
+              { label: 'Portefølje' },
+            ]}
+          />
+          <PageHeader title="Portefølje" subtitle="Kunne ikke laste data" />
+          <div className="portfolio-page__error">
+            En feil oppstod ved lasting av porteføljedata. Prøv igjen senere.
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="portfolio-page">
@@ -378,23 +388,34 @@ export default function PortfolioPage() {
           />
 
           {/* Spreadsheet table */}
-          <SpreadsheetTable
-            columnGroups={visibleColumnGroups}
-            data={paginatedData}
-            dateKey="date"
-          />
+          {tableData.length > 0 ? (
+            <SpreadsheetTable
+              columnGroups={visibleColumnGroups}
+              data={paginatedData}
+              dateKey="date"
+              rowIdKey="id"
+              initialCollapsedGroups={['gjeld', 'pensjon']}
+              onCellChange={handleCellChange}
+            />
+          ) : (
+            <div className="portfolio-page__empty">
+              <p>Ingen data ennå. Klikk "+ Ny måned" for å legge til din første måned.</p>
+            </div>
+          )}
 
           {/* Table footer with pagination and column toggles */}
-          <TableFooter
-            showing={paginatedData.length}
-            total={filteredData.length}
-            unit="måneder"
-            columnToggles={columnToggles}
-            onToggleColumn={handleToggleColumn}
-            page={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
+          {tableData.length > 0 && (
+            <TableFooter
+              showing={paginatedData.length}
+              total={filteredData.length}
+              unit="måneder"
+              columnToggles={columnToggles}
+              onToggleColumn={handleToggleColumn}
+              page={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          )}
         </div>
       </div>
 

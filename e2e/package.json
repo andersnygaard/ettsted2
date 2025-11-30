@@ -5,6 +5,8 @@
   "private": true,
   "scripts": {
     "test": "playwright test",
+    "test:frontend": "playwright test --project=frontend",
+    "test:backend": "playwright test --project=backend",
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
     "report": "playwright show-report"
