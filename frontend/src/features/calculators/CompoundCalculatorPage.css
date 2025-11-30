@@ -1,0 +1,174 @@
+/**
+ * CompoundCalculatorPage Styles
+ * Based on Nordic Minimal design system
+ */
+
+/* Shared calculator page styles */
+.calculator-page {
+  padding-top: var(--space-md);
+}
+
+/* Two-column layout for inputs and results */
+.calculator-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: var(--space-lg);
+}
+
+@media (max-width: 768px) {
+  .calculator-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Input card styles */
+.calculator-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 32px;
+}
+
+/* Results card styles */
+.calculator-results {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Hero result display */
+.result-hero {
+  text-align: center;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.result-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.result-value {
+  font-family: var(--font-heading);
+  font-size: 42px;
+  font-weight: 400;
+  color: var(--charcoal);
+  line-height: 1.1;
+}
+
+/* Result breakdown list */
+.result-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.result-item__label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.result-item__value {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--charcoal);
+}
+
+/* Positive/negative value colors */
+.text-positive {
+  color: var(--positive);
+}
+
+.text-negative {
+  color: var(--negative);
+}
+
+/* Info section */
+.calculator-info {
+  margin-top: var(--space-lg);
+  padding: 32px;
+  background: var(--warm-white);
+  border-radius: 2px;
+}
+
+.calculator-info h3 {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 16px;
+  color: var(--charcoal);
+}
+
+.calculator-info p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.calculator-info p:last-child {
+  margin-bottom: 0;
+}
+
+/* F.I.R.E. Calculator specific styles */
+.fire-results {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.fire-result {
+  text-align: center;
+  padding: 16px 0;
+}
+
+.fire-result__value {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--charcoal);
+  margin-bottom: 4px;
+}
+
+.fire-result__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+
+.fire-progress {
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.fire-progress__header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+@media (max-width: 480px) {
+  .fire-results {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .fire-result__value {
+    font-size: 24px;
+  }
+}

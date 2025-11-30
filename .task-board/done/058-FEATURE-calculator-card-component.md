@@ -1,6 +1,6 @@
 # FEATURE: Calculator Card Component
 
-**Status**: Backlog
+**Status**: Done
 **Created**: 2025-11-29
 **Priority**: Medium
 **Labels**: component, ui, calculators
@@ -20,13 +20,13 @@ Clickable card for each calculator with icon and description.
 
 ## Acceptance Criteria
 
-- [ ] Create `/frontend/src/shared/components/CalculatorCard.tsx`
-- [ ] Props: `icon`, `title`, `description`, `href`
-- [ ] Icon with colored background
-- [ ] Title in Cormorant Garamond
-- [ ] Description in secondary text
-- [ ] Hover lift effect
-- [ ] Staggered animation
+- [x] Create `/frontend/src/shared/components/CalculatorCard.tsx`
+- [x] Props: `icon`, `title`, `description`, `href`
+- [x] Icon with colored background
+- [x] Title in Cormorant Garamond
+- [x] Description in secondary text
+- [x] Hover lift effect
+- [x] Staggered animation
 
 ## Technical Approach
 

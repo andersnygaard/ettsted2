@@ -1,0 +1,23 @@
+/**
+ * Layout Styles
+ * Based on Nordic Minimal design from draft-1-nordic-minimal.html
+ */
+
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bone);
+}
+
+.app-layout > main {
+  flex: 1;
+  padding: var(--space-5xl) 0; /* 64px top/bottom as per design */
+}
+
+/* Responsive padding */
+@media (max-width: 768px) {
+  .app-layout > main {
+    padding: var(--space-2xl) 0; /* 32px on mobile */
+  }
+}

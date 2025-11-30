@@ -1,0 +1,22 @@
+/**
+ * CalculatorsPage Styles
+ * Based on Nordic Minimal design from draft-1-kalkulatorer.html
+ */
+
+.calculators-page {
+  padding-top: var(--space-xl);
+}
+
+/* Calculator Grid - 2x2 layout */
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* Responsive - Stack on mobile */
+@media (max-width: 600px) {
+  .calc-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -36,7 +36,10 @@
       "Bash(rg:*)",
       "Bash(rm:*)",
       "Bash(rmdir:*)",
+      "Bash(node:*)",
+      "Bash(cat:*)",
       "Bash(sort:*)",
+      "Bash(cd:*)",
       "Bash(tail:*)",
       "Bash(tar:*)",
       "Bash(tee:*)",
@@ -57,7 +60,8 @@
       "Bash(findstr:*)",
       "Bash(claude mcp add playwright --help:*)",
       "Bash(claude mcp --help:*)",
-      "Bash(claude mcp add:*)"
+      "Bash(claude mcp add:*)",
+      "Bash(test:*)"
     ],
     "deny": [],
     "ask": [

@@ -2,6 +2,8 @@
  * Shared Components Export
  */
 
+export { AreaChart } from './AreaChart';
+export type { AreaChartProps, DataPoint } from './AreaChart';
 export { Avatar } from './Avatar';
 export type { AvatarProps } from './Avatar';
 export { Breadcrumb } from './Breadcrumb';
@@ -24,6 +26,8 @@ export { SectionLink } from './SectionLink';
 export type { SectionLinkProps } from './SectionLink';
 export { StatCard } from './StatCard';
 export type { StatCardProps } from './StatCard';
+export { StatsRow } from './StatsRow';
+export type { Stat, StatsRowProps } from './StatsRow';
 export { ToastProvider, useToast } from './Toast';
 export type { Toast, ToastType } from './Toast';
 export { SpreadsheetTable } from './SpreadsheetTable';
@@ -32,3 +36,15 @@ export { TableHeader } from './TableHeader';
 export type { TableHeaderProps } from './TableHeader';
 export { TableFooter } from './TableFooter';
 export type { TableFooterProps, ColumnToggle } from './TableFooter';
+export { Modal } from './Modal';
+export type { ModalProps } from './Modal';
+export { NumberInput } from './NumberInput';
+export type { NumberInputProps } from './NumberInput';
+export { DateInput } from './DateInput';
+export type { DateInputProps } from './DateInput';
+export { CalculatorCard } from './CalculatorCard';
+export type { CalculatorCardProps } from './CalculatorCard';
+export { DonutChart } from './DonutChart';
+export type { DonutChartProps } from './DonutChart';
+export { StackedAreaChart } from './StackedAreaChart';
+export type { StackedAreaChartProps, Series, StackedDataPoint } from './StackedAreaChart';

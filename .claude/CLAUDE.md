@@ -1371,3 +1371,8 @@ Anyone who wants to track their portfolio monthly, including:
 - **Claude Code Issues**: Report at https://github.com/anthropics/claude-code/issues
 - **Project Issues**: Track in `/issue-tracking/` folder
 - **Documentation**: Check `/docs/` folder for additional guides
+
+## NOTES FROM THE USER
+- USER IS A SENIOR DEV WITH GOOD KNOWLEDGE OF SOFTWARE DEVELOPMENT. USER EXPECTS SENIOR DEVELOPER LEVEL WORK.
+- DO NOT BE LAZY. NEVER BE LAZY. IF THERE IS A BUG, FIND THE ROOT CAUSE AND FIX IT. NO TEMPORARY FIXES. YOU ARE A SENIOR DEVELOPER. NEVER BE LAZY.
+- BE CLEAR AND CONSISTANT. SACRIFICE GRAMMER FOR SHORT, CONSISTANT LANGUAGE. EXPRESS YOURSELF TO THE POINT.

@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import AppHeader from './AppHeader';
+import './Layout.css';
 
 function Layout() {
   return (

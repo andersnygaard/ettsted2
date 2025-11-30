@@ -8,6 +8,7 @@ import {
   TableFooter,
 } from '@/shared/components';
 import type { ColumnGroup, ColumnToggle } from '@/shared/components';
+import { NewMonthModal } from './NewMonthModal';
 import './PortfolioPage.css';
 
 /**
@@ -252,6 +253,7 @@ export default function PortfolioPage() {
   const [visibleGroups, setVisibleGroups] = useState<Set<string>>(
     new Set(['sparing', 'gjeld', 'pensjon'])
   );
+  const [isNewMonthModalOpen, setIsNewMonthModalOpen] = useState(false);
 
   // Get available years
   const availableYears = useMemo(() => getAvailableYears(mockPortfolioData), []);
@@ -328,8 +330,12 @@ export default function PortfolioPage() {
   };
 
   const handleAddNewMonth = () => {
-    // TODO: Implement add new month modal/form
-    console.log('Adding new month...');
+    setIsNewMonthModalOpen(true);
+  };
+
+  const handleNewMonthSuccess = () => {
+    // TODO: Refresh data from API
+    console.log('New month created successfully! Refreshing data...');
   };
 
   return (
@@ -391,6 +397,13 @@ export default function PortfolioPage() {
           />
         </div>
       </div>
+
+      {/* New month modal */}
+      <NewMonthModal
+        isOpen={isNewMonthModalOpen}
+        onClose={() => setIsNewMonthModalOpen(false)}
+        onSuccess={handleNewMonthSuccess}
+      />
     </main>
   );
 }

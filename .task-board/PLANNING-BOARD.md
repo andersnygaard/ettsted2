@@ -1,112 +1,110 @@
 # Planning Board - Finans
 
-**Current Focus**: Placeholder Pages + Design Foundation
+**Current Focus**: Calculator Sub-pages & Data Integration
 
 ---
 
 ## Top Priorities
 
-### 1. Design Tokens & Typography (Effort: Quick - 1-2 timer)
-**Files**: `021-FEATURE-design-tokens.md`, `022-FEATURE-typography-setup.md`
-**Why Now**: Grunnlag for all styling - må på plass først
-**Status**: Ready
+### 1. Loan Calculator Page (Effort: Medium - 2-3 timer)
+**File**: `backlog/062-FEATURE-loan-calculator-page.md`
+**Why Now**: Complete the calculator trio
+**Status**: Ready - follows same pattern as Compound/F.I.R.E.
 
-### 2. App Header & Layout (Effort: Quick - 1-2 timer)
-**Files**: `025-FEATURE-app-header.md`, `068-FEATURE-update-layout.md`
-**Why Now**: Navigation er synlig på alle sider
-**Status**: Ready (avhenger av design tokens)
+### 2. Dashboard Data Hook (Effort: Simple - 1-2 timer)
+**File**: `backlog/065-FEATURE-dashboard-data-hook.md`
+**Why Now**: Connect dashboard to real API data
+**Status**: Ready - Portfolio API complete
 
-### 3. Portfolio Page - Placeholder (Effort: Quick - 1 time)
-**File**: `041-FEATURE-portfolio-page.md`
-**Why Now**: Hovedside for dataregistrering
-**Status**: Ready - kan bygges med placeholder-data
+### 3. Login Redirect to Dashboard (Effort: Simple - 15 min)
+**File**: `backlog/072-FEATURE-login-redirect-to-dashboard.md`
+**Why Now**: Quick UX improvement - users land on dashboard after login
+**Status**: Ready for implementation
 
-### 4. Kalkulatorer Page - Placeholder (Effort: Quick - 1 time)
-**File**: `059-FEATURE-kalkulatorer-page.md`
-**Why Now**: Viktig funksjon, enkel side med 4 kort
-**Status**: Ready
-
-### 5. Sparing/Gjeld/Pensjon Pages - Placeholders (Effort: Quick - 2 timer)
-**Files**: `049-FEATURE-sparing-page.md`, `053-FEATURE-gjeld-page.md`, `057-FEATURE-pensjon-page.md`
-**Why Now**: Komplett navigasjon
-**Status**: Ready
+### 4. Monte Carlo Backend + Page (Effort: Complex - 8 timer)
+**Files**: `backlog/064-FEATURE-monte-carlo-backend.md`, `backlog/063-FEATURE-monte-carlo-page.md`
+**Why Now**: Complete all 4 calculators
+**Status**: Backend first, then frontend page
 
 ---
 
-## Task Categories
+## All Backlog Tasks (Ordered by Priority)
 
-### ✅ Ferdig (9 oppgaver)
-- 001-008: Backend infrastruktur, frontend init, user auth, portfolio API
-- 009: Dashboard/Oversikt page (placeholder)
+### Calculator Pages (062-063)
+| # | Task | Effort | Dependencies |
+|---|------|--------|--------------|
+| 062 | Loan Calculator Page | Medium | ✅ All ready |
+| 063 | Monte Carlo Page | Complex | Needs 064 |
 
-### 📋 Backlog - Infrastruktur (3 oppgaver, lav prioritet)
-- 013: Validation framework refactor
-- 014: Error handling refactor
-- 015: CI/CD workflows
+### Backend (064)
+| # | Task | Effort | Dependencies |
+|---|------|--------|--------------|
+| 064 | Monte Carlo Backend Endpoint | Medium | ✅ All ready |
 
-### 📋 Backlog - Design System (4 oppgaver)
-- 021: Design tokens
-- 022: Typography setup
-- 023: Grain texture overlay
-- 024: Animation utilities
+### Data Integration (065-068)
+| # | Task | Effort | Dependencies |
+|---|------|--------|--------------|
+| 065 | Dashboard Data Hook | Simple | ✅ All ready |
+| 066 | Sparing Data Hook | Simple | ✅ All ready |
+| 067 | Update Routes | Simple | After pages |
+| 068 | Update Layout | Simple | After pages |
 
-### 📋 Backlog - Komponenter (30+ oppgaver)
-- 025-036: Core UI components
-- 038-045: Table & form components
-- 046-058: Feature-specific components
-- 069-070: Container, loading skeleton
+### Components (069-070)
+| # | Task | Effort | Dependencies |
+|---|------|--------|--------------|
+| 069 | Container Component | Simple | ✅ All ready |
+| 070 | Loading Skeleton | Simple | ✅ All ready |
 
-### 📋 Backlog - Sider (6 oppgaver)
-- 041: Portfolio page
-- 049: Sparing page
-- 053: Gjeld page
-- 057: Pensjon page
-- 059: Kalkulatorer page
-- 060-063: Calculator sub-pages
-
-### 📋 Backlog - Data Integration (4 oppgaver)
-- 064: Monte Carlo backend
-- 065-066: Data hooks
-- 067: Update routes
-
-### ⏸️ On-Hold (3 oppgaver)
-- 016: LLM Data Import (avansert)
-- 017: Playwright E2E tests (etter MVP)
-- 019: Storybook setup (dokumentasjon)
+### Auth & Navigation (071-072)
+| # | Task | Effort | Dependencies |
+|---|------|--------|--------------|
+| 071 | Authenticated Home Redirect | Simple | ✅ All ready |
+| 072 | Login Redirect to Dashboard | Simple | ✅ All ready |
 
 ---
 
 ## Recently Completed
 
-### ✅ 009-FEATURE-portfolio-dashboard (2025-11-29)
-Placeholder Dashboard med Nordic Minimal design - hero number, quick stats, milestone, section links
+### ✅ 061 - F.I.R.E. Calculator Page (2025-11-30)
+Interactive F.I.R.E. calculator with inputs for savings, income, expenses, age, and return rate. Calculates F.I.R.E. number (25x expenses), years to F.I.R.E., retirement age, and savings rate. Includes progress bar and projection chart.
 
-### ✅ 008-FEATURE-portfolio-api-endpoints (2025-11-29)
-Komplett Portfolio API med 9 REST endpoints
+### ✅ 060 - Compound Interest Calculator Page (2025-11-30)
+Interactive compound interest calculator with Norwegian formatting. Shows how savings grow over time with inputs for initial amount, monthly deposit, interest rate, and years. Includes area chart visualization.
 
-### ✅ 001-007 (2025-11-28/29)
-Backend server, CosmosDB, frontend init, localization, auth middleware, user API, auth UI
+### ✅ 054-056 - Pensjon Components (2025-11-30)
+BreakdownCards, OtpSection, and StackedAreaChart components already implemented as part of Pensjon page.
+
+### ✅ 047-053 - Sparing, Gjeld, Pensjon Pages (2025-11-29)
+StatsRow, AreaChart, DekningCircle, DekningSection, LoansList components and complete pages.
+
+### ✅ 046, 058-059 - FireSection, CalculatorCard, Kalkulatorer Page (2025-11-29)
+FireSection component for F.I.R.E. tracking, CalculatorCard component, and Kalkulatorer page.
+
+### ✅ 041-045 - Portfolio Page + Components (2025-11-29)
+SpreadsheetTable, NewMonthModal, Modal, NumberInput, DateInput components and Portfolio page.
+
+### ✅ 021-036 - Design System + Core Components (2025-11-29)
+Design tokens, typography, grain texture, animations, and all core UI components.
+
+### ✅ 001-015 - Backend & Frontend Foundation (2025-11-28/29)
+Backend server, CosmosDB, frontend init, localization, auth, user API, Portfolio API, Dashboard.
 
 ---
 
-## Slettet/Erstattet
+## On-Hold
 
-Følgende gamle oppgaver ble slettet (erstattet av nyere, mer detaljerte oppgaver):
-- ~~010~~: Portfolio Tracker UI → Erstattet av 041 + 042
-- ~~011~~: Compound Calculator → Erstattet av 060
-- ~~012~~: Monte Carlo Simulator → Erstattet av 063 + 064
-- ~~018~~: Component Library → Erstattet av 021-036
-- ~~020~~: Asset Allocation Chart → Ikke i design-skisser
-- ~~037~~: Oversikt Page → Duplikat av 009
+- **016**: LLM Data Import (advanced feature, post-MVP)
+- **017**: Playwright E2E tests (after MVP complete)
+- **019**: Storybook setup (documentation, post-MVP)
 
 ---
 
-**Last Updated**: 2025-11-29
+**Last Updated**: 2025-11-30
 
 **Statistics**:
-- Ferdig: 9
-- Backlog: 50
+- Ferdig: 47
+- Backlog: 11
 - On-Hold: 3
 - In Progress: 0
 
-**Approach**: Bygg placeholder-sider først med hardkodet data, deretter legg til ekte komponenter og API-integrasjon.
+**Milestone**: 2 of 4 calculator sub-pages complete (Compound Interest, F.I.R.E.)! Next: Loan Calculator, then Monte Carlo.

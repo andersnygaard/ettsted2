@@ -1,6 +1,6 @@
 # FEATURE: F.I.R.E. Section Component
 
-**Status**: Backlog
+**Status**: Done
 **Created**: 2025-11-29
 **Priority**: High
 **Labels**: component, ui, sparing
@@ -20,13 +20,13 @@ Complete F.I.R.E. progress section with all metrics.
 
 ## Acceptance Criteria
 
-- [ ] Create `/frontend/src/features/sparing/FireSection.tsx`
-- [ ] Props: `fireNumber`, `current`, `minRetireAge`, `yearsToSalary`, `annualWithdrawal`
-- [ ] Header with title and subtitle
-- [ ] Progress bar showing % toward F.I.R.E. number
-- [ ] 4-column grid of metrics below
-- [ ] Sage green accent for highlight values
-- [ ] Warm-white card background
+- [x] Create `/frontend/src/features/sparing/FireSection.tsx`
+- [x] Props: `fireNumber`, `current`, `minRetireAge`, `yearsToSalary`, `annualWithdrawal`
+- [x] Header with title and subtitle
+- [x] Progress bar showing % toward F.I.R.E. number
+- [x] 4-column grid of metrics below
+- [x] Sage green accent for highlight values
+- [x] Warm-white card background
 
 ## Technical Approach
 

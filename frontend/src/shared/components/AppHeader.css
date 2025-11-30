@@ -95,7 +95,8 @@
 /* Responsive design */
 @media (max-width: 1024px) {
   .app-header__nav {
-    gap: 24px;
+    gap: 32px;
+    margin: 12px 24px;
   }
 }
 

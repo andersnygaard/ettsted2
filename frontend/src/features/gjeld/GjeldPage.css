@@ -1,0 +1,212 @@
+/**
+ * GjeldPage Styles
+ * Based on Nordic Minimal design from draft-1-gjeld.html
+ */
+
+.gjeld-page {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-2xl);
+}
+
+/* Dekning Section */
+.dekning-section {
+  background: var(--warm-white);
+  padding: var(--space-xl);
+  border-radius: 2px;
+  margin-bottom: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+  animation: fadeUp 0.6s ease forwards;
+  animation-delay: 0.15s;
+  opacity: 0;
+}
+
+@media (max-width: 640px) {
+  .dekning-section {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.dekning-circle {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--muted-sage) 0deg var(--coverage, 334deg),
+    var(--bone) var(--coverage, 334deg) 360deg
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.dekning-circle::before {
+  content: '';
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  background: var(--warm-white);
+  border-radius: 50%;
+}
+
+.dekning-inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.dekning-value {
+  font-family: var(--font-heading);
+  font-size: 42px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.dekning-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.dekning-info {
+  flex: 1;
+}
+
+.dekning-info h3 {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: var(--space-sm);
+}
+
+.dekning-info p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: var(--space-md);
+}
+
+.dekning-highlight {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* Loans Section */
+.loans-section {
+  background: var(--warm-white);
+  padding: var(--space-lg);
+  border-radius: 2px;
+  margin-bottom: var(--space-lg);
+  animation: fadeUp 0.6s ease forwards;
+  animation-delay: 0.25s;
+  opacity: 0;
+}
+
+.loans-header {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 400;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border);
+}
+
+.loan-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.loan-item:last-child {
+  border-bottom: none;
+}
+
+.loan-name {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.loan-details {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.loan-amount {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* Chart Section */
+.chart-section {
+  background: var(--warm-white);
+  padding: var(--space-lg);
+  border-radius: 2px;
+  animation: fadeUp 0.6s ease forwards;
+  animation-delay: 0.35s;
+  opacity: 0;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--space-md);
+}
+
+.chart-title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 400;
+  display: block;
+}
+
+.chart-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: block;
+  margin-top: 4px;
+}
+
+.chart-placeholder {
+  height: 180px;
+  position: relative;
+}
+
+.chart-placeholder svg {
+  width: 100%;
+  height: 100%;
+}
+
+.chart-path {
+  fill: none;
+  stroke: var(--pale-blue);
+  stroke-width: 2;
+}
+
+.chart-area-fill {
+  fill: var(--pale-blue);
+  opacity: 0.3;
+}
+
+.chart-x-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-sm);
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+/* Narrow container for focused pages */
+.container--narrow {
+  max-width: 900px;
+}

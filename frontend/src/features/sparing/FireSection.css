@@ -1,0 +1,91 @@
+/**
+ * FireSection Styles
+ * Based on Nordic Minimal design from draft-1-sparing.html
+ */
+
+.fire-section {
+  background: var(--warm-white);
+  padding: 40px;
+  border-radius: 2px;
+  margin-bottom: 48px;
+}
+
+.fire-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.fire-header h2 {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 400;
+  margin: 0 0 8px 0;
+  color: var(--charcoal);
+}
+
+.fire-header p {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin: 0;
+}
+
+.fire-progress {
+  margin-bottom: 32px;
+}
+
+.fire-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+.fire-stat {
+  text-align: center;
+}
+
+.fire-stat__value {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--charcoal);
+}
+
+.fire-stat__value--highlight {
+  color: var(--muted-sage);
+}
+
+.fire-stat__label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .fire-section {
+    padding: var(--space-xl);
+  }
+
+  .fire-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .fire-stat__value {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .fire-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .fire-stat__value {
+    font-size: 20px;
+  }
+}

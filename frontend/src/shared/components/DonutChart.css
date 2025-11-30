@@ -1,0 +1,46 @@
+/**
+ * DonutChart Component Styles
+ * Based on Nordic Minimal design system
+ */
+
+.donut-chart {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  animation: fadeUp 0.6s ease forwards;
+  opacity: 0;
+}
+
+.donut-chart::before {
+  content: '';
+  position: absolute;
+  width: 72%;
+  height: 72%;
+  background: var(--warm-white);
+  border-radius: 50%;
+}
+
+.donut-chart__inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.donut-chart__value {
+  font-family: var(--font-heading);
+  font-size: 42px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--charcoal);
+}
+
+.donut-chart__label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}

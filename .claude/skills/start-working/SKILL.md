@@ -7,6 +7,39 @@ description: Continue work on the next priority from the task backlog. Use this 
 
 This skill provides a structured workflow for continuing work on the next priority from the task backlog. It automates the process of selecting, planning, implementing, and completing tasks following the finans project's task-board workflow.
 
+---
+
+## 🚨 THREE CRITICAL RULES 🚨
+
+### 1. USE SUBAGENTS WITH HAIKU BY DEFAULT
+Each task MUST be executed using the **Task tool** with a subagent:
+- **Default model: `haiku`** - fast and efficient for most tasks
+- **Use `sonnet` only for**: D3.js visualizations, complex business logic, architectural decisions
+
+### 2. TASKS ARE DONE IN ORDER
+Tasks are numbered for dependency reasons. Execute them **sequentially, in order**:
+- Pick task 071 → Complete → Pick task 072 → Complete → Pick task 073...
+- **NEVER skip ahead** unless user explicitly requests it
+- **NEVER run tasks in parallel**
+
+### 3. PLAYWRIGHT CLI FOR FRONTEND VERIFICATION
+Every frontend task MUST be verified with Playwright CLI **before marking complete**:
+```bash
+# Run verification script (no permission prompts)
+node scripts/playwright-verify.js <url> [screenshot-name]
+```
+
+The script will:
+- Navigate to the page
+- Wait for content to load
+- Capture console errors
+- Take a screenshot
+- Output verification results
+
+**Frontend tasks without Playwright verification are INCOMPLETE.**
+
+---
+
 **CRITICAL**: Never commit and push unless explicitly confirmed by the user first.
 
 ## When to Use This Skill
@@ -327,6 +360,69 @@ pnpm dev
 - Check Winston logs
 - Future: Jest unit tests
 
+#### Playwright CLI Visual Verification - MANDATORY FOR FRONTEND
+
+**🚨 CRITICAL**: Every frontend task MUST be verified using Playwright CLI before marking complete.
+
+This is NOT optional. Frontend tasks are NOT complete until visually verified.
+
+**Design drafts location**: `.docs/design-drafts/`
+- `draft-1-nordic-minimal.html` - Dashboard (Oversikt)
+- `draft-1-portfolio.html` - Portfolio page
+- `draft-1-sparing.html` - Savings page
+- `draft-1-gjeld.html` - Debt page
+- `draft-1-pensjon.html` - Pension page
+- `draft-1-kalkulatorer.html` - Calculators page
+
+**MANDATORY Verification Workflow for Frontend Tasks**:
+
+```bash
+# 1. Start dev server (if not running)
+pnpm --filter frontend dev &
+
+# 2. Run verification script (auto-approved via Bash allowlist)
+node scripts/playwright-verify.js http://localhost:5173/[page] [task-name]
+
+# The script outputs:
+# - Page title and URL
+# - Console errors (if any)
+# - Screenshot saved to .playwright-output/[task-name].png
+# - Pass/fail status
+```
+
+**What to verify** (script checks automatically):
+- Page loads successfully (no crash)
+- No JavaScript console errors
+- Screenshot captured for visual review
+
+**Manual verification** (review script output):
+- Layout matches design draft structure
+- Components are positioned correctly
+- Norwegian text is displayed properly
+- Number formatting (space as thousands separator, e.g., "123 456,78 kr")
+- Color scheme matches Nordic Minimal palette
+- Typography (Cormorant Garamond for headings, DM Sans for body)
+
+**Example verification session**:
+```bash
+# Verify portfolio page
+node scripts/playwright-verify.js http://localhost:5173/portfolio portfolio-page
+
+# Output:
+# ✓ Page loaded: Finans - Portefølje
+# ✓ No console errors
+# ✓ Screenshot: .playwright-output/portfolio-page.png
+# PASS
+
+# For interactive testing (opens browser for manual inspection)
+node scripts/playwright-verify.js http://localhost:5173/portfolio --interactive
+```
+
+**If verification fails**:
+- Fix the issues before marking complete
+- Re-run verification after fixes
+- Document what was fixed in Progress Log
+
 **Build verification**:
 ```bash
 # Frontend build
@@ -358,7 +454,18 @@ Before marking complete, verify the **Verification Checklist** (in task file):
 - [ ] Norwegian formatting verified
 - [ ] Error handling tested
 - [ ] Code reviewed (self-review)
+- [ ] **🚨 Playwright CLI verification** (MANDATORY for frontend tasks)
 ```
+
+**🚨 Playwright CLI verification is MANDATORY for ALL frontend tasks**:
+
+The task is NOT complete until you have:
+1. Run `node scripts/playwright-verify.js <url> <task-name>`
+2. Verified no console errors in output
+3. Reviewed screenshot in `.playwright-output/`
+4. Confirmed layout and functionality match requirements
+
+**DO NOT skip this step. Frontend tasks without Playwright verification are INCOMPLETE.**
 
 **Then finalize**:
 
@@ -425,6 +532,145 @@ Before marking complete, verify the **Verification Checklist** (in task file):
    └── On Hold: 0
    ```
 
+## Subagent Execution Strategy
+
+### CRITICAL: Use Subagents for Each Task
+
+**IMPORTANT**: Each task from the backlog MUST be executed using the Task tool with an appropriate subagent. This ensures:
+- Focused context for each task
+- Proper model selection based on complexity
+- Clear separation between tasks
+- Better resource utilization
+
+### Model Selection by Complexity
+
+**DEFAULT MODEL: `haiku`** - Use haiku for most tasks unless complexity requires sonnet.
+
+| Complexity | Model | Examples |
+|------------|-------|----------|
+| **Standard** (default) | `haiku` | CSS fixes, text changes, simple components, form fields, API endpoints with clear patterns, bug fixes, refactoring |
+| **Complex** | `sonnet` | D3.js visualizations, complex business logic, multi-file architectural changes, intricate state management, complex validation logic |
+
+**Use `haiku` when**:
+- Task follows existing patterns in the codebase
+- Requirements are clear and well-defined
+- Single feature or component implementation
+- Straightforward API endpoint
+- CSS/styling work
+- Simple to medium React components
+
+**Use `sonnet` when**:
+- Task involves D3.js or complex visualizations
+- Complex state management across multiple stores
+- Architectural decisions needed
+- Multi-step business logic with edge cases
+- Integration of multiple systems (e.g., CosmosDB + LLM + frontend)
+
+### Sequential Task Execution - TASKS ARE DONE IN ORDER
+
+**CRITICAL**: Execute tasks ONE AT A TIME, IN ORDER. This is non-negotiable.
+
+```
+❌ WRONG: Start multiple tasks in parallel
+❌ WRONG: Skip ahead to "more interesting" tasks
+❌ WRONG: Pick tasks out of order
+✅ RIGHT: Complete task 071 → Move to done → Start task 072 → Complete → Start 073...
+```
+
+**The workflow is strictly sequential**:
+1. Pick the FIRST numbered task from PLANNING-BOARD
+2. Execute it with a subagent (haiku by default)
+3. Verify completion (including Playwright CLI for frontend)
+4. Move to done
+5. Pick the NEXT numbered task
+6. Repeat
+
+**Why sequential and in-order**:
+- Tasks are numbered to respect dependencies
+- Foundation work must come before features
+- Prevents broken builds and incomplete features
+- Makes progress predictable and trackable
+
+### Task Ordering is MANDATORY
+
+Tasks in the backlog are **numbered for a reason**. The numbering reflects:
+- Dependency order (lower numbers are prerequisites)
+- Logical implementation sequence
+- Foundation → Features → Polish
+
+**NEVER skip tasks unless**:
+1. User explicitly requests a different order
+2. A task is blocked by external factors (and you've asked user)
+
+**Example dependency chain**:
+```
+071-redirect → 072-login-redirect → 073-user-model → 074-account-model → ...
+```
+
+### How to Invoke Subagents
+
+Use the **Task tool** to spawn a subagent for each task:
+
+```
+Task tool parameters:
+- subagent_type: "general-purpose"
+- model: "haiku" (default) or "sonnet" (for complex tasks)
+- prompt: Detailed task instructions
+- description: Short 3-5 word summary
+```
+
+**Example subagent invocation for a standard task**:
+```
+Task tool:
+  subagent_type: "general-purpose"
+  model: "haiku"
+  description: "Implement user routes"
+  prompt: |
+    Implement the user API routes as specified in:
+    .task-board/in-progress/081-FEATURE-user-routes.md
+
+    Follow all patterns from CLAUDE.md.
+    Update the task file with progress.
+    Mark acceptance criteria as complete.
+
+    When done, provide a summary of:
+    - Files created/modified
+    - All acceptance criteria status
+    - Any issues encountered
+```
+
+**Example for a complex frontend task (needs sonnet)**:
+```
+Task tool:
+  subagent_type: "general-purpose"
+  model: "sonnet"
+  description: "Build D3.js area chart"
+  prompt: |
+    Implement the AreaChart component with D3.js as specified in:
+    .task-board/in-progress/048-FEATURE-area-chart-component.md
+
+    This involves complex D3.js visualization work.
+
+    After implementation, VERIFY using Playwright CLI:
+    node scripts/playwright-verify.js http://localhost:5173/[page] area-chart
+
+    Provide summary with verification results.
+```
+
+### Working Through the Backlog
+
+This skill processes the **entire backlog** systematically, IN ORDER:
+
+1. Read PLANNING-BOARD to get the FIRST numbered task
+2. Move task to in-progress/
+3. Spawn subagent with Task tool (haiku by default)
+4. Subagent implements and verifies (Playwright CLI for frontend)
+5. Move task to done/
+6. Get NEXT numbered task from PLANNING-BOARD
+7. Repeat
+
+The user can say "keep going" to continue through the backlog.
+
 ## Constraints and Guidelines
 
 ### Critical Constraints
@@ -434,9 +680,10 @@ Before marking complete, verify the **Verification Checklist** (in task file):
 3. **Norwegian localization**: All UI text in Norwegian, use format utilities
 4. **Keep PLANNING-BOARD.md lean**: Maximum 3-5 items, concise status notes
 5. **Real-time updates**: Update Progress Log frequently during work
-6. **One task at a time**: Limit in-progress folder to 1-2 tasks maximum
+6. **One task at a time**: Execute ONE task fully before starting the next
 7. **No breaking changes**: Maintain backward compatibility
 8. **Security first**: Never commit secrets, always validate input
+9. **Respect task ordering**: Tasks are numbered for dependency reasons
 
 ### Development Environment
 
@@ -520,16 +767,24 @@ Update docs **DURING and AFTER** work:
 
 A work session is complete when:
 
-- [ ] Top priority task moved to `in-progress/`
-- [ ] Implementation Plan section filled in
-- [ ] `PLANNING-BOARD.md` updated with "In Progress" status
-- [ ] Solution implemented following all acceptance criteria
+### For Each Task (executed via subagent):
+- [ ] Task executed using Task tool with appropriate model (haiku default, sonnet for complex)
+- [ ] Implementation follows all acceptance criteria
 - [ ] All builds passing (frontend, backend, TypeScript, ESLint)
-- [ ] Manual testing complete
+- [ ] **🚨 Playwright CLI verification complete** (MANDATORY for frontend tasks)
 - [ ] Task file updated with Progress Log and Resolution
 - [ ] Task moved to `done/`
-- [ ] `PLANNING-BOARD.md` updated (item removed, added to "Recently Completed")
-- [ ] README statistics updated
+
+### For the Overall Session:
+- [ ] Tasks processed IN ORDER (no skipping)
+- [ ] Each task used a subagent (not done inline)
+- [ ] `PLANNING-BOARD.md` updated after each completion
+- [ ] Next task from backlog added when current completes
+
+### Key Reminders:
+1. **Use haiku by default** - only use sonnet for truly complex tasks
+2. **Tasks done IN ORDER** - respect numbering
+3. **Playwright CLI for frontend** - no exceptions
 
 ## Handling Edge Cases
 

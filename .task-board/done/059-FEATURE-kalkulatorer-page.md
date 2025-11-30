@@ -1,6 +1,6 @@
 # FEATURE: Kalkulatorer (Calculators) Page
 
-**Status**: Backlog
+**Status**: Done
 **Created**: 2025-11-29
 **Priority**: Medium
 **Labels**: page, calculators, frontend
@@ -20,12 +20,12 @@ Complete Kalkulatorer page with calculator grid.
 
 ## Acceptance Criteria
 
-- [ ] Update `/frontend/src/features/calculators/CalculatorsPage.tsx`
-- [ ] Centered PageHeader with title and subtitle
-- [ ] 2x2 grid of CalculatorCards
-- [ ] Cards: Renters rente, F.I.R.E. kalkulator, Lånekalkulator, Monte Carlo
-- [ ] Each card links to respective calculator page
-- [ ] Staggered fade-in animation
+- [x] Update `/frontend/src/features/calculators/CalculatorsPage.tsx`
+- [x] Centered PageHeader with title and subtitle
+- [x] 2x2 grid of CalculatorCards
+- [x] Cards: Renters rente, F.I.R.E. kalkulator, Lånekalkulator, Monte Carlo
+- [x] Each card links to respective calculator page
+- [x] Staggered fade-in animation
 
 ## Technical Approach
 

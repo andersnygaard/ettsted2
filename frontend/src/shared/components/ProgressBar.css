@@ -70,8 +70,11 @@
 /* Individual labels */
 .progress-bar__label-left,
 .progress-bar__label-right {
-  font-family: var(--font-body);
-  font-size: var(--font-size-sm);
+  font-size: 12px;
   color: var(--text-secondary);
-  font-weight: var(--font-weight-medium);
+}
+
+/* Right label uses monospace for currency/numbers */
+.progress-bar__label-right {
+  font-family: var(--font-mono);
 }

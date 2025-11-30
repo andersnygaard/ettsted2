@@ -1,18 +1,74 @@
+import { PageHeader, CalculatorCard } from '@/shared/components';
+import './CalculatorsPage.css';
+
+/**
+ * Calculator data for the grid
+ * Each calculator has an icon, title, description, link, and icon background color
+ */
+const calculators = [
+  {
+    icon: '📈',
+    title: 'Renters rente',
+    description: 'Se hvordan sparingen din vokser over tid med compound interest.',
+    href: '/kalkulatorer/compound',
+    iconBg: 'rgba(139, 154, 125, 0.15)', // Muted sage
+  },
+  {
+    icon: '🎯',
+    title: 'F.I.R.E. kalkulator',
+    description: 'Beregn hvor lang tid det tar å nå økonomisk uavhengighet.',
+    href: '/kalkulatorer/fire',
+    iconBg: 'rgba(184, 197, 208, 0.3)', // Pale blue
+  },
+  {
+    icon: '🏠',
+    title: 'Lånekalkulator',
+    description: 'Beregn månedlige avdrag og total rentekostnad på lån.',
+    href: '/kalkulatorer/loan',
+    iconBg: 'rgba(196, 164, 132, 0.2)', // Soft terracotta
+  },
+  {
+    icon: '🎲',
+    title: 'Monte Carlo',
+    description: 'Simuler tusenvis av scenarioer for å teste pensjonsplanen din.',
+    href: '/kalkulatorer/monte-carlo',
+    iconBg: 'rgba(44, 44, 44, 0.08)', // Charcoal light
+  },
+];
+
+/**
+ * CalculatorsPage Component
+ *
+ * Landing page for all financial calculators.
+ * Displays a 2x2 grid of calculator cards with staggered animations.
+ *
+ * Based on Nordic Minimal design from draft-1-kalkulatorer.html
+ */
 function CalculatorsPage() {
   return (
-    <div className="container">
-      <h4>Finansielle Kalkulatorer</h4>
-      <p>Kalkulatorer kommer snart...</p>
-      <article className="border round">
-        <h6>Kommende kalkulatorer:</h6>
-        <ul>
-          <li>Renters rente kalkulator</li>
-          <li>Monte Carlo simulering for pensjon</li>
-          <li>F.I.R.E. beregning</li>
-          <li>Lån nedbetaling visualisering</li>
-        </ul>
-      </article>
-    </div>
+    <main className="calculators-page">
+      <div className="container container--narrow">
+        <PageHeader
+          title="Kalkulatorer"
+          subtitle="Verktøy for å planlegge din økonomi"
+          centered
+        />
+
+        <div className="calc-grid">
+          {calculators.map((calc, index) => (
+            <CalculatorCard
+              key={calc.href}
+              icon={calc.icon}
+              title={calc.title}
+              description={calc.description}
+              href={calc.href}
+              iconBg={calc.iconBg}
+              className={`animate-fade-up animate-delay-${index + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+    </main>
   );
 }
 

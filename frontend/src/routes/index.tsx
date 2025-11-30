@@ -7,7 +7,13 @@ import ProtectedRoute from '../features/auth/ProtectedRoute';
 const HomePage = lazy(() => import('../features/dashboard/HomePage'));
 const DashboardPage = lazy(() => import('../features/dashboard/DashboardPage'));
 const PortfolioPage = lazy(() => import('../features/portfolio/PortfolioPage'));
+const SparingPage = lazy(() => import('../features/sparing/SparingPage'));
+const GjeldPage = lazy(() => import('../features/gjeld/GjeldPage'));
+const PensjonPage = lazy(() => import('../features/pensjon/PensjonPage'));
 const CalculatorsPage = lazy(() => import('../features/calculators/CalculatorsPage'));
+const CompoundCalculatorPage = lazy(() => import('../features/calculators/CompoundCalculatorPage'));
+const FireCalculatorPage = lazy(() => import('../features/calculators/FireCalculatorPage'));
+const LoanCalculatorPage = lazy(() => import('../features/calculators/LoanCalculatorPage'));
 const LoginPage = lazy(() => import('../features/auth/LoginPage'));
 const OnboardingPage = lazy(() => import('../features/auth/OnboardingPage'));
 
@@ -45,13 +51,51 @@ function AppRoutes() {
             }
           />
           <Route
-            path="calculators"
+            path="sparing"
+            element={<SparingPage />}
+          />
+          <Route
+            path="gjeld"
+            element={<GjeldPage />}
+          />
+          <Route
+            path="pensjon"
+            element={<PensjonPage />}
+          />
+          <Route
+            path="kalkulatorer"
             element={
               <ProtectedRoute>
                 <CalculatorsPage />
               </ProtectedRoute>
             }
           />
+          <Route
+            path="kalkulatorer/compound"
+            element={
+              <ProtectedRoute>
+                <CompoundCalculatorPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="kalkulatorer/fire"
+            element={
+              <ProtectedRoute>
+                <FireCalculatorPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="kalkulatorer/loan"
+            element={
+              <ProtectedRoute>
+                <LoanCalculatorPage />
+              </ProtectedRoute>
+            }
+          />
+          {/* Legacy route redirect */}
+          <Route path="calculators" element={<Navigate to="/kalkulatorer" replace />} />
           {/* 404 - Not Found */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

@@ -1,0 +1,65 @@
+/**
+ * NewMonthModal Styles
+ *
+ * Styling for the new month modal form.
+ * Based on Nordic Minimal design system.
+ */
+
+.new-month-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/**
+ * Section spacing
+ */
+.new-month-modal__section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/**
+ * Section title
+ * Uses DM Sans, small caps, secondary color
+ */
+.new-month-modal__section-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+/**
+ * Fields container
+ * Grid layout for account inputs
+ */
+.new-month-modal__fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+/**
+ * Footer actions (buttons)
+ */
+.new-month-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/**
+ * Responsive: Single column on smaller screens
+ */
+@media (max-width: 768px) {
+  .new-month-modal__fields {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,165 @@
+/**
+ * HomePage Styles
+ * Based on Nordic Minimal design system
+ */
+
+.home-page {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-4xl);
+}
+
+.home-page__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3xl);
+}
+
+/* Welcome Card */
+.home-page__welcome-card {
+  background: var(--warm-white);
+  padding: var(--space-3xl);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+.home-page__welcome-card h3 {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-light);
+  color: var(--charcoal);
+  margin-bottom: var(--space-md);
+}
+
+.home-page__welcome-card p {
+  color: var(--text-secondary);
+  font-size: var(--font-size-md);
+  margin-bottom: var(--space-lg);
+}
+
+.home-page__welcome-card p:last-of-type {
+  margin-bottom: var(--space-xl);
+}
+
+/* Greeting */
+.home-page__greeting {
+  color: var(--charcoal);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Button group */
+.home-page__actions {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+.home-page__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 12px 24px;
+  font-size: var(--font-size-xs);
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  border: 1px solid transparent;
+}
+
+.home-page__btn--primary {
+  background: var(--charcoal);
+  color: var(--warm-white);
+  border-color: var(--charcoal);
+}
+
+.home-page__btn--primary:hover {
+  background: #1a1a1a;
+}
+
+.home-page__btn--secondary {
+  background: transparent;
+  color: var(--charcoal);
+  border-color: var(--border-strong);
+}
+
+.home-page__btn--secondary:hover {
+  background: var(--bone);
+}
+
+.home-page__btn i {
+  font-size: 18px;
+}
+
+/* Feature cards grid */
+.home-page__features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  max-width: 900px;
+  width: 100%;
+}
+
+.home-page__feature-card {
+  background: var(--warm-white);
+  padding: var(--space-xl);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.home-page__feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.home-page__feature-card i {
+  font-size: 32px;
+  color: var(--muted-sage);
+  margin-bottom: var(--space-md);
+  display: block;
+}
+
+.home-page__feature-card h6 {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-regular);
+  color: var(--charcoal);
+  margin-bottom: var(--space-xs);
+}
+
+.home-page__feature-card p {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .home-page {
+    padding: 0 var(--space-lg);
+  }
+
+  .home-page__features {
+    grid-template-columns: 1fr;
+  }
+
+  .home-page__actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .home-page__btn {
+    width: 100%;
+    max-width: 280px;
+    justify-content: center;
+  }
+}
