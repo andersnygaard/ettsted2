@@ -1,0 +1,55 @@
+/**
+ * MonteCarloChart Styles
+ *
+ * Styling for Monte Carlo D3.js visualization
+ * Based on Nordic Minimal design system
+ */
+
+.monte-carlo-chart {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 24px;
+  margin-top: 32px;
+}
+
+.monte-carlo-chart svg {
+  overflow: visible;
+}
+
+/* Chart elements */
+.scenario-path {
+  transition: opacity 0.2s ease;
+}
+
+.scenario-path:hover {
+  opacity: 0.4 !important;
+  stroke-width: 1.5 !important;
+}
+
+.median-line {
+  stroke-dasharray: none;
+}
+
+.percentile-band-core,
+.percentile-band-outer {
+  pointer-events: none;
+}
+
+/* Axis styling */
+.x-axis path,
+.y-axis path {
+  stroke: var(--border);
+}
+
+.x-axis line,
+.y-axis line {
+  stroke: var(--border);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .monte-carlo-chart {
+    padding: 16px;
+  }
+}

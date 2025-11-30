@@ -1,0 +1,205 @@
+/**
+ * Page Skeleton Layouts
+ * Shared styling for page-specific skeleton loaders
+ */
+
+.skeleton-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Page Header Skeleton */
+.skeleton-page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 16px;
+}
+
+/* Hero Section Skeleton */
+.skeleton-hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+}
+
+/* Quick Stats Grid */
+.skeleton-quick-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.skeleton-stat-card {
+  padding: 24px;
+  background: var(--warm-white);
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Stats Row */
+.skeleton-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Milestone Section */
+.skeleton-milestone-section {
+  padding: 24px;
+  background: var(--warm-white);
+  border-radius: 2px;
+}
+
+/* Section Links */
+.skeleton-section-links {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.skeleton-section-link {
+  padding: 20px 24px;
+  background: var(--warm-white);
+  border-radius: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Breadcrumb Skeleton */
+.skeleton-breadcrumb {
+  padding: 16px 0;
+}
+
+/* Page Actions */
+.skeleton-page-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+/* Table Header */
+.skeleton-table-header {
+  padding: 24px;
+  background: var(--warm-white);
+  border-radius: 2px;
+  margin-bottom: 16px;
+}
+
+/* Table Body */
+.skeleton-table-body {
+  background: var(--warm-white);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.skeleton-table-row {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.skeleton-table-row:last-child {
+  border-bottom: none;
+}
+
+/* Table Footer */
+.skeleton-table-footer {
+  padding: 24px;
+  background: var(--warm-white);
+  border-radius: 2px;
+  margin-top: 16px;
+}
+
+/* Dekning Section */
+.skeleton-dekning-section {
+  padding: 24px;
+  background: var(--warm-white);
+  border-radius: 2px;
+  margin-top: 24px;
+}
+
+/* Loans List */
+.skeleton-loans-list {
+  padding: 24px 0;
+}
+
+.skeleton-loan-item {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.skeleton-loan-item:last-child {
+  border-bottom: none;
+}
+
+/* Fire Section */
+.skeleton-fire-section {
+  padding: 24px;
+  background: var(--warm-white);
+  border-radius: 2px;
+  margin-top: 24px;
+}
+
+/* OTP Section */
+.skeleton-otp-section {
+  padding: 24px;
+  background: var(--warm-white);
+  border-radius: 2px;
+  margin-top: 24px;
+}
+
+/* Breakdown Cards */
+.skeleton-breakdown-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.skeleton-breakdown-card {
+  padding: 24px;
+  background: var(--warm-white);
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chart Section */
+.skeleton-chart-section {
+  padding: 24px;
+  background: var(--warm-white);
+  border-radius: 2px;
+  margin-top: 24px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .skeleton-quick-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .skeleton-stats-row {
+    grid-template-columns: 1fr;
+  }
+
+  .skeleton-breakdown-cards {
+    grid-template-columns: 1fr;
+  }
+}

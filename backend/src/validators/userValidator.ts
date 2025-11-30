@@ -6,17 +6,17 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { getUserByUsername } from '../services/userService';
+import { getUserByNickname } from '../services/userService';
 import { logger } from '../utils/logger';
 
 /**
- * Username validation rules:
+ * Nickname validation rules:
  * - 3-20 characters
  * - Alphanumeric characters (a-z, A-Z, 0-9)
  * - Underscores allowed
  * - No special characters, spaces, or emojis
  */
-const USERNAME_REGEX = /^[a-zA-Z0-9_]{3,20}$/;
+const NICKNAME_REGEX = /^[a-zA-Z0-9_]{3,20}$/;
 
 /**
  * Email validation (basic format check)
@@ -24,11 +24,11 @@ const USERNAME_REGEX = /^[a-zA-Z0-9_]{3,20}$/;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
- * Validates username setup request body
+ * Validates nickname setup request body
  *
  * Checks:
- * - username field exists and is string
- * - username matches format requirements (3-20 chars, alphanumeric + underscore)
+ * - nickname field exists and is string
+ * - nickname matches format requirements (3-20 chars, alphanumeric + underscore)
  * - email field (if provided) is valid format
  *
  * @param req - Express request
@@ -40,43 +40,43 @@ export function validateSetupRequest(
   res: Response,
   next: NextFunction
 ): void {
-  const { username, email } = req.body;
+  const { nickname, email } = req.body;
 
-  // Validate username is provided
-  if (!username) {
+  // Validate nickname is provided
+  if (!nickname) {
     res.status(400).json({
       error: {
-        message: 'Username is required',
+        message: 'Nickname is required',
         code: 'VALIDATION_ERROR',
-        details: { field: 'username' }
+        details: { field: 'nickname' }
       },
       success: false
     });
     return;
   }
 
-  // Validate username is string
-  if (typeof username !== 'string') {
+  // Validate nickname is string
+  if (typeof nickname !== 'string') {
     res.status(400).json({
       error: {
-        message: 'Username must be a string',
+        message: 'Nickname must be a string',
         code: 'VALIDATION_ERROR',
-        details: { field: 'username', type: typeof username }
+        details: { field: 'nickname', type: typeof nickname }
       },
       success: false
     });
     return;
   }
 
-  // Validate username format
-  if (!USERNAME_REGEX.test(username)) {
+  // Validate nickname format
+  if (!NICKNAME_REGEX.test(nickname)) {
     res.status(400).json({
       error: {
-        message: 'Username must be 3-20 characters (alphanumeric and underscores only)',
+        message: 'Nickname must be 3-20 characters (alphanumeric and underscores only)',
         code: 'VALIDATION_ERROR',
         details: {
-          field: 'username',
-          value: username,
+          field: 'nickname',
+          value: nickname,
           pattern: '3-20 characters, a-z, A-Z, 0-9, _'
         }
       },
@@ -112,50 +112,50 @@ export function validateSetupRequest(
     }
   }
 
-  logger.debug('Setup request validation passed', { username, hasEmail: !!email });
+  logger.debug('Setup request validation passed', { nickname, hasEmail: !!email });
   next();
 }
 
 /**
- * Validates username uniqueness (business validation)
+ * Validates nickname uniqueness (business validation)
  *
- * Checks that username is not already taken by another user.
- * Returns 409 Conflict if username exists.
+ * Checks that nickname is not already taken by another user.
+ * Returns 409 Conflict if nickname exists.
  *
  * @param req - Express request
  * @param res - Express response
  * @param next - Express next function
  */
-export async function validateUsernameAvailable(
+export async function validateNicknameAvailable(
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { username } = req.body;
+  const { nickname } = req.body;
 
   try {
-    const existingUser = await getUserByUsername(username);
+    const existingUser = await getUserByNickname(nickname);
 
     if (existingUser) {
-      logger.warn('Username already taken', { username, existingUserId: existingUser.id });
+      logger.warn('Nickname already taken', { nickname, existingUserId: existingUser.id });
       res.status(409).json({
         error: {
-          message: 'Username already taken',
+          message: 'Nickname already taken',
           code: 'CONFLICT',
-          details: { field: 'username', value: username }
+          details: { field: 'nickname', value: nickname }
         },
         success: false
       });
       return;
     }
 
-    logger.debug('Username available', { username });
+    logger.debug('Nickname available', { nickname });
     next();
   } catch (error) {
-    logger.error('Error checking username availability', { username, error });
+    logger.error('Error checking nickname availability', { nickname, error });
     res.status(500).json({
       error: {
-        message: 'Failed to validate username availability',
+        message: 'Failed to validate nickname availability',
         code: 'INTERNAL_SERVER_ERROR'
       },
       success: false
@@ -169,8 +169,8 @@ export async function validateUsernameAvailable(
  * Checks:
  * - At least one field to update is provided
  * - email (if provided) is valid format
- * - preferences (if provided) is object
- * - Blocked fields (id, username, createdAt) are not included
+ * - profile (if provided) is object
+ * - Blocked fields (id, createdAt) are not included
  *
  * @param req - Express request
  * @param res - Express response
@@ -211,12 +211,12 @@ export function validateUpdateRequest(
   }
 
   // Validate blocked fields are not included
-  const blockedFields = ['id', 'username', 'createdAt'];
+  const blockedFields = ['id', 'createdAt'];
   const hasBlockedField = updateFields.some(field => blockedFields.includes(field));
   if (hasBlockedField) {
     res.status(400).json({
       error: {
-        message: 'Cannot update id, username, or createdAt',
+        message: 'Cannot update id or createdAt',
         code: 'VALIDATION_ERROR',
         details: {
           blockedFields,
@@ -255,14 +255,14 @@ export function validateUpdateRequest(
     }
   }
 
-  // Validate preferences if provided
-  if (updates.preferences !== undefined) {
-    if (typeof updates.preferences !== 'object' || updates.preferences === null || Array.isArray(updates.preferences)) {
+  // Validate profile if provided
+  if (updates.profile !== undefined) {
+    if (typeof updates.profile !== 'object' || updates.profile === null || Array.isArray(updates.profile)) {
       res.status(400).json({
         error: {
-          message: 'Preferences must be an object',
+          message: 'Profile must be an object',
           code: 'VALIDATION_ERROR',
-          details: { field: 'preferences', type: typeof updates.preferences }
+          details: { field: 'profile', type: typeof updates.profile }
         },
         success: false
       });

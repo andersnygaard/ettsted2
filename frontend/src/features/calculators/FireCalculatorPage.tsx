@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
-import { Breadcrumb, PageHeader, Card, NumberInput, AreaChart, ProgressBar } from '@/shared/components';
+import { Breadcrumb, PageHeader, Card, NumberInput, AreaChart, ProgressBar, Modal, Button } from '@/shared/components';
 import type { DataPoint } from '@/shared/components';
 import { formatCurrency, formatNumber } from '@/shared/utils/numberFormat';
+import { userApi } from '@/shared/api/services';
 import './CompoundCalculatorPage.css'; // Reuse shared calculator styles
 
 /**
@@ -123,8 +124,27 @@ function FireCalculatorPage() {
     currentAge: 35,
     expectedReturn: 7,
   });
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   const result = useMemo(() => calculateFire(inputs), [inputs]);
+
+  const handleSaveFireNumber = async () => {
+    setIsSaving(true);
+    try {
+      await userApi.updateProfile({ fireNumber: result.fireNumber });
+      setSaveSuccess(true);
+      setTimeout(() => {
+        setShowConfirmDialog(false);
+        setSaveSuccess(false);
+      }, 1500);
+    } catch (error) {
+      console.error('Failed to save F.I.R.E. number:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const updateInput = <K extends keyof FireInputs>(
     key: K,
@@ -227,6 +247,30 @@ function FireCalculatorPage() {
                 height={12}
               />
             </div>
+
+            <div className="fire-formula">
+              <div className="fire-formula__title">Slik beregnes F.I.R.E. tallet</div>
+              <div className="fire-formula__calculation">
+                <span className="fire-formula__term">{formatCurrency(inputs.annualExpenses)}</span>
+                <span className="fire-formula__operator">×</span>
+                <span className="fire-formula__term">25</span>
+                <span className="fire-formula__operator">=</span>
+                <span className="fire-formula__result">{formatCurrency(result.fireNumber)}</span>
+              </div>
+              <div className="fire-formula__explanation">
+                Med 4%-regelen kan du ta ut 4% av formuen årlig.
+                For å dekke {formatCurrency(inputs.annualExpenses)} i utgifter
+                trenger du 25× dette beløpet.
+              </div>
+              <div className="fire-formula__action">
+                <Button
+                  variant="secondary"
+                  onClick={() => setShowConfirmDialog(true)}
+                >
+                  Lagre som mitt F.I.R.E. mål
+                </Button>
+              </div>
+            </div>
           </Card>
         </div>
 
@@ -255,6 +299,30 @@ function FireCalculatorPage() {
           </p>
         </div>
       </div>
+
+      <Modal
+        isOpen={showConfirmDialog}
+        onClose={() => setShowConfirmDialog(false)}
+        title="Oppdater F.I.R.E. mål"
+        footer={
+          <div className="modal-actions">
+            <Button variant="secondary" onClick={() => setShowConfirmDialog(false)} disabled={isSaving}>
+              Avbryt
+            </Button>
+            <Button variant="primary" onClick={handleSaveFireNumber} disabled={isSaving}>
+              {isSaving ? 'Lagrer...' : saveSuccess ? 'Lagret!' : 'Bekreft'}
+            </Button>
+          </div>
+        }
+      >
+        <p>
+          Vil du lagre <strong>{formatCurrency(result.fireNumber)}</strong> som ditt F.I.R.E. mål?
+        </p>
+        <p className="text-secondary">
+          Dette tallet vil brukes til å beregne din fremgang mot økonomisk uavhengighet
+          på tvers av appen.
+        </p>
+      </Modal>
     </main>
   );
 }

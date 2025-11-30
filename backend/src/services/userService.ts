@@ -26,7 +26,7 @@ export async function createUser(user: User): Promise<User> {
   try {
     const container = getUsersContainer();
     const { resource } = await container.items.create(user);
-    logger.info('User created successfully', { userId: user.id, username: user.username });
+    logger.info('User created successfully', { userId: user.id, nickname: user.nickname });
     return resource as User;
   } catch (error) {
     logger.error('Failed to create user', { userId: user.id, error });
@@ -56,21 +56,21 @@ export async function getUserById(userId: string): Promise<User | null> {
 }
 
 /**
- * Get user by username
+ * Get user by nickname
  *
  * Uses parameterized query to prevent NoSQL injection.
  * Note: This is a cross-partition query (slower and more expensive).
  *
- * @param username - Username to search for
+ * @param nickname - Nickname to search for
  * @returns User document or null if not found
  * @throws DatabaseError if operation fails
  */
-export async function getUserByUsername(username: string): Promise<User | null> {
+export async function getUserByNickname(nickname: string): Promise<User | null> {
   try {
     const container = getUsersContainer();
     const querySpec = buildParameterizedQuery(
-      'SELECT * FROM users u WHERE u.username = @username',
-      { username }
+      'SELECT * FROM users u WHERE u.nickname = @nickname',
+      { nickname }
     );
 
     const { resources } = await container.items.query<User>(querySpec).fetchAll();
@@ -79,10 +79,10 @@ export async function getUserByUsername(username: string): Promise<User | null> 
       return null;
     }
 
-    // Return first match (username should be unique)
+    // Return first match (nickname should be unique)
     return resources[0];
   } catch (error) {
-    logger.error('Failed to get user by username', { username, error });
+    logger.error('Failed to get user by nickname', { nickname, error });
     throw handleCosmosError(error);
   }
 }
@@ -109,12 +109,17 @@ export async function updateUser(
       throw new Error('User not found');
     }
 
-    // Merge updates (preserve id and createdAt)
+    // Merge updates (preserve id and createdAt, deep-merge profile)
     const updatedUser: User = {
       ...existingUser,
       ...updates,
+      // Deep-merge profile if provided
+      profile: updates.profile
+        ? { ...existingUser.profile, ...updates.profile }
+        : existingUser.profile,
       id: existingUser.id, // Ensure id is not changed
       createdAt: existingUser.createdAt, // Ensure createdAt is not changed
+      updatedAt: new Date() // Always update timestamp
     };
 
     // Replace the document
@@ -146,12 +151,12 @@ export async function deleteUser(userId: string): Promise<void> {
 }
 
 /**
- * Check if username is available (not taken)
+ * Check if nickname is available (not taken)
  *
- * @param username - Username to check
- * @returns true if username is available, false if taken
+ * @param nickname - Nickname to check
+ * @returns true if nickname is available, false if taken
  */
-export async function isUsernameAvailable(username: string): Promise<boolean> {
-  const user = await getUserByUsername(username);
+export async function isNicknameAvailable(nickname: string): Promise<boolean> {
+  const user = await getUserByNickname(nickname);
   return user === null;
 }

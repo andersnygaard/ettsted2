@@ -64,47 +64,64 @@
 
 **Container: `users`**
 - **Partition Key**: `/id` (userId)
-- **Documents**: User profiles
+- **Documents**: User with profile and account configurations
 ```typescript
 {
   id: string              // userId (from EasyAuth token)
-  username: string        // Unique, chosen at first login
-  email?: string          // Optional, user toggles during onboarding
+  nickname: string        // Display name
+  email: string           // User email
   createdAt: Date
-  preferences: {
-    // Future: theme, locale, etc.
+  updatedAt: Date
+  profile: {
+    monthlySalary: number       // Monthly income for savings rate
+    annualExpenses: number      // Yearly expenses for F.I.R.E. calc
+    birthYear: number           // For pension projections
+    plannedRetirementAge: number
+    fireNumber?: number         // Optional custom F.I.R.E. target
   }
+  accounts: [             // Account configurations (not balances)
+    {
+      id: string
+      name: string        // "Nordnet ASK", "Huslån", etc.
+      category: 'sparing' | 'gjeld' | 'pensjon'
+      isActive: boolean   // Hide inactive accounts from UI
+      sortOrder: number   // Display order within category
+      createdAt: Date
+      loanDetails?: {     // Only for gjeld accounts
+        interestRate: number
+        remainingYears: number
+        originalAmount?: number
+      }
+    }
+  ]
 }
 ```
 
-**Container: `portfolios`**
+**Container: `snapshots`**
 - **Partition Key**: `/userId`
 - **Documents**: Monthly snapshots with account balances
 ```typescript
 {
   id: string              // snapshotId
   userId: string
-  date: string            // "01.01.2024" (dd.MM.yyyy format)
-  accounts: [
-    {
-      id: string
-      name: string        // "Nordnet ASK", "Bouvet ASK", etc.
-      assetClass: string  // "aksjer", "fond", "krypto", "bankkonto", or custom
-      value: number       // Total value in NOK (kroner, decimal)
-      notes?: string
-    }
-  ]
-  totalNetWorth: number   // Calculated sum
+  date: Date              // First day of month (UTC)
   createdAt: Date
   updatedAt: Date
+  balances: [             // Only balances, references account by ID
+    {
+      accountId: string   // FK → User.accounts[].id
+      balance: number     // Value in NOK
+    }
+  ]
 }
 ```
 
 ### Design Rationale
-- **Co-location**: All user data in same partition (userId) enables fast, low-cost queries
-- **Account-based tracking**: Users track account totals, not individual holdings within accounts
-- **Flexible asset classes**: Predefined types (aksjer, fond, krypto, bankkonto) + custom user-defined types
-- **Optimistic updates**: No immutable history - users can edit any past snapshot
+- **Normalized accounts**: Account config stored once in User, balances reference by ID
+- **Category-based**: Three categories (sparing, gjeld, pensjon) for grouping
+- **Co-location**: All user data in same partition (userId) for fast queries
+- **Optimistic updates**: No immutable history - users can edit any snapshot
+- **Inactive accounts**: Can hide old accounts without deleting historical data
 
 ### Migration Strategy
 - **No migrations initially**: CosmosDB is schemaless
@@ -474,22 +491,33 @@ Expanded:                          Collapsed:
 ### API Endpoints
 
 **Users:**
-- `GET /api/v1/users/me` - Get current user
-- `POST /api/v1/users/me/setup` - First-time username setup
+- `GET /api/v1/users/me` - Get current user with profile and accounts
+- `POST /api/v1/users/me/setup` - First-time user setup (nickname, profile)
 - `PATCH /api/v1/users/me` - Update user settings
+- `PATCH /api/v1/users/me/profile` - Update user profile (salary, expenses, etc.)
 
-**Portfolio:**
+**Accounts** (account configurations, stored in User):
+- `GET /api/v1/accounts` - Get all accounts for user
+- `POST /api/v1/accounts` - Create new account config
+- `PATCH /api/v1/accounts/:id` - Update account config
+- `DELETE /api/v1/accounts/:id` - Delete account config (and related balances)
+
+**Snapshots** (monthly balances):
 - `GET /api/v1/snapshots` - Get all snapshots for user
 - `POST /api/v1/snapshots` - Create new monthly snapshot
-- `PATCH /api/v1/snapshots/:id` - Edit existing snapshot
+- `PATCH /api/v1/snapshots/:id` - Edit snapshot balances
 - `DELETE /api/v1/snapshots/:id` - Delete snapshot
-- `GET /api/v1/snapshots/:id/accounts` - Get accounts for a snapshot
-- `POST /api/v1/snapshots/:id/accounts` - Add account to snapshot
-- `PATCH /api/v1/accounts/:id` - Update account
-- `DELETE /api/v1/accounts/:id` - Delete account
+
+**Aggregated Data** (for pages):
+- `GET /api/v1/dashboard` - Dashboard data (net worth, stats, milestones)
+- `GET /api/v1/sparing` - Sparing page data (savings, F.I.R.E. progress)
+- `GET /api/v1/gjeld` - Gjeld page data (debt, coverage, loans)
+- `GET /api/v1/pensjon` - Pensjon page data (pension breakdown)
 
 **Calculators:**
 - `POST /api/v1/calculators/compound` - Run compound interest calculator
+- `POST /api/v1/calculators/fire` - Run F.I.R.E. calculator
+- `POST /api/v1/calculators/loan` - Run loan calculator
 - `POST /api/v1/calculators/monte-carlo` - Run Monte Carlo simulation
 
 **LLM Data Import:**
@@ -974,39 +1002,62 @@ const tools = [
 
 **User**
 - `id`: Unique identifier (from EasyAuth)
-- `username`: Unique, user-chosen
-- `email`: Optional, user-controlled
+- `nickname`: Display name
+- `email`: User email
+- `createdAt`, `updatedAt`: Timestamps
+- `profile`: UserProfile (embedded)
+- `accounts`: AccountConfig[] (embedded)
+
+**UserProfile** (embedded in User)
+- `monthlySalary`: Monthly income for savings rate calculation
+- `annualExpenses`: Yearly expenses for F.I.R.E. calculation
+- `birthYear`: For pension projections
+- `plannedRetirementAge`: Target retirement age
+- `fireNumber`: Optional custom F.I.R.E. target (defaults to 25x expenses)
+
+**AccountConfig** (embedded in User)
+- `id`: Unique identifier
+- `name`: User-defined (e.g., "Nordnet ASK", "Huslån")
+- `category`: 'sparing' | 'gjeld' | 'pensjon'
+- `isActive`: Boolean for hiding old accounts
+- `sortOrder`: Display order within category
 - `createdAt`: Timestamp
+- `loanDetails`: Optional LoanDetails for gjeld accounts
+
+**LoanDetails** (embedded in AccountConfig)
+- `interestRate`: Interest rate percentage
+- `remainingYears`: Years left on loan
+- `originalAmount`: Optional original loan amount
 
 **MonthlySnapshot**
 - `id`: Unique identifier
 - `userId`: Foreign key to User
-- `date`: Snapshot date (1st of month, dd.MM.yyyy)
-- `accounts`: Array of Account objects
-- `totalNetWorth`: Calculated sum of all account values
+- `date`: Snapshot date (1st of month, UTC)
 - `createdAt`, `updatedAt`: Timestamps
+- `balances`: AccountBalance[] (embedded)
 
-**Account (embedded in MonthlySnapshot)**
-- `id`: Unique identifier within snapshot
-- `name`: User-defined (e.g., "Nordnet ASK")
-- `assetClass`: Predefined or custom (e.g., "aksjer", "fond", "krypto", "bankkonto")
-- `value`: Total value in NOK (decimal)
-- `notes`: Optional text
+**AccountBalance** (embedded in MonthlySnapshot)
+- `accountId`: Foreign key to AccountConfig.id
+- `balance`: Value in NOK
 
 ### Relationships
+- One User → Many AccountConfigs (embedded)
 - One User → Many MonthlySnapshots
-- One MonthlySnapshot → Many Accounts (embedded)
+- One MonthlySnapshot → Many AccountBalances (embedded, references AccountConfig by ID)
 
-### Asset Classes
-**Predefined types:**
-- `aksjer` (stocks)
-- `fond` (funds)
-- `krypto` (crypto)
-- `bankkonto` (bank account)
+### Categories
+- `sparing`: Savings and investments (bank, stocks, funds, crypto)
+- `gjeld`: Debt (loans, mortgages)
+- `pensjon`: Pension (employer, government)
 
-**Custom types:**
-- Users can enter any string as asset class
-- No validation on custom types (flexible)
+### Default Accounts
+Created on user signup:
+- Bank (sparing)
+- Fond (sparing)
+- Huslån (gjeld)
+- Studielån (gjeld)
+- Arbeidsgiver (pensjon)
+- Folketrygden (pensjon)
 
 ---
 

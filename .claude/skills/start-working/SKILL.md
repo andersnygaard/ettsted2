@@ -5,24 +5,47 @@ description: Continue work on the next priority from the task backlog. Use this 
 
 # Start Working Skill
 
-This skill provides a structured workflow for continuing work on the next priority from the task backlog. It automates the process of selecting, planning, implementing, and completing tasks following the finans project's task-board workflow.
+This skill provides a structured workflow for continuing work on the next priority from the **task board system** (`.task-board/`). All work is tracked through the task board - no ad-hoc work outside the system.
+
+**Task Board Flow**: `.task-board/backlog/` → `.task-board/in-progress/` → `.task-board/done/`
+
+The skill automates selecting, planning, implementing, and completing tasks following this strict workflow.
 
 ---
 
-## 🚨 THREE CRITICAL RULES 🚨
+## 🚨 SIX CRITICAL RULES 🚨
 
-### 1. USE SUBAGENTS WITH HAIKU BY DEFAULT
+### 1. USE THE TASK BOARD SYSTEM
+**ALL work flows through `.task-board/`** - this is non-negotiable.
+- Tasks live in: `backlog/` → `in-progress/` → `done/`
+- `PLANNING-BOARD.md` is the source of truth for priorities
+- **NEVER work on something not tracked in the task board**
+- Update task files with progress as you work
+
+**Why**: The task board ensures organized, trackable, sequential work with clear accountability.
+
+### 2. NEVER USE GIT COMMANDS
+**ABSOLUTELY NO git commands** - not by the main agent, not by subagents.
+- ❌ `git add`, `git commit`, `git push`, `git pull`, `git checkout`, `git branch`, etc.
+- ❌ `git status`, `git diff`, `git log` (even read-only commands)
+- ❌ Any command starting with `git`
+
+**Why**: The user handles all git operations manually. This prevents accidental commits, branch switches, or repository state changes.
+
+**If user requests git operations**: Politely decline and explain that git commands are disabled for this workflow.
+
+### 3. USE SUBAGENTS WITH HAIKU BY DEFAULT
 Each task MUST be executed using the **Task tool** with a subagent:
 - **Default model: `haiku`** - fast and efficient for most tasks
 - **Use `sonnet` only for**: D3.js visualizations, complex business logic, architectural decisions
 
-### 2. TASKS ARE DONE IN ORDER
+### 4. TASKS ARE DONE IN ORDER
 Tasks are numbered for dependency reasons. Execute them **sequentially, in order**:
 - Pick task 071 → Complete → Pick task 072 → Complete → Pick task 073...
 - **NEVER skip ahead** unless user explicitly requests it
 - **NEVER run tasks in parallel**
 
-### 3. PLAYWRIGHT CLI FOR FRONTEND VERIFICATION
+### 5. PLAYWRIGHT CLI FOR FRONTEND VERIFICATION
 Every frontend task MUST be verified with Playwright CLI **before marking complete**:
 ```bash
 # Run verification script (no permission prompts)
@@ -38,9 +61,43 @@ The script will:
 
 **Frontend tasks without Playwright verification are INCOMPLETE.**
 
+### 6. USE BUILT-IN TOOLS, NOT BASH COMMANDS
+Subagents MUST use built-in tools instead of bash equivalents. **This is non-negotiable.**
+
+| ❌ NEVER USE | ✅ ALWAYS USE |
+|--------------|---------------|
+| `cat`, `head`, `tail` | **Read** tool |
+| `echo >`, `cat <<EOF` | **Write** tool |
+| `sed`, `awk` | **Edit** tool |
+| `find`, `ls` (for search) | **Glob** tool |
+| `grep`, `rg` | **Grep** tool |
+
+**Why**: Built-in tools are optimized, safer, and provide better output for Claude Code.
+
+**Example violations to watch for**:
+```bash
+# ❌ BAD - Using bash for file operations
+cat /path/to/file.ts
+grep -r "pattern" src/
+find . -name "*.tsx"
+echo "content" > file.ts
+
+# ✅ GOOD - Using built-in tools
+Read tool: file_path="/path/to/file.ts"
+Grep tool: pattern="pattern", path="src/"
+Glob tool: pattern="**/*.tsx"
+Write tool: file_path="file.ts", content="content"
+```
+
+**Subagent prompts MUST include this reminder.**
+
 ---
 
-**CRITICAL**: Never commit and push unless explicitly confirmed by the user first.
+**🚨 TWO ABSOLUTE RULES 🚨**
+1. **ALL WORK THROUGH TASK BOARD** - Tasks come from `.task-board/`, progress tracked in task files, never work outside the system
+2. **NO GIT COMMANDS** - Never run ANY git commands. User handles all version control manually.
+
+---
 
 ## When to Use This Skill
 
@@ -629,13 +686,26 @@ Task tool:
     Implement the user API routes as specified in:
     .task-board/in-progress/081-FEATURE-user-routes.md
 
+    This task is tracked in the task board system.
     Follow all patterns from CLAUDE.md.
-    Update the task file with progress.
-    Mark acceptance criteria as complete.
+    Update the task file in .task-board/in-progress/ with progress.
+    Mark acceptance criteria as complete in the task file.
+
+    🚨 CRITICAL RESTRICTIONS:
+    1. Work ONLY on this task from .task-board/ - no ad-hoc work
+    2. NEVER use git commands (git add, commit, push, status, diff, etc.)
+    3. Use Read tool (NOT cat/head/tail)
+    4. Use Write tool (NOT echo/cat heredoc)
+    5. Use Edit tool (NOT sed/awk)
+    6. Use Glob tool (NOT find/ls for search)
+    7. Use Grep tool (NOT grep/rg bash commands)
+
+    NEVER use bash for file operations when a built-in tool exists.
+    NEVER run ANY git commands - user handles version control manually.
 
     When done, provide a summary of:
     - Files created/modified
-    - All acceptance criteria status
+    - All acceptance criteria status (update in task file)
     - Any issues encountered
 ```
 
@@ -649,12 +719,26 @@ Task tool:
     Implement the AreaChart component with D3.js as specified in:
     .task-board/in-progress/048-FEATURE-area-chart-component.md
 
+    This task is tracked in the task board system.
     This involves complex D3.js visualization work.
+    Update the task file in .task-board/in-progress/ with progress.
+
+    🚨 CRITICAL RESTRICTIONS:
+    1. Work ONLY on this task from .task-board/ - no ad-hoc work
+    2. NEVER use git commands (git add, commit, push, status, diff, etc.)
+    3. Use Read tool (NOT cat/head/tail)
+    4. Use Write tool (NOT echo/cat heredoc)
+    5. Use Edit tool (NOT sed/awk)
+    6. Use Glob tool (NOT find/ls for search)
+    7. Use Grep tool (NOT grep/rg bash commands)
+
+    NEVER use bash for file operations when a built-in tool exists.
+    NEVER run ANY git commands - user handles version control manually.
 
     After implementation, VERIFY using Playwright CLI:
     node scripts/playwright-verify.js http://localhost:5173/[page] area-chart
 
-    Provide summary with verification results.
+    Provide summary with verification results and update task file.
 ```
 
 ### Working Through the Backlog
@@ -675,15 +759,16 @@ The user can say "keep going" to continue through the backlog.
 
 ### Critical Constraints
 
-1. **Never commit/push without user approval**: Always ask before running git commands
-2. **Follow finans architecture patterns**: See CLAUDE.md for complete patterns
-3. **Norwegian localization**: All UI text in Norwegian, use format utilities
-4. **Keep PLANNING-BOARD.md lean**: Maximum 3-5 items, concise status notes
-5. **Real-time updates**: Update Progress Log frequently during work
-6. **One task at a time**: Execute ONE task fully before starting the next
-7. **No breaking changes**: Maintain backward compatibility
-8. **Security first**: Never commit secrets, always validate input
-9. **Respect task ordering**: Tasks are numbered for dependency reasons
+1. **🚨 ALL WORK THROUGH TASK BOARD**: Every task must come from `.task-board/`. Never do ad-hoc work outside the system.
+2. **🚨 NEVER use git commands**: No git add, commit, push, status, diff, or ANY git command. User handles all version control.
+3. **Follow finans architecture patterns**: See CLAUDE.md for complete patterns
+4. **Norwegian localization**: All UI text in Norwegian, use format utilities
+5. **Keep PLANNING-BOARD.md lean**: Maximum 3-5 items, concise status notes
+6. **Real-time updates**: Update task files in `.task-board/in-progress/` frequently
+7. **One task at a time**: Execute ONE task fully before starting the next
+8. **No breaking changes**: Maintain backward compatibility
+9. **Security first**: Never commit secrets, always validate input
+10. **Respect task ordering**: Tasks are numbered for dependency reasons
 
 ### Development Environment
 
@@ -768,23 +853,32 @@ Update docs **DURING and AFTER** work:
 A work session is complete when:
 
 ### For Each Task (executed via subagent):
+- [ ] **🚨 Task from `.task-board/`** (never work outside the task board system)
+- [ ] **🚨 NO git commands used** (user handles all version control)
 - [ ] Task executed using Task tool with appropriate model (haiku default, sonnet for complex)
+- [ ] **🚨 Built-in tools used** (Read/Write/Edit/Glob/Grep - NO bash for file ops)
 - [ ] Implementation follows all acceptance criteria
 - [ ] All builds passing (frontend, backend, TypeScript, ESLint)
 - [ ] **🚨 Playwright CLI verification complete** (MANDATORY for frontend tasks)
-- [ ] Task file updated with Progress Log and Resolution
-- [ ] Task moved to `done/`
+- [ ] Task file in `.task-board/in-progress/` updated with Progress Log
+- [ ] Task moved to `.task-board/done/` with Resolution
 
 ### For the Overall Session:
-- [ ] Tasks processed IN ORDER (no skipping)
+- [ ] **🚨 All work tracked in `.task-board/`** (no ad-hoc work outside the system)
+- [ ] **🚨 Zero git commands executed** (by main agent or subagents)
+- [ ] Tasks processed IN ORDER from `PLANNING-BOARD.md` (no skipping)
 - [ ] Each task used a subagent (not done inline)
 - [ ] `PLANNING-BOARD.md` updated after each completion
-- [ ] Next task from backlog added when current completes
+- [ ] Completed tasks moved to `.task-board/done/`
+- [ ] Next task from `.task-board/backlog/` added when current completes
 
 ### Key Reminders:
-1. **Use haiku by default** - only use sonnet for truly complex tasks
-2. **Tasks done IN ORDER** - respect numbering
-3. **Playwright CLI for frontend** - no exceptions
+1. **🚨 USE TASK BOARD** - all work tracked in `.task-board/`, never work outside the system
+2. **🚨 NO GIT COMMANDS** - never run any git command, user handles version control
+3. **Use haiku by default** - only use sonnet for truly complex tasks
+4. **Tasks done IN ORDER** - respect numbering from PLANNING-BOARD.md
+5. **Playwright CLI for frontend** - no exceptions
+6. **Built-in tools over bash** - Read/Write/Edit/Glob/Grep, never cat/grep/find/sed
 
 ## Handling Edge Cases
 
@@ -964,10 +1058,11 @@ finans/
 - REST conventions (GET, POST, PATCH, DELETE)
 - Standard response format
 
-**Git Workflow**:
+**Git Workflow** (USER MANAGED - agent never runs git):
 - Main branch: `main`
 - Conventional Commits format
 - Never commit `.env` files
+- **🚨 Agent NEVER runs git commands** - user handles all version control
 
 ## See Also
 

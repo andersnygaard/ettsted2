@@ -14,47 +14,47 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { getUserByUsername } from '../services/userService';
+import { getUserByNickname } from '../services/userService';
 import { logger } from '../utils/logger';
 
 /**
- * Validates that username is not already taken
+ * Validates that nickname is not already taken
  *
- * Business rule: Usernames must be unique across all users
+ * Business rule: Nicknames must be unique across all users
  *
- * @throws {ConflictError} if username is already taken
+ * @throws {ConflictError} if nickname is already taken
  */
-export async function validateUsernameAvailable(
+export async function validateNicknameAvailable(
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { username } = req.body;
+  const { nickname } = req.body;
 
   try {
-    const existingUser = await getUserByUsername(username);
+    const existingUser = await getUserByNickname(nickname);
 
     if (existingUser) {
-      logger.warn('Username already taken', { username, existingUserId: existingUser.id });
+      logger.warn('Nickname already taken', { nickname, existingUserId: existingUser.id });
 
       res.status(409).json({
         error: {
-          message: 'Username already taken',
+          message: 'Nickname already taken',
           code: 'CONFLICT',
-          details: { field: 'username', value: username }
+          details: { field: 'nickname', value: nickname }
         },
         success: false
       });
       return;
     }
 
-    logger.debug('Username available', { username });
+    logger.debug('Nickname available', { nickname });
     next();
   } catch (error) {
-    logger.error('Error checking username availability', { username, error });
+    logger.error('Error checking nickname availability', { nickname, error });
     res.status(500).json({
       error: {
-        message: 'Failed to validate username availability',
+        message: 'Failed to validate nickname availability',
         code: 'INTERNAL_SERVER_ERROR'
       },
       success: false

@@ -140,6 +140,7 @@
   font-weight: 400;
   color: var(--charcoal);
   margin-bottom: 4px;
+  white-space: nowrap;
 }
 
 .fire-result__label {
@@ -162,6 +163,145 @@
   margin-bottom: 8px;
 }
 
+/* F.I.R.E. formula explanation */
+.fire-formula {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.fire-formula__title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.fire-formula__calculation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  margin-bottom: 16px;
+  flex-wrap: nowrap;
+}
+
+.fire-formula__term {
+  color: var(--charcoal);
+  white-space: nowrap;
+}
+
+.fire-formula__operator {
+  color: var(--text-secondary);
+}
+
+.fire-formula__result {
+  color: var(--muted-sage);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.fire-formula__explanation {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.fire-formula__action {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Modal actions */
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* Slider input styles */
+.slider-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.slider-input__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.slider-input__label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+
+.slider-input__value {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--charcoal);
+}
+
+.slider-input__track {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.slider-input__track::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--charcoal);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.slider-input__track::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.slider-input__track::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--charcoal);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.slider-input__track::-moz-range-thumb:hover {
+  transform: scale(1.1);
+}
+
+.slider-input__range {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
 @media (max-width: 480px) {
   .fire-results {
     grid-template-columns: 1fr;
@@ -170,5 +310,9 @@
 
   .fire-result__value {
     font-size: 24px;
+  }
+
+  .fire-formula__calculation {
+    font-size: 14px;
   }
 }

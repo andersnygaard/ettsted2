@@ -61,7 +61,13 @@
       "Bash(claude mcp add playwright --help:*)",
       "Bash(claude mcp --help:*)",
       "Bash(claude mcp add:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(c:/code/ettsted2/backend/src/controllers/calculatorController.ts )",
+      "Bash(c:/code/ettsted2/backend/src/services/calculatorService.ts)",
+      "Bash(c:/code/ettsted2/backend/src/routes/index.ts)",
+      "Bash(c:/code/ettsted2/backend/dist/controllers/calculatorController.js )",
+      "Bash(c:/code/ettsted2/backend/dist/services/calculatorService.js)",
+      "Bash(claude mcp list:*)"
     ],
     "deny": [],
     "ask": [

@@ -1,0 +1,79 @@
+/**
+ * LoanCalculatorPage Styles
+ * Loan type selector tabs and serial loan result display
+ */
+
+/* Loan type selector tabs */
+.loan-type-selector {
+  display: flex;
+  gap: 0;
+  margin-bottom: var(--space-md);
+  background: var(--warm-white);
+  border-radius: 2px;
+  padding: 4px;
+  width: fit-content;
+}
+
+.loan-type-tab {
+  padding: 12px 24px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.loan-type-tab:hover {
+  color: var(--charcoal);
+}
+
+.loan-type-tab.active {
+  background: var(--bone);
+  color: var(--charcoal);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Serial loan result hero (two values side by side) */
+.result-hero--serial {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  text-align: center;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.result-hero__item {
+  flex: 1;
+}
+
+.result-value--small {
+  font-size: 28px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .loan-type-selector {
+    width: 100%;
+  }
+
+  .loan-type-tab {
+    flex: 1;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .result-hero--serial {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .result-value--small {
+    font-size: 32px;
+  }
+}

@@ -6,6 +6,7 @@
  */
 
 import { CosmosClient, Database, Container } from '@azure/cosmos';
+import https from 'https';
 import { config } from './environment';
 import { logger } from '../utils/logger';
 
@@ -17,10 +18,17 @@ const PORTFOLIOS_CONTAINER_ID = 'portfolios';
 // Throughput configuration (Request Units per second)
 const DEFAULT_THROUGHPUT = 400; // Minimum for cost efficiency
 
+// For local emulator: disable SSL cert verification (self-signed cert)
+const isLocalEmulator = config.cosmosDbEndpoint.includes('localhost');
+const agent = isLocalEmulator
+  ? new https.Agent({ rejectUnauthorized: false })
+  : undefined;
+
 // Singleton CosmosDB client
 const client = new CosmosClient({
   endpoint: config.cosmosDbEndpoint,
   key: config.cosmosDbKey,
+  agent,
 });
 
 // Container references (initialized during initializeDatabase)

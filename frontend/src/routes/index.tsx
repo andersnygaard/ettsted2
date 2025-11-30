@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from '../shared/components/Layout';
 import ProtectedRoute from '../features/auth/ProtectedRoute';
+import { useAuth } from '../features/auth/useAuth';
 
 // Lazy load page components for code splitting
 const HomePage = lazy(() => import('../features/dashboard/HomePage'));
@@ -14,6 +15,7 @@ const CalculatorsPage = lazy(() => import('../features/calculators/CalculatorsPa
 const CompoundCalculatorPage = lazy(() => import('../features/calculators/CompoundCalculatorPage'));
 const FireCalculatorPage = lazy(() => import('../features/calculators/FireCalculatorPage'));
 const LoanCalculatorPage = lazy(() => import('../features/calculators/LoanCalculatorPage'));
+const MonteCarloPage = lazy(() => import('../features/calculators/MonteCarloPage'));
 const LoginPage = lazy(() => import('../features/auth/LoginPage'));
 const OnboardingPage = lazy(() => import('../features/auth/OnboardingPage'));
 
@@ -26,12 +28,23 @@ function LoadingFallback() {
   );
 }
 
+// Conditional home page component
+function HomePageRouter() {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <LoadingFallback />;
+  }
+
+  return isAuthenticated ? <DashboardPage /> : <HomePage />;
+}
+
 function AppRoutes() {
   return (
     <Suspense fallback={<LoadingFallback />}>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
+          <Route index element={<HomePageRouter />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="onboarding" element={<OnboardingPage />} />
           <Route
@@ -52,15 +65,27 @@ function AppRoutes() {
           />
           <Route
             path="sparing"
-            element={<SparingPage />}
+            element={
+              <ProtectedRoute>
+                <SparingPage />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="gjeld"
-            element={<GjeldPage />}
+            element={
+              <ProtectedRoute>
+                <GjeldPage />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="pensjon"
-            element={<PensjonPage />}
+            element={
+              <ProtectedRoute>
+                <PensjonPage />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="kalkulatorer"
@@ -91,6 +116,14 @@ function AppRoutes() {
             element={
               <ProtectedRoute>
                 <LoanCalculatorPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="kalkulatorer/monte-carlo"
+            element={
+              <ProtectedRoute>
+                <MonteCarloPage />
               </ProtectedRoute>
             }
           />

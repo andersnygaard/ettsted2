@@ -21,7 +21,7 @@
  *   />
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { formatNumber, parseNumber } from '@/shared/utils/numberFormat';
 import './NumberInput.css';
 
@@ -91,9 +91,14 @@ export function NumberInput({
 }: NumberInputProps) {
   // Track display value separately to allow partial input
   const [displayValue, setDisplayValue] = useState<string>('');
+  // Track focus state to avoid reformatting while user is typing
+  const isFocusedRef = useRef(false);
 
-  // Sync display value when value prop changes externally
+  // Sync display value when value prop changes externally (not from user input)
   useEffect(() => {
+    // Skip update if user is actively typing
+    if (isFocusedRef.current) return;
+
     if (value !== undefined && !Number.isNaN(value)) {
       setDisplayValue(formatNumber(value));
     } else if (value === undefined) {
@@ -116,13 +121,31 @@ export function NumberInput({
   };
 
   /**
+   * Track focus state and select all text for easy replacement
+   */
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    isFocusedRef.current = true;
+    e.target.select();
+  };
+
+  /**
    * Re-format on blur to ensure consistent formatting
    */
   const handleBlur = () => {
+    isFocusedRef.current = false;
     if (value !== undefined && !Number.isNaN(value)) {
       setDisplayValue(formatNumber(value));
     } else {
       setDisplayValue('');
+    }
+  };
+
+  /**
+   * Handle Enter key to confirm input
+   */
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.currentTarget.blur();
     }
   };
 
@@ -150,7 +173,9 @@ export function NumberInput({
           className="number-input__field"
           value={displayValue}
           onChange={handleChange}
+          onFocus={handleFocus}
           onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={disabled}
           required={required}

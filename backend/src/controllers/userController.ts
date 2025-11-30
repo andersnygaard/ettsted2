@@ -48,7 +48,7 @@ export async function getCurrentUser(req: Request, res: Response): Promise<void>
       return;
     }
 
-    logger.info('User profile retrieved', { userId, username: user.username });
+    logger.info('User profile retrieved', { userId, nickname: user.nickname });
     res.status(200).json({
       data: user,
       success: true
@@ -74,12 +74,12 @@ export async function getCurrentUser(req: Request, res: Response): Promise<void>
  *
  * POST /api/v1/users/me/setup
  *
- * Creates a new user profile with chosen username.
+ * Creates a new user profile with chosen nickname.
  * Should only be called once per user (on first login).
  *
  * Request body:
  * {
- *   username: string (3-20 chars, alphanumeric + underscore)
+ *   nickname: string (3-20 chars, alphanumeric + underscore)
  *   email?: string (optional)
  * }
  *
@@ -91,22 +91,22 @@ export async function getCurrentUser(req: Request, res: Response): Promise<void>
 export async function setupUser(req: Request, res: Response): Promise<void> {
   try {
     const userId = req.user!.userId;
-    const { username, email } = req.body;
+    const { nickname, email } = req.body;
 
-    logger.debug('Setting up new user', { userId, username, hasEmail: !!email });
+    logger.debug('Setting up new user', { userId, nickname, hasEmail: !!email });
 
     // Check if user already exists
     const existingUser = await getUserById(userId);
     if (existingUser) {
       logger.warn('User setup attempted but user already exists', {
         userId,
-        existingUsername: existingUser.username
+        existingNickname: existingUser.nickname
       });
       res.status(409).json({
         error: {
           message: 'User already set up',
           code: 'CONFLICT',
-          details: { username: existingUser.username }
+          details: { nickname: existingUser.nickname }
         },
         success: false
       });
@@ -116,12 +116,20 @@ export async function setupUser(req: Request, res: Response): Promise<void> {
     // Create new user
     const newUser = await createUser({
       id: userId,
-      username,
-      email: email || undefined,
-      createdAt: new Date()
+      nickname,
+      email,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      profile: {
+        monthlySalary: 0,
+        annualExpenses: 0,
+        birthYear: new Date().getFullYear() - 30,
+        plannedRetirementAge: 67
+      },
+      accounts: []
     });
 
-    logger.info('User setup completed', { userId, username });
+    logger.info('User setup completed', { userId, nickname });
     res.status(201).json({
       data: newUser,
       success: true
@@ -147,8 +155,8 @@ export async function setupUser(req: Request, res: Response): Promise<void> {
  *
  * PATCH /api/v1/users/me
  *
- * Updates user preferences (email, preferences object).
- * Cannot update id, username, or createdAt.
+ * Updates user settings (nickname, email, profile, etc.).
+ * Cannot update id or createdAt.
  *
  * Request body (partial):
  * {

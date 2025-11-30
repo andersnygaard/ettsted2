@@ -1,7 +1,12 @@
+/// <reference path="../types/express.d.ts" />
 import { Router, Request, Response, IRouter } from 'express';
 import { validateAuth } from '../middleware/auth';
 import userRoutes from './userRoutes';
+import accountRoutes from './accountRoutes';
 import snapshotRoutes from './snapshotRoutes';
+import calculatorRoutes from './calculatorRoutes';
+import summaryRoutes from './summaryRoutes';
+import devRoutes from './devRoutes';
 
 /**
  * Main route aggregator
@@ -50,10 +55,19 @@ router.get('/test/me', validateAuth, (req: Request, res: Response) => {
 
 // Protected route modules (require authentication)
 router.use('/users', validateAuth, userRoutes);
+router.use('/accounts', validateAuth, accountRoutes);
 router.use('/snapshots', validateAuth, snapshotRoutes);
+router.use('/', validateAuth, summaryRoutes);
+
+// Public route modules (no authentication required)
+router.use('/calculators', calculatorRoutes);
+
+// Development-only routes (database seeding, reset)
+if (process.env.NODE_ENV === 'development') {
+  router.use('/dev', devRoutes);
+}
 
 // Future route modules will be mounted here:
-// router.use('/calculators', calculatorRoutes); // Public - no auth
 // router.use('/import', validateAuth, importRoutes);
 
 export default router;

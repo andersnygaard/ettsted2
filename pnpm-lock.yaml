@@ -47,6 +47,9 @@ importers:
       openai:
         specifier: ^4.20.0
         version: 4.104.0(ws@8.18.3)(zod@3.25.76)
+      uuid:
+        specifier: ^9.0.0
+        version: 9.0.1
       winston:
         specifier: ^3.11.0
         version: 3.18.3
@@ -63,6 +66,9 @@ importers:
       '@types/node':
         specifier: ^20.10.0
         version: 20.19.25
+      '@types/uuid':
+        specifier: ^9.0.0
+        version: 9.0.8
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.13.0
         version: 6.21.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)

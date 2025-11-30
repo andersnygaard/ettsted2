@@ -1,0 +1,92 @@
+.profile-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.profile-modal__error {
+  padding: 12px 16px;
+  background-color: rgba(157, 107, 90, 0.1);
+  border: 1px solid var(--negative);
+  border-radius: 4px;
+  color: var(--negative);
+  font-size: 14px;
+}
+
+.profile-modal__section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.profile-modal__section-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.profile-modal__label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--charcoal);
+}
+
+.profile-modal__input {
+  padding: 10px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--charcoal);
+  background-color: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.profile-modal__input:focus {
+  outline: none;
+  border-color: var(--pale-blue);
+  box-shadow: 0 0 0 2px rgba(184, 197, 208, 0.3);
+}
+
+.profile-modal__input::-webkit-outer-spin-button,
+.profile-modal__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.profile-modal__input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.profile-modal__hint {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.profile-modal__description {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.profile-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}

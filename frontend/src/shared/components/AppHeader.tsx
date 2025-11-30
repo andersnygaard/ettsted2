@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../features/auth/useAuth';
-import { Avatar } from './Avatar';
+import { AvatarMenu } from './AvatarMenu';
+import { ProfileModal } from './ProfileModal';
 import './AppHeader.css';
 
 /**
@@ -11,7 +13,8 @@ import './AppHeader.css';
  */
 export default function AppHeader() {
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, logout, refreshUser } = useAuth();
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   // Navigation items with paths
   const navItems = [
@@ -44,28 +47,41 @@ export default function AppHeader() {
   };
 
   return (
-    <header className="app-header">
-      <div className="app-header__container">
-        <Link to="/" className="app-header__logo">
-          finans
-        </Link>
+    <>
+      <header className="app-header">
+        <div className="app-header__container">
+          <Link to="/" className="app-header__logo">
+            finans
+          </Link>
 
-        <nav className="app-header__nav">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`app-header__nav-item ${isActive(item.path) ? 'active' : ''}`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+          <nav className="app-header__nav">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`app-header__nav-item ${isActive(item.path) ? 'active' : ''}`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
 
-        <div className="app-header__avatar">
-          <Avatar initials={getUserInitials()} size="medium" />
+          <div className="app-header__avatar">
+            <AvatarMenu
+              initials={getUserInitials()}
+              onProfileClick={() => setIsProfileModalOpen(true)}
+              onLogout={logout}
+            />
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        profile={user?.profile}
+        onSaved={refreshUser}
+      />
+    </>
   );
 }

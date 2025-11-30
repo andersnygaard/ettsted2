@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { Breadcrumb, PageHeader, Card, NumberInput, AreaChart } from '@/shared/components';
-import type { DataPoint } from '@/shared/components';
+import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart } from '@/shared/components';
+import type { StackedDataPoint, Series } from '@/shared/components';
 import { formatCurrency, formatNumber } from '@/shared/utils/numberFormat';
 import './CompoundCalculatorPage.css';
 
@@ -30,11 +30,12 @@ interface CompoundResult {
   finalAmount: number;
   totalDeposited: number;
   totalInterest: number;
-  yearlyData: DataPoint[];
+  yearlyData: StackedDataPoint[];
 }
 
 /**
  * Calculate compound interest with monthly contributions
+ * Returns stacked data with deposits and interest breakdown per year
  */
 function calculateCompoundInterest(inputs: CompoundInputs): CompoundResult {
   const { initialAmount, monthlyDeposit, annualRate, years } = inputs;
@@ -42,18 +43,27 @@ function calculateCompoundInterest(inputs: CompoundInputs): CompoundResult {
   const months = years * 12;
 
   let balance = initialAmount;
-  const yearlyData: DataPoint[] = [];
+  let totalDeposits = initialAmount;
+  const yearlyData: StackedDataPoint[] = [];
 
   // Add initial data point
   const startYear = new Date().getFullYear();
-  yearlyData.push({ date: new Date(startYear, 0, 1), value: balance });
+  yearlyData.push({
+    date: new Date(startYear, 0, 1),
+    deposits: initialAmount,
+    interest: 0,
+  });
 
   for (let month = 1; month <= months; month++) {
     balance = balance * (1 + monthlyRate) + monthlyDeposit;
+    totalDeposits += monthlyDeposit;
+
     if (month % 12 === 0) {
+      const interest = balance - totalDeposits;
       yearlyData.push({
         date: new Date(startYear + month / 12, 0, 1),
-        value: balance,
+        deposits: totalDeposits,
+        interest: Math.max(0, interest),
       });
     }
   }
@@ -88,6 +98,12 @@ function CompoundCalculatorPage() {
   const interestPercentage = result.finalAmount > 0
     ? ((result.totalInterest / result.finalAmount) * 100).toFixed(1)
     : '0';
+
+  // Chart series configuration
+  const chartSeries: Series[] = [
+    { key: 'deposits', color: 'var(--pale-blue)', label: 'Innskudd' },
+    { key: 'interest', color: 'var(--muted-sage)', label: 'Avkastning' },
+  ];
 
   return (
     <main className="calculator-page">
@@ -124,12 +140,25 @@ function CompoundCalculatorPage() {
               onChange={(v) => updateInput('annualRate', v)}
               suffix="%"
             />
-            <NumberInput
-              label="Antall år"
-              value={inputs.years}
-              onChange={(v) => updateInput('years', v)}
-              suffix="år"
-            />
+            <div className="slider-input">
+              <div className="slider-input__header">
+                <span className="slider-input__label">Antall år</span>
+                <span className="slider-input__value">{inputs.years} år</span>
+              </div>
+              <input
+                type="range"
+                className="slider-input__track"
+                min={1}
+                max={30}
+                step={1}
+                value={inputs.years}
+                onChange={(e) => updateInput('years', parseInt(e.target.value, 10))}
+              />
+              <div className="slider-input__range">
+                <span>1 år</span>
+                <span>30 år</span>
+              </div>
+            </div>
           </Card>
 
           <Card className="calculator-results animate-fade-up animate-delay-2">
@@ -159,10 +188,10 @@ function CompoundCalculatorPage() {
         </div>
 
         <div className="animate-fade-up animate-delay-3">
-          <AreaChart
+          <StackedAreaChart
             data={result.yearlyData}
+            series={chartSeries}
             title="Vekst over tid"
-            color="var(--muted-sage)"
             height={240}
             xAxisFormat={(date) => {
               const year = date.getFullYear();

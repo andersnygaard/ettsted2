@@ -4,6 +4,8 @@
  */
 
 .app-header {
+  position: relative;
+  z-index: 50;
   padding: var(--space-2xl) 0;
   border-bottom: 1px solid var(--border);
   background: var(--warm-white);
@@ -14,8 +16,9 @@
   margin: 0 auto;
   padding: 0 var(--space-4xl);
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 48px;
+  overflow: visible;
 }
 
 /* Logo */
@@ -37,7 +40,9 @@
 /* Navigation */
 .app-header__nav {
   display: flex;
-  gap: 40px;
+  flex: 1;
+  justify-content: center;
+  gap: 48px;
   align-items: center;
 }
 
@@ -73,23 +78,7 @@
 
 /* User Avatar */
 .app-header__avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-full);
-  background: var(--pale-blue);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  color: var(--charcoal);
-  cursor: pointer;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.app-header__avatar:hover {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-sm);
+  position: relative;
 }
 
 /* Responsive design */

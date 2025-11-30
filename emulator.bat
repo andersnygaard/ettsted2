@@ -1,38 +1,37 @@
 @echo off
-echo Starting CosmosDB Emulator...
-echo.
-echo This will start the Azure CosmosDB Emulator locally.
-echo Endpoint: https://localhost:8081
+setlocal
+
+set "EMULATOR_EXE=C:\Program Files\Azure Cosmos DB Emulator\Microsoft.Azure.Cosmos.Emulator.exe"
+
+echo CosmosDB Emulator
+echo =================
 echo.
 
-REM Check if CosmosDB Emulator is installed
-where /q Microsoft.Azure.Cosmos.Emulator
-if errorlevel 1 (
-    echo ERROR: CosmosDB Emulator is not installed.
+REM Check if emulator is installed
+if not exist "%EMULATOR_EXE%" (
+    echo ERROR: CosmosDB Emulator not installed.
     echo.
-    echo Please install it from:
-    echo https://docs.microsoft.com/azure/cosmos-db/local-emulator
-    echo.
-    echo Or download directly:
-    echo https://aka.ms/cosmosdb-emulator
-    echo.
-    pause
+    echo Download: https://aka.ms/cosmosdb-emulator
     exit /b 1
 )
 
-REM Start the emulator
+REM Check if already running
+tasklist /FI "IMAGENAME eq Microsoft.Azure.Cosmos.Emulator.exe" 2>NUL | find /I "Microsoft.Azure.Cosmos.Emulator.exe" >NUL
+if not errorlevel 1 (
+    echo Emulator already running.
+    echo.
+    echo Endpoint: https://localhost:8081
+    echo Explorer: https://localhost:8081/_explorer/index.html
+    exit /b 0
+)
+
+REM Start emulator
 echo Starting emulator...
-start "" "C:\Program Files\Azure Cosmos DB Emulator\Microsoft.Azure.Cosmos.Emulator.exe"
+start "" "%EMULATOR_EXE%"
 
 echo.
-echo CosmosDB Emulator is starting...
+echo Endpoint: https://localhost:8081
+echo Key:      C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
+echo Explorer: https://localhost:8081/_explorer/index.html
 echo.
-echo The emulator UI will open in your browser at:
-echo https://localhost:8081/_explorer/index.html
-echo.
-echo Connection details:
-echo   Endpoint: https://localhost:8081
-echo   Primary Key: C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
-echo.
-echo Press any key to exit this window...
-pause >nul
+echo Emulator starting... wait ~30s for endpoint to be ready.
