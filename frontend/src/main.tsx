@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import 'beercss';
 import App from './App';
 import './styles/global.css';
 import './config/locale'; // Initialize Norwegian locale for numeral.js

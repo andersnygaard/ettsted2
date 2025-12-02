@@ -205,6 +205,9 @@ importers:
       axios:
         specifier: ^1.6.0
         version: 1.13.2
+      beercss:
+        specifier: ^3.12.13
+        version: 3.12.13
       d3:
         specifier: ^7.9.0
         version: 7.9.0
