@@ -81,6 +81,34 @@
   position: relative;
 }
 
+/* Login Actions (unauthenticated state) */
+.app-header__actions {
+  margin-left: auto;
+}
+
+.app-header__login-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--warm-white);
+  background: var(--charcoal);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.app-header__login-btn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
 /* Responsive design */
 @media (max-width: 1024px) {
   .app-header__nav {

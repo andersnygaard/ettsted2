@@ -326,7 +326,7 @@ export function SpreadsheetTable({
           {data.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {/* Date column (sticky) */}
-              <td className="date-cell">{row[dateKey]}</td>
+              <td className="date-cell">{String(row[dateKey] ?? '-')}</td>
 
               {/* Data columns */}
               {columnGroups.flatMap((group) => {

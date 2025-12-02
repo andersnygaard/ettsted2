@@ -68,8 +68,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     await fetchUser();
   }, [fetchUser]);
 
-  const login = (provider: 'google' | 'facebook') => {
-    window.location.href = `/.auth/login/${provider}`;
+  const login = (provider: 'google' | 'facebook', returnUrl = '/dashboard') => {
+    window.location.href = `/.auth/login/${provider}?post_login_redirect_uri=${encodeURIComponent(returnUrl)}`;
   };
 
   const logout = () => {

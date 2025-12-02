@@ -1,20 +1,29 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './useAuth';
+
+interface LocationState {
+  from?: string;
+}
 
 export default function LoginPage() {
   const { isAuthenticated, isLoading } = useAuth();
+  const location = useLocation();
+  const state = location.state as LocationState | null;
 
-  // Redirect authenticated users to dashboard
+  // Get the return URL from state, default to /dashboard
+  const returnUrl = state?.from || '/dashboard';
+
+  // Redirect authenticated users to their intended destination
   if (!isLoading && isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={returnUrl} replace />;
   }
 
   const handleGoogleLogin = () => {
-    window.location.href = '/.auth/login/google?post_login_redirect_uri=/dashboard';
+    window.location.href = `/.auth/login/google?post_login_redirect_uri=${encodeURIComponent(returnUrl)}`;
   };
 
   const handleFacebookLogin = () => {
-    window.location.href = '/.auth/login/facebook?post_login_redirect_uri=/dashboard';
+    window.location.href = `/.auth/login/facebook?post_login_redirect_uri=${encodeURIComponent(returnUrl)}`;
   };
 
   return (

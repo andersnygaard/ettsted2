@@ -11,9 +11,10 @@ import './LoginModal.css';
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
+  returnUrl?: string;
 }
 
-export function LoginModal({ isOpen, onClose }: LoginModalProps) {
+export function LoginModal({ isOpen, onClose, returnUrl = '/dashboard' }: LoginModalProps) {
   // Handle escape key to close modal
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -39,11 +40,11 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
   if (!isOpen) return null;
 
   const handleGoogleLogin = () => {
-    window.location.href = '/.auth/login/google?post_login_redirect_uri=/dashboard';
+    window.location.href = `/.auth/login/google?post_login_redirect_uri=${encodeURIComponent(returnUrl)}`;
   };
 
   const handleFacebookLogin = () => {
-    window.location.href = '/.auth/login/facebook?post_login_redirect_uri=/dashboard';
+    window.location.href = `/.auth/login/facebook?post_login_redirect_uri=${encodeURIComponent(returnUrl)}`;
   };
 
   const handleBackdropClick = (e: React.MouseEvent) => {

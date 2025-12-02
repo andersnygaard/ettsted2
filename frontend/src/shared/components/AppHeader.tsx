@@ -10,15 +10,16 @@ import './AppHeader.css';
  * App Header Component
  *
  * Main navigation header with logo, navigation tabs, and user avatar.
+ * Shows full nav for authenticated users, login button for guests.
  * Based on Nordic Minimal design system.
  */
 export default function AppHeader() {
   const location = useLocation();
-  const { user, logout, refreshUser } = useAuth();
+  const { user, isAuthenticated, logout, refreshUser } = useAuth();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isAccountsModalOpen, setIsAccountsModalOpen] = useState(false);
 
-  // Navigation items with paths
+  // Navigation items with paths (only shown when authenticated)
   const navItems = [
     { label: 'Oversikt', path: '/dashboard' },
     { label: 'Portefølje', path: '/portfolio' },
@@ -56,42 +57,56 @@ export default function AppHeader() {
             finans
           </Link>
 
-          <nav className="app-header__nav">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`app-header__nav-item ${isActive(item.path) ? 'active' : ''}`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          {isAuthenticated ? (
+            <>
+              <nav className="app-header__nav">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`app-header__nav-item ${isActive(item.path) ? 'active' : ''}`}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
 
-          <div className="app-header__avatar">
-            <AvatarMenu
-              initials={getUserInitials()}
-              onProfileClick={() => setIsProfileModalOpen(true)}
-              onAccountsClick={() => setIsAccountsModalOpen(true)}
-              onLogout={logout}
-            />
-          </div>
+              <div className="app-header__avatar">
+                <AvatarMenu
+                  initials={getUserInitials()}
+                  onProfileClick={() => setIsProfileModalOpen(true)}
+                  onAccountsClick={() => setIsAccountsModalOpen(true)}
+                  onLogout={logout}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="app-header__actions">
+              <Link to="/login" className="app-header__login-btn">
+                Logg inn
+              </Link>
+            </div>
+          )}
         </div>
       </header>
 
-      <ProfileModal
-        isOpen={isProfileModalOpen}
-        onClose={() => setIsProfileModalOpen(false)}
-        profile={user?.profile}
-        onSaved={refreshUser}
-      />
+      {isAuthenticated && (
+        <>
+          <ProfileModal
+            isOpen={isProfileModalOpen}
+            onClose={() => setIsProfileModalOpen(false)}
+            profile={user?.profile}
+            onSaved={refreshUser}
+          />
 
-      <AccountsModal
-        isOpen={isAccountsModalOpen}
-        onClose={() => setIsAccountsModalOpen(false)}
-        accounts={user?.accounts}
-        onSaved={refreshUser}
-      />
+          <AccountsModal
+            isOpen={isAccountsModalOpen}
+            onClose={() => setIsAccountsModalOpen(false)}
+            accounts={user?.accounts}
+            onSaved={refreshUser}
+          />
+        </>
+      )}
     </>
   );
 }
