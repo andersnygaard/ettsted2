@@ -96,7 +96,7 @@
 .landing-btn--primary:hover {
   background: #1a1a1a;
   transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
 .landing-btn--secondary {
@@ -108,6 +108,7 @@
 .landing-btn--secondary:hover {
   background: var(--warm-white);
   transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .landing-btn--large {
@@ -160,11 +161,11 @@
   padding: var(--space-3xl);
   border-radius: var(--radius-sm);
   text-align: left;
-  transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .landing-feature-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
 
@@ -224,20 +225,16 @@
   margin-bottom: var(--space-2xl);
 }
 
-/* ============================================
-   ANIMATIONS
-   ============================================ */
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.landing-cta__actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
 }
+
+/* ============================================
+   ANIMATIONS (Note: main fadeUp defined in global animations.css)
+   ============================================ */
 
 /* ============================================
    RESPONSIVE

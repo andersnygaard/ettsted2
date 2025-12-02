@@ -6,9 +6,9 @@ import {
   SpreadsheetTable,
   TableHeader,
   TableFooter,
-  PortfolioSkeleton,
-} from '@/shared/components';
-import type { Column, ColumnGroup, ColumnToggle, CellChangeEvent } from '@/shared/components';
+} from '@finans/components';
+import type { Column, ColumnGroup, ColumnToggle, CellChangeEvent } from '@finans/components';
+import { PortfolioSkeleton } from '@/shared/components';
 import { useAuth } from '@/features/auth/useAuth';
 import { usePortfolioData, useUpdateSnapshot } from './usePortfolioData';
 import { NewMonthModal } from './NewMonthModal';

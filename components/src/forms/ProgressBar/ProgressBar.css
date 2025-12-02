@@ -1,0 +1,80 @@
+/**
+ * ProgressBar Component Styles
+ * Based on Nordic Minimal design system
+ *
+ * Flexible progress bar with multiple style variants.
+ * Used for milestones, savings progress, debt coverage, etc.
+ */
+
+/* Container - full width layout */
+.progress-bar-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: var(--space-xs);
+}
+
+/* Main progress bar track */
+.progress-bar {
+  position: relative;
+  width: 100%;
+  background-color: rgba(44, 44, 44, 0.06);
+  overflow: hidden;
+}
+
+/* Animated fill bar */
+.progress-bar__fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--muted-sage) 0%,
+    var(--muted-sage) 100%
+  );
+  transition: width var(--transition-medium);
+}
+
+/* Default variant - muted sage green */
+.progress-bar--default .progress-bar__fill {
+  background: linear-gradient(
+    90deg,
+    #7a8f6f 0%,
+    var(--muted-sage) 100%
+  );
+}
+
+/* Gold variant - for milestones */
+.progress-bar--gold .progress-bar__fill {
+  background: linear-gradient(
+    90deg,
+    #b8934f 0%,
+    var(--gold) 100%
+  );
+}
+
+/* Blue variant - for alternative progress tracking */
+.progress-bar--blue .progress-bar__fill {
+  background: linear-gradient(
+    90deg,
+    #9ab3ca 0%,
+    var(--pale-blue) 100%
+  );
+}
+
+/* Labels container - flex space-between */
+.progress-bar__labels {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+/* Individual labels */
+.progress-bar__label-left,
+.progress-bar__label-right {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* Right label uses monospace for currency/numbers */
+.progress-bar__label-right {
+  font-family: var(--font-mono);
+}

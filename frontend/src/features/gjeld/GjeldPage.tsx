@@ -1,5 +1,8 @@
-import { PageHeader, HeroNumber, AreaChart, DataPoint } from '@/shared/components';
+import { PageHeader, HeroNumber, AreaChart } from '@finans/components';
+import type { DataPoint } from '@finans/components';
 import { formatCurrency } from '@/shared/utils/numberFormat';
+import { useGjeldData } from './useGjeldData';
+import { useAuth } from '../auth/useAuth';
 import { DekningSection } from './DekningSection';
 import { LoansList, Loan } from './LoansList';
 import './GjeldPage.css';
@@ -13,37 +16,69 @@ import './GjeldPage.css';
  * Based on Nordic Minimal design from draft-1-gjeld.html
  */
 function GjeldPage() {
-  // Placeholder data for testing (will be replaced with API data)
-  const debtData = {
-    sumGjeld: 823751,
-    monthlyChange: -12450,
-    sumSparing: 763502, // Used to calculate coverage
+  const { data: gjeldData, isLoading, error } = useGjeldData();
+  const { user } = useAuth();
+
+  // Handle loading state
+  if (isLoading) {
+    return (
+      <main className="gjeld-page">
+        <div className="container container--narrow">
+          <PageHeader title="Gjeld" subtitle="Laster..." />
+        </div>
+      </main>
+    );
+  }
+
+  // Handle error state
+  if (error) {
+    return (
+      <main className="gjeld-page">
+        <div className="container container--narrow">
+          <PageHeader title="Gjeld" subtitle="Feil ved lasting av data" />
+        </div>
+      </main>
+    );
+  }
+
+  // Use gjeldData or empty defaults
+  const data = gjeldData || {
+    sumGjeld: 0,
+    monthlyChange: 0,
+    dekning: 100,
+    remaining: 0,
+    loans: [],
+    history: []
   };
 
+  // Merge loan info with user account details for interest rate and years
+  const loans: Loan[] = data.loans.map(loanInfo => {
+    // Find matching account config from user for loan details
+    const accountConfig = user?.accounts?.find(
+      acc => acc.id === loanInfo.id || acc.name === loanInfo.name
+    );
+    return {
+      id: loanInfo.id,
+      name: loanInfo.name,
+      balance: loanInfo.balance,
+      interestRate: accountConfig?.loanDetails?.interestRate ?? 0,
+      yearsRemaining: accountConfig?.loanDetails?.remainingYears ?? 0
+    };
+  });
 
-  const loans: Loan[] = [
-    {
-      id: '1',
-      name: 'SBanken Boliglån',
-      interestRate: 4.2,
-      yearsRemaining: 25,
-      balance: 823751,
-    },
-  ];
+  // Convert history for chart - use DataPoint format
+  const debtHistory: DataPoint[] = data.history.map(h => ({
+    date: h.date,
+    value: h.value
+  }));
 
-  // Sample chart data - debt decreasing over time
-  const debtHistory: DataPoint[] = [
-    { date: new Date(2022, 8, 1), value: 950000 },
-    { date: new Date(2022, 11, 1), value: 935000 },
-    { date: new Date(2023, 2, 1), value: 915000 },
-    { date: new Date(2023, 5, 1), value: 895000 },
-    { date: new Date(2023, 8, 1), value: 875000 },
-    { date: new Date(2023, 11, 1), value: 860000 },
-    { date: new Date(2024, 2, 1), value: 850000 },
-    { date: new Date(2024, 5, 1), value: 840000 },
-    { date: new Date(2024, 8, 1), value: 830000 },
-    { date: new Date(2024, 10, 1), value: 823751 },
-  ];
+  // Calculate change percentage (handle division by zero)
+  const changePercentage = data.sumGjeld > 0 ? (data.monthlyChange / data.sumGjeld) * 100 : 0;
+
+  // Calculate sumSparing from dekning ratio
+  // dekning = (sumSparing / sumGjeld) * 100
+  // sumSparing = (dekning / 100) * sumGjeld
+  const sumSparing = (data.dekning / 100) * data.sumGjeld;
 
   return (
     <main className="gjeld-page">
@@ -55,14 +90,14 @@ function GjeldPage() {
 
         <HeroNumber
           label="Sum gjeld"
-          value={formatCurrency(debtData.sumGjeld)}
-          change={debtData.monthlyChange / debtData.sumGjeld * 100}
+          value={formatCurrency(data.sumGjeld)}
+          change={changePercentage}
           changeLabel="denne måneden"
         />
 
         <DekningSection
-          sumSparing={debtData.sumSparing}
-          sumGjeld={debtData.sumGjeld}
+          sumSparing={sumSparing}
+          sumGjeld={data.sumGjeld}
         />
 
         <LoansList loans={loans} />

@@ -90,7 +90,7 @@ router.get('/dashboard', async (req: Request, res: Response, next: NextFunction)
 });
 
 /**
- * GET /api/v1/sparing/summary
+ * GET /api/v1/sparing
  *
  * Sparing & F.I.R.E. metrics with historical data
  *
@@ -106,7 +106,7 @@ router.get('/dashboard', async (req: Request, res: Response, next: NextFunction)
  *   }
  * }
  */
-router.get('/sparing/summary', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/sparing', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user!.userId;
 
@@ -163,7 +163,7 @@ router.get('/sparing/summary', async (req: Request, res: Response, next: NextFun
 });
 
 /**
- * GET /api/v1/gjeld/summary
+ * GET /api/v1/gjeld
  *
  * Debt & coverage metrics with historical data
  *
@@ -178,7 +178,7 @@ router.get('/sparing/summary', async (req: Request, res: Response, next: NextFun
  *   }
  * }
  */
-router.get('/gjeld/summary', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/gjeld', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user!.userId;
 
@@ -234,7 +234,7 @@ router.get('/gjeld/summary', async (req: Request, res: Response, next: NextFunct
 });
 
 /**
- * GET /api/v1/pensjon/summary
+ * GET /api/v1/pensjon
  *
  * Pension metrics with breakdown and historical data
  *
@@ -247,7 +247,7 @@ router.get('/gjeld/summary', async (req: Request, res: Response, next: NextFunct
  *   }
  * }
  */
-router.get('/pensjon/summary', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/pensjon', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user!.userId;
 

@@ -216,7 +216,12 @@ Scandinavian-inspired design with warm, muted tones and elegant typography. Clea
 **Header** (all pages)
 - Logo: "finans" (Cormorant Garamond, lowercase, letter-spacing)
 - Navigation: 6 tabs with active state
-- Avatar: User initials in circle
+- Avatar: User initials in circle with dropdown menu
+
+**Avatar Menu** (click avatar to open)
+- **Min informasjon** → ProfileModal (edit profile: salary, savings, expenses, birth year, retirement age, F.I.R.E. target)
+- **Mitt oppsett** → AccountsModal (manage accounts: create, edit, delete, reorder accounts)
+- **Logg ut** → Logout and redirect to login page
 
 **Page Structure**
 - Container: max-width 1200px (900px for focused pages)
@@ -865,27 +870,65 @@ numeral(123456.78).format('0,0.00') + ' kr'  // "123 456,78 kr"
 
 ## Authentication (EasyAuth)
 
-### Integration
-- **Provider**: Azure App Service EasyAuth
-- **Methods**: Google OAuth + Facebook OAuth
-- **Frontend**: Check auth state via React Context
-- **Backend**: Validate headers from EasyAuth
+### Architecture
+EasyAuth configured on **both** frontend and backend App Services for secure token validation.
+
+| App Service | EasyAuth | Purpose |
+|-------------|----------|---------|
+| `finans-frontend` | ✓ Enabled | User login via OAuth |
+| `finans-backend` | ✓ Enabled | Validates `x-ms-client-principal` header |
+
+### Providers
+Both apps use identical OAuth providers:
+- **Google**: `920940568659-******.apps.googleusercontent.com`
+- **Facebook**: `136125******3454`
+
+### Configuration
+- **Unauthenticated action**: `AllowAnonymous` (app controls auth flow)
+- **Token store**: Enabled
+- **Auth V2**: Enabled on both apps
+
+### OAuth Redirect URIs
+Each provider needs callback URLs for **both** apps:
+
+**Google Cloud Console** (Authorized redirect URIs):
+```
+https://finans-frontend.azurewebsites.net/.auth/login/google/callback
+https://finans-backend.azurewebsites.net/.auth/login/google/callback
+```
+
+**Facebook Developers** (Valid OAuth Redirect URIs):
+```
+https://finans-frontend.azurewebsites.net/.auth/login/facebook/callback
+https://finans-backend.azurewebsites.net/.auth/login/facebook/callback
+```
 
 ### User Flow
-1. User clicks login button
+1. User clicks login button on frontend
 2. Redirects to EasyAuth (`/.auth/login/google` or `/.auth/login/facebook`)
 3. EasyAuth handles OAuth flow
-4. Redirects back to app
+4. Redirects back to frontend
 5. Frontend reads user from `/.auth/me` endpoint
-6. Context provides user state to all components
+6. Frontend makes API calls to backend
+7. Backend receives `x-ms-client-principal` header (validated by EasyAuth)
 
 ### Implementation
 ```typescript
 // Frontend: useAuth hook
 const { user, isLoading } = useAuth()
 
-// Backend: Validate user from headers
-const user = req.headers['x-ms-client-principal']
+// Backend: Extract user from EasyAuth header
+const principal = req.headers['x-ms-client-principal']
+const user = JSON.parse(Buffer.from(principal, 'base64').toString())
+```
+
+### CLI Setup Commands
+```bash
+# Enable EasyAuth on backend (frontend already configured)
+az webapp auth config-version upgrade --name finans-backend --resource-group finans-rg
+az webapp auth update --name finans-backend --resource-group finans-rg --enabled true --action AllowAnonymous
+az webapp auth google update --name finans-backend --resource-group finans-rg --client-id "<ID>" --client-secret "<SECRET>" --yes
+az webapp auth facebook update --name finans-backend --resource-group finans-rg --app-id "<ID>" --app-secret "<SECRET>" --yes
 ```
 
 ---
@@ -1111,12 +1154,18 @@ pnpm format                       # Format code with Prettier
 
 ## Azure Deployment
 
+**Setup Guide**: Use the `azure-setup-guide` skill to generate `.docs/azure-setup-guide.md` with step-by-step instructions.
+
+**Credentials**: OAuth credentials stored in `backend/.env` (see Environment Variables section)
+
 ### Azure Resources
 
-**Resource Group**: `finans`
+**Resource Group**: `finans-rg`
+**Region**: `norwayeast` (GDPR compliance)
+**Tier**: Free (F1) for dev, B1+ for production
 
 ```
-finans (Resource Group)
+finans-rg (Resource Group) - see CosmosDB setup in azure-setup-guide skill
    finans-frontend     � React app (includes bundled components)
    finans-backend      � Express API server
    finans-components   � Storybook static documentation site
@@ -1430,3 +1479,4 @@ Anyone who wants to track their portfolio monthly, including:
 - USER IS A SENIOR DEV WITH GOOD KNOWLEDGE OF SOFTWARE DEVELOPMENT. USER EXPECTS SENIOR DEVELOPER LEVEL WORK.
 - DO NOT BE LAZY. NEVER BE LAZY. IF THERE IS A BUG, FIND THE ROOT CAUSE AND FIX IT. NO TEMPORARY FIXES. YOU ARE A SENIOR DEVELOPER. NEVER BE LAZY.
 - BE CLEAR AND CONSISTANT. SACRIFICE GRAMMER FOR SHORT, CONSISTANT LANGUAGE. EXPRESS YOURSELF TO THE POINT.
+- ALWAYS USE TOOLS OVER BASH!! USE READ, EDIT, WRITE, GLOB, GREP TOOLS INSTEAD OF CAT, SED, AWK, FIND, GREP BASH COMMANDS!

@@ -1,4 +1,4 @@
-import { ProgressBar } from '@/shared/components';
+import { ProgressBar } from '@finans/components';
 import { formatCurrency, formatNumber } from '@/shared/utils/numberFormat';
 import './FireSection.css';
 

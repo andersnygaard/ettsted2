@@ -1,4 +1,4 @@
-import { PageHeader, CalculatorCard } from '@/shared/components';
+import { PageHeader, CalculatorCard } from '@finans/components';
 import './CalculatorsPage.css';
 
 /**

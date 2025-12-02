@@ -1,0 +1,64 @@
+/**
+ * Button Component Styles
+ * Based on Nordic Minimal design system
+ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 11px;
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all var(--transition-fast);
+  border: none;
+  font-weight: 500;
+}
+
+.btn__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Primary Variant */
+.btn--primary {
+  background: var(--charcoal);
+  color: var(--warm-white);
+  border: 1px solid var(--charcoal);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: #1a1a1a;
+  transform: translateY(-1px);
+}
+
+.btn--primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Secondary Variant */
+.btn--secondary {
+  background: transparent;
+  border: 1px solid var(--muted-sage);
+  color: var(--charcoal);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background: var(--warm-white);
+  border-color: var(--charcoal);
+}
+
+.btn--secondary:active:not(:disabled) {
+  background: var(--bone);
+}
+
+/* Disabled State */
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

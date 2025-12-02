@@ -1,9 +1,20 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
+import { LoginModal } from '../auth/LoginModal';
 import './HomePage.css';
 
 function HomePage() {
-  const { user, isAuthenticated, login } = useAuth();
+  const { isAuthenticated, loginAsDemo, isLoading } = useAuth();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  const handleDemoClick = async () => {
+    try {
+      await loginAsDemo();
+    } catch (error) {
+      console.error('Failed to start demo:', error);
+    }
+  };
 
   return (
     <div className="landing-page">
@@ -33,17 +44,19 @@ function HomePage() {
             <div className="landing-hero__actions">
               <button
                 className="landing-btn landing-btn--primary"
-                onClick={() => login('google')}
+                onClick={() => setIsLoginModalOpen(true)}
+                disabled={isLoading}
               >
                 <i>login</i>
-                <span>Logg inn med Google</span>
+                <span>Logg inn</span>
               </button>
               <button
                 className="landing-btn landing-btn--secondary"
-                onClick={() => login('facebook')}
+                onClick={handleDemoClick}
+                disabled={isLoading}
               >
-                <i>login</i>
-                <span>Logg inn med Facebook</span>
+                <i>play_arrow</i>
+                <span>{isLoading ? 'Laster...' : 'Prøv demo'}</span>
               </button>
             </div>
           )}
@@ -111,15 +124,32 @@ function HomePage() {
         <h2 className="landing-cta__title">Klar til å starte?</h2>
         <p className="landing-cta__subtitle">Gratis å bruke. Ingen kredittkort nødvendig.</p>
         {!isAuthenticated && (
-          <button
-            className="landing-btn landing-btn--primary landing-btn--large"
-            onClick={() => login('google')}
-          >
-            <i>rocket_launch</i>
-            <span>Kom i gang</span>
-          </button>
+          <div className="landing-cta__actions">
+            <button
+              className="landing-btn landing-btn--primary landing-btn--large"
+              onClick={() => setIsLoginModalOpen(true)}
+              disabled={isLoading}
+            >
+              <i>rocket_launch</i>
+              <span>Kom i gang</span>
+            </button>
+            <button
+              className="landing-btn landing-btn--secondary landing-btn--large"
+              onClick={handleDemoClick}
+              disabled={isLoading}
+            >
+              <i>play_arrow</i>
+              <span>Prøv demo først</span>
+            </button>
+          </div>
         )}
       </section>
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+      />
     </div>
   );
 }

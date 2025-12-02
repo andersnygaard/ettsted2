@@ -9,6 +9,12 @@ function DashboardPage() {
   const { data: dashboardData, isLoading, error } = useDashboardData();
   const firstName = user?.nickname?.split(' ')[0] || 'bruker';
 
+  // Calculate sparerate from user profile
+  const profile = user?.profile;
+  const sparerate = profile && profile.monthlySalary > 0 && profile.monthlySavings !== undefined
+    ? (profile.monthlySavings / profile.monthlySalary) * 100
+    : 0;
+
   // Use dashboard data if available, otherwise use empty state
   const data = dashboardData || {
     netWorth: 0,
@@ -93,7 +99,7 @@ function DashboardPage() {
         </Link>
         <Link to="/portfolio" className="quick-stat">
           <div className="quick-stat-value">
-            {data.sparerate.toFixed(2).replace('.', ',')}%
+            {sparerate.toFixed(2).replace('.', ',')}%
           </div>
           <div className="quick-stat-label">Sparerate</div>
         </Link>

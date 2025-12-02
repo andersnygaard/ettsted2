@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart } from '@/shared/components';
-import type { StackedDataPoint, Series } from '@/shared/components';
+import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart } from '@finans/components';
+import type { StackedDataPoint, Series } from '@finans/components';
 import { formatCurrency, formatNumber } from '@/shared/utils/numberFormat';
 import { useSparingData } from '@/features/sparing/useSparingData';
 import { useUser } from '@/shared/hooks/useUser';
@@ -80,6 +80,12 @@ function CompoundCalculatorPage() {
   const { data: sparingData } = useSparingData();
   const { data: user } = useUser();
 
+  // Track if defaults have been initialized
+  const [defaultsInitialized, setDefaultsInitialized] = useState({
+    initialAmount: false,
+    monthlyDeposit: false,
+  });
+
   const [inputs, setInputs] = useState<CompoundInputs>({
     initialAmount: 0,
     monthlyDeposit: 0,
@@ -87,24 +93,24 @@ function CompoundCalculatorPage() {
     years: 10,
   });
 
-  // Set defaults from user profile and portfolio data when loaded
+  // Set initial amount from portfolio data when loaded
   useEffect(() => {
-    const updates: Partial<CompoundInputs> = {};
-
-    // Set initial amount from sum sparing (0 if no portfolio data)
-    if (sparingData && inputs.initialAmount === 0) {
-      updates.initialAmount = sparingData.sumSparing ?? 0;
+    if (sparingData && !defaultsInitialized.initialAmount) {
+      setInputs((prev) => ({ ...prev, initialAmount: sparingData.sumSparing ?? 0 }));
+      setDefaultsInitialized((prev) => ({ ...prev, initialAmount: true }));
     }
+  }, [sparingData, defaultsInitialized.initialAmount]);
 
-    // Set monthly deposit from user profile, fallback to 5000
-    if (inputs.monthlyDeposit === 0) {
-      updates.monthlyDeposit = user?.profile?.monthlySavings || 5000;
+  // Set monthly deposit from user profile (default 5000) when user data loads
+  useEffect(() => {
+    if (user && !defaultsInitialized.monthlyDeposit) {
+      setInputs((prev) => ({
+        ...prev,
+        monthlyDeposit: user.profile?.monthlySavings || 5000,
+      }));
+      setDefaultsInitialized((prev) => ({ ...prev, monthlyDeposit: true }));
     }
-
-    if (Object.keys(updates).length > 0) {
-      setInputs((prev) => ({ ...prev, ...updates }));
-    }
-  }, [sparingData?.sumSparing, user?.profile?.monthlySavings]);
+  }, [user, defaultsInitialized.monthlyDeposit]);
 
   const result = useMemo(() => calculateCompoundInterest(inputs), [inputs]);
 

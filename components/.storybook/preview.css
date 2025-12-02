@@ -1,0 +1,69 @@
+/* Import Google Fonts for Nordic Minimal design */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* Nordic Minimal Design System - CSS Variables */
+:root {
+  /* Primary Colors */
+  --bone: #F5F2ED;
+  --warm-white: #FDFCFA;
+  --charcoal: #2C2C2C;
+
+  /* Accent Colors */
+  --muted-sage: #8B9A7D;
+  --soft-terracotta: #C4A484;
+  --pale-blue: #B8C5D0;
+
+  /* Semantic Colors */
+  --text-secondary: #6B6B6B;
+  --gold: #C9A962;
+  --positive: #5A7D5A;
+  --negative: #9D6B5A;
+
+  /* Borders & Dividers */
+  --border: rgba(44, 44, 44, 0.08);
+
+  /* Typography */
+  --font-heading: 'Cormorant Garamond', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Background */
+  background-color: var(--bone);
+  color: var(--charcoal);
+  font-family: var(--font-body);
+}
+
+/* Grain texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" /><feColorMatrix in="noise" type="saturate" values="0.3" /></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.08" /></svg>');
+  z-index: -1;
+}
+
+/* Global Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+code, pre {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+/* Storybook specifics */
+.sb-show-main {
+  background-color: var(--bone);
+}
+
+/* Card styling for Storybook */
+.sb-show-main > * {
+  background-color: var(--warm-white);
+}

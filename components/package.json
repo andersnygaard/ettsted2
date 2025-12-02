@@ -13,6 +13,8 @@
     "@mui/icons-material": "^5.15.0",
     "@mui/material": "^5.15.0",
     "beercss": "^3.12.0",
+    "d3": "^7.8.5",
+    "numeral": "^2.0.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -24,17 +26,21 @@
     "@storybook/react": "^7.6.0",
     "@storybook/react-vite": "^7.6.0",
     "@storybook/testing-library": "^0.2.2",
+    "@types/d3": "^7.4.3",
+    "@types/numeral": "^2.0.5",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.13.0",
     "@typescript-eslint/parser": "^6.13.0",
     "eslint": "^8.55.0",
+    "react-router-dom": "^6.20.0",
     "storybook": "^7.6.0",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0"
   },
   "engines": {
     "node": ">=18.0.0"

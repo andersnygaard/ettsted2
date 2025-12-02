@@ -16,7 +16,7 @@
  */
 
 import { useState, useMemo, useEffect } from 'react';
-import { Modal, Button, DateInput, NumberInput } from '@/shared/components';
+import { Modal, Button, DateInput, NumberInput } from '@finans/components';
 import { useAuth } from '@/features/auth/useAuth';
 import type { AccountConfig } from '@/features/auth/types';
 import { useCreateSnapshot } from './usePortfolioData';

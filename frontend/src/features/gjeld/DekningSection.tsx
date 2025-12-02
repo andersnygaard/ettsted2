@@ -7,7 +7,7 @@
  * Based on Nordic Minimal design from draft-1-gjeld.html
  */
 
-import { DonutChart } from '@/shared/components';
+import { DonutChart } from '@finans/components';
 import { formatCurrency } from '@/shared/utils/numberFormat';
 
 export interface DekningSectionProps {

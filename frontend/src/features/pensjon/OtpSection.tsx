@@ -6,7 +6,7 @@
  * Based on Nordic Minimal design from draft-1-pensjon.html
  */
 
-import { ProgressBar } from '@/shared/components';
+import { ProgressBar } from '@finans/components';
 
 export interface OtpSectionProps {
   percentage: number;

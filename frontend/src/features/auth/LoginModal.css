@@ -1,0 +1,154 @@
+/**
+ * LoginModal Styles
+ *
+ * Modal dialog for OAuth login options.
+ */
+
+.login-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(44, 44, 44, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.login-modal {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--warm-white, #FDFCFA);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  animation: modal-enter 0.2s ease-out;
+}
+
+@keyframes modal-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.login-modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary, #6B6B6B);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.login-modal__close:hover {
+  background-color: var(--bone, #F5F2ED);
+  color: var(--charcoal, #2C2C2C);
+}
+
+.login-modal__close i {
+  font-family: 'Material Symbols Outlined';
+  font-size: 1.25rem;
+}
+
+.login-modal__content {
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+}
+
+.login-modal__title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.75rem;
+  font-weight: 400;
+  color: var(--charcoal, #2C2C2C);
+  margin: 0 0 0.5rem 0;
+}
+
+.login-modal__subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9375rem;
+  color: var(--text-secondary, #6B6B6B);
+  margin: 0 0 2rem 0;
+}
+
+.login-modal__buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.login-modal__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.login-modal__btn svg {
+  flex-shrink: 0;
+}
+
+.login-modal__btn--google {
+  background-color: var(--warm-white, #FDFCFA);
+  color: var(--charcoal, #2C2C2C);
+  border: 1px solid var(--border, rgba(44, 44, 44, 0.2));
+}
+
+.login-modal__btn--google:hover {
+  background-color: var(--bone, #F5F2ED);
+  border-color: rgba(44, 44, 44, 0.3);
+}
+
+.login-modal__btn--facebook {
+  background-color: #1877F2;
+  color: white;
+  border: none;
+}
+
+.login-modal__btn--facebook:hover {
+  background-color: #166FE5;
+}
+
+.login-modal__terms {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.75rem;
+  color: var(--text-secondary, #6B6B6B);
+  margin: 1.5rem 0 0 0;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .login-modal__content {
+    padding: 2rem 1.5rem 1.5rem;
+  }
+
+  .login-modal__title {
+    font-size: 1.5rem;
+  }
+
+  .login-modal__btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+}

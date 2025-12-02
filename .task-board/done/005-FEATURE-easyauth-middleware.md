@@ -17,8 +17,8 @@ This middleware validates EasyAuth headers, extracts user identity, and attaches
 
 - ✅ OAuth apps configured in Facebook and Google
 - ✅ Credentials stored in `backend/.env` (gitignored)
-  - Facebook App ID: 1361252568813454
-  - Google Client ID: 920940568659-0ru2vr626jc4fa5mi1jmtekh5pruat96.apps.googleusercontent.com
+  - Facebook App ID: (see backend/.env)
+  - Google Client ID: (see backend/.env)
 - Express server setup (planned in `001-FEATURE-backend-express-server.md`)
 - **No authentication middleware exists yet**
 

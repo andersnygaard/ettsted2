@@ -11,6 +11,7 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDemo, setIsDemo] = useState(false);
 
   const fetchUser = useCallback(async () => {
     try {
@@ -72,14 +73,35 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const logout = () => {
+    setIsDemo(false);
     window.location.href = '/.auth/logout';
   };
+
+  const loginAsDemo = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await client.post('/auth/demo-login');
+
+      if (response.data.success && response.data.data?.user) {
+        setUser(response.data.data.user);
+        setIsDemo(true);
+        window.location.href = '/dashboard';
+      }
+    } catch (error) {
+      console.error('Demo login failed:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   const value: AuthContextType = {
     user,
     isLoading,
     isAuthenticated: user !== null,
+    isDemo,
     login,
+    loginAsDemo,
     logout,
     refreshUser,
   };

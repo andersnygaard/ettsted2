@@ -1,4 +1,5 @@
-import { PageHeader, HeroNumber, StackedAreaChart, StackedDataPoint, Series } from '@/shared/components';
+import { PageHeader, HeroNumber, StackedAreaChart } from '@finans/components';
+import type { StackedDataPoint, Series } from '@finans/components';
 import { PensjonSkeleton } from '@/shared/components/skeletons';
 import { formatCurrency } from '@/shared/utils/numberFormat';
 import { usePensjonData } from './usePensjonData';

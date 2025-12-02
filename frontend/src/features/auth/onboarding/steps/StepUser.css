@@ -1,0 +1,138 @@
+/**
+ * StepUser Styles
+ *
+ * Nordic Minimal design for user info and profile form
+ */
+
+.step-user {
+  width: 100%;
+}
+
+.step-user__header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.step-user__title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--charcoal, #2C2C2C);
+  margin: 0 0 8px 0;
+}
+
+.step-user__subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary, #6B6B6B);
+  margin: 0;
+}
+
+.step-user__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.step-user__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.step-user__field--half {
+  flex: 1;
+  min-width: 0;
+}
+
+.step-user__row {
+  display: flex;
+  gap: 16px;
+}
+
+.step-user__label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--charcoal, #2C2C2C);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.step-user__required {
+  color: var(--negative, #9D6B5A);
+}
+
+.step-user__input {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--border, rgba(44, 44, 44, 0.15));
+  border-radius: 4px;
+  background-color: var(--warm-white, #FDFCFA);
+  color: var(--charcoal, #2C2C2C);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.step-user__input:focus {
+  outline: none;
+  border-color: var(--muted-sage, #8B9A7D);
+  box-shadow: 0 0 0 3px rgba(139, 154, 125, 0.15);
+}
+
+.step-user__input::placeholder {
+  color: var(--text-secondary, #6B6B6B);
+  opacity: 0.6;
+}
+
+.step-user__input--number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+}
+
+.step-user__input--error {
+  border-color: var(--negative, #9D6B5A);
+}
+
+.step-user__input--error:focus {
+  box-shadow: 0 0 0 3px rgba(157, 107, 90, 0.15);
+}
+
+.step-user__error {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--negative, #9D6B5A);
+}
+
+.step-user__hint {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--text-secondary, #6B6B6B);
+}
+
+.step-user__divider {
+  height: 1px;
+  background-color: var(--border, rgba(44, 44, 44, 0.1));
+  margin: 8px 0;
+}
+
+.step-user__section-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--charcoal, #2C2C2C);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 4px 0;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .step-user__row {
+    flex-direction: column;
+  }
+
+  .step-user__title {
+    font-size: 24px;
+  }
+}

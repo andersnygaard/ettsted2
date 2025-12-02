@@ -1,0 +1,61 @@
+/**
+ * HeroNumber Component Styles
+ * Based on Nordic Minimal design system
+ *
+ * Large, centered metric display with optional change indicator.
+ */
+
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+}
+
+/* Label - Small caps, muted color */
+.hero-label {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-widest);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Value - Large hero number using serif font */
+.hero-value {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-hero);
+  font-weight: var(--font-weight-light);
+  color: var(--charcoal);
+  line-height: 1;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+/* Change badge - shows percentage change with color indicator */
+.hero-change {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: var(--radius-sm);
+}
+
+/* Positive change - sage green */
+.hero-change--positive {
+  color: var(--positive);
+  background-color: rgba(90, 125, 90, 0.08);
+}
+
+/* Negative change - terracotta red */
+.hero-change--negative {
+  color: var(--negative);
+  background-color: rgba(157, 107, 90, 0.08);
+}

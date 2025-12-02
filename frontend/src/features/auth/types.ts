@@ -37,7 +37,9 @@ export interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  isDemo: boolean;
   login: (provider: 'google' | 'facebook') => void;
+  loginAsDemo: () => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }

@@ -119,7 +119,7 @@ async function fetchDashboardData(): Promise<DashboardData> {
       sumSparing,
       sumGjeld,
       pensjon,
-      sparerate: 0, // TODO: Calculate from income/expenses when data available
+      sparerate: 0, // Calculated in DashboardPage from user profile
       nextMilestone,
       currentTowardsMilestone: netWorth
     };

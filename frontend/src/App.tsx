@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './features/auth/AuthContext';
 import { queryClient } from './shared/api/queryClient';
 import AppRoutes from './routes';
-import { ErrorBoundary, ToastProvider } from './shared/components';
+import { ErrorBoundary, ToastProvider } from '@finans/components';
 
 function App() {
   return (

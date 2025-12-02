@@ -1,4 +1,4 @@
-import { PageHeader, HeroNumber, StatsRow, AreaChart } from '@/shared/components';
+import { PageHeader, HeroNumber, StatsRow, AreaChart } from '@finans/components';
 import { formatCurrency } from '@/shared/utils/numberFormat';
 import { useSparingData } from './useSparingData';
 import { FireSection } from './FireSection';

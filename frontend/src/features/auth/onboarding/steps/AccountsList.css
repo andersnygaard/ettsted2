@@ -1,0 +1,276 @@
+/**
+ * AccountsList Styles
+ *
+ * Nordic Minimal design for account list in onboarding steps
+ */
+
+.accounts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.accounts-list__items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Account Item Card */
+.accounts-list__item {
+  background-color: var(--warm-white, #FDFCFA);
+  border: 1px solid var(--border, rgba(44, 44, 44, 0.1));
+  border-radius: 8px;
+  padding: 16px;
+  transition: box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.accounts-list__item:hover {
+  box-shadow: 0 2px 8px rgba(44, 44, 44, 0.05);
+}
+
+.accounts-list__item--inactive {
+  opacity: 0.6;
+}
+
+.accounts-list__item-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* Account Name Input */
+.accounts-list__name-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.accounts-list__name-input {
+  width: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: transparent;
+  color: var(--charcoal, #2C2C2C);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.accounts-list__name-input:hover {
+  background-color: var(--bone, #F5F2ED);
+}
+
+.accounts-list__name-input:focus {
+  outline: none;
+  border-color: var(--muted-sage, #8B9A7D);
+  background-color: var(--warm-white, #FDFCFA);
+}
+
+.accounts-list__name-input::placeholder {
+  color: var(--text-secondary, #6B6B6B);
+  opacity: 0.6;
+}
+
+.accounts-list__name-input--error {
+  border-color: var(--negative, #9D6B5A);
+}
+
+/* Active Toggle */
+.accounts-list__toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--text-secondary, #6B6B6B);
+  user-select: none;
+}
+
+.accounts-list__toggle input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--muted-sage, #8B9A7D);
+  cursor: pointer;
+}
+
+.accounts-list__toggle-label {
+  white-space: nowrap;
+}
+
+/* Delete Button */
+.accounts-list__delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 4px;
+  background-color: transparent;
+  color: var(--text-secondary, #6B6B6B);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.accounts-list__delete:hover:not(:disabled) {
+  background-color: rgba(157, 107, 90, 0.1);
+  color: var(--negative, #9D6B5A);
+}
+
+.accounts-list__delete:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.accounts-list__delete i {
+  font-family: 'Material Symbols Outlined';
+  font-size: 20px;
+}
+
+/* Value Row */
+.accounts-list__value-row {
+  margin-top: 8px;
+}
+
+/* Loan Details */
+.accounts-list__loan-details {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border, rgba(44, 44, 44, 0.08));
+}
+
+.accounts-list__loan-row {
+  display: flex;
+  gap: 16px;
+}
+
+.accounts-list__loan-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.accounts-list__loan-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary, #6B6B6B);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.accounts-list__loan-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.accounts-list__loan-input {
+  width: 100%;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  padding: 8px 12px;
+  border: 1px solid var(--border, rgba(44, 44, 44, 0.15));
+  border-radius: 4px;
+  background-color: var(--warm-white, #FDFCFA);
+  color: var(--charcoal, #2C2C2C);
+  transition: border-color 0.2s ease;
+}
+
+.accounts-list__loan-input:focus {
+  outline: none;
+  border-color: var(--muted-sage, #8B9A7D);
+}
+
+.accounts-list__loan-input--error {
+  border-color: var(--negative, #9D6B5A);
+}
+
+.accounts-list__loan-suffix {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--text-secondary, #6B6B6B);
+  white-space: nowrap;
+}
+
+/* Error Message */
+.accounts-list__error {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  color: var(--negative, #9D6B5A);
+  margin-top: 2px;
+}
+
+/* Add Account Button */
+.accounts-list__add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px dashed var(--border, rgba(44, 44, 44, 0.2));
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--text-secondary, #6B6B6B);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.accounts-list__add-btn:hover {
+  border-color: var(--muted-sage, #8B9A7D);
+  color: var(--muted-sage, #8B9A7D);
+  background-color: rgba(139, 154, 125, 0.05);
+}
+
+.accounts-list__add-btn i {
+  font-family: 'Material Symbols Outlined';
+  font-size: 20px;
+}
+
+/* Category Total */
+.accounts-list__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: var(--bone, #F5F2ED);
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.accounts-list__total-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--charcoal, #2C2C2C);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.accounts-list__total-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--charcoal, #2C2C2C);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .accounts-list__item-header {
+    flex-wrap: wrap;
+  }
+
+  .accounts-list__loan-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+}

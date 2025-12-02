@@ -3,7 +3,8 @@
  *
  * API endpoints for user management:
  * - GET /api/v1/users/me - Get current user profile
- * - POST /api/v1/users/me/setup - First-time nickname setup
+ * - POST /api/v1/users/me/setup - First-time nickname setup (legacy)
+ * - POST /api/v1/users/me/onboarding - Complete onboarding wizard
  * - PATCH /api/v1/users/me - Update user settings
  *
  * All routes require authentication via validateAuth middleware.
@@ -15,12 +16,19 @@ import {
   setupUser,
   updateUser
 } from '../controllers/userController';
+import { completeOnboarding } from '../controllers/onboardingController';
 import { validateBody } from '../middleware/validate';
 import {
   userSetupSchema,
   userUpdateSchema,
   validateNicknameAvailable
 } from '../validators';
+import {
+  validateOnboardingRequest,
+  validateNicknameAvailable as validateOnboardingNickname,
+  validateUserNotExists,
+  validateNoSnapshotForMonth
+} from '../validators/onboardingValidator';
 
 const router: IRouter = Router();
 
@@ -61,5 +69,32 @@ router.post(
  * Returns: 200 with updated user, or 404 if user not found
  */
 router.patch('/me', validateBody(userUpdateSchema), updateUser);
+
+/**
+ * POST /api/v1/users/me/onboarding
+ * Complete onboarding wizard (new user setup with profile, accounts, and first snapshot)
+ *
+ * Requires: Authentication, user must not exist, nickname must be available
+ * Body: {
+ *   nickname: string,
+ *   profile: { monthlySalary, annualExpenses, birthYear, plannedRetirementAge, fireNumber? },
+ *   accounts: Array<{ name, category, value, isActive, loanDetails? }>
+ * }
+ * Returns: 201 with created user and snapshot, or 409 if user/nickname exists
+ *
+ * Validation chain:
+ * 1. validateOnboardingRequest - validates all input fields
+ * 2. validateUserNotExists - ensures user hasn't already been set up
+ * 3. validateOnboardingNickname - ensures nickname is available
+ * 4. validateNoSnapshotForMonth - ensures no duplicate snapshot for current month
+ */
+router.post(
+  '/me/onboarding',
+  validateOnboardingRequest,
+  validateUserNotExists,
+  validateOnboardingNickname,
+  validateNoSnapshotForMonth,
+  completeOnboarding
+);
 
 export default router;

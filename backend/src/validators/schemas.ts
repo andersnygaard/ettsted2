@@ -416,3 +416,91 @@ export const monteCarloSchema = z.object({
     .default(1000)
     .describe('Number of simulations to run (default: 1000, max: 10000)')
 });
+
+/**
+ * Compound interest calculator request schema
+ * Formula: A = P(1 + r/n)^(nt) + PMT * (((1 + r/n)^(nt) - 1) / (r/n))
+ */
+export const compoundSchema = z.object({
+  principal: z
+    .number()
+    .nonnegative('Principal cannot be negative'),
+  annualRate: z
+    .number()
+    .min(0, 'Annual rate cannot be negative')
+    .max(100, 'Annual rate cannot exceed 100%')
+    .describe('Annual interest rate as percentage (e.g., 7 for 7%)'),
+  years: z
+    .number()
+    .positive('Years must be greater than 0')
+    .max(100, 'Years cannot exceed 100'),
+  compoundingFrequency: z
+    .number()
+    .int('Compounding frequency must be an integer')
+    .positive('Compounding frequency must be positive')
+    .optional()
+    .default(12)
+    .describe('Compounding frequency per year (default: 12 for monthly)'),
+  monthlyContribution: z
+    .number()
+    .nonnegative('Monthly contribution cannot be negative')
+    .optional()
+    .default(0)
+});
+
+/**
+ * F.I.R.E. calculator request schema
+ * Uses 4% rule (25x annual expenses) by default
+ */
+export const fireSchema = z.object({
+  currentSavings: z
+    .number()
+    .nonnegative('Current savings cannot be negative'),
+  annualExpenses: z
+    .number()
+    .positive('Annual expenses must be greater than 0'),
+  annualIncome: z
+    .number()
+    .nonnegative('Annual income cannot be negative')
+    .optional()
+    .default(0),
+  annualSavings: z
+    .number()
+    .optional()
+    .describe('Annual savings (calculated from income - expenses if not provided)'),
+  expectedReturn: z
+    .number()
+    .optional()
+    .default(7)
+    .describe('Expected annual return as percentage (default: 7)'),
+  customFireNumber: z
+    .number()
+    .positive('Custom F.I.R.E. number must be positive')
+    .optional()
+    .describe('Override default 25x expenses calculation')
+});
+
+/**
+ * Loan calculator request schema
+ * Standard amortization formula
+ */
+export const loanSchema = z.object({
+  principal: z
+    .number()
+    .positive('Principal must be greater than 0'),
+  annualRate: z
+    .number()
+    .min(0, 'Annual rate cannot be negative')
+    .max(50, 'Annual rate cannot exceed 50%')
+    .describe('Annual interest rate as percentage (e.g., 5 for 5%)'),
+  years: z
+    .number()
+    .positive('Years must be greater than 0')
+    .max(50, 'Loan term cannot exceed 50 years'),
+  extraPayment: z
+    .number()
+    .nonnegative('Extra payment cannot be negative')
+    .optional()
+    .default(0)
+    .describe('Additional monthly payment towards principal')
+});

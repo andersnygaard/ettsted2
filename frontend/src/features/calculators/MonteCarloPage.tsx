@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { Breadcrumb, PageHeader, Card, NumberInput } from '@/shared/components';
+import { Breadcrumb, PageHeader, Card, NumberInput } from '@finans/components';
 import { formatCurrency, formatNumber } from '@/shared/utils/numberFormat';
 import client from '@/shared/api/client';
 import MonteCarloChart from './MonteCarloChart';

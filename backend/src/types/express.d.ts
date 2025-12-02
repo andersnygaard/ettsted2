@@ -15,7 +15,12 @@ declare namespace Express {
       /** User email address from OAuth provider */
       email?: string;
       /** OAuth provider used for authentication */
-      provider: 'google' | 'facebook';
+      provider: 'google' | 'facebook' | 'demo';
     };
+    /**
+     * Flag indicating if this is a demo session
+     * Set by checkDemoSession middleware
+     */
+    isDemo?: boolean;
   }
 }

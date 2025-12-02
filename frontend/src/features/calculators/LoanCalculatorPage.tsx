@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart } from '@/shared/components';
-import type { StackedDataPoint } from '@/shared/components';
+import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart } from '@finans/components';
+import type { StackedDataPoint } from '@finans/components';
 import { formatCurrency, formatNumber } from '@/shared/utils/numberFormat';
 import { useGjeldData } from '@/features/gjeld/useGjeldData';
 import './CompoundCalculatorPage.css'; // Reuse shared calculator styles

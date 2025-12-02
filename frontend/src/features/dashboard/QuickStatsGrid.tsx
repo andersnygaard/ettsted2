@@ -1,4 +1,4 @@
-import { StatCard } from '../../shared/components';
+import { StatCard } from '@/shared/components';
 import './QuickStatsGrid.css';
 
 interface QuickStat {

@@ -1,0 +1,134 @@
+/**
+ * WizardProgressBar Styles
+ *
+ * Nordic Minimal design with step indicators and connector lines.
+ */
+
+.wizard-progress {
+  width: 100%;
+  padding: 24px 0;
+  margin-bottom: 32px;
+}
+
+.wizard-progress__track {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.wizard-progress__step-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+}
+
+/* Connector line between steps */
+.wizard-progress__connector {
+  position: absolute;
+  top: 18px;
+  right: 50%;
+  width: 100%;
+  height: 2px;
+  background-color: var(--border, rgba(44, 44, 44, 0.15));
+  z-index: 0;
+}
+
+.wizard-progress__connector--active {
+  background-color: var(--muted-sage, #8B9A7D);
+}
+
+/* Step circle button */
+.wizard-progress__step {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--border, rgba(44, 44, 44, 0.15));
+  background-color: var(--warm-white, #FDFCFA);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  cursor: default;
+  transition: all 0.2s ease;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary, #6B6B6B);
+}
+
+.wizard-progress__step--current {
+  border-color: var(--charcoal, #2C2C2C);
+  background-color: var(--charcoal, #2C2C2C);
+  color: var(--warm-white, #FDFCFA);
+}
+
+.wizard-progress__step--completed {
+  border-color: var(--muted-sage, #8B9A7D);
+  background-color: var(--muted-sage, #8B9A7D);
+  color: var(--warm-white, #FDFCFA);
+}
+
+.wizard-progress__step--clickable {
+  cursor: pointer;
+}
+
+.wizard-progress__step--clickable:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(139, 154, 125, 0.3);
+}
+
+.wizard-progress__step--clickable:focus-visible {
+  outline: 2px solid var(--muted-sage, #8B9A7D);
+  outline-offset: 2px;
+}
+
+/* Step number */
+.wizard-progress__number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Checkmark icon for completed steps */
+.wizard-progress__check {
+  font-family: 'Material Symbols Outlined';
+  font-size: 18px;
+  font-weight: normal;
+}
+
+/* Step label */
+.wizard-progress__label {
+  margin-top: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--text-secondary, #6B6B6B);
+  text-align: center;
+  transition: color 0.2s ease;
+}
+
+.wizard-progress__label--active {
+  color: var(--charcoal, #2C2C2C);
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .wizard-progress__step {
+    width: 32px;
+    height: 32px;
+  }
+
+  .wizard-progress__connector {
+    top: 15px;
+  }
+
+  .wizard-progress__label {
+    font-size: 11px;
+  }
+}

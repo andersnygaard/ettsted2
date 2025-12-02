@@ -7,8 +7,9 @@
 /* Import BeerCSS */
 @import 'beercss/dist/cdn/beer.min.css';
 
-/* Global styles and overrides */
+/* Global styles - BeerCSS integration (legacy support) */
 :root {
+  /* Legacy BeerCSS color variables - can be removed if BeerCSS usage eliminated */
   --primary-color: #1976d2;
   --secondary-color: #dc004e;
 }
@@ -98,15 +99,15 @@ pre code {
 
 /* Utility classes */
 .container {
-  max-width: 1200px;
+  max-width: var(--container-max-width);
   margin: 0 auto;
-  padding: 1rem;
+  padding: var(--space-lg);
 }
 
 .error-text {
-  color: var(--error);
+  color: var(--negative);
 }
 
 .success-text {
-  color: var(--primary);
+  color: var(--positive);
 }

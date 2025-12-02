@@ -1,0 +1,70 @@
+/**
+ * OnboardingPage Styles
+ *
+ * Full-page wrapper for the onboarding wizard.
+ */
+
+.onboarding-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bone, #F5F2ED);
+}
+
+.onboarding-page__header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border, rgba(44, 44, 44, 0.08));
+}
+
+.onboarding-page__logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--charcoal, #2C2C2C);
+  margin: 0;
+  text-transform: lowercase;
+}
+
+.onboarding-page__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+}
+
+.onboarding-page__intro {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.onboarding-page__title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--charcoal, #2C2C2C);
+  margin: 0 0 0.5rem 0;
+}
+
+.onboarding-page__subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  color: var(--text-secondary, #6B6B6B);
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .onboarding-page__header {
+    padding: 1rem;
+  }
+
+  .onboarding-page__title {
+    font-size: 1.5rem;
+  }
+
+  .onboarding-page__subtitle {
+    font-size: 0.9375rem;
+  }
+}
