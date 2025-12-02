@@ -1,16 +1,11 @@
 import { Router, Request, Response, IRouter } from 'express';
 import { validateAuth } from '../middleware/auth';
-import { checkDemoSession, validateAuthWithDemo } from '../middleware/demoAuth';
-import authRoutes from './authRoutes';
 import userRoutes from './userRoutes';
 import accountRoutes from './accountRoutes';
 import snapshotRoutes from './snapshotRoutes';
 import calculatorRoutes from './calculatorRoutes';
 import summaryRoutes from './summaryRoutes';
 import devRoutes from './devRoutes';
-
-// Combined auth middleware: checks demo session first, then validates auth
-const authMiddleware = [checkDemoSession, validateAuthWithDemo(validateAuth)];
 
 /**
  * Main route aggregator
@@ -47,7 +42,7 @@ router.get('/health', (_req: Request, res: Response) => {
  * GET /api/v1/test/me
  * Requires authentication - returns authenticated user info
  */
-router.get('/test/me', authMiddleware, (req: Request, res: Response) => {
+router.get('/test/me', validateAuth, (req: Request, res: Response) => {
   res.status(200).json({
     data: {
       message: 'Authentication successful',
@@ -58,14 +53,13 @@ router.get('/test/me', authMiddleware, (req: Request, res: Response) => {
 });
 
 // Public route modules (no authentication required)
-router.use('/auth', authRoutes);
 router.use('/calculators', calculatorRoutes);
 
-// Protected route modules (require authentication or demo session)
-router.use('/users', authMiddleware, userRoutes);
-router.use('/accounts', authMiddleware, accountRoutes);
-router.use('/snapshots', authMiddleware, snapshotRoutes);
-router.use('/', authMiddleware, summaryRoutes);
+// Protected route modules (require authentication)
+router.use('/users', validateAuth, userRoutes);
+router.use('/accounts', validateAuth, accountRoutes);
+router.use('/snapshots', validateAuth, snapshotRoutes);
+router.use('/', validateAuth, summaryRoutes);
 
 // Development-only routes (database seeding, reset)
 if (process.env.NODE_ENV === 'development') {

@@ -5,16 +5,8 @@ import { LoginModal } from '../auth/LoginModal';
 import './HomePage.css';
 
 function HomePage() {
-  const { isAuthenticated, loginAsDemo, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
-  const handleDemoClick = async () => {
-    try {
-      await loginAsDemo();
-    } catch (error) {
-      console.error('Failed to start demo:', error);
-    }
-  };
 
   return (
     <div className="landing-page">
@@ -49,14 +41,6 @@ function HomePage() {
               >
                 <i>login</i>
                 <span>Logg inn</span>
-              </button>
-              <button
-                className="landing-btn landing-btn--secondary"
-                onClick={handleDemoClick}
-                disabled={isLoading}
-              >
-                <i>play_arrow</i>
-                <span>{isLoading ? 'Laster...' : 'Prøv demo'}</span>
               </button>
             </div>
           )}
@@ -132,14 +116,6 @@ function HomePage() {
             >
               <i>rocket_launch</i>
               <span>Kom i gang</span>
-            </button>
-            <button
-              className="landing-btn landing-btn--secondary landing-btn--large"
-              onClick={handleDemoClick}
-              disabled={isLoading}
-            >
-              <i>play_arrow</i>
-              <span>Prøv demo først</span>
             </button>
           </div>
         )}
