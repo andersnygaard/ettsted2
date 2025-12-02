@@ -17,7 +17,7 @@
 ### Frontend (`/frontend`)
 - **Framework**: React 18+ with TypeScript
 - **Build Tool**: Vite
-- **Styling**: BeerCSS + Material UI
+- **Styling**: Custom CSS (Nordic Minimal design system) + Material UI
 - **Visualizations**: D3.js
 - **State Management**:
   - Zustand (client state)
@@ -37,7 +37,7 @@
 ### Components (`/components`)
 - **Type**: Shared React component library
 - **Documentation**: Storybook
-- **Styling**: BeerCSS + Material UI
+- **Styling**: Custom CSS (Nordic Minimal design system) + Material UI
 - **Distribution**: Workspace co-hosting (bundled into frontend)
 
 ### Testing (`/e2e`)
@@ -778,7 +778,7 @@ const { user } = useAuth()
 ### Form Handling
 - **React Hook Form**: For all forms
 - **Validation**: Zod or Yup schemas
-- **Accessibility**: Use BeerCSS/Material UI form components
+- **Accessibility**: Use Material UI form components with custom Nordic styling
 
 ### Language
 **IMPORTANT**: All code, comments, and documentation MUST be in English.
@@ -1172,6 +1172,12 @@ finans-rg (Resource Group) - see CosmosDB setup in azure-setup-guide skill
 ```
 
 ### Deployment Strategy
+
+**IMPORTANT: Deploy by pushing to git.** GitHub Actions CI/CD handles deployment automatically on push to main.
+
+```bash
+git add . && git commit -m "message" && git push
+```
 
 **1. finans-frontend** (App Service)
 - Deploys built React application

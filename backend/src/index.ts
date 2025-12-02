@@ -36,7 +36,9 @@ function createApp(): Application {
         callback(new Error('Not allowed by CORS'));
       }
     },
-    credentials: true // Allow cookies for EasyAuth
+    credentials: true,
+    // Allow custom auth header from frontend
+    allowedHeaders: ['Content-Type', 'X-MS-CLIENT-PRINCIPAL'],
   }));
 
   // Body parser middleware

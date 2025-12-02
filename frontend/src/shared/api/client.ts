@@ -1,14 +1,19 @@
 import axios, { AxiosError } from 'axios';
+import { getAuthToken } from './authToken';
 
 /**
  * Axios client with error handling interceptors
  *
- * Configured for EasyAuth and standard error responses from backend.
+ * Configured for EasyAuth token forwarding and standard error responses from backend.
+ * In production, fetches token from /.auth/me and forwards to backend.
  */
+
+const isDevelopment = import.meta.env.VITE_APP_ENV === 'development';
 
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1',
-  withCredentials: true, // Include cookies for EasyAuth
+  withCredentials: true,
+  timeout: 10000, // 10 second timeout
   headers: {
     'Content-Type': 'application/json',
   },
@@ -75,10 +80,16 @@ function getErrorMessage(error: AxiosError<ApiErrorResponse>): string {
   }
 }
 
-// Request interceptor - add auth headers if needed
+// Request interceptor - add auth token header
 client.interceptors.request.use(
-  (config) => {
-    // Future: Add custom headers here if needed
+  async (config) => {
+    // In production, fetch and forward the EasyAuth token
+    if (!isDevelopment) {
+      const token = await getAuthToken();
+      if (token) {
+        config.headers['X-MS-CLIENT-PRINCIPAL'] = token;
+      }
+    }
     return config;
   },
   (error) => {

@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import client from '../../shared/api/client';
+import { clearAuthToken } from '../../shared/api/authToken';
 import type { User, AuthContextType } from './types';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -61,9 +62,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const logout = () => {
+    // Clear cached auth token
+    clearAuthToken();
+    setUser(null);
+
     if (isDevelopment) {
-      // In development, just clear user state and redirect
-      setUser(null);
       window.location.href = '/';
       return;
     }
