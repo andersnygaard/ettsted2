@@ -99,16 +99,8 @@ client.interceptors.response.use(
       url: error.config?.url,
     });
 
-    // Handle 401 - Unauthorized (redirect to login)
-    if (error.response?.status === 401) {
-      console.warn('Unauthorized - redirecting to login');
-      // Show message before redirect
-      // Note: Toast will be shown by the component that catches this error
-      // Delay redirect to allow user to see the message
-      setTimeout(() => {
-        window.location.href = '/.auth/login/google';
-      }, 1500);
-    }
+    // 401 is handled by AuthContext - it sets user to null
+    // Components/pages decide whether to redirect or show login UI
 
     // Transform error to custom ApiError for better handling
     const apiError = new ApiError(
