@@ -34,9 +34,11 @@ export interface CellChangeEvent {
   value: number;
 }
 
+export type RowData = Record<string, string | number | null | undefined>;
+
 export interface SpreadsheetTableProps {
   columnGroups: ColumnGroup[];
-  data: Record<string, any>[];
+  data: RowData[];
   dateKey: string;
   rowIdKey?: string; // Key for row identifier (snapshot ID), defaults to 'id'
   milestones?: Record<string, number[]>; // Map of column ID -> array of milestone values crossed
@@ -52,7 +54,7 @@ export interface SpreadsheetTableProps {
  * @param milestones - Array of milestone thresholds crossed in this cell
  * @returns Formatted value with optional milestone star
  */
-function formatCell(value: any, milestones?: number[]): JSX.Element | string {
+function formatCell(value: string | number | null | undefined, milestones?: number[]): JSX.Element | string {
   // Handle null, undefined, or empty values
   if (value === null || value === undefined || value === '' || value === '-') {
     return '-';
@@ -131,7 +133,7 @@ export function SpreadsheetTable({
   /**
    * Start editing a cell
    */
-  const startEditing = (rowIndex: number, columnId: string, currentValue: any) => {
+  const startEditing = (rowIndex: number, columnId: string, currentValue: string | number | null | undefined) => {
     if (editingDisabled || !onCellChange) return;
 
     setEditingCell({ rowIndex, columnId });

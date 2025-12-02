@@ -1,4 +1,3 @@
-/// <reference path="../types/express.d.ts" />
 import { Router, Request, Response, IRouter } from 'express';
 import { validateAuth } from '../middleware/auth';
 import { checkDemoSession, validateAuthWithDemo } from '../middleware/demoAuth';

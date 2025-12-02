@@ -92,7 +92,7 @@ export async function getSnapshotsByUserId(
     // Build query with options
     const orderBy = options?.orderBy || 'date';
     const direction = options?.ascending === false ? 'DESC' : 'ASC';
-    let query = `SELECT * FROM portfolios p WHERE p.userId = @userId ORDER BY p.${orderBy} ${direction}`;
+    const query = `SELECT * FROM portfolios p WHERE p.userId = @userId ORDER BY p.${orderBy} ${direction}`;
 
     const querySpec = buildParameterizedQuery(query, { userId });
 
