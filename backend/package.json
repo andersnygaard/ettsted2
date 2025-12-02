@@ -6,7 +6,8 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
-    "build": "tsc",
+    "build": "node esbuild.config.js",
+    "build:tsc": "tsc",
     "start": "node dist/index.js",
     "lint": "eslint src --ext .ts",
     "type-check": "tsc --noEmit",
@@ -37,6 +38,7 @@
     "@types/uuid": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^6.13.0",
     "@typescript-eslint/parser": "^6.13.0",
+    "esbuild": "^0.27.0",
     "eslint": "^8.55.0",
     "nodemon": "^3.0.2",
     "ts-node": "^10.9.2",
