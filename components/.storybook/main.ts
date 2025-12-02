@@ -8,6 +8,7 @@ const config: StorybookConfig = {
     '@storybook/addon-interactions',
     '@storybook/addon-links'
   ],
+  staticDirs: ['./public'],
   docs: {
     autodocs: 'tag'
   }
