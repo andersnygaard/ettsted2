@@ -29,6 +29,8 @@ jobs:
 
       - name: Build frontend
         run: pnpm --filter frontend build
+        env:
+          VITE_API_URL: https://finans-backend.azurewebsites.net/api/v1
 
       - name: Login to Azure
         uses: azure/login@v1
