@@ -4,16 +4,6 @@
 /* Import animations */
 @import './animations.css';
 
-/* Import BeerCSS */
-@import 'beercss/dist/cdn/beer.min.css';
-
-/* Global styles - BeerCSS integration (legacy support) */
-:root {
-  /* Legacy BeerCSS color variables - can be removed if BeerCSS usage eliminated */
-  --primary-color: #1976d2;
-  --secondary-color: #dc004e;
-}
-
 body {
   margin: 0;
   padding: 0;

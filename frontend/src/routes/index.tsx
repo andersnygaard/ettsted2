@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from '../shared/components/Layout';
+import { LoadingSpinner } from '../shared/components';
 import ProtectedRoute from '../features/auth/ProtectedRoute';
 
 // Lazy load page components for code splitting
@@ -15,26 +16,15 @@ const CompoundCalculatorPage = lazy(() => import('../features/calculators/Compou
 const FireCalculatorPage = lazy(() => import('../features/calculators/FireCalculatorPage'));
 const LoanCalculatorPage = lazy(() => import('../features/calculators/LoanCalculatorPage'));
 const MonteCarloPage = lazy(() => import('../features/calculators/MonteCarloPage'));
-const LoginPage = lazy(() => import('../features/auth/LoginPage'));
 const OnboardingPage = lazy(() => import('../features/auth/OnboardingPage'));
-
-// Loading component
-function LoadingFallback() {
-  return (
-    <div className="middle-align center-align">
-      <progress className="circle large"></progress>
-    </div>
-  );
-}
 
 
 function AppRoutes() {
   return (
-    <Suspense fallback={<LoadingFallback />}>
+    <Suspense fallback={<LoadingSpinner />}>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
-          <Route path="login" element={<LoginPage />} />
           <Route path="onboarding" element={<OnboardingPage />} />
           <Route
             path="dashboard"
@@ -116,8 +106,9 @@ function AppRoutes() {
               </ProtectedRoute>
             }
           />
-          {/* Legacy route redirect */}
+          {/* Legacy route redirects */}
           <Route path="calculators" element={<Navigate to="/kalkulatorer" replace />} />
+          <Route path="login" element={<Navigate to="/dashboard" replace />} />
           {/* 404 - Not Found */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

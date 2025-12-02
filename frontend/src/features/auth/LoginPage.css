@@ -1,0 +1,108 @@
+/* LoginPage - Nordic Minimal Design */
+
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--space-4xl);
+}
+
+.login-card {
+  background: var(--warm-white);
+  padding: var(--space-4xl);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  animation: fadeUp 0.6s ease forwards;
+}
+
+.login-title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-light);
+  color: var(--charcoal);
+  margin-bottom: var(--space-sm);
+}
+
+.login-subtitle {
+  font-size: var(--font-size-md);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2xl);
+  line-height: 1.5;
+}
+
+.login-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
+
+.login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-md) var(--space-xl);
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.login-btn svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.login-btn--google {
+  background-color: var(--warm-white);
+  color: var(--charcoal);
+  border: 1px solid var(--border-strong);
+}
+
+.login-btn--google:hover {
+  background-color: var(--bone);
+  border-color: var(--charcoal);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.login-btn--facebook {
+  background-color: #1877F2;
+  color: white;
+  border: none;
+}
+
+.login-btn--facebook:hover {
+  background-color: #166FE5;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.login-terms {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-page {
+    padding: var(--space-xl);
+  }
+
+  .login-card {
+    padding: var(--space-2xl);
+  }
+
+  .login-title {
+    font-size: var(--font-size-lg);
+  }
+}

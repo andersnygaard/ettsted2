@@ -4,6 +4,7 @@ import { useAuth } from '../../features/auth/useAuth';
 import { AvatarMenu } from './AvatarMenu';
 import { ProfileModal } from './ProfileModal';
 import { AccountsModal } from './AccountsModal';
+import { LoginModal } from '../../features/auth/LoginModal';
 import './AppHeader.css';
 
 /**
@@ -18,6 +19,7 @@ export default function AppHeader() {
   const { user, isAuthenticated, logout, refreshUser } = useAuth();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isAccountsModalOpen, setIsAccountsModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   // Navigation items with paths (only shown when authenticated)
   const navItems = [
@@ -82,9 +84,13 @@ export default function AppHeader() {
             </>
           ) : (
             <div className="app-header__actions">
-              <Link to="/login" className="app-header__login-btn">
+              <button
+                type="button"
+                className="app-header__login-btn"
+                onClick={() => setIsLoginModalOpen(true)}
+              >
                 Logg inn
-              </Link>
+              </button>
             </div>
           )}
         </div>
@@ -107,6 +113,11 @@ export default function AppHeader() {
           />
         </>
       )}
+
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+      />
     </>
   );
 }

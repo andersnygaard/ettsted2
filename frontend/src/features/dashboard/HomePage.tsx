@@ -5,7 +5,7 @@ import { LoginModal } from '../auth/LoginModal';
 import './HomePage.css';
 
 function HomePage() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   return (
@@ -37,7 +37,6 @@ function HomePage() {
               <button
                 className="landing-btn landing-btn--primary"
                 onClick={() => setIsLoginModalOpen(true)}
-                disabled={isLoading}
               >
                 <i>login</i>
                 <span>Logg inn</span>
@@ -112,7 +111,6 @@ function HomePage() {
             <button
               className="landing-btn landing-btn--primary landing-btn--large"
               onClick={() => setIsLoginModalOpen(true)}
-              disabled={isLoading}
             >
               <i>rocket_launch</i>
               <span>Kom i gang</span>

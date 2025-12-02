@@ -18,6 +18,7 @@ export { Container } from './Container';
 export type { ContainerProps } from './Container';
 export { default as AppHeader } from './AppHeader';
 export { default as ErrorBoundary } from './ErrorBoundary';
+export { default as LoadingSpinner } from './LoadingSpinner';
 export { HeroNumber } from './HeroNumber';
 export type { HeroNumberProps } from './HeroNumber';
 export { MilestoneCard } from './MilestoneCard';

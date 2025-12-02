@@ -1,4 +1,5 @@
 import React, { Component, ReactNode } from 'react';
+import './ErrorBoundary.css';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -37,24 +38,33 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="middle-align center-align" style={{ padding: '2rem' }}>
-          <article className="border round">
-            <i className="extra-large">error</i>
-            <h3>Noe gikk galt</h3>
-            <p>En uventet feil oppstod. Vennligst prøv igjen.</p>
+        <div className="error-page">
+          <div className="error-card">
+            <div className="error-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+            </div>
+            <h1 className="error-title">Noe gikk galt</h1>
+            <p className="error-message">
+              En uventet feil oppstod. Vennligst prøv igjen.
+            </p>
             {this.state.error && (
-              <details style={{ marginTop: '1rem', textAlign: 'left' }}>
+              <details className="error-details">
                 <summary>Tekniske detaljer</summary>
-                <pre style={{ fontSize: '0.875rem', overflow: 'auto' }}>
-                  {this.state.error.toString()}
-                </pre>
+                <pre>{this.state.error.toString()}</pre>
               </details>
             )}
-            <button className="large" onClick={this.handleReload}>
-              <i>refresh</i>
+            <button className="error-button" onClick={this.handleReload}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+              </svg>
               <span>Last siden på nytt</span>
             </button>
-          </article>
+          </div>
         </div>
       );
     }
