@@ -152,13 +152,15 @@ export function SpreadsheetTable({
 
     const row = data[editingCell.rowIndex];
     const rowId = row[rowIdKey];
+    if (rowId === null || rowId === undefined) return;
+
     const newValue = parseFloat(editValue) || 0;
     const oldValue = row[editingCell.columnId];
 
     // Only save if value changed
     if (newValue !== oldValue) {
       onCellChange({
-        rowId,
+        rowId: String(rowId),
         columnId: editingCell.columnId,
         value: newValue,
       });
