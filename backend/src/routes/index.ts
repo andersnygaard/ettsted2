@@ -7,6 +7,7 @@ import calculatorRoutes from './calculatorRoutes';
 import summaryRoutes from './summaryRoutes';
 import devRoutes from './devRoutes';
 import authRoutes from './authRoutes';
+import importRoutes from './importRoutes';
 
 /**
  * Main route aggregator
@@ -61,14 +62,12 @@ router.use('/calculators', calculatorRoutes);
 router.use('/users', validateAuth, userRoutes);
 router.use('/accounts', validateAuth, accountRoutes);
 router.use('/snapshots', validateAuth, snapshotRoutes);
+router.use('/import', validateAuth, importRoutes);
 router.use('/', validateAuth, summaryRoutes);
 
 // Development-only routes (database seeding, reset)
 if (process.env.NODE_ENV === 'development') {
   router.use('/dev', devRoutes);
 }
-
-// Future route modules will be mounted here:
-// router.use('/import', validateAuth, importRoutes);
 
 export default router;

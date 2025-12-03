@@ -160,81 +160,123 @@ function calculateYearsToValue(
 
 /**
  * Fetch and calculate sparing data from API
+ *
+ * Uses the aggregated /api/v1/sparing endpoint which calculates
+ * F.I.R.E. metrics from user profile settings.
+ * Also fetches user profile to calculate retirement age projections.
  */
 async function fetchSparingData(): Promise<SparingData> {
   try {
-    const snapshots = await snapshotApi.getAll();
+    // Fetch both sparing metrics and user profile in parallel
+    const [sparingResponse, userResponse] = await Promise.all([
+      fetch('/api/v1/sparing'),
+      fetch('/api/v1/users/me')
+    ]);
 
-    if (!snapshots || snapshots.length === 0) {
+    if (!sparingResponse.ok || !userResponse.ok) {
+      throw new Error('API error fetching sparing data');
+    }
+
+    const { data: sparingData } = await sparingResponse.json();
+    const { data: userData } = await userResponse.json();
+
+    if (!sparingData) {
       return getEmptySparingData();
     }
 
-    // Sort by date descending (most recent first)
-    const sorted = [...snapshots].sort((a, b) => {
-      const dateA = parseDate(a.date);
-      const dateB = parseDate(b.date);
-      return dateB.getTime() - dateA.getTime();
-    });
+    // API response structure for /api/v1/sparing:
+    // {
+    //   sumSparing: number
+    //   sparerate: number (percentage)
+    //   monthsFree: number
+    //   fireNumber: number
+    //   fireProgress: number (0-100+)
+    //   history: Array<{ date: string, value: number }>
+    // }
 
-    const latest = sorted[0];
-    const first = sorted[sorted.length - 1];
+    // Parse history dates
+    const parsedHistory = (sparingData.history || []).map((item: { date: string; value: number }) => ({
+      date: parseDate(item.date),
+      value: item.value
+    }));
 
-    // Find snapshot from start of year
-    const currentYear = new Date().getFullYear();
-    const yearStartSnapshot = sorted.find(s => {
-      const date = parseDate(s.date);
-      return date.getFullYear() === currentYear && isStartOfYear(s.date);
-    });
+    // Get snapshots for calculating yearly/monthly changes and growth
+    const snapshots = await snapshotApi.getAll();
 
-    const sumSparing = calculateSumSparing(latest.accounts);
+    let yearlyChange = 0;
+    let monthlyChange = 0;
+    let totalGrowth = 0;
 
-    // TODO: Get these from user settings once implemented
-    const annualExpenses = 256000;
-    const annualIncome = 800000;
-    const currentAge = 35;
-    const annualGrowthRate = 0.07; // 7% assumption
+    if (snapshots && snapshots.length > 0) {
+      const sorted = [...snapshots].sort((a, b) => {
+        const dateA = parseDate(a.date);
+        const dateB = parseDate(b.date);
+        return dateB.getTime() - dateA.getTime();
+      });
 
-    // Calculate F.I.R.E. metrics
-    const fireNumber = annualExpenses * 25;
-    const fireProgress = (sumSparing / fireNumber) * 100;
-    const sparerate = annualIncome > 0 ? ((annualIncome - annualExpenses) / annualIncome) * 100 : 0;
-    const monthlyExpenses = annualExpenses / 12;
-    const monthsFree = monthlyExpenses > 0 ? Math.floor(sumSparing / monthlyExpenses) : 0;
-    const annualWithdrawal = sumSparing * 0.04;
+      const latest = sorted[0];
+      const first = sorted[sorted.length - 1];
 
-    // Calculate years to financial independence
-    const annualSavings = annualIncome - annualExpenses;
-    const yearsToFire = calculateYearsToValue(sumSparing, fireNumber, annualSavings, annualGrowthRate);
-    const minRetireAge = yearsToFire === Infinity ? 999 : currentAge + yearsToFire;
+      // Find snapshot from start of year
+      const currentYear = new Date().getFullYear();
+      const yearStartSnapshot = sorted.find(s => {
+        const date = parseDate(s.date);
+        return date.getFullYear() === currentYear && isStartOfYear(s.date);
+      });
 
-    // Calculate years until savings equals annual salary
-    const yearsToSalary = calculateYearsToValue(sumSparing, annualIncome, annualSavings, annualGrowthRate);
+      yearlyChange = calculateYearlyChange(latest, yearStartSnapshot);
+      monthlyChange = calculateMonthlyChange(sorted);
 
-    // Calculate total growth from first snapshot
-    const firstValue = calculateSumSparing(first.accounts);
-    const totalGrowth = sumSparing - firstValue;
+      // Calculate total growth from first snapshot
+      const firstValue = calculateSumSparing(first.accounts);
+      const currentValue = calculateSumSparing(latest.accounts);
+      totalGrowth = currentValue - firstValue;
+    }
 
-    // Build history for chart (reversed to chronological order)
-    const history = sorted
-      .map(s => ({
-        date: parseDate(s.date),
-        value: calculateSumSparing(s.accounts)
-      }))
-      .reverse();
+    // Calculate retirement age projection using user profile data
+    let minRetireAge = 999;
+    let yearsToSalary = 0;
+
+    if (userData && userData.profile) {
+      const profile = userData.profile;
+      const currentYear = new Date().getFullYear();
+      const currentAge = profile.birthYear ? currentYear - profile.birthYear : 35;
+      const annualIncome = (profile.monthlySalary || 0) * 12;
+      const annualExpenses = profile.annualExpenses || 0;
+      const annualSavings = annualIncome - annualExpenses;
+      const annualGrowthRate = 0.07; // 7% assumption
+
+      // Calculate years until F.I.R.E. target is reached
+      const yearsToFire = calculateYearsToValue(
+        sparingData.sumSparing,
+        sparingData.fireNumber,
+        annualSavings,
+        annualGrowthRate
+      );
+      minRetireAge = yearsToFire === Infinity ? 999 : currentAge + yearsToFire;
+
+      // Calculate years until savings equals annual income
+      yearsToSalary = calculateYearsToValue(
+        sparingData.sumSparing,
+        annualIncome,
+        annualSavings,
+        annualGrowthRate
+      );
+    }
 
     return {
-      sumSparing,
-      yearlyChange: calculateYearlyChange(latest, yearStartSnapshot),
-      monthlyChange: calculateMonthlyChange(sorted),
-      sparerate,
-      monthsFree,
-      fireNumber,
-      fireProgress,
+      sumSparing: sparingData.sumSparing,
+      yearlyChange,
+      monthlyChange,
+      sparerate: sparingData.sparerate,
+      monthsFree: sparingData.monthsFree,
+      fireNumber: sparingData.fireNumber,
+      fireProgress: sparingData.fireProgress,
       minRetireAge,
       yearsToSalary,
-      annualWithdrawal,
+      annualWithdrawal: sparingData.sumSparing * 0.04, // 4% rule
       totalGrowth,
-      history
+      history: parsedHistory
     };
   } catch (error) {
     console.error('Error fetching sparing data:', error);

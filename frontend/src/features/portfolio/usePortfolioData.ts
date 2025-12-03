@@ -20,6 +20,14 @@ export interface PortfolioRow {
 }
 
 /**
+ * Portfolio data including rows and milestone information
+ */
+export interface PortfolioData {
+  rows: PortfolioRow[];
+  milestones: Record<string, number[]>;
+}
+
+/**
  * Parse Norwegian date format (dd.MM.yyyy) to Date object
  */
 function parseDate(dateStr: string): Date {
@@ -47,18 +55,75 @@ function calculateTotals(accounts: Account[]): { sparing: number; gjeld: number;
 }
 
 /**
+ * Detect milestone crossings for each account across consecutive snapshots
+ *
+ * Returns a map of "snapshotId-accountName" to array of thresholds crossed
+ */
+function detectMilestones(snapshots: MonthlySnapshot[]): Record<string, number[]> {
+  const milestones: Record<string, number[]> = {};
+
+  const thresholds = [
+    10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
+    100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000,
+    1000000, 2000000, 3000000, 4000000, 5000000
+  ];
+
+  // Sort by date ascending so we can compare consecutive snapshots
+  const sorted = [...snapshots].sort((a, b) =>
+    parseDate(a.date).getTime() - parseDate(b.date).getTime()
+  );
+
+  // Compare each snapshot to the previous one
+  for (let i = 1; i < sorted.length; i++) {
+    const current = sorted[i];
+    const previous = sorted[i - 1];
+
+    // Check each account in current snapshot
+    current.accounts.forEach((acc) => {
+      // Find same account in previous snapshot
+      const prevAcc = previous.accounts.find(a => a.name === acc.name);
+      const prevValue = prevAcc?.value ?? 0;
+      const currValue = acc.value;
+
+      // For negative values (gjeld/debt), use absolute values for milestone detection
+      const prevAbsValue = Math.abs(prevValue);
+      const currAbsValue = Math.abs(currValue);
+
+      // Find all thresholds crossed between previous and current
+      const crossed = thresholds.filter(
+        t => prevAbsValue < t && currAbsValue >= t
+      );
+
+      // Store milestones if any thresholds were crossed
+      if (crossed.length > 0) {
+        const key = `${current.id}-${acc.name}`;
+        milestones[key] = crossed;
+      }
+    });
+  }
+
+  return milestones;
+}
+
+/**
  * Fetch and transform portfolio data for table display
  */
-async function fetchPortfolioData(): Promise<PortfolioRow[]> {
+async function fetchPortfolioData(): Promise<PortfolioData> {
   try {
     const snapshots = await snapshotApi.getAll();
 
     if (!snapshots || snapshots.length === 0) {
-      return [];
+      return {
+        rows: [],
+        milestones: {}
+      };
     }
 
+    // Detect milestones across snapshots
+    const milestones = detectMilestones(snapshots);
+
     // Transform snapshots to portfolio rows and sort by date descending
-    return snapshots
+    const rows = snapshots
       .map((snapshot) => ({
         id: snapshot.id,
         date: snapshot.date,
@@ -68,6 +133,8 @@ async function fetchPortfolioData(): Promise<PortfolioRow[]> {
         totals: calculateTotals(snapshot.accounts)
       }))
       .sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
+
+    return { rows, milestones };
   } catch (error) {
     console.error('Error fetching portfolio data:', error);
     throw error;

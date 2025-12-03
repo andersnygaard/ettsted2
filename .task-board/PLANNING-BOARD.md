@@ -1,181 +1,81 @@
 # Planning Board - Finans
 
-**Current Focus**: Storybook Component Library Migration
+**Current Focus**: Bug fixes and feature enhancements
 
 ---
 
 ## Dependency Graph
 
 ```
-101 Storybook Config ✅
- ├── 102 Core UI Components ✅
- ├── 103 Form Components ✅
- ├── 104 Data Display Components ✅
- ├── 105 Layout Components ✅
- └── 106 System Components ✅
-      └── 107 Update Frontend Imports ✅
+108 Sparing Use API Data (Bug Fix)
+ └── No dependencies
 
-100 Design Polish ✅
+109 Logging Refactor
+ └── No dependencies
+
+114 OpenAI Service
+ └── 115 Langfuse Integration (optional)
+      └── 116 Import Routes
+           └── 117 Import Page UI
+
+110 Milestone Detection
+ └── No dependencies (SpreadsheetTable already supports it)
+
+111 E2E Test Coverage
+ └── No dependencies
+
+112 Delete Snapshot UI
+ └── No dependencies (Backend exists)
+
+113 Economy Wizard Values
+ └── No dependencies
+
+118 Terms/Privacy Dialog
+ └── No dependencies
 ```
 
 ---
 
 ## Top Priorities
 
-*No tasks in progress - Storybook migration complete! Awaiting new priorities.*
-
----
-
-## Backlog Tasks (Detailed)
-
-### 101 - Storybook Config ✅ DONE
-**Priority**: High | **Effort**: 1 hr | **File**: `done/101-FEATURE-storybook-config.md`
-**Completed**: 2025-12-01
-
-Setup Storybook infrastructure in `/components` workspace.
-
-**Deliverables**:
-- `.storybook/main.ts` - Vite builder, addons
-- `.storybook/preview.ts` - Global decorators
-- `.storybook/preview.css` - BeerCSS + Nordic Minimal variables
-- `tsconfig.json` - TypeScript support
-- `src/index.ts` - Barrel exports
-- Directory structure: `ui/`, `forms/`, `data/`, `layout/`, `charts/`
-- Introduction.mdx welcome page
-
-**Verify**: `pnpm --filter components storybook` starts without errors
-
-**Dependencies**: None (packages already installed)
-
----
-
-### 102 - Migrate Core UI Components
-**Priority**: High | **Effort**: 2-3 hrs | **File**: `backlog/102-FEATURE-migrate-core-ui-components.md`
-
-Move 7 generic UI components to `/components/src/ui/`.
-
-**Components**:
-| Component | Variants/Notes |
-|-----------|----------------|
-| Button | Primary/secondary variants |
-| Card | Base card styling |
-| Container | 3 width variants |
-| Avatar | 3 size variants |
-| Modal | Focus trap, keyboard handling |
-| Skeleton | Shimmer animation |
-| Breadcrumb | Navigation path |
-
-**For each**: Copy .tsx/.css → create .stories.tsx → export from index.ts
-
-**Dependencies**: 101
-
----
-
-### 103 - Migrate Form Components
-**Priority**: High | **Effort**: 2 hrs | **File**: `backlog/103-FEATURE-migrate-form-components.md`
-
-Move 3 form components to `/components/src/forms/` with Norwegian formatting.
-
-**Components**:
-| Component | Stories |
-|-----------|---------|
-| NumberInput | Empty, with value (123 456,78 kr), suffix, disabled, error |
-| DateInput | Date picker, month picker, disabled |
-| ProgressBar | Default, gold, blue, with label, 0%/50%/100% |
-
-**Include utilities**: `formatNumber()`, `formatDate()` with nb-NO locale
-
-**Dependencies**: 101
-
----
-
-### 104 - Migrate Data Display Components
-**Priority**: Medium | **Effort**: 3-4 hrs | **File**: `backlog/104-FEATURE-migrate-data-display-components.md`
-
-Move 10 components to `/components/src/data/` and `/components/src/charts/`.
-
-**Data components** (src/data/):
-- HeroNumber - Large value with change badge
-- StatCard - Clickable metric card
-- MilestoneCard - Progress toward target
-- StatsRow - 3-column stats grid
-- SpreadsheetTable - Collapsible groups, sticky columns, milestone highlights
-- TableHeader - With filter controls
-- TableFooter - With pagination
-
-**Chart components** (src/charts/):
-- AreaChart - D3.js line/area
-- StackedAreaChart - D3.js multi-series
-- DonutChart - CSS donut
-
-**Note**: Add D3.js deps to components/package.json
-
-**Dependencies**: 101, 103 (ProgressBar used by MilestoneCard)
-
----
-
-### 105 - Migrate Layout Components
-**Priority**: Medium | **Effort**: 1-2 hrs | **File**: `backlog/105-FEATURE-migrate-layout-components.md`
-
-Move 3 layout components to `/components/src/layout/`.
-
-**Components**:
-| Component | Stories |
-|-----------|---------|
-| PageHeader | Centered, left-aligned, with actions, with breadcrumb |
-| SectionLink | Default with arrow, hover state, 3-column grid |
-| CalculatorCard | With emoji icon, with description, 2x2 grid |
-
-**Dependencies**: 101
-
----
-
-### 106 - Migrate System Components
-**Priority**: Low | **Effort**: 2 hrs | **File**: `backlog/106-FEATURE-migrate-system-components.md`
-
-Move Toast and ErrorBoundary to `/components/src/system/`.
-
-**Components**:
-| Component | Stories |
-|-----------|---------|
-| Toast + ToastContext | Success, error, warning, info, stacked, manual dismiss |
-| ErrorBoundary | Default fallback, custom fallback, trigger error demo |
-
-**Deferred** (auth dependency):
-- AvatarMenu - depends on useAuth
-- AppHeader - depends on useAuth + routes
-
-**Dependencies**: 101
-
----
-
-### 107 - Update Frontend Imports
-**Priority**: Medium | **Effort**: 1 hr | **File**: `backlog/107-REFACTOR-update-frontend-imports.md`
-
-Update all frontend imports to use `@finans/components`.
-
-**Pattern**:
-```tsx
-// Before
-import { Button } from '../shared/components/Button'
-
-// After
-import { Button, Card } from '@finans/components'
-```
-
-**Steps**:
-1. Search/replace imports in all feature folders
-2. Delete migrated files from `frontend/src/shared/components/`
-3. Delete .example.tsx files
-4. Verify: `pnpm --filter frontend build` passes
-
-**Dependencies**: 102-106 (or run incrementally)
-
----
+_No tasks in backlog. Run task-discovery skill to identify new work._
 
 ---
 
 ## Recently Completed
+
+### 118 - Terms/Privacy Dialog (2025-12-03)
+Clickable terms link in login screens. Tabbed dialog with Vilkår/Personvern content.
+
+### 113 - Economy Wizard Values (2025-12-03)
+Load latest snapshot values in economy wizard. TanStack Query fetch, case-insensitive account matching.
+
+### 112 - Delete Snapshot UI (2025-12-03)
+Trash button on portfolio rows. Confirmation modal, toast notifications, TanStack Query invalidation.
+
+### 111 - E2E Test Coverage (2025-12-03)
+70 test cases across 8 files. Login, navigation, portfolio modal, calculators, page content.
+
+### 109 - Logging Refactor (2025-12-03)
+AsyncLocalStorage for request context, auto requestId/userId injection, sensitive data sanitization.
+
+### 110 - Milestone Detection (2025-12-03)
+Gold highlights in Portfolio table when account values cross thresholds (10k, 100k, 1M, etc.). Uses existing SpreadsheetTable styling.
+
+### 117 - Import Page UI (2025-12-03)
+Chat interface at /import for LLM data extraction. Messages, data preview, confirm/cancel flow.
+
+### 116 - Import Routes (2025-12-03)
+POST /api/v1/import/chat and /batch endpoints. Rate limiting, Zod validation, conversation history.
+
+### 115 - Langfuse Integration (2025-12-03)
+LLM observability with Langfuse Cloud (EU). Traces OpenAI calls with token usage.
+
+### 114 - OpenAI Service (2025-12-03)
+OpenAI SDK integration with function calling for `batch_insert_snapshots`. Norwegian data extraction.
+
+### 108 - Sparing Use API Data Bug Fix (2025-12-03)
+Removed hardcoded values from useSparingData.ts. Now fetches real data from `/api/v1/sparing` and `/api/v1/users/me`.
 
 ### 107 - Update Frontend Imports (2025-12-01)
 22 imports updated to @finans/components. Build passes with no TypeScript errors.
@@ -187,22 +87,19 @@ Toast and ErrorBoundary migrated. 10 stories created.
 4 components migrated (PageHeader, SectionLink, CalculatorCard, Container). 24 stories created.
 
 ### 104 - Migrate Data Display Components (2025-12-01)
-10 components migrated (HeroNumber, StatCard, MilestoneCard, StatsRow, SpreadsheetTable, TableHeader, TableFooter, AreaChart, StackedAreaChart, DonutChart). 61 stories created.
-
-### 100 - Design Polish (2025-12-01)
-Unified hover states (-2px lift), design tokens applied across 11 files, typography/spacing verified.
+10 components migrated. 61 stories created.
 
 ### 103 - Migrate Form Components (2025-12-01)
-NumberInput, DateInput, ProgressBar migrated to `/components/src/forms/` with Norwegian formatting utilities. 26 Storybook stories created.
+NumberInput, DateInput, ProgressBar migrated with Norwegian formatting utilities. 26 stories.
 
-### 099 - Monte Carlo Frontend (2025-12-01)
-Form inputs, API integration, D3.js chart, loading/error states.
+### 102 - Migrate Core UI Components (2025-12-01)
+Button, Card, Container, Avatar, Modal, Skeleton, Breadcrumb migrated.
 
-### 098 - Gjeld Data Integration (2025-12-01)
-Wired GjeldPage to real API data. Merged loan details from user accounts.
+### 101 - Storybook Config (2025-12-01)
+Storybook infrastructure setup in /components workspace.
 
-### 097 - Sparerate Calculation (2025-12-01)
-Fixed broken sparerate metric on dashboard.
+### 100 - Design Polish (2025-12-01)
+Unified hover states, design tokens applied across 11 files.
 
 ---
 
@@ -210,12 +107,13 @@ Fixed broken sparerate metric on dashboard.
 
 | Status | Count |
 |--------|-------|
-| Done | 93 |
+| Done | 104 |
 | Backlog | 0 |
 | In Progress | 0 |
 
-**Total Effort Estimate**: ~15-18 hours
+**Backlog Breakdown**:
+- Empty! All tasks complete.
 
-**Next Milestone**: Complete Storybook setup and component library migration
+**🎉 BACKLOG CLEARED** - All 104 tasks completed
 
-**Last Updated**: 2025-12-01
+**Last Updated**: 2025-12-03

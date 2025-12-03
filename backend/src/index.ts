@@ -10,6 +10,7 @@ import { errorHandler } from './middleware/errorHandler';
 import { requestLogger } from './middleware/requestLogger';
 import { generalRateLimiter } from './middleware/rateLimiter';
 import { initializeDatabase } from './config/cosmosdb';
+import { flushLangfuse } from './services/langfuseService';
 import routes from './routes';
 
 /**
@@ -75,8 +76,11 @@ function createApp(): Application {
 /**
  * Graceful shutdown handler
  */
-function gracefulShutdown(server: Server): void {
+async function gracefulShutdown(server: Server): Promise<void> {
   logger.info('Received shutdown signal, starting graceful shutdown...');
+
+  // Flush Langfuse traces before shutdown
+  await flushLangfuse();
 
   // Stop accepting new connections
   server.close(() => {

@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Breadcrumb,
   PageHeader,
@@ -6,11 +7,12 @@ import {
   SpreadsheetTable,
   TableHeader,
   TableFooter,
+  useToast,
 } from '@finans/components';
 import type { Column, ColumnGroup, ColumnToggle, CellChangeEvent } from '@finans/components';
-import { PortfolioSkeleton } from '@/shared/components';
+import { PortfolioSkeleton, Modal } from '@/shared/components';
 import { useAuth } from '@/features/auth/useAuth';
-import { usePortfolioData, useUpdateSnapshot } from './usePortfolioData';
+import { usePortfolioData, useUpdateSnapshot, useDeleteSnapshot } from './usePortfolioData';
 import { NewMonthModal } from './NewMonthModal';
 import './PortfolioPage.css';
 
@@ -44,9 +46,16 @@ const CATEGORY_LABELS: Record<string, string> = {
 const ITEMS_PER_PAGE = 12;
 
 export default function PortfolioPage() {
+  const navigate = useNavigate();
   const { user } = useAuth();
-  const { data: portfolioData, isLoading, error } = usePortfolioData();
+  const { data: portfolioDataWithMilestones, isLoading, error } = usePortfolioData();
   const updateSnapshot = useUpdateSnapshot();
+  const deleteSnapshot = useDeleteSnapshot();
+  const { showSuccess, showError } = useToast();
+
+  // Extract rows and milestones from the fetched data
+  const portfolioData = portfolioDataWithMilestones?.rows ?? [];
+  const milestones = portfolioDataWithMilestones?.milestones ?? {};
 
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [searchValue, setSearchValue] = useState('');
@@ -55,6 +64,58 @@ export default function PortfolioPage() {
     new Set(['sparing', 'gjeld', 'pensjon'])
   );
   const [isNewMonthModalOpen, setIsNewMonthModalOpen] = useState(false);
+  const [deleteConfirmModal, setDeleteConfirmModal] = useState<{
+    isOpen: boolean;
+    snapshotId: string | null;
+    snapshotDate: string | null;
+  }>({
+    isOpen: false,
+    snapshotId: null,
+    snapshotDate: null,
+  });
+
+  /**
+   * Open delete confirmation modal
+   */
+  const handleDeleteClick = useCallback((snapshotId: string, snapshotDate: string) => {
+    setDeleteConfirmModal({
+      isOpen: true,
+      snapshotId,
+      snapshotDate,
+    });
+  }, []);
+
+  /**
+   * Close delete confirmation modal
+   */
+  const handleDeleteCancel = useCallback(() => {
+    setDeleteConfirmModal({
+      isOpen: false,
+      snapshotId: null,
+      snapshotDate: null,
+    });
+  }, []);
+
+  /**
+   * Confirm delete and call mutation
+   */
+  const handleDeleteConfirm = useCallback(async () => {
+    if (!deleteConfirmModal.snapshotId) return;
+
+    deleteSnapshot.mutate(deleteConfirmModal.snapshotId, {
+      onSuccess: () => {
+        showSuccess('Måned slettet');
+        setDeleteConfirmModal({
+          isOpen: false,
+          snapshotId: null,
+          snapshotDate: null,
+        });
+      },
+      onError: () => {
+        showError('Kunne ikke slette måned');
+      },
+    });
+  }, [deleteConfirmModal.snapshotId, deleteSnapshot, showSuccess, showError]);
 
   // Generate column groups from user accounts
   const columnGroups = useMemo((): ColumnGroup[] => {
@@ -96,6 +157,7 @@ export default function PortfolioPage() {
       const rowData: Record<string, any> = {
         id: row.id, // Snapshot ID for editing
         date: row.date,
+        _deleteHandler: () => handleDeleteClick(row.id, row.date),
       };
 
       // Map each account value
@@ -119,7 +181,30 @@ export default function PortfolioPage() {
 
       return rowData;
     });
-  }, [portfolioData, user?.accounts]);
+  }, [portfolioData, user?.accounts, handleDeleteClick]);
+
+  // Transform milestone keys from "snapshotId-accountName" to "snapshotId-accountConfigId"
+  // This allows SpreadsheetTable to look up milestones using row ID and column ID
+  const transformedMilestones = useMemo(() => {
+    if (!user?.accounts) return {};
+
+    const transformed: Record<string, number[]> = {};
+
+    Object.entries(milestones).forEach(([key, thresholds]) => {
+      const [snapshotId, accountName] = key.split('-');
+      const accountConfig = user.accounts!.find(
+        (cfg) => cfg.name.toLowerCase() === accountName.toLowerCase()
+      );
+
+      if (accountConfig && snapshotId) {
+        // Key format: "snapshotId-columnId" to uniquely identify a cell
+        const newKey = `${snapshotId}-${accountConfig.id}`;
+        transformed[newKey] = thresholds;
+      }
+    });
+
+    return transformed;
+  }, [milestones, user?.accounts]);
 
   // Get available years from data
   const availableYears = useMemo(() => {
@@ -368,6 +453,9 @@ export default function PortfolioPage() {
               <Button variant="secondary" onClick={handleExport}>
                 Eksporter
               </Button>
+              <Button variant="secondary" onClick={() => navigate('/import')}>
+                Importer data
+              </Button>
               <Button variant="primary" onClick={handleAddNewMonth}>
                 + Ny måned
               </Button>
@@ -394,8 +482,13 @@ export default function PortfolioPage() {
               data={paginatedData}
               dateKey="date"
               rowIdKey="id"
+              milestones={transformedMilestones}
               initialCollapsedGroups={['gjeld', 'pensjon']}
               onCellChange={handleCellChange}
+              onRowDelete={(rowData) => {
+                const handler = rowData._deleteHandler as (() => void) | undefined;
+                handler?.();
+              }}
             />
           ) : (
             <div className="portfolio-page__empty">
@@ -425,6 +518,37 @@ export default function PortfolioPage() {
         onClose={() => setIsNewMonthModalOpen(false)}
         onSuccess={handleNewMonthSuccess}
       />
+
+      {/* Delete confirmation modal */}
+      <Modal
+        isOpen={deleteConfirmModal.isOpen}
+        onClose={handleDeleteCancel}
+        title="Slett måned"
+        footer={
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+            <Button
+              variant="secondary"
+              onClick={handleDeleteCancel}
+            >
+              Avbryt
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleDeleteConfirm}
+              disabled={deleteSnapshot.isPending}
+            >
+              {deleteSnapshot.isPending ? 'Sletter...' : 'Slett'}
+            </Button>
+          </div>
+        }
+      >
+        <p>
+          Er du sikker på at du vil slette {deleteConfirmModal.snapshotDate}?
+        </p>
+        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '12px' }}>
+          Denne handlingen kan ikke angres.
+        </p>
+      </Modal>
     </main>
   );
 }

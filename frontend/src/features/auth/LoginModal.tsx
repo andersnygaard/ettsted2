@@ -7,6 +7,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from './useAuth';
+import { TermsDialog } from './TermsDialog';
 import './LoginModal.css';
 
 interface LoginModalProps {
@@ -19,6 +20,7 @@ export function LoginModal({ isOpen, onClose, returnUrl = '/auth/callback' }: Lo
   const { demoLogin } = useAuth();
   const [isDemoLoading, setIsDemoLoading] = useState(false);
   const [demoError, setDemoError] = useState<string | null>(null);
+  const [showTerms, setShowTerms] = useState(false);
 
   // Handle escape key to close modal
   const handleKeyDown = useCallback(
@@ -81,7 +83,7 @@ export function LoginModal({ isOpen, onClose, returnUrl = '/auth/callback' }: Lo
           onClick={onClose}
           aria-label="Lukk"
         >
-          <i>close</i>
+          ×
         </button>
 
         <div className="login-modal__content">
@@ -158,10 +160,19 @@ export function LoginModal({ isOpen, onClose, returnUrl = '/auth/callback' }: Lo
           </div>
 
           <p className="login-modal__terms">
-            Ved å logge inn godtar du våre vilkår og personvernregler
+            Ved å logge inn godtar du våre{' '}
+            <button
+              type="button"
+              className="login-modal__terms-link"
+              onClick={() => setShowTerms(true)}
+            >
+              vilkår og personvernregler
+            </button>
           </p>
         </div>
       </div>
+
+      <TermsDialog isOpen={showTerms} onClose={() => setShowTerms(false)} />
     </div>
   );
 }

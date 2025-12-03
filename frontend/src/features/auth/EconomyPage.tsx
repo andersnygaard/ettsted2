@@ -6,17 +6,37 @@
  */
 
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { useAuth } from './useAuth';
 import { OnboardingWizard } from './onboarding/OnboardingWizard';
 import { OnboardingState } from './onboarding/types';
 import { generateTempId } from './onboarding/defaultAccounts';
 import { LoadingSpinner } from '../../shared/components';
+import { snapshotApi } from '@/shared/api/services';
 import './OnboardingPage.css';
 
 /**
  * Convert existing user data to OnboardingWizard initial state
+ *
+ * @param user User data with accounts
+ * @param latestSnapshot Optional latest snapshot containing current account values
+ * @returns Initial state for OnboardingWizard in edit mode
  */
-function convertUserToInitialState(user: NonNullable<ReturnType<typeof useAuth>['user']>): Partial<OnboardingState> {
+function convertUserToInitialState(
+  user: NonNullable<ReturnType<typeof useAuth>['user']>,
+  latestSnapshot?: Awaited<ReturnType<typeof snapshotApi.getAll>>[0]
+): Partial<OnboardingState> {
+  /**
+   * Find account value from latest snapshot by name (case-insensitive)
+   */
+  function getAccountValue(accountName: string): number {
+    if (!latestSnapshot) return 0;
+    const snapshotAccount = latestSnapshot.accounts.find(
+      acc => acc.name.toLowerCase() === accountName.toLowerCase()
+    );
+    return snapshotAccount?.value ?? 0;
+  }
+
   // Group accounts by category
   const sparingAccounts = user.accounts
     .filter(acc => acc.category === 'sparing')
@@ -25,7 +45,7 @@ function convertUserToInitialState(user: NonNullable<ReturnType<typeof useAuth>[
       tempId: acc.id,
       name: acc.name,
       category: acc.category as 'sparing',
-      value: 0, // Values not stored in user, would need snapshot data
+      value: getAccountValue(acc.name),
       isActive: acc.isActive,
     }));
 
@@ -36,7 +56,7 @@ function convertUserToInitialState(user: NonNullable<ReturnType<typeof useAuth>[
       tempId: acc.id,
       name: acc.name,
       category: acc.category as 'gjeld',
-      value: 0,
+      value: getAccountValue(acc.name),
       isActive: acc.isActive,
       loanDetails: acc.loanDetails,
     }));
@@ -48,7 +68,7 @@ function convertUserToInitialState(user: NonNullable<ReturnType<typeof useAuth>[
       tempId: acc.id,
       name: acc.name,
       category: acc.category as 'pensjon',
-      value: 0,
+      value: getAccountValue(acc.name),
       isActive: acc.isActive,
     }));
 
@@ -105,9 +125,24 @@ function convertUserToInitialState(user: NonNullable<ReturnType<typeof useAuth>[
 
 export default function EconomyPage() {
   const navigate = useNavigate();
-  const { user, isLoading } = useAuth();
+  const { user, isLoading: userLoading } = useAuth();
 
-  if (isLoading) {
+  // Fetch latest snapshot to populate account values
+  const { data: snapshots = [], isLoading: snapshotsLoading } = useQuery({
+    queryKey: ['snapshots', 'latest'],
+    queryFn: () =>
+      snapshotApi.getAll({
+        orderBy: 'date',
+        ascending: false,
+        limit: 1
+      }),
+    enabled: !!user,
+    staleTime: 1000 * 60 * 5 // 5 minutes
+  });
+
+  const latestSnapshot = snapshots[0];
+
+  if (userLoading || snapshotsLoading) {
     return <LoadingSpinner text="Laster..." />;
   }
 
@@ -116,7 +151,7 @@ export default function EconomyPage() {
     return null;
   }
 
-  const initialState = convertUserToInitialState(user);
+  const initialState = convertUserToInitialState(user, latestSnapshot);
 
   return (
     <div className="onboarding-page">

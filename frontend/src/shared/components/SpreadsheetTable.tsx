@@ -319,64 +319,70 @@ export function SpreadsheetTable({
         </thead>
 
         <tbody>
-          {data.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {/* Date column (sticky) */}
-              <td className="date-cell">{row[dateKey]}</td>
+          {data.map((row, rowIndex) => {
+            const rowId = row[rowIdKey];
 
-              {/* Data columns */}
-              {columnGroups.flatMap((group) => {
-                const isCollapsed = collapsedGroups.has(group.id);
+            return (
+              <tr key={rowIndex}>
+                {/* Date column (sticky) */}
+                <td className="date-cell">{row[dateKey]}</td>
 
-                if (isCollapsed) {
-                  // Show only the total column when collapsed
-                  const totalColumn = group.columns.find((col) => col.isTotal);
-                  if (totalColumn) {
-                    return [
-                      <td
-                        key={`${group.id}-total`}
-                        className={`col-${group.id} col-total col-group-end`}
-                      >
-                        {formatCell(row[totalColumn.id], milestones[totalColumn.id])}
-                      </td>,
-                    ];
+                {/* Data columns */}
+                {columnGroups.flatMap((group) => {
+                  const isCollapsed = collapsedGroups.has(group.id);
+
+                  if (isCollapsed) {
+                    // Show only the total column when collapsed
+                    const totalColumn = group.columns.find((col) => col.isTotal);
+                    if (totalColumn) {
+                      const milestoneKey = `${rowId}-${totalColumn.id}`;
+                      return [
+                        <td
+                          key={`${group.id}-total`}
+                          className={`col-${group.id} col-total col-group-end`}
+                        >
+                          {formatCell(row[totalColumn.id], milestones[milestoneKey])}
+                        </td>,
+                      ];
+                    }
+                    return [];
                   }
-                  return [];
-                }
 
-                // Show all columns when expanded
-                return group.columns.map((col, index) => {
-                  const isLastInGroup = index === group.columns.length - 1;
-                  const isEditing = editingCell?.rowIndex === rowIndex && editingCell?.columnId === col.id;
-                  const isEditable = !col.isTotal && onCellChange && !editingDisabled;
+                  // Show all columns when expanded
+                  return group.columns.map((col, index) => {
+                    const isLastInGroup = index === group.columns.length - 1;
+                    const isEditing = editingCell?.rowIndex === rowIndex && editingCell?.columnId === col.id;
+                    const isEditable = !col.isTotal && onCellChange && !editingDisabled;
+                    const milestoneKey = `${rowId}-${col.id}`;
 
-                  return (
-                    <td
-                      key={col.id}
-                      className={`col-${group.id} ${col.isTotal ? 'col-total' : ''} ${
-                        isLastInGroup ? 'col-group-end' : ''
-                      } ${isEditable ? 'cell-editable' : ''} ${isEditing ? 'cell-editing' : ''}`}
-                      onClick={() => !col.isTotal && startEditing(rowIndex, col.id, row[col.id])}
-                    >
-                      {isEditing ? (
-                        <input
-                          ref={inputRef}
-                          type="number"
-                          className="cell-input"
-                          value={editValue}
-                          onChange={(e) => setEditValue(e.target.value)}
-                          onBlur={saveEdit}
-                          onKeyDown={handleKeyDown}
-                        />
-                      ) : (
-                        formatCell(row[col.id], milestones[col.id])
-                      )}
-                    </td>
-                  );
-                });
-              })}
-            </tr>
-          ))}
+                    return (
+                      <td
+                        key={col.id}
+                        className={`col-${group.id} ${col.isTotal ? 'col-total' : ''} ${
+                          isLastInGroup ? 'col-group-end' : ''
+                        } ${isEditable ? 'cell-editable' : ''} ${isEditing ? 'cell-editing' : ''}`}
+                        onClick={() => !col.isTotal && startEditing(rowIndex, col.id, row[col.id])}
+                      >
+                        {isEditing ? (
+                          <input
+                            ref={inputRef}
+                            type="number"
+                            className="cell-input"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            onBlur={saveEdit}
+                            onKeyDown={handleKeyDown}
+                          />
+                        ) : (
+                          formatCell(row[col.id], milestones[milestoneKey])
+                        )}
+                      </td>
+                    );
+                  });
+                })}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

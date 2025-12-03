@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from './useAuth';
+import { TermsDialog } from './TermsDialog';
 import './LoginPage.css';
 
 export default function LoginPage() {
   const { isAuthenticated, isLoading, needsOnboarding } = useAuth();
+  const [showTerms, setShowTerms] = useState(false);
 
   // Redirect authenticated users to dashboard
   if (!isLoading && isAuthenticated) {
@@ -61,9 +64,18 @@ export default function LoginPage() {
         </div>
 
         <p className="login-terms">
-          Ved å logge inn godtar du våre vilkår og personvernregler
+          Ved å logge inn godtar du våre{' '}
+          <button
+            type="button"
+            className="login-page__terms-link"
+            onClick={() => setShowTerms(true)}
+          >
+            vilkår og personvernregler
+          </button>
         </p>
       </div>
+
+      <TermsDialog isOpen={showTerms} onClose={() => setShowTerms(false)} />
     </div>
   );
 }

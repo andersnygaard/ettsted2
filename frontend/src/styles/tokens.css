@@ -135,7 +135,7 @@
   --z-base: 1;                        /* Base layer */
   --z-dropdown: 100;                  /* Dropdowns */
   --z-sticky: 200;                    /* Sticky elements */
-  --z-modal: 500;                     /* Modals */
+  --z-grain: 500;                     /* Grain texture (decorative, below modals) */
   --z-overlay: 900;                   /* Overlays */
-  --z-grain: 1000;                    /* Grain texture (always on top) */
+  --z-modal: 1000;                    /* Modals (above grain and overlays) */
 }

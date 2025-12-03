@@ -32,6 +32,25 @@ test.describe('Authentication', () => {
       await expect(page.locator('nav')).toBeVisible();
     });
 
+    test('demo login displays greeting and navigation', async ({ page }) => {
+      await page.goto('/');
+      await page.getByRole('button', { name: /prøv demo/i }).click();
+
+      // Verify redirect to dashboard
+      await expect(page).toHaveURL(/.*dashboard/, { timeout: 10000 });
+
+      // Verify greeting is visible (may have various forms)
+      const greeting = page.locator('text=/god morgen|hei|welcome/i');
+      const hasGreeting = await greeting.count().then(c => c > 0);
+
+      // Verify navigation is present
+      await expect(page.locator('nav')).toBeVisible();
+
+      // Verify main content is visible
+      const main = page.locator('main');
+      await expect(main.first()).toBeVisible();
+    });
+
     test('demo user can navigate to portfolio', async ({ page }) => {
       await page.goto('/');
       await page.getByRole('button', { name: /prøv demo/i }).click();

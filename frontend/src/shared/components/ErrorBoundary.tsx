@@ -52,9 +52,13 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
               En uventet feil oppstod. Vennligst prøv igjen.
             </p>
             {this.state.error && (
-              <details className="error-details">
+              <details className="error-details" open>
                 <summary>Tekniske detaljer</summary>
-                <pre>{this.state.error.toString()}</pre>
+                <pre>
+{this.state.error.name}: {this.state.error.message}
+{'\n\n'}
+{this.state.error.stack}
+                </pre>
               </details>
             )}
             <button className="error-button" onClick={this.handleReload}>

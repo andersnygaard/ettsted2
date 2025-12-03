@@ -9,6 +9,7 @@ import OnboardingRoute from '../features/auth/OnboardingRoute';
 const HomePage = lazy(() => import('../features/dashboard/HomePage'));
 const DashboardPage = lazy(() => import('../features/dashboard/DashboardPage'));
 const PortfolioPage = lazy(() => import('../features/portfolio/PortfolioPage'));
+const ImportPage = lazy(() => import('../features/import/ImportPage'));
 const SparingPage = lazy(() => import('../features/sparing/SparingPage'));
 const GjeldPage = lazy(() => import('../features/gjeld/GjeldPage'));
 const PensjonPage = lazy(() => import('../features/pensjon/PensjonPage'));
@@ -50,6 +51,14 @@ function AppRoutes() {
             element={
               <ProtectedRoute>
                 <PortfolioPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="import"
+            element={
+              <ProtectedRoute>
+                <ImportPage />
               </ProtectedRoute>
             }
           />

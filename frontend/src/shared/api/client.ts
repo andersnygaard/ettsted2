@@ -13,7 +13,7 @@ const isDevelopment = import.meta.env.VITE_APP_ENV === 'development';
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1',
   withCredentials: true,
-  timeout: 10000, // 10 second timeout
+  timeout: 120000, // 2 minute timeout (LLM calls can be slow)
   headers: {
     'Content-Type': 'application/json',
   },

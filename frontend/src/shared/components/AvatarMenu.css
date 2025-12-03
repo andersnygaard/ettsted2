@@ -1,6 +1,6 @@
 .avatar-menu {
   position: relative;
-  z-index: 100;
+  z-index: var(--z-dropdown, 100);
 }
 
 .avatar-menu__trigger {
@@ -33,7 +33,7 @@
   border: 1px solid var(--border);
   border-radius: 4px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  z-index: 1000;
+  z-index: var(--z-overlay, 900);
   animation: avatarMenuFadeIn 0.15s ease;
 }
 

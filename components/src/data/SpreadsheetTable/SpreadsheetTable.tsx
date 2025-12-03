@@ -34,7 +34,7 @@ export interface CellChangeEvent {
   value: number;
 }
 
-export type RowData = Record<string, string | number | null | undefined>;
+export type RowData = Record<string, string | number | null | undefined | any>;
 
 export interface SpreadsheetTableProps {
   columnGroups: ColumnGroup[];
@@ -44,6 +44,7 @@ export interface SpreadsheetTableProps {
   milestones?: Record<string, number[]>; // Map of column ID -> array of milestone values crossed
   initialCollapsedGroups?: string[]; // Group IDs to collapse by default
   onCellChange?: (event: CellChangeEvent) => void; // Callback when cell value changes
+  onRowDelete?: (rowData: RowData) => void; // Callback when delete button is clicked
   editingDisabled?: boolean; // Disable inline editing
 }
 
@@ -96,6 +97,7 @@ export function SpreadsheetTable({
   milestones = {},
   initialCollapsedGroups = [],
   onCellChange,
+  onRowDelete,
   editingDisabled = false,
 }: SpreadsheetTableProps) {
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
@@ -281,6 +283,14 @@ export function SpreadsheetTable({
                 </th>
               );
             })}
+            {onRowDelete && (
+              <th
+                rowSpan={2}
+                className="action-header"
+                style={{ background: 'var(--bone)', color: 'var(--charcoal)' }}
+              >
+              </th>
+            )}
           </tr>
 
           {/* Column Headers */}
@@ -324,7 +334,7 @@ export function SpreadsheetTable({
 
         <tbody>
           {data.map((row, rowIndex) => (
-            <tr key={rowIndex}>
+            <tr key={rowIndex} className="data-row">
               {/* Date column (sticky) */}
               <td className="date-cell">{String(row[dateKey] ?? '-')}</td>
 
@@ -379,6 +389,21 @@ export function SpreadsheetTable({
                   );
                 });
               })}
+
+              {/* Delete button column */}
+              {onRowDelete && (
+                <td className="action-cell">
+                  <button
+                    className="delete-button"
+                    onClick={() => onRowDelete(row)}
+                    aria-label="Slett måned"
+                    title="Slett måned"
+                    type="button"
+                  >
+                    🗑️
+                  </button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

@@ -1,0 +1,239 @@
+/**
+ * TermsDialog Styles
+ *
+ * Modal dialog with tabbed interface for Terms and Privacy content.
+ */
+
+/* Overlay */
+.terms-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(44, 44, 44, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal, 1000);
+  padding: 1rem;
+}
+
+/* Dialog container */
+.terms-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+  background: var(--warm-white, #FDFCFA);
+  border-radius: var(--radius-sm, 2px);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  animation: terms-dialog-enter 0.2s ease-out;
+}
+
+@keyframes terms-dialog-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Close button */
+.terms-dialog__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary, #6B6B6B);
+  border-radius: var(--radius-md, 4px);
+  transition: all 0.2s ease;
+  font-size: 1.5rem;
+  line-height: 1;
+  z-index: 10;
+}
+
+.terms-dialog__close:hover {
+  background-color: var(--bone, #F5F2ED);
+  color: var(--charcoal, #2C2C2C);
+}
+
+/* Tab container */
+.terms-dialog__tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border, rgba(44, 44, 44, 0.08));
+  flex-shrink: 0;
+  padding: 1rem 1.5rem 0;
+}
+
+/* Individual tabs */
+.terms-dialog__tab {
+  padding: 0.75rem 1.5rem 0.75rem 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+  font-size: 0.9375rem;
+  color: var(--text-secondary, #6B6B6B);
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+.terms-dialog__tab:hover {
+  color: var(--charcoal, #2C2C2C);
+}
+
+/* Active tab indicator */
+.terms-dialog__tab--active {
+  color: var(--charcoal, #2C2C2C);
+  font-weight: 500;
+}
+
+.terms-dialog__tab--active::after {
+  content: '';
+  position: absolute;
+  bottom: -1rem;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--charcoal, #2C2C2C);
+}
+
+/* Scrollable content area */
+.terms-dialog__content {
+  overflow-y: auto;
+  flex: 1;
+  padding: 2rem 1.5rem;
+}
+
+/* Content styling */
+.terms-content,
+.privacy-content {
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+  color: var(--charcoal, #2C2C2C);
+  line-height: 1.6;
+}
+
+.terms-content h2,
+.privacy-content h2 {
+  font-family: var(--font-heading, 'Cormorant Garamond', serif);
+  font-size: 1.75rem;
+  font-weight: 400;
+  margin: 0 0 0.5rem 0;
+  color: var(--charcoal, #2C2C2C);
+}
+
+.terms-content h3,
+.privacy-content h3 {
+  font-family: var(--font-heading, 'Cormorant Garamond', serif);
+  font-size: 1.125rem;
+  font-weight: 400;
+  margin: 1.5rem 0 0.75rem 0;
+  color: var(--charcoal, #2C2C2C);
+}
+
+.terms-content p,
+.privacy-content p {
+  font-size: 0.9375rem;
+  margin: 0.75rem 0;
+}
+
+.terms-updated {
+  font-size: 0.8125rem;
+  color: var(--text-secondary, #6B6B6B);
+  font-weight: 400;
+  margin: 0 0 1.5rem 0;
+}
+
+.terms-content ul,
+.privacy-content ul {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+}
+
+.terms-content li,
+.privacy-content li {
+  font-size: 0.9375rem;
+  margin: 0.5rem 0;
+}
+
+/* Scrollbar styling */
+.terms-dialog__content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.terms-dialog__content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.terms-dialog__content::-webkit-scrollbar-thumb {
+  background: var(--border-strong, rgba(44, 44, 44, 0.15));
+  border-radius: 3px;
+}
+
+.terms-dialog__content::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary, #6B6B6B);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .terms-dialog {
+    max-height: 90vh;
+    max-width: calc(100% - 2rem);
+  }
+
+  .terms-dialog__tabs {
+    padding: 1rem 1rem 0;
+  }
+
+  .terms-dialog__tab {
+    padding: 0.75rem 1rem 0.75rem 0;
+  }
+
+  .terms-dialog__content {
+    padding: 1.5rem 1rem;
+  }
+
+  .terms-content h2,
+  .privacy-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .terms-content h3,
+  .privacy-content h3 {
+    font-size: 1rem;
+  }
+}
+
+/* Link styling in LoginModal and LoginPage */
+.login-modal__terms-link,
+.login-page__terms-link {
+  background: none;
+  border: none;
+  color: var(--text-secondary, #6B6B6B);
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+  transition: color 0.2s ease;
+}
+
+.login-modal__terms-link:hover,
+.login-page__terms-link:hover {
+  color: var(--charcoal, #2C2C2C);
+}
+
+.login-modal__terms-link:focus,
+.login-page__terms-link:focus {
+  outline: 2px solid var(--charcoal, #2C2C2C);
+  outline-offset: 2px;
+}
