@@ -4,7 +4,6 @@ import { useAuth } from '../../features/auth/useAuth';
 import { AvatarMenu } from './AvatarMenu';
 import { ProfileModal } from './ProfileModal';
 import { AccountsModal } from './AccountsModal';
-import { LoginModal } from '../../features/auth/LoginModal';
 import './AppHeader.css';
 
 /**
@@ -19,7 +18,6 @@ export default function AppHeader() {
   const { user, isAuthenticated, logout, refreshUser } = useAuth();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isAccountsModalOpen, setIsAccountsModalOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   // Navigation items with paths (only shown when authenticated)
   const navItems = [
@@ -56,10 +54,10 @@ export default function AppHeader() {
       <header className="app-header">
         <div className="app-header__container">
           <Link to="/" className="app-header__logo">
-            finans
+            {isAuthenticated ? 'finans.' : 'finans.ettsted.no'}
           </Link>
 
-          {isAuthenticated ? (
+          {isAuthenticated && (
             <>
               <nav className="app-header__nav">
                 {navItems.map((item) => (
@@ -82,16 +80,6 @@ export default function AppHeader() {
                 />
               </div>
             </>
-          ) : (
-            <div className="app-header__actions">
-              <button
-                type="button"
-                className="app-header__login-btn"
-                onClick={() => setIsLoginModalOpen(true)}
-              >
-                Logg inn
-              </button>
-            </div>
           )}
         </div>
       </header>
@@ -113,11 +101,6 @@ export default function AppHeader() {
           />
         </>
       )}
-
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-      />
     </>
   );
 }
