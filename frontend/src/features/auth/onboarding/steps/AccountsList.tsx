@@ -114,6 +114,9 @@ export function AccountsList({
                   suffix="kr"
                   error={valueError}
                   name={`value-${account.tempId}`}
+                  disabled={!account.isActive}
+                  dataInputGroup={`verdi-${category}`}
+                  onActivate={() => onUpdateAccount(account.tempId, { isActive: true })}
                 />
               </div>
 
