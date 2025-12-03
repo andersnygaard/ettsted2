@@ -59,16 +59,25 @@ interface FacebookUserInfo {
 }
 
 /**
+ * Authenticated user info extracted from OAuth token
+ */
+interface AuthUser {
+  userId: string;
+  email?: string;
+  provider: 'google' | 'facebook';
+}
+
+/**
  * Cache for validated tokens to reduce OAuth provider calls
  */
-const tokenCache = new Map<string, { user: Express.User; expiry: number }>();
+const tokenCache = new Map<string, { user: AuthUser; expiry: number }>();
 const TOKEN_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 /**
  * Validates Google OAuth id_token (JWT)
  * Uses Google's tokeninfo endpoint to validate the JWT signature and claims
  */
-async function validateGoogleToken(token: string): Promise<Express.User | null> {
+async function validateGoogleToken(token: string): Promise<AuthUser | null> {
   try {
     // Google's tokeninfo endpoint validates id_tokens
     // Use id_token param for JWT tokens (not access_token)
@@ -117,7 +126,7 @@ async function validateGoogleToken(token: string): Promise<Express.User | null> 
 /**
  * Validates Facebook OAuth access_token
  */
-async function validateFacebookToken(token: string): Promise<Express.User | null> {
+async function validateFacebookToken(token: string): Promise<AuthUser | null> {
   try {
     const response = await axios.get<FacebookUserInfo>(
       `https://graph.facebook.com/me?access_token=${encodeURIComponent(token)}&fields=id,email`,
@@ -151,7 +160,7 @@ async function validateFacebookToken(token: string): Promise<Express.User | null
  * Validates Bearer token (id_token JWT) against OAuth providers
  * Tries Google first (JWT id_token), then Facebook (access_token)
  */
-async function validateBearerToken(token: string): Promise<Express.User | null> {
+async function validateBearerToken(token: string): Promise<AuthUser | null> {
   // Check cache first
   const cached = tokenCache.get(token);
   if (cached && cached.expiry > Date.now()) {
