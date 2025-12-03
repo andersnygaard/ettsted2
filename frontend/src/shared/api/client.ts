@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { getAccessToken, getClientPrincipal } from './authToken';
+import { getAccessToken, getClientPrincipal, isDemoSession } from './authToken';
 
 /**
  * Axios client with error handling interceptors
@@ -83,24 +83,31 @@ function getErrorMessage(error: AxiosError<ApiErrorResponse>): string {
 // Request interceptor - add auth headers
 client.interceptors.request.use(
   async (config) => {
-    // In production, fetch and forward the EasyAuth tokens
-    if (!isDevelopment) {
+    // Attach auth token in two cases:
+    // 1. Demo session (works in both dev and prod)
+    // 2. Production mode (EasyAuth tokens)
+    // In dev mode without demo session, backend injects dev user
+    const hasDemoSession = isDemoSession();
+    if (hasDemoSession || !isDevelopment) {
       const accessToken = await getAccessToken();
       if (accessToken) {
-        // Send the OAuth id_token as Bearer token
         config.headers['Authorization'] = `Bearer ${accessToken}`;
-        console.debug('Auth: Bearer token attached', {
+        console.debug('Auth: Token attached', {
+          type: hasDemoSession ? 'demo' : 'oauth',
           tokenPrefix: accessToken.substring(0, 20) + '...',
           url: config.url
         });
-      } else {
+      } else if (!isDevelopment) {
+        // Only warn in production (dev mode without demo is expected)
         console.warn('Auth: No access token available for request', { url: config.url });
       }
 
-      // Also send client principal for backward compatibility
-      const clientPrincipal = await getClientPrincipal();
-      if (clientPrincipal) {
-        config.headers['X-MS-CLIENT-PRINCIPAL'] = clientPrincipal;
+      // Also send client principal for backward compatibility (EasyAuth only)
+      if (!hasDemoSession) {
+        const clientPrincipal = await getClientPrincipal();
+        if (clientPrincipal) {
+          config.headers['X-MS-CLIENT-PRINCIPAL'] = clientPrincipal;
+        }
       }
     }
     return config;
