@@ -8,15 +8,20 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, needsOnboarding } = useAuth();
   const location = useLocation();
 
   if (isLoading) {
     return <LoadingSpinner text="Laster..." />;
   }
 
+  if (needsOnboarding) {
+    // User has EasyAuth session but hasn't completed onboarding
+    return <Navigate to="/onboarding" replace />;
+  }
+
   if (!isAuthenticated) {
-    // Redirect to home page where user can use login modal
+    // No session - redirect to home page where user can use login modal
     return <Navigate to="/" state={{ from: location.pathname }} replace />;
   }
 

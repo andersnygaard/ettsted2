@@ -14,7 +14,7 @@ interface LoginModalProps {
   returnUrl?: string;
 }
 
-export function LoginModal({ isOpen, onClose, returnUrl = '/dashboard' }: LoginModalProps) {
+export function LoginModal({ isOpen, onClose, returnUrl = '/auth/callback' }: LoginModalProps) {
   // Handle escape key to close modal
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
