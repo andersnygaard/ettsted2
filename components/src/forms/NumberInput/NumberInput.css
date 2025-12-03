@@ -45,9 +45,14 @@
   background: transparent;
   border: none;
   border-bottom: 2px solid var(--border);
+  border-radius: 0;
   padding: var(--space-sm) 0;
   outline: none;
   transition: border-color var(--transition-fast);
+  /* Remove iOS input styling */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .number-input__field::placeholder {

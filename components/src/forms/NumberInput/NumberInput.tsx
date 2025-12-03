@@ -75,6 +75,17 @@ export interface NumberInputProps {
    * ID attribute
    */
   id?: string;
+
+  /**
+   * Data attribute for grouping inputs (e.g., for tab navigation)
+   */
+  dataInputGroup?: string;
+
+  /**
+   * Callback when user attempts to type in disabled field
+   * If provided and returns true, the field will be enabled
+   */
+  onActivate?: () => void;
 }
 
 export function NumberInput({
@@ -88,11 +99,15 @@ export function NumberInput({
   required = false,
   name,
   id,
+  dataInputGroup,
+  onActivate,
 }: NumberInputProps) {
   // Track display value separately to allow partial input
   const [displayValue, setDisplayValue] = useState<string>('');
   // Track focus state to avoid reformatting while user is typing
   const isFocusedRef = useRef(false);
+  // Ref to input element for focus management
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Sync display value when value prop changes externally (not from user input)
   useEffect(() => {
@@ -107,11 +122,28 @@ export function NumberInput({
   }, [value]);
 
   /**
-   * Handle input changes - allow partial input, parse to number
+   * Filter input to only allow numeric characters and formatting
+   * Allows: digits, comma (decimal), space (thousands), minus (negative)
+   */
+  const filterNumericInput = (input: string): string => {
+    // Only allow digits, comma, space, minus, and period
+    return input.replace(/[^\d\s,.-]/g, '');
+  };
+
+  /**
+   * Handle input changes - filter non-numeric, parse to number
    */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
-    setDisplayValue(input);
+    const rawInput = e.target.value;
+    const input = filterNumericInput(rawInput);
+
+    // Only update if filtered value differs (prevents cursor jump on same value)
+    if (input !== rawInput) {
+      // Input contained invalid characters - use filtered value
+      setDisplayValue(input);
+    } else {
+      setDisplayValue(input);
+    }
 
     // Parse Norwegian format to number
     const parsed = parseNumber(input);
@@ -141,11 +173,68 @@ export function NumberInput({
   };
 
   /**
-   * Handle Enter key to confirm input
+   * Handle keyboard navigation and input
+   * - Enter: blur input
+   * - Tab: if dataInputGroup set, navigate to next input in group
+   * - Numeric keys on disabled field: activate if onActivate provided
    */
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.currentTarget.blur();
+      return;
+    }
+
+    // Handle Tab navigation within input group
+    if (e.key === 'Tab' && dataInputGroup && !e.shiftKey) {
+      const allGroupInputs = document.querySelectorAll<HTMLInputElement>(
+        `[data-input-group="${dataInputGroup}"]`
+      );
+      if (allGroupInputs.length > 1) {
+        const inputsArray = Array.from(allGroupInputs);
+        const currentIndex = inputsArray.indexOf(e.currentTarget);
+        const nextIndex = currentIndex + 1;
+
+        if (nextIndex < inputsArray.length) {
+          e.preventDefault();
+          inputsArray[nextIndex].focus();
+          inputsArray[nextIndex].select();
+        }
+      }
+    }
+
+    // Handle Shift+Tab navigation within input group
+    if (e.key === 'Tab' && dataInputGroup && e.shiftKey) {
+      const allGroupInputs = document.querySelectorAll<HTMLInputElement>(
+        `[data-input-group="${dataInputGroup}"]`
+      );
+      if (allGroupInputs.length > 1) {
+        const inputsArray = Array.from(allGroupInputs);
+        const currentIndex = inputsArray.indexOf(e.currentTarget);
+        const prevIndex = currentIndex - 1;
+
+        if (prevIndex >= 0) {
+          e.preventDefault();
+          inputsArray[prevIndex].focus();
+          inputsArray[prevIndex].select();
+        }
+      }
+    }
+
+    // If disabled and user presses a number key, activate if callback provided
+    if (disabled && onActivate && /^[0-9]$/.test(e.key)) {
+      e.preventDefault();
+      onActivate();
+      // After activation, we need to wait for re-render then type the digit
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+          // Simulate typing the digit
+          const newValue = e.key;
+          setDisplayValue(newValue);
+          const parsed = parseNumber(newValue);
+          onChange(Number.isNaN(parsed) ? undefined : parsed);
+        }
+      }, 0);
     }
   };
 
@@ -168,6 +257,7 @@ export function NumberInput({
 
       <div className="number-input__wrapper">
         <input
+          ref={inputRef}
           type="text"
           inputMode="decimal"
           className="number-input__field"
@@ -183,6 +273,7 @@ export function NumberInput({
           id={inputId}
           aria-invalid={error ? 'true' : 'false'}
           aria-describedby={error ? `${inputId}-error` : undefined}
+          data-input-group={dataInputGroup}
         />
         {suffix && <span className="number-input__suffix">{suffix}</span>}
       </div>

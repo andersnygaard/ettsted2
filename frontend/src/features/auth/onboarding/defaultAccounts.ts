@@ -47,8 +47,8 @@ export const DEFAULT_SPARING_ACCOUNTS: OnboardingAccount[] = [
  * Default gjeld (debt) accounts
  */
 export const DEFAULT_GJELD_ACCOUNTS: OnboardingAccount[] = [
-  createDefaultAccount('Boliglån', 'gjeld', true, { interestRate: 4.5, remainingYears: 25 }),
-  createDefaultAccount('Studielån', 'gjeld', true, { interestRate: 2.5, remainingYears: 15 }),
+  createDefaultAccount('Boliglån', 'gjeld', true, { interestRate: 5.5, remainingYears: 25 }),
+  createDefaultAccount('Studielån', 'gjeld', true, { interestRate: 5.5, remainingYears: 15 }),
 ];
 
 /**
@@ -77,8 +77,8 @@ export function getDefaultAccounts(): {
       createDefaultAccount('Krypto', 'sparing', false),
     ],
     gjeld: [
-      createDefaultAccount('Boliglån', 'gjeld', true, { interestRate: 4.5, remainingYears: 25 }),
-      createDefaultAccount('Studielån', 'gjeld', true, { interestRate: 2.5, remainingYears: 15 }),
+      createDefaultAccount('Boliglån', 'gjeld', true, { interestRate: 5.5, remainingYears: 25 }),
+      createDefaultAccount('Studielån', 'gjeld', true, { interestRate: 5.5, remainingYears: 15 }),
     ],
     pensjon: [
       createDefaultAccount('Arbeidsgiver (OTP)', 'pensjon', true),
@@ -97,7 +97,7 @@ export function createNewAccount(category: Category): OnboardingAccount {
     baseName,
     category,
     true,
-    category === 'gjeld' ? { interestRate: 5.0, remainingYears: 20 } : undefined
+    category === 'gjeld' ? { interestRate: 5.5, remainingYears: 20 } : undefined
   );
 }
 
