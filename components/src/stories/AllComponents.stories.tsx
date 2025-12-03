@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 // UI Components
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
-import { Modal } from '../ui/Modal';
 import { Skeleton } from '../ui/Skeleton';
 import { Breadcrumb } from '../ui/Breadcrumb';
 import { Avatar } from '../ui/Avatar';
