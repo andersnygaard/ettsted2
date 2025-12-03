@@ -29,6 +29,16 @@ interface EasyAuthIdentity {
   user_id: string;
 }
 
+/**
+ * Cached auth data structure
+ */
+interface CachedAuthData {
+  idToken: string;        // JWT id_token for Bearer auth
+  accessToken: string;    // Opaque access_token (for Google API calls if needed)
+  clientPrincipal: string;
+  expiry: Date;
+}
+
 // Known claim type URIs
 const CLAIM_TYPES = {
   EMAIL: 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress',
@@ -36,27 +46,22 @@ const CLAIM_TYPES = {
   NAME: 'name',
 } as const;
 
-let cachedToken: string | null = null;
-let tokenExpiry: Date | null = null;
-let tokenFetchPromise: Promise<string | null> | null = null;
+let cachedAuthData: CachedAuthData | null = null;
+let tokenFetchPromise: Promise<CachedAuthData | null> | null = null;
 
 /**
- * Fetches the client principal from EasyAuth and creates a base64-encoded token
- * that mimics the x-ms-client-principal header format.
- *
- * This token is sent to the backend in the X-MS-CLIENT-PRINCIPAL header
- * so the backend can authenticate the user without going through its own EasyAuth.
+ * Returns cached auth data if valid, otherwise fetches fresh data from EasyAuth.
+ * Contains both the OAuth access_token and the client principal for the backend.
  */
-export async function getAuthToken(): Promise<string | null> {
-  // Return cached token if available and not expired
-  if (cachedToken && tokenExpiry && new Date() < tokenExpiry) {
-    return cachedToken;
+export async function getAuthData(): Promise<CachedAuthData | null> {
+  // Return cached data if available and not expired
+  if (cachedAuthData && new Date() < cachedAuthData.expiry) {
+    return cachedAuthData;
   }
 
-  // Clear expired token
-  if (tokenExpiry && new Date() >= tokenExpiry) {
-    cachedToken = null;
-    tokenExpiry = null;
+  // Clear expired data
+  if (cachedAuthData && new Date() >= cachedAuthData.expiry) {
+    cachedAuthData = null;
   }
 
   // Deduplicate concurrent requests
@@ -65,10 +70,30 @@ export async function getAuthToken(): Promise<string | null> {
   }
 
   tokenFetchPromise = fetchAuthToken();
-  const token = await tokenFetchPromise;
+  const authData = await tokenFetchPromise;
   tokenFetchPromise = null;
 
-  return token;
+  return authData;
+}
+
+/**
+ * Returns the id_token (JWT) for Authorization: Bearer header.
+ * Using id_token instead of access_token because:
+ * - id_token is a JWT that can be validated locally or via Google's API
+ * - access_token from Google is opaque and requires tokeninfo API call
+ */
+export async function getAccessToken(): Promise<string | null> {
+  const authData = await getAuthData();
+  return authData?.idToken ?? null;
+}
+
+/**
+ * Returns the client principal for X-MS-CLIENT-PRINCIPAL header.
+ * @deprecated Use getAccessToken() for Bearer auth instead
+ */
+export async function getClientPrincipal(): Promise<string | null> {
+  const authData = await getAuthData();
+  return authData?.clientPrincipal ?? null;
 }
 
 /**
@@ -79,7 +104,7 @@ function getClaim(claims: EasyAuthClaim[], type: string): string | undefined {
   return claim?.val;
 }
 
-async function fetchAuthToken(): Promise<string | null> {
+async function fetchAuthToken(): Promise<CachedAuthData | null> {
   try {
     // Fetch from EasyAuth endpoint on the frontend
     const response = await fetch('/.auth/me', {
@@ -107,6 +132,12 @@ async function fetchAuthToken(): Promise<string | null> {
       return null;
     }
 
+    // Validate id_token exists (JWT for Bearer auth)
+    if (!identity.id_token) {
+      console.debug('EasyAuth: Missing id_token in response');
+      return null;
+    }
+
     // Extract email from claims (fallback to user_id which is often email)
     const email =
       getClaim(identity.user_claims, CLAIM_TYPES.EMAIL) || identity.user_id;
@@ -115,7 +146,7 @@ async function fetchAuthToken(): Promise<string | null> {
     const nameId =
       getClaim(identity.user_claims, CLAIM_TYPES.NAME_ID) || identity.user_id;
 
-    // Create a token that matches the x-ms-client-principal format expected by backend
+    // Create client principal for X-MS-CLIENT-PRINCIPAL header (backward compat)
     const principal = {
       userId: nameId,
       userDetails: email,
@@ -123,24 +154,30 @@ async function fetchAuthToken(): Promise<string | null> {
       userRoles: ['authenticated'],
     };
 
-    // Base64 encode the principal (same format as x-ms-client-principal header)
-    cachedToken = btoa(JSON.stringify(principal));
-
-    // Set token expiry (use expires_on from response, with 5min buffer)
+    // Calculate expiry (use expires_on from response, with 5min buffer)
+    let expiry: Date;
     if (identity.expires_on) {
       const expiryDate = new Date(identity.expires_on);
       // Refresh 5 minutes before actual expiry
-      tokenExpiry = new Date(expiryDate.getTime() - 5 * 60 * 1000);
+      expiry = new Date(expiryDate.getTime() - 5 * 60 * 1000);
     } else {
       // Default to 1 hour if no expiry provided
-      tokenExpiry = new Date(Date.now() + 60 * 60 * 1000);
+      expiry = new Date(Date.now() + 60 * 60 * 1000);
     }
+
+    // Cache all tokens
+    cachedAuthData = {
+      idToken: identity.id_token,           // JWT for Bearer auth
+      accessToken: identity.access_token,   // Opaque token for Google API calls
+      clientPrincipal: btoa(JSON.stringify(principal)),
+      expiry,
+    };
 
     console.debug(
       'EasyAuth: Token fetched successfully (provider: %s)',
       identity.provider_name
     );
-    return cachedToken;
+    return cachedAuthData;
   } catch (error) {
     console.error('EasyAuth: Failed to fetch token', error);
     return null;
@@ -148,18 +185,23 @@ async function fetchAuthToken(): Promise<string | null> {
 }
 
 /**
- * Clears the cached token. Call this on logout.
+ * Clears the cached auth data. Call this on logout.
  */
 export function clearAuthToken(): void {
-  cachedToken = null;
-  tokenExpiry = null;
+  cachedAuthData = null;
   tokenFetchPromise = null;
 }
 
 /**
- * Refreshes the token by clearing cache and fetching again.
+ * Refreshes auth data by clearing cache and fetching again.
  */
-export async function refreshAuthToken(): Promise<string | null> {
+export async function refreshAuthToken(): Promise<CachedAuthData | null> {
   clearAuthToken();
-  return getAuthToken();
+  return getAuthData();
 }
+
+/**
+ * @deprecated Use getAccessToken() instead
+ * Kept for backward compatibility - returns the access_token
+ */
+export const getAuthToken = getAccessToken;
