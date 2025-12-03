@@ -7,15 +7,17 @@ declare namespace Express {
   export interface Request {
     /**
      * User object populated by validateAuth middleware
-     * Contains authenticated user information from Azure EasyAuth
+     * Contains authenticated user information from JWT or Azure EasyAuth headers
      */
     user?: {
-      /** Unique user identifier from OAuth provider (e.g., "google|123456789") */
+      /** Unique user identifier (sub claim from JWT) */
       userId: string;
-      /** User email address from OAuth provider */
+      /** User email address */
       email?: string;
+      /** User display name */
+      name?: string;
       /** OAuth provider used for authentication */
-      provider: 'google' | 'facebook';
+      provider: 'google' | 'facebook' | 'unknown';
     };
   }
 }

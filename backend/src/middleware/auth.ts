@@ -1,76 +1,132 @@
 /**
  * Azure EasyAuth Authentication Middleware
  *
- * Uses Azure EasyAuth headers set automatically when a valid token is sent:
- * - x-ms-client-principal-id: User ID from OAuth provider
- * - x-ms-client-principal-name: Email address
- * - x-ms-client-principal-idp: Identity provider (google/facebook)
+ * Primary: Decode JWT from Authorization header (Bearer token)
+ * Fallback: Azure EasyAuth headers (x-ms-client-principal-*)
  *
- * No custom token validation - Azure EasyAuth handles all validation.
+ * Azure EasyAuth validates the token BEFORE it reaches our code.
+ * We only decode the payload - no signature validation needed.
  */
 
 import { Request, Response, NextFunction } from 'express';
 import { logger } from '../utils/logger';
 
+interface JwtPayload {
+  sub: string;
+  email?: string;
+  name?: string;
+  iss?: string;
+}
+
 /**
- * Validates authentication via Azure EasyAuth headers
+ * Decode JWT payload without validation.
+ * Azure EasyAuth has already validated the token.
+ */
+function decodeJwtPayload(token: string): JwtPayload | null {
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+
+    const payload = Buffer.from(parts[1], 'base64').toString('utf-8');
+    return JSON.parse(payload);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Determine provider from JWT issuer
+ */
+function getProviderFromIssuer(iss?: string): 'google' | 'facebook' | 'unknown' {
+  if (!iss) return 'unknown';
+  if (iss.includes('google')) return 'google';
+  if (iss.includes('facebook')) return 'facebook';
+  return 'unknown';
+}
+
+/**
+ * Validates authentication via JWT token or Azure EasyAuth headers
  *
- * Simply checks if x-ms-client-principal-id header exists.
- * Azure EasyAuth sets this header only for valid, authenticated requests.
- *
- * @param req - Express request object
- * @param res - Express response object
- * @param next - Express next function
- * @returns 401 if not authenticated, otherwise calls next()
+ * Priority:
+ * 1. JWT from Authorization header (Bearer token)
+ * 2. Azure EasyAuth headers (x-ms-client-principal-*)
+ * 3. Development mock user (NODE_ENV=development only)
  */
 export async function validateAuth(
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> {
+  // Try JWT from Authorization header first
+  const authHeader = req.headers['authorization'] as string | undefined;
+
+  if (authHeader?.startsWith('Bearer ')) {
+    const token = authHeader.slice(7);
+    const payload = decodeJwtPayload(token);
+
+    if (payload?.sub) {
+      req.user = {
+        userId: payload.sub,
+        email: payload.email,
+        name: payload.name,
+        provider: getProviderFromIssuer(payload.iss)
+      };
+
+      logger.debug('User authenticated via JWT', {
+        userId: req.user.userId,
+        provider: req.user.provider,
+        path: req.path
+      });
+
+      return next();
+    }
+  }
+
+  // Fallback to EasyAuth headers
   const principalId = req.headers['x-ms-client-principal-id'] as string | undefined;
   const principalName = req.headers['x-ms-client-principal-name'] as string | undefined;
   const principalIdp = req.headers['x-ms-client-principal-idp'] as string | undefined;
 
-  // Development bypass - inject mock user if no auth headers
-  if (process.env.NODE_ENV === 'development' && !principalId) {
-    logger.debug('Development mode: Using mock user (no auth headers)');
+  if (principalId) {
+    req.user = {
+      userId: principalId,
+      email: principalName,
+      provider: (principalIdp as 'google' | 'facebook') || 'unknown'
+    };
+
+    logger.debug('User authenticated via EasyAuth headers', {
+      userId: req.user.userId,
+      provider: req.user.provider,
+      path: req.path
+    });
+
+    return next();
+  }
+
+  // Development bypass - inject mock user if no auth
+  if (process.env.NODE_ENV === 'development') {
+    logger.debug('Development mode: Using mock user');
     req.user = {
       userId: 'dev-user-123',
       email: 'dev@finans.no',
+      name: 'Dev User',
       provider: 'google'
     };
     return next();
   }
 
-  // Check for EasyAuth header
-  if (!principalId) {
-    logger.warn('Authentication failed: No x-ms-client-principal-id header', {
-      path: req.path,
-      method: req.method
-    });
-    res.status(401).json({
-      error: {
-        message: 'Authentication required',
-        code: 'UNAUTHORIZED'
-      },
-      success: false
-    });
-    return;
-  }
-
-  // Extract user from EasyAuth headers
-  req.user = {
-    userId: principalId,
-    email: principalName,
-    provider: (principalIdp as 'google' | 'facebook') || 'google'
-  };
-
-  logger.debug('User authenticated via EasyAuth', {
-    userId: req.user.userId,
-    provider: req.user.provider,
-    path: req.path
+  // No authentication found
+  logger.warn('Authentication failed: No valid token or headers', {
+    path: req.path,
+    method: req.method,
+    hasAuthHeader: !!authHeader
   });
 
-  return next();
+  res.status(401).json({
+    error: {
+      message: 'Authentication required',
+      code: 'UNAUTHORIZED'
+    },
+    success: false
+  });
 }
