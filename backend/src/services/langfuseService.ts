@@ -395,9 +395,9 @@ export async function flushLangfuse(): Promise<void> {
   }
 
   try {
-    logger.info('Flushing Langfuse before shutdown...');
+    logger.debug('Flushing Langfuse traces...');
     await langfuse.flushAsync();
-    logger.info('Langfuse flushed successfully');
+    logger.debug('Langfuse flushed successfully');
   } catch (error) {
     logger.error('Failed to flush Langfuse', {
       error: error instanceof Error ? error.message : String(error),

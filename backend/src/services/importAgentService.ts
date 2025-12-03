@@ -21,6 +21,7 @@ import {
   endSpan,
   logGenerationToParent,
   logEventToParent,
+  flushLangfuse,
   LangfuseTraceClient,
 } from './langfuseService';
 import { getUserById } from './userService';
@@ -468,12 +469,11 @@ export async function runImportAgent(
 
       // Call OpenAI
       const response = await openai.chat.completions.create({
-        model: 'gpt-4-turbo-preview',
+        model: 'gpt-5-nano',
         messages,
         tools: TOOLS,
         tool_choice: 'auto',
-        temperature: 0.3,
-        max_tokens: 4000,
+        max_completion_tokens: 4000,
       });
 
       const durationMs = Date.now() - startTime;
@@ -487,10 +487,10 @@ export async function runImportAgent(
       // Log generation to Langfuse
       logGenerationToParent(
         iterationSpan,
-        `gpt-4-turbo-iteration-${iteration}`,
+        `gpt-5-nano-iteration-${iteration}`,
         messages.slice(-3), // Last 3 messages for context
         choice.message,
-        'gpt-4-turbo-preview',
+        'gpt-5-nano',
         {
           promptTokens: response.usage?.prompt_tokens,
           completionTokens: response.usage?.completion_tokens,
@@ -592,6 +592,9 @@ export async function runImportAgent(
           totalTokens,
         });
 
+        // Flush Langfuse to send traces immediately
+        await flushLangfuse();
+
         return {
           success: true,
           message: finalMessage,
@@ -611,6 +614,9 @@ export async function runImportAgent(
 
     logEventToParent(trace, 'agent-max-iterations', { maxIterations: MAX_ITERATIONS }, undefined, 'WARNING');
 
+    // Flush Langfuse to send traces immediately
+    await flushLangfuse();
+
     return {
       success: false,
       message: `Agent reached maximum iterations (${MAX_ITERATIONS}). Some data may not have been imported.`,
@@ -624,6 +630,9 @@ export async function runImportAgent(
     logger.error('Import agent error', { userId, error: errorMessage });
 
     logEventToParent(trace, 'agent-error', { error: errorMessage }, undefined, 'ERROR');
+
+    // Flush Langfuse to send traces immediately
+    await flushLangfuse();
 
     actions.push({
       type: 'error',
