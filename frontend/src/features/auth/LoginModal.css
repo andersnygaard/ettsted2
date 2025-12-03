@@ -129,6 +129,50 @@
   background-color: #166FE5;
 }
 
+.login-modal__divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.5rem 0;
+}
+
+.login-modal__divider::before,
+.login-modal__divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--border, rgba(44, 44, 44, 0.15));
+}
+
+.login-modal__divider span {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8125rem;
+  color: var(--text-secondary, #6B6B6B);
+  text-transform: lowercase;
+}
+
+.login-modal__btn--demo {
+  background-color: var(--muted-sage, #8B9A7D);
+  color: white;
+  border: none;
+}
+
+.login-modal__btn--demo:hover:not(:disabled) {
+  background-color: #7A8A6D;
+}
+
+.login-modal__btn--demo:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.login-modal__error {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8125rem;
+  color: var(--negative, #9D6B5A);
+  margin: 0.5rem 0 0 0;
+}
+
 .login-modal__terms {
   font-family: 'DM Sans', sans-serif;
   font-size: 0.75rem;

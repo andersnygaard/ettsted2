@@ -1,8 +1,11 @@
 /**
- * EasyAuth Token Service
+ * Auth Token Service
  *
- * Fetches and caches the access token from Azure EasyAuth.
- * Used to forward authentication to the backend API.
+ * Supports two authentication modes:
+ * 1. Demo tokens - stored in localStorage, validated by backend
+ * 2. EasyAuth tokens - fetched from Azure EasyAuth /.auth/me
+ *
+ * Priority: Demo token (if present) > EasyAuth token
  *
  * EasyAuth /.auth/me returns an array format:
  * [{
@@ -14,6 +17,8 @@
  *   user_id: string
  * }]
  */
+
+const DEMO_TOKEN_KEY = 'finans_demo_token';
 
 interface EasyAuthClaim {
   typ: string;
@@ -50,10 +55,23 @@ let cachedAuthData: CachedAuthData | null = null;
 let tokenFetchPromise: Promise<CachedAuthData | null> | null = null;
 
 /**
- * Returns cached auth data if valid, otherwise fetches fresh data from EasyAuth.
- * Contains both the OAuth access_token and the client principal for the backend.
+ * Returns auth data, checking demo token first, then EasyAuth.
+ * Demo tokens are stored in localStorage and take priority.
  */
 export async function getAuthData(): Promise<CachedAuthData | null> {
+  // Check for demo token first
+  const demoToken = localStorage.getItem(DEMO_TOKEN_KEY);
+  if (demoToken) {
+    // Demo tokens have 24h expiry, set in localStorage
+    // We trust the backend to validate expiry
+    return {
+      idToken: demoToken,
+      accessToken: demoToken,
+      clientPrincipal: '',
+      expiry: new Date(Date.now() + 24 * 60 * 60 * 1000), // Assume valid for 24h
+    };
+  }
+
   // Return cached data if available and not expired
   if (cachedAuthData && new Date() < cachedAuthData.expiry) {
     return cachedAuthData;
@@ -190,11 +208,12 @@ async function fetchAuthToken(): Promise<CachedAuthData | null> {
 }
 
 /**
- * Clears the cached auth data. Call this on logout.
+ * Clears the cached auth data and demo token. Call this on logout.
  */
 export function clearAuthToken(): void {
   cachedAuthData = null;
   tokenFetchPromise = null;
+  localStorage.removeItem(DEMO_TOKEN_KEY);
 }
 
 /**
@@ -203,6 +222,30 @@ export function clearAuthToken(): void {
 export async function refreshAuthToken(): Promise<CachedAuthData | null> {
   clearAuthToken();
   return getAuthData();
+}
+
+/**
+ * Store demo token in localStorage
+ */
+export function setDemoToken(token: string): void {
+  localStorage.setItem(DEMO_TOKEN_KEY, token);
+  // Clear cached EasyAuth data so demo token takes priority
+  cachedAuthData = null;
+  tokenFetchPromise = null;
+}
+
+/**
+ * Get demo token from localStorage
+ */
+export function getDemoToken(): string | null {
+  return localStorage.getItem(DEMO_TOKEN_KEY);
+}
+
+/**
+ * Check if user has a demo session
+ */
+export function isDemoSession(): boolean {
+  return getDemoToken() !== null;
 }
 
 /**

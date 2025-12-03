@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import client from '../../shared/api/client';
-import { clearAuthToken, getAuthData } from '../../shared/api/authToken';
+import { clearAuthToken, getAuthData, setDemoToken, getDemoToken } from '../../shared/api/authToken';
 import type { User, AuthContextType } from './types';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -19,14 +19,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const fetchUser = useCallback(async () => {
     try {
-      // First check if we have an EasyAuth session
+      // First check if we have an auth session (demo or EasyAuth)
       let hasSession = false;
       if (isDevelopment) {
         // In development, always assume session exists (backend will inject dev user)
         hasSession = true;
       } else {
-        const authData = await getAuthData();
-        hasSession = authData !== null;
+        // Check for demo token first, then EasyAuth
+        const demoToken = getDemoToken();
+        if (demoToken) {
+          hasSession = true;
+        } else {
+          const authData = await getAuthData();
+          hasSession = authData !== null;
+        }
       }
       setHasEasyAuthSession(hasSession);
 
@@ -88,6 +94,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
     window.location.href = `/.auth/login/${provider}?post_login_redirect_uri=${encodeURIComponent(returnUrl)}`;
   };
 
+  const demoLogin = async () => {
+    try {
+      // Call demo-login endpoint
+      const response = await client.post('/auth/demo-login');
+
+      if (response.data.success && response.data.data?.token) {
+        // Store the demo token
+        setDemoToken(response.data.data.token);
+
+        // Fetch user data with the new token
+        await fetchUser();
+
+        // Redirect to dashboard
+        window.location.href = '/dashboard';
+      }
+    } catch (error) {
+      console.error('Demo login failed:', error);
+      throw error;
+    }
+  };
+
   const logout = () => {
     // Clear cached auth token
     clearAuthToken();
@@ -109,6 +136,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     hasEasyAuthSession,
     needsOnboarding,
     login,
+    demoLogin,
     logout,
     refreshUser,
   };

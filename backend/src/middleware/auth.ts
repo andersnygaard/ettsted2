@@ -6,9 +6,12 @@
  *
  * Azure EasyAuth validates the token BEFORE it reaches our code.
  * We only decode the payload - no signature validation needed.
+ *
+ * Demo tokens (iss: finans-demo) are validated with HMAC signature.
  */
 
 import { Request, Response, NextFunction } from 'express';
+import crypto from 'crypto';
 import { logger } from '../utils/logger';
 
 interface JwtPayload {
@@ -16,7 +19,10 @@ interface JwtPayload {
   email?: string;
   name?: string;
   iss?: string;
+  exp?: number;
 }
+
+const DEMO_SECRET = process.env.DEMO_JWT_SECRET || 'demo-secret-key-for-development';
 
 /**
  * Decode JWT payload without validation.
@@ -35,10 +41,48 @@ function decodeJwtPayload(token: string): JwtPayload | null {
 }
 
 /**
+ * Verify demo token signature and expiration.
+ * Demo tokens use HMAC-SHA256 for signing.
+ */
+function verifyDemoToken(token: string): JwtPayload | null {
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+
+    const [headerB64, payloadB64, signature] = parts;
+
+    // Verify signature
+    const expectedSignature = crypto
+      .createHmac('sha256', DEMO_SECRET)
+      .update(`${headerB64}.${payloadB64}`)
+      .digest('base64url');
+
+    if (signature !== expectedSignature) {
+      logger.debug('Demo token signature mismatch');
+      return null;
+    }
+
+    // Decode and parse payload
+    const payload: JwtPayload = JSON.parse(Buffer.from(payloadB64, 'base64url').toString('utf-8'));
+
+    // Check expiration
+    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
+      logger.debug('Demo token expired');
+      return null;
+    }
+
+    return payload;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Determine provider from JWT issuer
  */
-function getProviderFromIssuer(iss?: string): 'google' | 'facebook' | 'unknown' {
+function getProviderFromIssuer(iss?: string): 'google' | 'facebook' | 'demo' | 'unknown' {
   if (!iss) return 'unknown';
+  if (iss === 'finans-demo') return 'demo';
   if (iss.includes('google')) return 'google';
   if (iss.includes('facebook')) return 'facebook';
   return 'unknown';
@@ -62,14 +106,37 @@ export async function validateAuth(
 
   if (authHeader?.startsWith('Bearer ')) {
     const token = authHeader.slice(7);
-    const payload = decodeJwtPayload(token);
 
-    if (payload?.sub) {
+    // First decode to check the issuer
+    const decodedPayload = decodeJwtPayload(token);
+
+    if (decodedPayload?.iss === 'finans-demo') {
+      // Demo token: verify signature
+      const verifiedPayload = verifyDemoToken(token);
+
+      if (verifiedPayload?.sub) {
+        req.user = {
+          userId: verifiedPayload.sub,
+          email: verifiedPayload.email,
+          name: verifiedPayload.name,
+          provider: 'demo'
+        };
+
+        logger.debug('User authenticated via demo token', {
+          userId: req.user.userId,
+          provider: req.user.provider,
+          path: req.path
+        });
+
+        return next();
+      }
+    } else if (decodedPayload?.sub) {
+      // OAuth token: trust EasyAuth validation
       req.user = {
-        userId: payload.sub,
-        email: payload.email,
-        name: payload.name,
-        provider: getProviderFromIssuer(payload.iss)
+        userId: decodedPayload.sub,
+        email: decodedPayload.email,
+        name: decodedPayload.name,
+        provider: getProviderFromIssuer(decodedPayload.iss)
       };
 
       logger.debug('User authenticated via JWT', {

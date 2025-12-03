@@ -6,6 +6,7 @@ import snapshotRoutes from './snapshotRoutes';
 import calculatorRoutes from './calculatorRoutes';
 import summaryRoutes from './summaryRoutes';
 import devRoutes from './devRoutes';
+import authRoutes from './authRoutes';
 
 /**
  * Main route aggregator
@@ -53,6 +54,7 @@ router.get('/test/me', validateAuth, (req: Request, res: Response) => {
 });
 
 // Public route modules (no authentication required)
+router.use('/auth', authRoutes);
 router.use('/calculators', calculatorRoutes);
 
 // Protected route modules (require authentication)
