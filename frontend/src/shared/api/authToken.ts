@@ -55,6 +55,29 @@ let cachedAuthData: CachedAuthData | null = null;
 let tokenFetchPromise: Promise<CachedAuthData | null> | null = null;
 
 /**
+ * Decode JWT payload without validation (for reading expiry).
+ */
+function decodeJwtPayload(token: string): { exp?: number } | null {
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    const payload = atob(parts[1].replace(/-/g, '+').replace(/_/g, '/'));
+    return JSON.parse(payload);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Check if demo token is expired.
+ */
+function isDemoTokenExpired(token: string): boolean {
+  const payload = decodeJwtPayload(token);
+  if (!payload?.exp) return true; // No expiry = treat as expired
+  return payload.exp < Math.floor(Date.now() / 1000);
+}
+
+/**
  * Returns auth data, checking demo token first, then EasyAuth.
  * Demo tokens are stored in localStorage and take priority.
  */
@@ -62,14 +85,24 @@ export async function getAuthData(): Promise<CachedAuthData | null> {
   // Check for demo token first
   const demoToken = localStorage.getItem(DEMO_TOKEN_KEY);
   if (demoToken) {
-    // Demo tokens have 24h expiry, set in localStorage
-    // We trust the backend to validate expiry
-    return {
-      idToken: demoToken,
-      accessToken: demoToken,
-      clientPrincipal: '',
-      expiry: new Date(Date.now() + 24 * 60 * 60 * 1000), // Assume valid for 24h
-    };
+    // Validate demo token expiry before using
+    if (isDemoTokenExpired(demoToken)) {
+      console.debug('Demo token expired, clearing');
+      localStorage.removeItem(DEMO_TOKEN_KEY);
+      // Fall through to EasyAuth check
+    } else {
+      const payload = decodeJwtPayload(demoToken);
+      const expiry = payload?.exp
+        ? new Date(payload.exp * 1000)
+        : new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+      return {
+        idToken: demoToken,
+        accessToken: demoToken,
+        clientPrincipal: '',
+        expiry,
+      };
+    }
   }
 
   // Return cached data if available and not expired
@@ -242,10 +275,12 @@ export function getDemoToken(): string | null {
 }
 
 /**
- * Check if user has a demo session
+ * Check if user has a valid (non-expired) demo session
  */
 export function isDemoSession(): boolean {
-  return getDemoToken() !== null;
+  const token = getDemoToken();
+  if (!token) return false;
+  return !isDemoTokenExpired(token);
 }
 
 /**
