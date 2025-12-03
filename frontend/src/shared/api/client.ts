@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { getAuthToken } from './authToken';
+import { getAccessToken, getClientPrincipal } from './authToken';
 
 /**
  * Axios client with error handling interceptors
@@ -80,14 +80,27 @@ function getErrorMessage(error: AxiosError<ApiErrorResponse>): string {
   }
 }
 
-// Request interceptor - add auth token header
+// Request interceptor - add auth headers
 client.interceptors.request.use(
   async (config) => {
-    // In production, fetch and forward the EasyAuth token
+    // In production, fetch and forward the EasyAuth tokens
     if (!isDevelopment) {
-      const token = await getAuthToken();
-      if (token) {
-        config.headers['X-MS-CLIENT-PRINCIPAL'] = token;
+      const accessToken = await getAccessToken();
+      if (accessToken) {
+        // Send the OAuth id_token as Bearer token
+        config.headers['Authorization'] = `Bearer ${accessToken}`;
+        console.debug('Auth: Bearer token attached', {
+          tokenPrefix: accessToken.substring(0, 20) + '...',
+          url: config.url
+        });
+      } else {
+        console.warn('Auth: No access token available for request', { url: config.url });
+      }
+
+      // Also send client principal for backward compatibility
+      const clientPrincipal = await getClientPrincipal();
+      if (clientPrincipal) {
+        config.headers['X-MS-CLIENT-PRINCIPAL'] = clientPrincipal;
       }
     }
     return config;
