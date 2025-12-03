@@ -4,18 +4,17 @@ import './AvatarMenu.css';
 
 export interface AvatarMenuProps {
   initials: string;
-  onProfileClick: () => void;
-  onAccountsClick: () => void;
+  onEconomyClick: () => void;
   onLogout: () => void;
 }
 
 /**
  * Avatar with dropdown menu
  *
- * Shows user avatar with a dropdown menu containing profile and logout options.
+ * Shows user avatar with a dropdown menu containing economy setup and logout options.
  * Menu closes on outside click or Escape key.
  */
-export function AvatarMenu({ initials, onProfileClick, onAccountsClick, onLogout }: AvatarMenuProps) {
+export function AvatarMenu({ initials, onEconomyClick, onLogout }: AvatarMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -48,14 +47,9 @@ export function AvatarMenu({ initials, onProfileClick, onAccountsClick, onLogout
     setIsOpen(!isOpen);
   };
 
-  const handleProfileClick = () => {
+  const handleEconomyClick = () => {
     setIsOpen(false);
-    onProfileClick();
-  };
-
-  const handleAccountsClick = () => {
-    setIsOpen(false);
-    onAccountsClick();
+    onEconomyClick();
   };
 
   const handleLogoutClick = () => {
@@ -79,33 +73,18 @@ export function AvatarMenu({ initials, onProfileClick, onAccountsClick, onLogout
         <div className="avatar-menu__dropdown" role="menu">
           <button
             className="avatar-menu__item"
-            onClick={handleProfileClick}
+            onClick={handleEconomyClick}
             role="menuitem"
             type="button"
           >
             <span className="avatar-menu__icon">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v12" />
+                <path d="M15 9.5c0-1.5-1.5-2.5-3-2.5s-3 1-3 2.5 1.5 2.5 3 2.5 3 1 3 2.5-1.5 2.5-3 2.5" />
               </svg>
             </span>
-            Min informasjon
-          </button>
-          <button
-            className="avatar-menu__item"
-            onClick={handleAccountsClick}
-            role="menuitem"
-            type="button"
-          >
-            <span className="avatar-menu__icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="3" y="3" width="7" height="7" />
-                <rect x="14" y="3" width="7" height="7" />
-                <rect x="14" y="14" width="7" height="7" />
-                <rect x="3" y="14" width="7" height="7" />
-              </svg>
-            </span>
-            Mitt oppsett
+            Min økonomi
           </button>
           <div className="avatar-menu__divider" />
           <button
