@@ -1,11 +1,12 @@
 /**
  * LoginModal Component
  *
- * Modal dialog with Google/Facebook OAuth login buttons.
+ * Modal dialog with Google/Facebook OAuth login buttons and demo mode.
  * Triggered from HomePage for quick login access.
  */
 
-import { useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from './useAuth';
 import './LoginModal.css';
 
 interface LoginModalProps {
@@ -15,6 +16,10 @@ interface LoginModalProps {
 }
 
 export function LoginModal({ isOpen, onClose, returnUrl = '/auth/callback' }: LoginModalProps) {
+  const { demoLogin } = useAuth();
+  const [isDemoLoading, setIsDemoLoading] = useState(false);
+  const [demoError, setDemoError] = useState<string | null>(null);
+
   // Handle escape key to close modal
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -29,6 +34,8 @@ export function LoginModal({ isOpen, onClose, returnUrl = '/auth/callback' }: Lo
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
+      // Reset error on open
+      setDemoError(null);
     }
 
     return () => {
@@ -45,6 +52,18 @@ export function LoginModal({ isOpen, onClose, returnUrl = '/auth/callback' }: Lo
 
   const handleFacebookLogin = () => {
     window.location.href = `/.auth/login/facebook?post_login_redirect_uri=${encodeURIComponent(returnUrl)}`;
+  };
+
+  const handleDemoLogin = async () => {
+    setIsDemoLoading(true);
+    setDemoError(null);
+    try {
+      await demoLogin();
+      // demoLogin redirects on success, so we don't need to do anything here
+    } catch {
+      setDemoError('Demo-innlogging feilet. Prøv igjen.');
+      setIsDemoLoading(false);
+    }
   };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -113,6 +132,29 @@ export function LoginModal({ isOpen, onClose, returnUrl = '/auth/callback' }: Lo
               </svg>
               <span>Fortsett med Facebook</span>
             </button>
+
+            <div className="login-modal__divider">
+              <span>eller</span>
+            </div>
+
+            <button
+              type="button"
+              className="login-modal__btn login-modal__btn--demo"
+              onClick={handleDemoLogin}
+              disabled={isDemoLoading}
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+                />
+              </svg>
+              <span>{isDemoLoading ? 'Laster...' : 'Prøv demo'}</span>
+            </button>
+
+            {demoError && (
+              <p className="login-modal__error">{demoError}</p>
+            )}
           </div>
 
           <p className="login-modal__terms">

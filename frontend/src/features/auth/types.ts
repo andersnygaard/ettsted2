@@ -40,6 +40,7 @@ export interface AuthContextType {
   hasEasyAuthSession: boolean;
   needsOnboarding: boolean;
   login: (provider: 'google' | 'facebook', returnUrl?: string) => void;
+  demoLogin: () => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }

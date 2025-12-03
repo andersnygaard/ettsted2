@@ -16,8 +16,8 @@ declare namespace Express {
       email?: string;
       /** User display name */
       name?: string;
-      /** OAuth provider used for authentication */
-      provider: 'google' | 'facebook' | 'unknown';
+      /** Authentication provider (OAuth or demo) */
+      provider: 'google' | 'facebook' | 'demo' | 'unknown';
     };
   }
 }
