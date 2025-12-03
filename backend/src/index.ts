@@ -37,8 +37,13 @@ function createApp(): Application {
       }
     },
     credentials: true,
-    // Allow custom auth header from frontend
-    allowedHeaders: ['Content-Type', 'X-MS-CLIENT-PRINCIPAL'],
+    // Allow EasyAuth headers from Azure
+    allowedHeaders: [
+      'Content-Type',
+      'X-MS-CLIENT-PRINCIPAL-ID',
+      'X-MS-CLIENT-PRINCIPAL-NAME',
+      'X-MS-CLIENT-PRINCIPAL-IDP'
+    ],
   }));
 
   // Body parser middleware
