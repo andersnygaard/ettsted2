@@ -19,6 +19,7 @@
  */
 
 const DEMO_TOKEN_KEY = 'finans_demo_token';
+const DEV_LOGOUT_KEY = 'finans_dev_logout';
 
 interface EasyAuthClaim {
   typ: string;
@@ -281,6 +282,28 @@ export function isDemoSession(): boolean {
   const token = getDemoToken();
   if (!token) return false;
   return !isDemoTokenExpired(token);
+}
+
+/**
+ * Mark as logged out in development mode.
+ * This prevents auto-login after logout.
+ */
+export function setDevLoggedOut(): void {
+  localStorage.setItem(DEV_LOGOUT_KEY, 'true');
+}
+
+/**
+ * Check if dev logout flag is set.
+ */
+export function isDevLoggedOut(): boolean {
+  return localStorage.getItem(DEV_LOGOUT_KEY) === 'true';
+}
+
+/**
+ * Clear dev logout flag (call on login).
+ */
+export function clearDevLogout(): void {
+  localStorage.removeItem(DEV_LOGOUT_KEY);
 }
 
 /**

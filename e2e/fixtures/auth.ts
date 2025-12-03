@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 
 export interface MockUser {
   id: string;
@@ -17,6 +17,18 @@ export function createMockUser(overrides?: Partial<MockUser>): MockUser {
   };
 }
 
+/**
+ * Login via demo account - uses real backend
+ */
+export async function loginAsDemo(page: Page) {
+  await page.goto('/');
+  await page.getByRole('button', { name: /prøv demo/i }).click();
+  await expect(page).toHaveURL(/.*dashboard/, { timeout: 10000 });
+}
+
+/**
+ * Mock authenticated user - uses route interception (for isolated tests)
+ */
 export async function mockAuthenticatedUser(page: Page, user?: MockUser) {
   const mockUser = user ?? createMockUser();
 
@@ -29,6 +41,9 @@ export async function mockAuthenticatedUser(page: Page, user?: MockUser) {
   });
 }
 
+/**
+ * Mock unauthenticated user - uses route interception
+ */
 export async function mockUnauthenticatedUser(page: Page) {
   await page.route('**/api/v1/users/me', async (route) => {
     await route.fulfill({

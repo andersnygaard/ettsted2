@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
-import { mockAuthenticatedUser } from '../fixtures/auth';
+import { loginAsDemo } from '../fixtures/auth';
 
 test.describe('Sparing (Savings & F.I.R.E.)', () => {
   test.beforeEach(async ({ page }) => {
-    await mockAuthenticatedUser(page);
+    await loginAsDemo(page);
   });
 
   test('page loads successfully', async ({ page }) => {
@@ -19,7 +19,7 @@ test.describe('Sparing (Savings & F.I.R.E.)', () => {
 
   test('can navigate to other tabs', async ({ page }) => {
     await page.goto('/sparing');
-    await page.click('nav >> text=Gjeld');
+    await page.getByRole('link', { name: /gjeld/i }).click();
     await expect(page).toHaveURL(/.*gjeld/);
   });
 });

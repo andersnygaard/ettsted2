@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
-import { mockAuthenticatedUser } from '../fixtures/auth';
+import { loginAsDemo } from '../fixtures/auth';
 
 test.describe('Kalkulatorer (Calculators)', () => {
   test.beforeEach(async ({ page }) => {
-    await mockAuthenticatedUser(page);
+    await loginAsDemo(page);
   });
 
   test('page loads successfully', async ({ page }) => {
@@ -19,14 +19,14 @@ test.describe('Kalkulatorer (Calculators)', () => {
 
   test('can navigate to other tabs', async ({ page }) => {
     await page.goto('/kalkulatorer');
-    await page.click('nav >> text=Oversikt');
+    await page.getByRole('link', { name: /oversikt/i }).click();
     await expect(page).toHaveURL(/.*dashboard/);
   });
 });
 
 test.describe('Kalkulatorer - Sub-pages', () => {
   test.beforeEach(async ({ page }) => {
-    await mockAuthenticatedUser(page);
+    await loginAsDemo(page);
   });
 
   test('Loan calculator loads', async ({ page }) => {

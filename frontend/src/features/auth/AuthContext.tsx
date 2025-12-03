@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import client from '../../shared/api/client';
-import { clearAuthToken, getAuthData, setDemoToken, getDemoToken } from '../../shared/api/authToken';
+import { clearAuthToken, getAuthData, setDemoToken, getDemoToken, isDevLoggedOut, setDevLoggedOut, clearDevLogout } from '../../shared/api/authToken';
 import type { User, AuthContextType } from './types';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -22,8 +22,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // First check if we have an auth session (demo or EasyAuth)
       let hasSession = false;
       if (isDevelopment) {
-        // In development, always assume session exists (backend will inject dev user)
-        hasSession = true;
+        // In development, check if user explicitly logged out
+        hasSession = !isDevLoggedOut();
       } else {
         // Check for demo token first, then EasyAuth
         const demoToken = getDemoToken();
@@ -85,6 +85,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [fetchUser]);
 
   const login = async (provider: 'google' | 'facebook', returnUrl = '/auth/callback') => {
+    // Clear dev logout flag so session works again
+    clearDevLogout();
+
     if (isDevelopment) {
       // In development, backend auto-injects dev user - just fetch and redirect
       await fetchUser();
@@ -95,6 +98,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const demoLogin = async () => {
+    // Clear dev logout flag so session works
+    clearDevLogout();
+
     try {
       // Call demo-login endpoint
       const response = await client.post('/auth/demo-login');
@@ -123,6 +129,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setNeedsOnboarding(false);
 
     if (isDevelopment) {
+      // Mark as logged out so dev mode respects logout
+      setDevLoggedOut();
       window.location.href = '/';
       return;
     }

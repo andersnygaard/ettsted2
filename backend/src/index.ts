@@ -1,3 +1,4 @@
+import './types/express';
 import express, { Application } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -20,31 +21,34 @@ function createApp(): Application {
   // Security middleware (Helmet - sets various HTTP headers)
   app.use(helmet());
 
-  // CORS middleware
-  app.use(cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, Postman, etc.)
-      if (!origin) {
-        return callback(null, true);
-      }
+  // CORS middleware - only in development (production uses Azure EasyAuth same-origin)
+  if (config.nodeEnv === 'development') {
+    app.use(cors({
+      origin: (origin, callback) => {
+        // Allow requests with no origin (mobile apps, Postman, etc.)
+        if (!origin) {
+          return callback(null, true);
+        }
 
-      // Check if origin is in allowed list
-      if (config.allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        logger.warn('CORS blocked request from origin', { origin });
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-    // Allow EasyAuth headers from Azure
-    allowedHeaders: [
-      'Content-Type',
-      'X-MS-CLIENT-PRINCIPAL-ID',
-      'X-MS-CLIENT-PRINCIPAL-NAME',
-      'X-MS-CLIENT-PRINCIPAL-IDP'
-    ],
-  }));
+        // Check if origin is in allowed list
+        if (config.allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          logger.warn('CORS blocked request from origin', { origin });
+          callback(new Error('Not allowed by CORS'));
+        }
+      },
+      credentials: true,
+      allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'X-MS-CLIENT-PRINCIPAL',
+        'X-MS-CLIENT-PRINCIPAL-ID',
+        'X-MS-CLIENT-PRINCIPAL-NAME',
+        'X-MS-CLIENT-PRINCIPAL-IDP'
+      ],
+    }));
+  }
 
   // Body parser middleware
   app.use(express.json({ limit: '10mb' }));

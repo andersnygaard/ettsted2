@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
-import { mockAuthenticatedUser } from '../fixtures/auth';
+import { loginAsDemo } from '../fixtures/auth';
 
 test.describe('Gjeld (Debt)', () => {
   test.beforeEach(async ({ page }) => {
-    await mockAuthenticatedUser(page);
+    await loginAsDemo(page);
   });
 
   test('page loads successfully', async ({ page }) => {
@@ -19,7 +19,7 @@ test.describe('Gjeld (Debt)', () => {
 
   test('can navigate to other tabs', async ({ page }) => {
     await page.goto('/gjeld');
-    await page.click('nav >> text=Pensjon');
+    await page.getByRole('link', { name: /pensjon/i }).click();
     await expect(page).toHaveURL(/.*pensjon/);
   });
 });
