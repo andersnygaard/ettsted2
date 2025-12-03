@@ -1,9 +1,6 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../features/auth/useAuth';
 import { AvatarMenu } from './AvatarMenu';
-import { ProfileModal } from './ProfileModal';
-import { AccountsModal } from './AccountsModal';
 import './AppHeader.css';
 
 /**
@@ -15,9 +12,8 @@ import './AppHeader.css';
  */
 export default function AppHeader() {
   const location = useLocation();
-  const { user, isAuthenticated, logout, refreshUser } = useAuth();
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [isAccountsModalOpen, setIsAccountsModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
 
   // Navigation items with paths (only shown when authenticated)
   const navItems = [
@@ -74,8 +70,7 @@ export default function AppHeader() {
               <div className="app-header__avatar">
                 <AvatarMenu
                   initials={getUserInitials()}
-                  onProfileClick={() => setIsProfileModalOpen(true)}
-                  onAccountsClick={() => setIsAccountsModalOpen(true)}
+                  onEconomyClick={() => navigate('/economy')}
                   onLogout={logout}
                 />
               </div>
@@ -83,24 +78,6 @@ export default function AppHeader() {
           )}
         </div>
       </header>
-
-      {isAuthenticated && (
-        <>
-          <ProfileModal
-            isOpen={isProfileModalOpen}
-            onClose={() => setIsProfileModalOpen(false)}
-            profile={user?.profile}
-            onSaved={refreshUser}
-          />
-
-          <AccountsModal
-            isOpen={isAccountsModalOpen}
-            onClose={() => setIsAccountsModalOpen(false)}
-            accounts={user?.accounts}
-            onSaved={refreshUser}
-          />
-        </>
-      )}
     </>
   );
 }

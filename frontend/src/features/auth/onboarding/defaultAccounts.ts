@@ -123,3 +123,26 @@ export function getDefaultUserInfo() {
     nickname: '',
   };
 }
+
+/**
+ * Convert an existing account to onboarding format
+ */
+export function convertExistingAccount(
+  account: {
+    id: string;
+    name: string;
+    category: 'sparing' | 'gjeld' | 'pensjon';
+    isActive: boolean;
+    loanDetails?: { interestRate: number; remainingYears: number; originalAmount?: number };
+  },
+  value: number = 0
+): OnboardingAccount {
+  return {
+    tempId: account.id, // Use existing ID as tempId for tracking
+    name: account.name,
+    category: account.category,
+    value: Math.abs(value), // Always positive for display (gjeld negated in backend)
+    isActive: account.isActive,
+    ...(account.loanDetails ? { loanDetails: account.loanDetails } : {}),
+  };
+}

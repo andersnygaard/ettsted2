@@ -18,6 +18,7 @@ const FireCalculatorPage = lazy(() => import('../features/calculators/FireCalcul
 const LoanCalculatorPage = lazy(() => import('../features/calculators/LoanCalculatorPage'));
 const MonteCarloPage = lazy(() => import('../features/calculators/MonteCarloPage'));
 const OnboardingPage = lazy(() => import('../features/auth/OnboardingPage'));
+const EconomyPage = lazy(() => import('../features/auth/EconomyPage'));
 const PostLoginPage = lazy(() => import('../features/auth/PostLoginPage'));
 
 
@@ -113,6 +114,14 @@ function AppRoutes() {
             element={
               <ProtectedRoute>
                 <MonteCarloPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="economy"
+            element={
+              <ProtectedRoute>
+                <EconomyPage />
               </ProtectedRoute>
             }
           />

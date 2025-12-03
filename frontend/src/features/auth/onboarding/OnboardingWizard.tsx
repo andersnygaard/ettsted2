@@ -3,6 +3,10 @@
  *
  * Main orchestrator for the 4-step onboarding wizard.
  * Manages state with useReducer and handles navigation, validation, and submission.
+ *
+ * Supports two modes:
+ * - 'create': Initial onboarding for new users (POST /users/me/onboarding)
+ * - 'edit': Edit existing user economy (PATCH /users/me)
  */
 
 import { useReducer, useCallback } from 'react';
@@ -32,12 +36,24 @@ import {
 } from './defaultAccounts';
 import './OnboardingWizard.css';
 
+/**
+ * Props for OnboardingWizard
+ */
+export interface OnboardingWizardProps {
+  /** Mode: 'create' for new users, 'edit' for existing users */
+  mode?: 'create' | 'edit';
+  /** Initial state for edit mode (pre-populated from user data) */
+  initialState?: Partial<OnboardingState>;
+  /** Callback when wizard completes */
+  onComplete?: () => void;
+}
+
 // ============================================================================
 // INITIAL STATE
 // ============================================================================
 
-function getInitialState(): OnboardingState {
-  return {
+function getInitialState(initial?: Partial<OnboardingState>): OnboardingState {
+  const defaults: OnboardingState = {
     currentStep: 1,
     userInfo: getDefaultUserInfo(),
     profile: getDefaultProfile(),
@@ -45,6 +61,18 @@ function getInitialState(): OnboardingState {
     errors: {},
     isSubmitting: false,
     submitError: null,
+  };
+
+  if (!initial) {
+    return defaults;
+  }
+
+  return {
+    ...defaults,
+    ...initial,
+    userInfo: { ...defaults.userInfo, ...initial.userInfo },
+    profile: { ...defaults.profile, ...initial.profile },
+    accounts: initial.accounts || defaults.accounts,
   };
 }
 
@@ -208,23 +236,61 @@ function validateAccountsStep(accounts: OnboardingAccount[], category: Category)
 // COMPONENT
 // ============================================================================
 
-export function OnboardingWizard() {
-  const [state, dispatch] = useReducer(onboardingReducer, getInitialState());
+export function OnboardingWizard({ mode = 'create', initialState, onComplete }: OnboardingWizardProps) {
+  const [state, dispatch] = useReducer(onboardingReducer, getInitialState(initialState));
   const navigate = useNavigate();
   const { refreshUser } = useAuth();
 
-  // API mutation for submitting onboarding
-  const submitMutation = useMutation<OnboardingResponse, Error, OnboardingRequestBody>({
+  // API mutation for creating new user (onboarding)
+  const createMutation = useMutation<OnboardingResponse, Error, OnboardingRequestBody>({
     mutationFn: async (data) => {
       const response = await apiClient.post<OnboardingResponse>('/users/me/onboarding', data);
       return response.data;
     },
     onSuccess: async () => {
       await refreshUser();
-      navigate('/dashboard');
+      if (onComplete) {
+        onComplete();
+      } else {
+        navigate('/dashboard');
+      }
     },
     onError: (error: any) => {
       const message = error.response?.data?.error?.message || 'Kunne ikke fullføre oppsett';
+      dispatch({ type: 'SET_SUBMIT_ERROR', error: message });
+      dispatch({ type: 'SET_SUBMITTING', value: false });
+    },
+  });
+
+  // API mutation for updating existing user (edit mode)
+  const updateMutation = useMutation({
+    mutationFn: async (data: { nickname: string; profile: OnboardingRequestBody['profile']; accounts: any[] }) => {
+      // Update user profile and accounts
+      const response = await apiClient.patch('/users/me', {
+        nickname: data.nickname,
+        profile: data.profile,
+        accounts: data.accounts.map((acc, index) => ({
+          id: acc.id || `acc-${Date.now()}-${index}`,
+          name: acc.name,
+          category: acc.category,
+          isActive: acc.isActive,
+          sortOrder: index,
+          createdAt: acc.createdAt || new Date().toISOString(),
+          ...(acc.category === 'gjeld' && acc.loanDetails ? { loanDetails: acc.loanDetails } : {}),
+        })),
+      });
+      return response.data;
+    },
+    onSuccess: async () => {
+      await refreshUser();
+      if (onComplete) {
+        onComplete();
+      } else {
+        navigate('/dashboard');
+      }
+    },
+    onError: (error: any) => {
+      const message = error.response?.data?.error?.message || 'Kunne ikke lagre endringer';
       dispatch({ type: 'SET_SUBMIT_ERROR', error: message });
       dispatch({ type: 'SET_SUBMITTING', value: false });
     },
@@ -287,12 +353,14 @@ export function OnboardingWizard() {
     // Build all accounts into a single array
     const allAccounts = [
       ...state.accounts.sparing.map((acc) => ({
+        id: acc.tempId.startsWith('temp-') ? undefined : acc.tempId,
         name: acc.name,
         category: 'sparing' as Category,
         value: acc.value,
         isActive: acc.isActive,
       })),
       ...state.accounts.gjeld.map((acc) => ({
+        id: acc.tempId.startsWith('temp-') ? undefined : acc.tempId,
         name: acc.name,
         category: 'gjeld' as Category,
         value: acc.value,
@@ -300,6 +368,7 @@ export function OnboardingWizard() {
         loanDetails: acc.loanDetails,
       })),
       ...state.accounts.pensjon.map((acc) => ({
+        id: acc.tempId.startsWith('temp-') ? undefined : acc.tempId,
         name: acc.name,
         category: 'pensjon' as Category,
         value: acc.value,
@@ -319,8 +388,12 @@ export function OnboardingWizard() {
       accounts: allAccounts,
     };
 
-    submitMutation.mutate(requestBody);
-  }, [state, submitMutation]);
+    if (mode === 'edit') {
+      updateMutation.mutate(requestBody);
+    } else {
+      createMutation.mutate(requestBody);
+    }
+  }, [state, mode, createMutation, updateMutation]);
 
   // Account handlers for each category
   const createAccountHandlers = (category: Category) => ({
