@@ -37,6 +37,8 @@ export interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  hasEasyAuthSession: boolean;
+  needsOnboarding: boolean;
   login: (provider: 'google' | 'facebook', returnUrl?: string) => void;
   logout: () => void;
   refreshUser: () => Promise<void>;

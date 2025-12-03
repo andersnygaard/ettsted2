@@ -1,30 +1,30 @@
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from './useAuth';
 import './LoginPage.css';
 
-interface LocationState {
-  from?: string;
-}
-
 export default function LoginPage() {
-  const { isAuthenticated, isLoading } = useAuth();
-  const location = useLocation();
-  const state = location.state as LocationState | null;
+  const { isAuthenticated, isLoading, needsOnboarding } = useAuth();
 
-  // Get the return URL from state, default to /dashboard
-  const returnUrl = state?.from || '/dashboard';
-
-  // Redirect authenticated users to their intended destination
+  // Redirect authenticated users to dashboard
   if (!isLoading && isAuthenticated) {
-    return <Navigate to={returnUrl} replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
+  // Redirect users who need onboarding
+  if (!isLoading && needsOnboarding) {
+    return <Navigate to="/onboarding" replace />;
+  }
+
+  // Always redirect to /auth/callback after OAuth
+  // PostLoginPage will handle routing to onboarding or dashboard
+  const callbackUrl = '/auth/callback';
+
   const handleGoogleLogin = () => {
-    window.location.href = `/.auth/login/google?post_login_redirect_uri=${encodeURIComponent(returnUrl)}`;
+    window.location.href = `/.auth/login/google?post_login_redirect_uri=${encodeURIComponent(callbackUrl)}`;
   };
 
   const handleFacebookLogin = () => {
-    window.location.href = `/.auth/login/facebook?post_login_redirect_uri=${encodeURIComponent(returnUrl)}`;
+    window.location.href = `/.auth/login/facebook?post_login_redirect_uri=${encodeURIComponent(callbackUrl)}`;
   };
 
   return (
