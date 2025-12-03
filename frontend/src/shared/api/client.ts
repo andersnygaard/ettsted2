@@ -87,8 +87,14 @@ client.interceptors.request.use(
     if (!isDevelopment) {
       const accessToken = await getAccessToken();
       if (accessToken) {
-        // Send the OAuth access_token as Bearer token
+        // Send the OAuth id_token as Bearer token
         config.headers['Authorization'] = `Bearer ${accessToken}`;
+        console.debug('Auth: Bearer token attached', {
+          tokenPrefix: accessToken.substring(0, 20) + '...',
+          url: config.url
+        });
+      } else {
+        console.warn('Auth: No access token available for request', { url: config.url });
       }
 
       // Also send client principal for backward compatibility

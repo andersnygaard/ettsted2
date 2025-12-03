@@ -72,35 +72,43 @@ async function validateGoogleToken(token: string): Promise<Express.User | null> 
   try {
     // Google's tokeninfo endpoint validates id_tokens
     // Use id_token param for JWT tokens (not access_token)
+    logger.info('Calling Google tokeninfo API...');
     const response = await axios.get<GoogleTokenInfo>(
       `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(token)}`,
       { timeout: 5000 }
     );
 
     if (response.data.error_description) {
-      logger.debug('Google id_token validation failed', { error: response.data.error_description });
+      logger.warn('Google id_token validation failed', { error: response.data.error_description });
       return null;
     }
 
     if (!response.data.email || !response.data.sub) {
-      logger.debug('Google id_token missing required fields');
+      logger.warn('Google id_token missing required fields', {
+        hasEmail: !!response.data.email,
+        hasSub: !!response.data.sub
+      });
       return null;
     }
 
     // Verify issuer is Google
     if (response.data.iss !== 'https://accounts.google.com') {
-      logger.debug('Google id_token has invalid issuer', { iss: response.data.iss });
+      logger.warn('Google id_token has invalid issuer', { iss: response.data.iss });
       return null;
     }
 
+    logger.info('Google token validated successfully', { sub: response.data.sub });
     return {
       userId: response.data.sub,
       email: response.data.email,
       provider: 'google'
     };
-  } catch (error) {
-    logger.debug('Google id_token validation error', {
-      error: error instanceof Error ? error.message : 'Unknown error'
+  } catch (error: unknown) {
+    const axiosError = error as { response?: { status?: number; data?: unknown } };
+    logger.warn('Google id_token validation error', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      status: axiosError.response?.status,
+      data: axiosError.response?.data
     });
     return null;
   }
@@ -197,6 +205,14 @@ export async function validateAuth(
   const authHeader = req.headers['authorization'] as string | undefined;
   const principalHeader = req.headers['x-ms-client-principal'] as string | undefined;
 
+  // Log received auth headers for debugging
+  logger.info('Auth headers received', {
+    path: req.path,
+    hasBearer: !!authHeader?.startsWith('Bearer '),
+    hasPrincipal: !!principalHeader,
+    bearerPrefix: authHeader ? authHeader.substring(0, 30) + '...' : 'none'
+  });
+
   // Development bypass - inject mock user if no auth headers
   if (process.env.NODE_ENV === 'development' && !authHeader && !principalHeader) {
     logger.debug('Development mode: Using mock user (no auth headers)');
@@ -227,10 +243,11 @@ export async function validateAuth(
       return;
     }
 
+    logger.info('Validating Bearer token against OAuth provider...');
     const user = await validateBearerToken(token);
     if (user) {
       req.user = user;
-      logger.debug('User authenticated via Bearer token', {
+      logger.info('User authenticated via Bearer token', {
         userId: user.userId,
         provider: user.provider,
         path: req.path
@@ -238,10 +255,12 @@ export async function validateAuth(
       return next();
     }
 
-    // Bearer token was provided but invalid
-    logger.warn('Authentication failed: Invalid Bearer token', {
+    // Bearer token was provided but invalid - log details
+    logger.warn('Authentication failed: Bearer token validation failed', {
       path: req.path,
-      method: req.method
+      method: req.method,
+      tokenIsJWT: token.startsWith('eyJ'),
+      tokenLength: token.length
     });
     res.status(401).json({
       error: {
