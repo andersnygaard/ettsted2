@@ -166,8 +166,13 @@ async function fetchAuthToken(): Promise<CachedAuthData | null> {
     }
 
     // Cache all tokens
+    // Strip "Bearer " prefix if present (EasyAuth may return it with prefix)
+    const rawIdToken = identity.id_token.startsWith('Bearer ')
+      ? identity.id_token.slice(7)
+      : identity.id_token;
+
     cachedAuthData = {
-      idToken: identity.id_token,           // JWT for Bearer auth
+      idToken: rawIdToken,                  // JWT for Bearer auth (without prefix)
       accessToken: identity.access_token,   // Opaque token for Google API calls
       clientPrincipal: btoa(JSON.stringify(principal)),
       expiry,
