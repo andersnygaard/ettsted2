@@ -6,6 +6,7 @@
 import 'express';
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
       /**
@@ -22,6 +23,8 @@ declare global {
         /** Authentication provider (OAuth or demo) */
         provider: 'google' | 'facebook' | 'demo' | 'unknown';
       };
+      /** Request ID for tracing */
+      requestId?: string;
     }
   }
 }

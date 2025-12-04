@@ -19,7 +19,7 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction): 
   const requestId = randomUUID();
 
   // Attach request ID to request object for use in other middleware/routes (backward compatibility)
-  (req as any).requestId = requestId;
+  req.requestId = requestId;
 
   // Extract user ID from EasyAuth header if authenticated
   // Header format: Base64-encoded JSON with { principalId: "...", claims: [...], ...}

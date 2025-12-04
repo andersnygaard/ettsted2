@@ -32,7 +32,7 @@ let isConfigured = false;
 export interface TraceContext {
   userId?: string;
   sessionId?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -198,7 +198,7 @@ export function logGeneration(
 export function logEvent(
   traceId: string | null | undefined,
   name: string,
-  properties?: Record<string, any>
+  properties?: Record<string, unknown>
 ) {
   const langfuse = getLangfuse();
   if (!langfuse || !traceId) {

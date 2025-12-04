@@ -36,14 +36,15 @@ const contextFormat = winston.format((info) => {
 const sanitizeFormat = winston.format((info) => {
   const sensitiveKeys = ['password', 'token', 'secret', 'key', 'authorization'];
 
-  const sanitize = (obj: any): any => {
+  const sanitize = (obj: unknown): unknown => {
     if (!obj || typeof obj !== 'object') return obj;
 
     if (Array.isArray(obj)) {
       return obj.map(item => sanitize(item));
     }
 
-    const result = { ...obj };
+    const record = obj as Record<string, unknown>;
+    const result: Record<string, unknown> = { ...record };
     for (const key of Object.keys(result)) {
       if (sensitiveKeys.some(s => key.toLowerCase().includes(s))) {
         result[key] = '[REDACTED]';
@@ -54,7 +55,7 @@ const sanitizeFormat = winston.format((info) => {
     return result;
   };
 
-  return sanitize(info);
+  return sanitize(info) as winston.Logform.TransformableInfo;
 });
 
 // Define log format with context and sanitization

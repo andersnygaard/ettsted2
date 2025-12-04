@@ -34,7 +34,7 @@ export interface CellChangeEvent {
   value: number;
 }
 
-export type RowData = Record<string, string | number | null | undefined | any>;
+export type RowData = Record<string, string | number | null | undefined>;
 
 export interface SpreadsheetTableProps {
   columnGroups: ColumnGroup[];

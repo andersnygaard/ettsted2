@@ -34,8 +34,9 @@ export async function clearUserData(
   try {
     await usersContainer.item(userId, userId).delete();
     logger.debug(`Deleted user: ${userId}`);
-  } catch (error: any) {
-    if (error.code !== 404) throw error;
+  } catch (error: unknown) {
+    const cosmosError = error as { code?: number };
+    if (cosmosError.code !== 404) throw error;
   }
 
   // Delete user's snapshots

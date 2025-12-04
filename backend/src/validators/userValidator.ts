@@ -288,20 +288,21 @@ export function validateUpdateRequest(
     const validCategories = ['sparing', 'gjeld', 'pensjon'];
     const errors: { index: number; field: string; message: string }[] = [];
 
-    updates.accounts.forEach((account: any, index: number) => {
-      if (!account.id || typeof account.id !== 'string') {
+    (updates.accounts as unknown[]).forEach((account: unknown, index: number) => {
+      const acc = account as Record<string, unknown>;
+      if (!acc.id || typeof acc.id !== 'string') {
         errors.push({ index, field: 'id', message: 'Account id is required and must be a string' });
       }
-      if (!account.name || typeof account.name !== 'string') {
+      if (!acc.name || typeof acc.name !== 'string') {
         errors.push({ index, field: 'name', message: 'Account name is required and must be a string' });
       }
-      if (!account.category || !validCategories.includes(account.category)) {
+      if (!acc.category || !validCategories.includes(acc.category as string)) {
         errors.push({ index, field: 'category', message: `Category must be one of: ${validCategories.join(', ')}` });
       }
-      if (typeof account.isActive !== 'boolean') {
+      if (typeof acc.isActive !== 'boolean') {
         errors.push({ index, field: 'isActive', message: 'isActive must be a boolean' });
       }
-      if (typeof account.sortOrder !== 'number') {
+      if (typeof acc.sortOrder !== 'number') {
         errors.push({ index, field: 'sortOrder', message: 'sortOrder must be a number' });
       }
     });
