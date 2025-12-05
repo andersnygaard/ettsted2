@@ -95,7 +95,7 @@ function AppRoutes() {
             }
           />
           <Route
-            path="kalkulatorer/compound"
+            path="kalkulatorer/rentes-rente"
             element={
               <ProtectedRoute>
                 <CompoundCalculatorPage />
@@ -111,7 +111,7 @@ function AppRoutes() {
             }
           />
           <Route
-            path="kalkulatorer/loan"
+            path="kalkulatorer/lan"
             element={
               <ProtectedRoute>
                 <LoanCalculatorPage />
@@ -126,6 +126,9 @@ function AppRoutes() {
               </ProtectedRoute>
             }
           />
+          {/* Redirects from old calculator routes to new Norwegian names */}
+          <Route path="kalkulatorer/compound" element={<Navigate to="/kalkulatorer/rentes-rente" replace />} />
+          <Route path="kalkulatorer/loan" element={<Navigate to="/kalkulatorer/lan" replace />} />
           <Route
             path="economy"
             element={

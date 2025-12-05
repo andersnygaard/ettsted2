@@ -31,6 +31,8 @@
   /* Borders */
   --border: rgba(44, 44, 44, 0.08);       /* Subtle borders */
   --border-strong: rgba(44, 44, 44, 0.15); /* More visible borders */
+  --border-subtle: 0.5px solid #efefef;    /* Very subtle card borders */
+  --surface: #faf6f4;                     /* Slightly darker surface background */
 
 
   /* ============================================

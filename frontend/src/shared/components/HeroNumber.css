@@ -32,6 +32,16 @@
   color: var(--charcoal);
   line-height: 1;
   letter-spacing: var(--letter-spacing-tight);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .hero-value {
+    font-size: 48px;
+  }
 }
 
 /* Change badge - shows percentage change with color indicator */

@@ -69,14 +69,14 @@
 
 /* Primary Button */
 .onboarding-wizard__btn--primary {
-  background-color: var(--charcoal, #2C2C2C);
+  background-color: var(--charcoal, #2C2C2C) !important;
   color: var(--warm-white, #FDFCFA);
   border: none;
   margin-left: auto;
 }
 
 .onboarding-wizard__btn--primary:hover:not(:disabled) {
-  background-color: var(--text-secondary, #6B6B6B);
+  background-color: var(--text-secondary, #6B6B6B) !important;
 }
 
 /* Secondary Button */

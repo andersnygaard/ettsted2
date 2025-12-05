@@ -1,4 +1,4 @@
-import { PageHeader, HeroNumber, StatsRow, AreaChart } from '@finans/components';
+import { PageHeader, HeroNumber, StatsRow, AreaChart, Breadcrumb } from '@finans/components';
 import { formatCurrency } from '@/shared/utils/numberFormat';
 import { useSparingData } from './useSparingData';
 import { FireSection } from './FireSection';
@@ -58,6 +58,13 @@ function SparingPage() {
   return (
     <main className="sparing-page">
       <div className="container container--narrow">
+        <Breadcrumb
+          items={[
+            { label: 'Hjem', path: '/dashboard' },
+            { label: 'Sparing' },
+          ]}
+        />
+
         <PageHeader
           title="Sparing"
           subtitle="Din vei mot økonomisk frihet"

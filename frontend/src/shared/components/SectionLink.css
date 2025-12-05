@@ -13,6 +13,7 @@
   gap: var(--space-xl);
   padding: var(--space-2xl);
   background: var(--warm-white);
+  border: var(--border-subtle);
   border-radius: var(--radius-sm);
   text-decoration: none;
   color: inherit;

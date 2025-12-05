@@ -6,6 +6,7 @@
  * - POST /api/v1/users/me/setup - First-time nickname setup (legacy)
  * - POST /api/v1/users/me/onboarding - Complete onboarding wizard
  * - PATCH /api/v1/users/me - Update user settings
+ * - DELETE /api/v1/users/me - Delete user account (GDPR compliant)
  *
  * All routes require authentication via validateAuth middleware.
  */
@@ -14,7 +15,8 @@ import { Router, IRouter } from 'express';
 import {
   getCurrentUser,
   setupUser,
-  updateUser
+  updateUser,
+  deleteMe
 } from '../controllers/userController';
 import { completeOnboarding } from '../controllers/onboardingController';
 import { validateBody } from '../middleware/validate';
@@ -69,6 +71,19 @@ router.post(
  * Returns: 200 with updated user, or 404 if user not found
  */
 router.patch('/me', validateBody(userUpdateSchema), updateUser);
+
+/**
+ * DELETE /api/v1/users/me
+ * Delete user account and all associated data (GDPR compliant)
+ *
+ * Requires: Authentication
+ * Returns: 200 with success message, or 404 if user not found
+ *
+ * Deletes:
+ * - All snapshots from portfolios container
+ * - User document from users container
+ */
+router.delete('/me', deleteMe);
 
 /**
  * POST /api/v1/users/me/onboarding

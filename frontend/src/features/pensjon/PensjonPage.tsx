@@ -1,4 +1,4 @@
-import { PageHeader, HeroNumber, StackedAreaChart } from '@finans/components';
+import { PageHeader, HeroNumber, StackedAreaChart, Breadcrumb } from '@finans/components';
 import type { StackedDataPoint, Series } from '@finans/components';
 import { PensjonSkeleton } from '@/shared/components/skeletons';
 import { formatCurrency } from '@/shared/utils/numberFormat';
@@ -95,6 +95,13 @@ function PensjonPage() {
   return (
     <main className="pensjon-page">
       <div className="container container--narrow">
+        <Breadcrumb
+          items={[
+            { label: 'Hjem', path: '/dashboard' },
+            { label: 'Pensjon' },
+          ]}
+        />
+
         <PageHeader
           title="Pensjon"
           subtitle="Oppspart pensjon og fremtidig utbetaling"

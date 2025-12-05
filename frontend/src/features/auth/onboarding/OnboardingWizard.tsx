@@ -204,8 +204,8 @@ function validateAccountsStep(accounts: OnboardingAccount[], category: Category)
       errors[`${prefix}.name`] = 'Kontonavn kan ikke være mer enn 50 tegn';
     }
 
-    // Value
-    if (account.value < 0) {
+    // Value - only disallow negatives for sparing and pensjon, allow for gjeld
+    if (account.value < 0 && category !== 'gjeld') {
       errors[`${prefix}.value`] = 'Verdi kan ikke være negativ';
     }
 
@@ -363,7 +363,7 @@ export function OnboardingWizard({ mode = 'create', initialState, onComplete }: 
         id: acc.tempId.startsWith('temp-') ? undefined : acc.tempId,
         name: acc.name,
         category: 'gjeld' as Category,
-        value: acc.value,
+        value: Math.abs(acc.value), // Store debt as positive value
         isActive: acc.isActive,
         loanDetails: acc.loanDetails,
       })),

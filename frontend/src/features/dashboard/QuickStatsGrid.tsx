@@ -1,4 +1,5 @@
-import { StatCard } from '@/shared/components';
+import { useNavigate } from 'react-router-dom';
+import { StatCard } from '@finans/components';
 import './QuickStatsGrid.css';
 
 interface QuickStat {
@@ -16,14 +17,10 @@ interface QuickStatsGridProps {
  *
  * Displays 4 quick stat cards in a responsive grid layout.
  * Based on Nordic Minimal design system.
- *
- * Features:
- * - 4 columns on desktop
- * - 2 columns on tablet (max-width: 1024px)
- * - 1 column on mobile (max-width: 600px)
- * - Staggered fade-up animations
  */
 export function QuickStatsGrid({ stats }: QuickStatsGridProps) {
+  const navigate = useNavigate();
+
   return (
     <div className="quick-stats-grid">
       {stats.map((stat, index) => (
@@ -34,7 +31,7 @@ export function QuickStatsGrid({ stats }: QuickStatsGridProps) {
           <StatCard
             value={stat.value}
             label={stat.label}
-            href={stat.href}
+            onClick={() => navigate(stat.href)}
           />
         </div>
       ))}

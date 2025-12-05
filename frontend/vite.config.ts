@@ -18,6 +18,14 @@ export default defineConfig({
         target: 'http://localhost:3000',
         changeOrigin: true
       }
+    },
+    watch: {
+      // Watch components workspace for changes
+      ignored: ['!**/components/src/**']
     }
+  },
+  optimizeDeps: {
+    // Don't pre-bundle components so changes are picked up immediately
+    exclude: ['@finans/components']
   }
 })

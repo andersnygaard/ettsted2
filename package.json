@@ -9,10 +9,7 @@
     "lint": "pnpm --recursive lint",
     "type-check": "pnpm --filter frontend type-check && pnpm --filter backend type-check",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "test:e2e": "pnpm --filter e2e test",
-    "test:e2e:frontend": "pnpm --filter e2e test:frontend",
-    "test:e2e:backend": "pnpm --filter e2e test:backend",
-    "db:seed": "pnpm --filter backend db:seed"
+    "test:e2e": "pnpm --filter e2e test"
   },
   "keywords": [
     "portfolio",

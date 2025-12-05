@@ -83,7 +83,9 @@
       "Bash(az cosmosdb sql container create:*)",
       "Bash(timeout 20 bash:*)",
       "Bash(timeout 15 pnpm:*)",
-      "Bash(netstat:*)"
+      "Bash(netstat:*)",
+      "Bash(timeout:*)",
+      "Skill(storybook-stories)"
     ],
     "deny": [],
     "ask": [

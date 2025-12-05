@@ -12,6 +12,7 @@
 .dekning-section {
   background: var(--warm-white);
   padding: var(--space-xl);
+  border: var(--border-subtle);
   border-radius: 2px;
   margin-bottom: var(--space-lg);
   display: flex;
@@ -102,6 +103,7 @@
 .loans-section {
   background: var(--warm-white);
   padding: var(--space-lg);
+  border: var(--border-subtle);
   border-radius: 2px;
   margin-bottom: var(--space-lg);
   animation: fadeUp 0.6s ease forwards;
@@ -150,6 +152,7 @@
 .chart-section {
   background: var(--warm-white);
   padding: var(--space-lg);
+  border: var(--border-subtle);
   border-radius: 2px;
   animation: fadeUp 0.6s ease forwards;
   animation-delay: 0.35s;

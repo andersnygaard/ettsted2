@@ -131,6 +131,44 @@
   }
 }
 
+/* Hamburger button - hidden on desktop, shown on mobile */
+.app-header__hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  padding: 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+  z-index: 100;
+  position: relative;
+}
+
+.app-header__hamburger:hover {
+  background-color: rgba(44, 44, 44, 0.06);
+}
+
+.app-header__hamburger:focus-visible {
+  outline: 2px solid var(--pale-blue);
+  outline-offset: 2px;
+}
+
+.app-header__hamburger-line {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background-color: var(--charcoal);
+  border-radius: 1px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
 @media (max-width: 640px) {
   .app-header {
     padding: var(--space-lg) 0;
@@ -141,6 +179,172 @@
   }
 
   .app-header__nav {
-    display: none; /* Hide on mobile - would need hamburger menu */
+    display: none;
   }
+
+  .app-header__avatar {
+    display: none;
+  }
+
+  .app-header__hamburger {
+    display: flex;
+  }
+}
+
+/* Mobile menu overlay */
+.app-header__mobile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 998;
+}
+
+.app-header__mobile-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Mobile menu panel - slides from right */
+.app-header__mobile-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 280px;
+  max-width: 85vw;
+  background: var(--warm-white);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.app-header__mobile-menu.open {
+  transform: translateX(0);
+}
+
+/* Mobile menu header */
+.app-header__mobile-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.app-header__mobile-nickname {
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: var(--font-weight-medium);
+  color: var(--charcoal);
+}
+
+.app-header__mobile-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.app-header__mobile-close:hover {
+  background-color: rgba(44, 44, 44, 0.06);
+  color: var(--charcoal);
+}
+
+/* Mobile navigation */
+.app-header__mobile-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0;
+}
+
+.app-header__mobile-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--text-secondary);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.app-header__mobile-nav-item:hover {
+  background-color: rgba(44, 44, 44, 0.04);
+  color: var(--charcoal);
+}
+
+.app-header__mobile-nav-item.active {
+  color: var(--charcoal);
+  font-weight: var(--font-weight-medium);
+  background-color: rgba(44, 44, 44, 0.04);
+}
+
+.app-header__mobile-nav-item svg {
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.app-header__mobile-divider {
+  height: 1px;
+  background-color: var(--border);
+  margin: 8px 20px;
+}
+
+/* Mobile menu footer with logout */
+.app-header__mobile-footer {
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+.app-header__mobile-logout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--negative);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.app-header__mobile-logout:hover {
+  background-color: rgba(157, 107, 90, 0.08);
+}
+
+.app-header__mobile-logout svg {
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+/* Prevent body scroll when menu is open */
+body.mobile-menu-open {
+  overflow: hidden;
 }

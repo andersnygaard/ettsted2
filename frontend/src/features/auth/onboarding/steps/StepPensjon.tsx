@@ -6,6 +6,7 @@
 
 import { OnboardingAccount } from '../types';
 import { AccountsList } from './AccountsList';
+import { PageHeader } from '@finans/components';
 import './StepAccounts.css';
 
 interface StepPensjonProps {
@@ -30,12 +31,11 @@ export function StepPensjon({
 }: StepPensjonProps) {
   return (
     <div className="step-accounts">
-      <div className="step-accounts__header">
-        <h2 className="step-accounts__title">Pensjon</h2>
-        <p className="step-accounts__subtitle">
-          Legg inn dine pensjonskontoer
-        </p>
-      </div>
+      <PageHeader
+        title="Pensjon"
+        subtitle="Legg inn dine pensjonskontoer"
+        reduced={true}
+      />
 
       <AccountsList
         category="pensjon"

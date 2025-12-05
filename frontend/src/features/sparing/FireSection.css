@@ -6,6 +6,7 @@
 .fire-section {
   background: var(--warm-white);
   padding: 40px;
+  border: var(--border-subtle);
   border-radius: 2px;
   margin-bottom: 48px;
 }

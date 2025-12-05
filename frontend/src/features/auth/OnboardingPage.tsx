@@ -6,6 +6,7 @@
  */
 
 import { OnboardingWizard } from './onboarding/OnboardingWizard';
+import { PageHeader } from '@finans/components';
 import './OnboardingPage.css';
 
 export default function OnboardingPage() {
@@ -16,12 +17,10 @@ export default function OnboardingPage() {
       </header>
 
       <main className="onboarding-page__main">
-        <div className="onboarding-page__intro">
-          <h2 className="onboarding-page__title">Velkommen til Finans</h2>
-          <p className="onboarding-page__subtitle">
-            La oss sette opp din profil og portefølje
-          </p>
-        </div>
+        <PageHeader
+          title="Velkommen til Finans"
+          subtitle="La oss sette opp din profil og portefølje"
+        />
 
         <OnboardingWizard />
       </main>

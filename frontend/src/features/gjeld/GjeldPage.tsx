@@ -1,4 +1,4 @@
-import { PageHeader, HeroNumber, AreaChart } from '@finans/components';
+import { PageHeader, HeroNumber, AreaChart, Breadcrumb } from '@finans/components';
 import type { DataPoint } from '@finans/components';
 import { formatCurrency } from '@/shared/utils/numberFormat';
 import { useGjeldData } from './useGjeldData';
@@ -83,6 +83,13 @@ function GjeldPage() {
   return (
     <main className="gjeld-page">
       <div className="container container--narrow">
+        <Breadcrumb
+          items={[
+            { label: 'Hjem', path: '/dashboard' },
+            { label: 'Gjeld' },
+          ]}
+        />
+
         <PageHeader
           title="Gjeld"
           subtitle="Oversikt over lån og nedbetaling"

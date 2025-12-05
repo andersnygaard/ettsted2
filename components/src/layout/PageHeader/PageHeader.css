@@ -1,122 +1,34 @@
-/**
- * Page Header Styles
- * Based on Nordic Minimal design from draft-1-nordic-minimal.html and draft-1-portfolio.html
- */
-
 .page-header {
-  margin-bottom: var(--space-6xl);
-}
-
-/* Centered variant (for Oversikt) */
-.page-header--centered {
+  display: block;
+  padding-bottom: var(--space-3xl);
   text-align: center;
 }
 
-.page-header--centered .page-header__title {
-  margin-bottom: var(--space-xs);
-}
-
-/* Default variant (for Portefølje) - left aligned with optional actions */
-.page-header--default {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: var(--space-2xl);
-}
-
-.page-header--default .page-header__title {
-  margin-bottom: var(--space-xs);
-}
-
-/* Content */
-.page-header__content {
-  flex: 1;
-}
-
-/* Title */
 .page-header__title {
   font-family: var(--font-heading);
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-light);
   color: var(--charcoal);
   line-height: 1.2;
+  margin-bottom: var(--space-xs);
+
+  &.reduced {
+    font-size: var(--font-size-xl);
+  }
 }
 
-/* Adjust for portfolio page (slightly smaller) */
-.page-header--default .page-header__title {
-  font-size: var(--font-size-xl);
-}
-
-/* Subtitle */
 .page-header__subtitle {
   color: var(--text-secondary);
   font-size: var(--font-size-md);
   line-height: 1.4;
 }
 
-.page-header--default .page-header__subtitle {
-  font-size: var(--font-size-sm);
-}
-
-/* Actions container */
-.page-header__actions {
-  display: flex;
-  gap: var(--space-sm);
-  flex-shrink: 0;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .page-header {
-    margin-bottom: var(--space-4xl);
-  }
-
-  .page-header--default {
-    margin-bottom: var(--space-xl);
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-lg);
-  }
-
+@media (max-width: 640px) {
   .page-header__title {
-    font-size: var(--font-size-lg);
-  }
-
-  .page-header--default .page-header__title {
     font-size: 28px;
   }
 
   .page-header__subtitle {
     font-size: var(--font-size-sm);
-  }
-
-  .page-header__actions {
-    width: 100%;
-  }
-
-  .page-header__actions button {
-    flex: 1;
-  }
-}
-
-@media (max-width: 640px) {
-  .page-header {
-    margin-bottom: var(--space-2xl);
-  }
-
-  .page-header--default {
-    margin-bottom: var(--space-lg);
-  }
-
-  .page-header__title {
-    font-size: 28px;
-  }
-
-  .page-header--default .page-header__title {
-    font-size: 24px;
-  }
-
-  .page-header__subtitle {
-    font-size: 12px;
   }
 }

@@ -12,6 +12,7 @@ import { OnboardingWizard } from './onboarding/OnboardingWizard';
 import { OnboardingState } from './onboarding/types';
 import { generateTempId } from './onboarding/defaultAccounts';
 import { LoadingSpinner } from '../../shared/components';
+import { PageHeader } from '@finans/components';
 import { snapshotApi } from '@/shared/api/services';
 import './OnboardingPage.css';
 
@@ -160,12 +161,10 @@ export default function EconomyPage() {
       </header>
 
       <main className="onboarding-page__main">
-        <div className="onboarding-page__intro">
-          <h2 className="onboarding-page__title">Min økonomi</h2>
-          <p className="onboarding-page__subtitle">
-            Oppdater din profil og kontoer
-          </p>
-        </div>
+        <PageHeader
+          title="Min økonomi"
+          subtitle="Oppdater din profil og kontoer"
+        />
 
         <OnboardingWizard
           mode="edit"

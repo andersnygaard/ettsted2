@@ -8,29 +8,14 @@
   width: 100%;
 }
 
-.step-accounts__header {
+.step-accounts .page-header {
+  padding-bottom: var(--space-lg);
+}
+
+.step-accounts__note {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-lg) 0;
+  font-style: italic;
   text-align: center;
-  margin-bottom: 32px;
-}
-
-.step-accounts__title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 28px;
-  font-weight: 300;
-  color: var(--charcoal, #2C2C2C);
-  margin: 0 0 8px 0;
-}
-
-.step-accounts__subtitle {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  color: var(--text-secondary, #6B6B6B);
-  margin: 0;
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-  .step-accounts__title {
-    font-size: 24px;
-  }
 }

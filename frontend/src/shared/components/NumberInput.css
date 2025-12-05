@@ -44,7 +44,7 @@
   color: var(--charcoal);
   background: transparent;
   border: none;
-  border-bottom: 2px solid var(--border);
+  border-bottom: var(--border-subtle);
   padding: var(--space-sm) 0;
   outline: none;
   transition: border-color var(--transition-fast);

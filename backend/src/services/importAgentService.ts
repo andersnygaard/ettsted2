@@ -46,9 +46,14 @@ const openai = new OpenAI({
 const MAX_ITERATIONS = 20;
 
 /**
- * System prompt for the import agent
+ * Build system prompt with user's preloaded accounts
  */
-const SYSTEM_PROMPT = `You are a portfolio data import assistant for a Norwegian finance app called Finans.
+function buildSystemPrompt(accounts: AccountConfig[]): string {
+  const accountsList = accounts
+    .map((a) => `  - ${a.name} (${a.category})`)
+    .join('\n');
+
+  return `You are a portfolio data import assistant for a Norwegian finance app called Finans.
 SPEAK NORWEGIAN. All responses must be in Norwegian.
 
 GUARDRAILS - STRICT BOUNDARIES:
@@ -68,14 +73,25 @@ PARSING RULES:
 4. "kr -" or "-" = 0 or no value
 5. Asset classes: aksjer, fond, krypto, bankkonto, lån, pensjon
 
+USER'S CONFIGURED ACCOUNTS:
+${accountsList || '  (No accounts configured yet)'}
+
+ACCOUNT MATCHING RULES:
+1. Match case-insensitively ("nordnet" = "Nordnet ASK")
+2. Match partial names ("Aksjer" matches "Nordnet Aksjer", "Nordnet" alone matches "Nordnet ASK")
+3. If user pastes MORE columns than accounts, ask which columns to ignore or skip
+4. If user pastes FEWER columns, proceed with available data
+5. When unsure about matching, list the options and ask user to confirm mapping
+6. Use get_user_accounts tool ONLY if user adds new accounts during conversation (edge case)
+
 WORKFLOW - ALWAYS FOLLOW THIS ORDER:
 1. When user pastes data, FIRST analyze it WITHOUT importing:
-   - Call get_user_accounts to see configured accounts
    - Parse the data to identify: dates, account columns, values
+   - Try to match columns to configured accounts using fuzzy matching rules above
    - Present a summary to the user in Norwegian:
      "Jeg fant følgende i dataene dine:
       📅 Datoer: [first] til [last] ([count] måneder)
-      📊 Kontoer: [list account names found]
+      📊 Kontoer: [list account names found with matching results]
 
       Vil du importere alle disse? Skriv 'ja' for å fortsette, eller fortell meg hvilke kontoer du vil ha med."
 
@@ -89,6 +105,7 @@ WORKFLOW - ALWAYS FOLLOW THIS ORDER:
 4. If user wants specific accounts only, filter and import only those.
 
 IMPORTANT: Never import without asking first. Always present what you found and wait for confirmation.`;
+}
 
 /**
  * Tool definitions for OpenAI function calling
@@ -439,9 +456,28 @@ export async function runImportAgent(
     actions,
   };
 
-  // Build initial messages
+  // Fetch user accounts for preloading in system prompt
+  let userAccounts: AccountConfig[] = [];
+  try {
+    const user = await getUserById(userId);
+    userAccounts = user?.accounts || [];
+    logger.info('Preloaded user accounts for import agent', {
+      userId,
+      accountCount: userAccounts.length,
+    });
+  } catch (error) {
+    logger.warn('Failed to preload user accounts', {
+      userId,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    // Continue without preloaded accounts - agent can call get_user_accounts
+    userAccounts = [];
+  }
+
+  // Build initial messages with preloaded accounts
+  const systemPrompt = buildSystemPrompt(userAccounts);
   const messages: OpenAI.ChatCompletionMessageParam[] = [
-    { role: 'system', content: SYSTEM_PROMPT },
+    { role: 'system', content: systemPrompt },
     ...conversationHistory,
     { role: 'user', content: userMessage },
   ];
@@ -449,9 +485,10 @@ export async function runImportAgent(
   logger.info('Starting import agent', {
     userId,
     messageLength: userMessage.length,
+    preloadedAccounts: userAccounts.length,
   });
 
-  logEventToParent(trace, 'agent-start', { messageLength: userMessage.length });
+  logEventToParent(trace, 'agent-start', { messageLength: userMessage.length, preloadedAccounts: userAccounts.length });
 
   try {
     let iteration = 0;

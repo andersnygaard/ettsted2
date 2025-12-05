@@ -6,6 +6,7 @@
 .calc-card {
   background: var(--warm-white);
   padding: 40px;
+  border: var(--border-subtle);
   border-radius: var(--radius-sm);
   text-decoration: none;
   color: inherit;

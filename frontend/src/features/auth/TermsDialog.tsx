@@ -81,7 +81,7 @@ function TermsContent() {
       <p>Finans forbeholder seg retten til å endre disse vilkårene når som helst. Fortsatt bruk av tjenesten etter endringer betyr at du godtar de nye vilkårene.</p>
 
       <h3>7. Slettelse av konto</h3>
-      <p>Du kan når som helst be om å få slettet kontoen din og all tilhørende data. Ta kontakt med støtte for å initialisere denne prosessen.</p>
+      <p>Du kan når som helst slette kontoen din og all tilhørende data. Gå til Min økonomi i avatarmenyen og velg "Slett konto". All data vil bli permanent fjernet.</p>
     </div>
   );
 }
@@ -121,13 +121,16 @@ function PrivacyContent() {
         <li>Be om innsyn i hvilke data vi lagrer om deg</li>
       </ul>
 
-      <h3>5. Cookies</h3>
+      <h3>5. Sletting av konto</h3>
+      <p>Du har rett til å slette kontoen din og alle tilhørende data når som helst. Gå til avatarmenyen, velg "Slett konto", og følg instruksjonene. All data vil bli permanent fjernet fra serverne våre.</p>
+
+      <h3>6. Cookies</h3>
       <p>Vi bruker cookies til autentisering og sesjonshåndtering. OAuth-provideren (Google/Facebook) kan også bruke cookies.</p>
 
-      <h3>6. Kontakt</h3>
+      <h3>7. Kontakt</h3>
       <p>Hvis du har spørsmål om personvernet eller ønsker å bruke rettighetene dine, ta kontakt med oss.</p>
 
-      <h3>7. Endringer av personvernerklæring</h3>
+      <h3>8. Endringer av personvernerklæring</h3>
       <p>Finans forbeholder seg retten til å oppdatere denne erklæringen. Vi vil varsle brukere om vesentlige endringer.</p>
     </div>
   );

@@ -25,6 +25,7 @@
 .breakdown-card {
   background: var(--warm-white);
   padding: var(--space-lg);
+  border: var(--border-subtle);
   border-radius: 2px;
   text-align: center;
   animation: fadeUp 0.5s ease forwards;

@@ -109,7 +109,7 @@ test.describe('Navigation - Breadcrumbs', () => {
   });
 
   test('calculator pages have breadcrumb navigation', async ({ page }) => {
-    await page.goto('/kalkulatorer/compound');
+    await page.goto('/kalkulatorer/rentes-rente');
 
     // Look for breadcrumb
     const breadcrumb = page.locator('[class*="breadcrumb"]');

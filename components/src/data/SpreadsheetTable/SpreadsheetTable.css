@@ -84,6 +84,7 @@
   left: 0;
   z-index: 20;
   border-right: 2px solid var(--border-strong);
+  width: 100px;
 }
 
 .spreadsheet .group-header-row th.date-header:hover {
@@ -149,7 +150,7 @@
    ======================================== */
 
 .spreadsheet td {
-  padding: 12px 16px;
+  padding: 0px 8px;
   text-align: right;
   border-bottom: 1px solid var(--border);
   font-family: 'JetBrains Mono', monospace;
@@ -320,16 +321,16 @@
 }
 
 .delete-button {
-  display: none;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: unset;
   font-size: 16px;
   line-height: 1;
   border-radius: 2px;
   transition: background 0.15s ease, opacity 0.15s ease;
-  opacity: 0.6;
+  opacity: 0;
+  visibility: hidden;
   color: var(--negative);
 }
 
@@ -343,7 +344,8 @@
 }
 
 .spreadsheet tr:hover .delete-button {
-  display: block;
+  opacity: 0.6;
+  visibility: visible;
 }
 
 /* ========================================

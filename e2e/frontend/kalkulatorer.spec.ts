@@ -30,13 +30,13 @@ test.describe('Kalkulatorer - Sub-pages', () => {
   });
 
   test('Loan calculator loads', async ({ page }) => {
-    await page.goto('/kalkulatorer/loan');
-    await expect(page).toHaveURL(/.*loan/);
+    await page.goto('/kalkulatorer/lan');
+    await expect(page).toHaveURL(/.*lan/);
   });
 
   test('Compound calculator loads', async ({ page }) => {
-    await page.goto('/kalkulatorer/compound');
-    await expect(page).toHaveURL(/.*compound/);
+    await page.goto('/kalkulatorer/rentes-rente');
+    await expect(page).toHaveURL(/.*rentes-rente/);
   });
 
   test('F.I.R.E. calculator loads', async ({ page }) => {
@@ -53,7 +53,7 @@ test.describe('Kalkulatorer - Sub-pages', () => {
 test.describe('Compound Calculator - Form Interaction', () => {
   test.beforeEach(async ({ page }) => {
     await loginAsDemo(page);
-    await page.goto('/kalkulatorer/compound');
+    await page.goto('/kalkulatorer/rentes-rente');
   });
 
   test('displays input fields for compound calculator', async ({ page }) => {
@@ -135,12 +135,12 @@ test.describe('FIRE Calculator - Form Interaction', () => {
 test.describe('Loan Calculator - Form Interaction', () => {
   test.beforeEach(async ({ page }) => {
     await loginAsDemo(page);
-    await page.goto('/kalkulatorer/loan');
+    await page.goto('/kalkulatorer/lan');
   });
 
   test('loan calculator page loads', async ({ page }) => {
     // Verify loan calculator loads
-    await expect(page).toHaveURL(/.*loan/);
+    await expect(page).toHaveURL(/.*lan/);
 
     // Verify main heading
     const heading = page.locator('h1, h2').first();

@@ -11,8 +11,10 @@ import { Request, Response } from 'express';
 import {
   getUserById,
   createUser,
-  updateUser as updateUserService
+  updateUser as updateUserService,
+  deleteUser
 } from '../services/userService';
+import { deleteAllSnapshotsForUser } from '../services/portfolioService';
 import { logger } from '../utils/logger';
 
 /**
@@ -207,6 +209,72 @@ export async function updateUser(req: Request, res: Response): Promise<void> {
     res.status(500).json({
       error: {
         message: 'Failed to update user profile',
+        code: 'INTERNAL_SERVER_ERROR'
+      },
+      success: false
+    });
+  }
+}
+
+/**
+ * Delete user account and all associated data
+ *
+ * DELETE /api/v1/users/me
+ *
+ * GDPR compliant account deletion. Deletes:
+ * 1. All snapshots from portfolios container
+ * 2. User document from users container
+ *
+ * This is irreversible and should be used with caution.
+ *
+ * @param req - Express request
+ * @param res - Express response
+ *
+ * @returns 200 with success message, or 404 if user not found
+ */
+export async function deleteMe(req: Request, res: Response): Promise<void> {
+  try {
+    const userId = req.user!.userId;
+
+    logger.info('User deletion initiated', { userId });
+
+    // Check if user exists
+    const existingUser = await getUserById(userId);
+    if (!existingUser) {
+      logger.warn('User deletion attempted but user not found', { userId });
+      res.status(404).json({
+        error: {
+          message: 'User not found',
+          code: 'NOT_FOUND'
+        },
+        success: false
+      });
+      return;
+    }
+
+    // Delete all snapshots for user
+    const snapshotsDeleted = await deleteAllSnapshotsForUser(userId);
+    logger.info('Snapshots deleted during user deletion', { userId, count: snapshotsDeleted });
+
+    // Delete user document
+    await deleteUser(userId);
+    logger.warn('User account deleted', { userId, snapshotCount: snapshotsDeleted });
+
+    res.status(200).json({
+      data: {
+        message: 'Bruker slettet'
+      },
+      success: true
+    });
+  } catch (error) {
+    logger.error('Error deleting user account', {
+      userId: req.user!.userId,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+
+    res.status(500).json({
+      error: {
+        message: 'Failed to delete user account',
         code: 'INTERNAL_SERVER_ERROR'
       },
       success: false

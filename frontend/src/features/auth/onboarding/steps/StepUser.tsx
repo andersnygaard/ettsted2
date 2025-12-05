@@ -6,7 +6,7 @@
  * - Profile: Monthly salary, Annual expenses, Birth year, Retirement age, F.I.R.E. number
  */
 
-import { NumberInput } from '@finans/components';
+import { NumberInput, Card, PageHeader } from '@finans/components';
 import { OnboardingUserInfo, OnboardingProfile } from '../types';
 import './StepUser.css';
 
@@ -37,14 +37,14 @@ export function StepUser({
 
   return (
     <div className="step-user">
-      <div className="step-user__header">
-        <h2 className="step-user__title">Brukerinformasjon</h2>
-        <p className="step-user__subtitle">
-          Fortell oss litt om deg selv for å komme i gang
-        </p>
-      </div>
+      <PageHeader
+        title="Brukerinformasjon"
+        subtitle="Fortell oss litt om deg selv for å komme i gang"
+        reduced={true}
+      />
 
-      <div className="step-user__form">
+      <Card className="step-user__card">
+        <div className="step-user__form">
         {/* Nickname */}
         <div className="step-user__field">
           <label htmlFor="nickname" className="step-user__label">
@@ -171,7 +171,8 @@ export function StepUser({
             {defaultFireNumber && ` = ${defaultFireNumber.toLocaleString('nb-NO')} kr`}
           </span>
         </div>
-      </div>
+        </div>
+      </Card>
     </div>
   );
 }

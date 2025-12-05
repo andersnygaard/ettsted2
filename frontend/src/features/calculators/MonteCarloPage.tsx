@@ -59,6 +59,8 @@ function MonteCarloPage() {
     simulations: 1000,
   });
 
+  const [submittedYears, setSubmittedYears] = useState<number | null>(null);
+
   const { mutate, data: result, isPending, error } = useMutation({
     mutationFn: runMonteCarloSimulation,
   });
@@ -74,6 +76,7 @@ function MonteCarloPage() {
   };
 
   const handleRunSimulation = () => {
+    setSubmittedYears(inputs.years);
     mutate(inputs);
   };
 
@@ -199,7 +202,7 @@ function MonteCarloPage() {
                 p75: result.percentile75,
                 p90: result.percentile90,
               }}
-              years={inputs.years}
+              years={submittedYears || inputs.years}
             />
           </div>
         )}

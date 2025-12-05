@@ -12,7 +12,7 @@
 
 .app-layout > main {
   flex: 1;
-  padding: var(--space-xl) 0 var(--space-5xl); /* 24px top, 64px bottom */
+  padding: var(--space-xl) 0 var(--space-2xl); /* 24px top, 64px bottom */
 }
 
 /* Responsive padding */

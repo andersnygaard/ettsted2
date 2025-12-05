@@ -512,6 +512,30 @@ export const Empty: Story = {
 9. **Accessibility**: Test keyboard navigation and screen reader behavior
 10. **Norwegian Context**: Use Norwegian text in stories to match production UI
 
+## CSS Scoping
+
+Always scope page-level CSS to avoid collisions with component library classes.
+
+**Problem**: Unscoped selectors in page CSS override component styles globally.
+
+```css
+/* BAD - leaks globally, overrides component library */
+.page-header {
+  margin-bottom: 64px;
+}
+
+/* GOOD - scoped to page */
+.dashboard-page .page-header {
+  margin-bottom: 64px;
+}
+```
+
+**Rules**:
+- Component library classes (in `/components`) define the base styles
+- Page-level CSS should scope selectors to their parent container
+- Use BEM naming (`.block__element--modifier`) to reduce collision risk
+- When debugging unexpected styles, check for unscoped selectors in page CSS
+
 ## Story Organization
 
 ```typescript

@@ -159,6 +159,7 @@
 .landing-feature-card {
   background: var(--warm-white);
   padding: var(--space-3xl);
+  border: var(--border-subtle);
   border-radius: var(--radius-sm);
   text-align: left;
   transition: transform var(--transition-fast), box-shadow var(--transition-fast);
@@ -208,6 +209,7 @@
   padding: var(--space-6xl) var(--space-4xl);
   text-align: center;
   background: var(--warm-white);
+  border: var(--border-subtle);
 }
 
 .landing-cta__title {

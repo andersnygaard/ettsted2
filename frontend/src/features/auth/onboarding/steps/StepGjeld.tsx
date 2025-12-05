@@ -6,6 +6,7 @@
 
 import { OnboardingAccount } from '../types';
 import { AccountsList } from './AccountsList';
+import { PageHeader } from '@finans/components';
 import './StepAccounts.css';
 
 interface StepGjeldProps {
@@ -30,12 +31,14 @@ export function StepGjeld({
 }: StepGjeldProps) {
   return (
     <div className="step-accounts">
-      <div className="step-accounts__header">
-        <h2 className="step-accounts__title">Gjeld</h2>
-        <p className="step-accounts__subtitle">
-          Legg inn dine lån og gjeld
-        </p>
-      </div>
+      <PageHeader
+        title="Gjeld"
+        subtitle="Legg inn dine lån og gjeld"
+        reduced={true}
+      />
+      <p className="step-accounts__note">
+        Du kan legge inn negative verdier (f.eks. -500 000), som vil bli lagret som positive tall
+      </p>
 
       <AccountsList
         category="gjeld"

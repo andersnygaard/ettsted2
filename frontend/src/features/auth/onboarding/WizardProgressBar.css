@@ -66,6 +66,7 @@
   border-color: var(--charcoal, #2C2C2C);
   background-color: var(--charcoal, #2C2C2C);
   color: var(--warm-white, #FDFCFA);
+  opacity: 1;
 }
 
 .wizard-progress__step--completed {

@@ -34,37 +34,13 @@
   padding: 2rem 1rem;
 }
 
-.onboarding-page__intro {
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.onboarding-page__title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 2rem;
-  font-weight: 400;
-  color: var(--charcoal, #2C2C2C);
-  margin: 0 0 0.5rem 0;
-}
-
-.onboarding-page__subtitle {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 1rem;
-  color: var(--text-secondary, #6B6B6B);
-  margin: 0;
+.onboarding-page__main > .page-header {
+  padding: var(--space-md) 0;
 }
 
 /* Responsive */
 @media (max-width: 480px) {
   .onboarding-page__header {
     padding: 1rem;
-  }
-
-  .onboarding-page__title {
-    font-size: 1.5rem;
-  }
-
-  .onboarding-page__subtitle {
-    font-size: 0.9375rem;
   }
 }

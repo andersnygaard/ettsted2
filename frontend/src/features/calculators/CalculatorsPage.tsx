@@ -1,4 +1,4 @@
-import { PageHeader, CalculatorCard } from '@finans/components';
+import { PageHeader, CalculatorCard, Breadcrumb } from '@finans/components';
 import './CalculatorsPage.css';
 
 /**
@@ -10,7 +10,7 @@ const calculators = [
     icon: '📈',
     title: 'Renters rente',
     description: 'Se hvordan sparingen din vokser over tid med compound interest.',
-    href: '/kalkulatorer/compound',
+    href: '/kalkulatorer/rentes-rente',
     iconBg: 'rgba(139, 154, 125, 0.15)', // Muted sage
   },
   {
@@ -24,7 +24,7 @@ const calculators = [
     icon: '🏠',
     title: 'Lånekalkulator',
     description: 'Beregn månedlige avdrag og total rentekostnad på lån.',
-    href: '/kalkulatorer/loan',
+    href: '/kalkulatorer/lan',
     iconBg: 'rgba(196, 164, 132, 0.2)', // Soft terracotta
   },
   {
@@ -48,6 +48,13 @@ function CalculatorsPage() {
   return (
     <main className="calculators-page">
       <div className="container container--narrow">
+        <Breadcrumb
+          items={[
+            { label: 'Hjem', path: '/dashboard' },
+            { label: 'Kalkulatorer' },
+          ]}
+        />
+
         <PageHeader
           title="Kalkulatorer"
           subtitle="Verktøy for å planlegge din økonomi"

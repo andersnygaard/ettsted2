@@ -4,8 +4,8 @@
  */
 
 .container {
-  margin: 0 auto;
-  padding: 0 48px;
+  margin: 0;
+  padding: 0;
 }
 
 /* Default variant: 1200px (dashboard, overview pages) */

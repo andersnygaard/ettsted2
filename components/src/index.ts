@@ -79,14 +79,14 @@ export { DonutChart } from './charts/DonutChart'
 export type { DonutChartProps } from './charts/DonutChart'
 
 // Layout Components
-export { PageHeader } from './layout/PageHeader'
-export type { PageHeaderProps } from './layout/PageHeader'
-
 export { SectionLink } from './layout/SectionLink'
 export type { SectionLinkProps } from './layout/SectionLink'
 
 export { CalculatorCard } from './layout/CalculatorCard'
 export type { CalculatorCardProps } from './layout/CalculatorCard'
+
+export { PageHeader } from './layout/PageHeader/PageHeader'
+export type { PageHeaderProps } from './layout/PageHeader/PageHeader'
 
 // System Components
 export { ToastProvider, useToast } from './system/Toast'

@@ -15,6 +15,14 @@
   padding: 0 40px;
 }
 
+/* Page actions */
+.portfolio-page__actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-2xl);
+}
+
 /* Table container */
 .portfolio-page .table-container {
   background: var(--warm-white);

@@ -87,6 +87,9 @@ export const WithContent: Story = {
 };
 
 export const ResponsiveComparison: Story = {
+  args: {
+    children: <div>Responsive Comparison</div>,
+  },
   render: () => (
     <div>
       <div style={{ background: '#F5F2ED', padding: '32px 0', marginBottom: '32px' }}>

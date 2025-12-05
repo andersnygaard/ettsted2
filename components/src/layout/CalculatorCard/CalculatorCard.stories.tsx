@@ -68,6 +68,12 @@ export const WithCustomBackground: Story = {
 };
 
 export const TwoByTwoGrid: Story = {
+  args: {
+    icon: '📈',
+    title: '2x2 Grid',
+    description: 'Grid layout demo',
+    href: '/calculators',
+  },
   render: () => (
     <BrowserRouter>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px', maxWidth: '600px' }}>

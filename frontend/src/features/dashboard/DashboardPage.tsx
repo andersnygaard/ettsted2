@@ -2,6 +2,7 @@ import { useAuth } from '../auth/useAuth';
 import { formatCurrency } from '../../shared/utils/numberFormat';
 import { Link } from 'react-router-dom';
 import { useDashboardData } from './useDashboardData';
+import { PageHeader } from '@finans/components';
 import './DashboardPage.css';
 
 function DashboardPage() {
@@ -34,9 +35,9 @@ function DashboardPage() {
     year: 'numeric',
   });
 
-  const milestoneProgress = Math.min(
-    (data.currentTowardsMilestone / data.nextMilestone) * 100,
-    100
+  const milestoneProgress = Math.max(
+    0,
+    Math.min((data.currentTowardsMilestone / data.nextMilestone) * 100, 100)
   );
   const milestoneRemaining = Math.max(
     data.nextMilestone - data.currentTowardsMilestone,
@@ -47,10 +48,7 @@ function DashboardPage() {
   if (isLoading) {
     return (
       <div className="dashboard-page">
-        <div className="page-header">
-          <h1 className="page-title">God morgen, {firstName}</h1>
-          <p className="page-subtitle">Laster...</p>
-        </div>
+        <PageHeader title={`God morgen, ${firstName}`} subtitle="Laster..." />
       </div>
     );
   }
@@ -58,21 +56,14 @@ function DashboardPage() {
   if (error) {
     return (
       <div className="dashboard-page">
-        <div className="page-header">
-          <h1 className="page-title">God morgen, {firstName}</h1>
-          <p className="page-subtitle">Feil ved lasting av data</p>
-        </div>
+        <PageHeader title={`God morgen, ${firstName}`} subtitle="Feil ved lasting av data" />
       </div>
     );
   }
 
   return (
     <div className="dashboard-page">
-      {/* Page Header */}
-      <div className="page-header">
-        <h1 className="page-title">God morgen, {firstName}</h1>
-        <p className="page-subtitle">{monthYear}</p>
-      </div>
+      <PageHeader title={`God morgen, ${firstName}`} subtitle={monthYear} />
 
       {/* Hero Section - Net Worth */}
       <div className="hero-section">

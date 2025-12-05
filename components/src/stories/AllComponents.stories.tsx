@@ -28,7 +28,6 @@ import { DonutChart } from '../charts/DonutChart';
 
 // Layout Components
 import { Container } from '../layout/Container';
-import { PageHeader } from '../layout/PageHeader';
 import { SectionLink } from '../layout/SectionLink';
 import { CalculatorCard } from '../layout/CalculatorCard';
 
@@ -56,21 +55,21 @@ type Story = StoryObj<typeof meta>;
 
 // Mock data for charts
 const chartData = [
-  { date: 'Jan', value: 450000 },
-  { date: 'Feb', value: 465000 },
-  { date: 'Mar', value: 478000 },
-  { date: 'Apr', value: 492000 },
-  { date: 'May', value: 510000 },
-  { date: 'Jun', value: 525000 },
+  { date: new Date(2024, 0, 1), value: 450000 },
+  { date: new Date(2024, 1, 1), value: 465000 },
+  { date: new Date(2024, 2, 1), value: 478000 },
+  { date: new Date(2024, 3, 1), value: 492000 },
+  { date: new Date(2024, 4, 1), value: 510000 },
+  { date: new Date(2024, 5, 1), value: 525000 },
 ];
 
 const stackedChartData = [
-  { date: 'Jan', sparing: 400000, gjeld: -450000, pensjon: 100000 },
-  { date: 'Feb', sparing: 420000, gjeld: -440000, pensjon: 105000 },
-  { date: 'Mar', sparing: 445000, gjeld: -430000, pensjon: 110000 },
-  { date: 'Apr', sparing: 470000, gjeld: -420000, pensjon: 115000 },
-  { date: 'May', sparing: 495000, gjeld: -410000, pensjon: 120000 },
-  { date: 'Jun', sparing: 520000, gjeld: -400000, pensjon: 125000 },
+  { date: new Date(2024, 0, 1), sparing: 400000, pensjon: 100000 },
+  { date: new Date(2024, 1, 1), sparing: 420000, pensjon: 105000 },
+  { date: new Date(2024, 2, 1), sparing: 445000, pensjon: 110000 },
+  { date: new Date(2024, 3, 1), sparing: 470000, pensjon: 115000 },
+  { date: new Date(2024, 4, 1), sparing: 495000, pensjon: 120000 },
+  { date: new Date(2024, 5, 1), sparing: 520000, pensjon: 125000 },
 ];
 
 // Mock table data
@@ -104,17 +103,17 @@ const tableData = [
 
 // Toast Demo Component
 function ToastDemo() {
-  const { addToast } = useToast();
+  const { showToast } = useToast();
 
   return (
     <div className="demo-toast-buttons">
-      <Button onClick={() => addToast('Endringer lagret', 'success')}>
+      <Button onClick={() => showToast('Endringer lagret', 'success')}>
         Success Toast
       </Button>
-      <Button variant="secondary" onClick={() => addToast('Vennligst sjekk feltene', 'warning')}>
+      <Button variant="secondary" onClick={() => showToast('Vennligst sjekk feltene', 'warning')}>
         Warning Toast
       </Button>
-      <Button variant="secondary" onClick={() => addToast('Kunne ikke lagre', 'error')}>
+      <Button variant="secondary" onClick={() => showToast('Kunne ikke lagre', 'error')}>
         Error Toast
       </Button>
     </div>
@@ -137,17 +136,15 @@ export const KitchenSink: Story = {
           <div className="demo-grid demo-grid--2">
             <div className="demo-card">
               <h3>PageHeader</h3>
-              <PageHeader
-                title="Oversikt"
-                subtitle="Din finansielle status"
-              />
+              <h1 style={{ fontFamily: "Cormorant Garamond", fontWeight: 300, margin: 0 }}>Oversikt</h1>
+              <p style={{ color: "var(--text-secondary)", margin: "4px 0 0" }}>Din finansielle status</p>
             </div>
             <div className="demo-card">
               <h3>Breadcrumb</h3>
               <Breadcrumb
                 items={[
-                  { label: 'Hjem', href: '/' },
-                  { label: 'Portefølje', href: '/portfolio' },
+                  { label: 'Hjem', path: '/' },
+                  { label: 'Portefølje', path: '/portfolio' },
                   { label: 'November 2024' },
                 ]}
               />
@@ -157,17 +154,17 @@ export const KitchenSink: Story = {
           <div className="demo-grid demo-grid--3">
             <SectionLink
               title="Portefølje"
-              description="Se din totale formue"
+              subtitle="Se din totale formue"
               href="/portfolio"
             />
             <SectionLink
               title="Kalkulatorer"
-              description="Planlegg din fremtid"
+              subtitle="Planlegg din fremtid"
               href="/calculators"
             />
             <SectionLink
               title="Sparing"
-              description="F.I.R.E. fremgang"
+              subtitle="F.I.R.E. fremgang"
               href="/sparing"
             />
           </div>
@@ -195,10 +192,9 @@ export const KitchenSink: Story = {
 
           <div className="demo-grid demo-grid--1">
             <MilestoneCard
-              title="Neste milepæl"
+              label="Neste milepæl"
               target={1500000}
               current={1234567}
-              unit="kr"
             />
           </div>
 
@@ -222,8 +218,6 @@ export const KitchenSink: Story = {
               <h3>AreaChart</h3>
               <AreaChart
                 data={chartData}
-                xKey="date"
-                yKey="value"
                 height={200}
                 color="var(--muted-sage)"
               />
@@ -244,7 +238,6 @@ export const KitchenSink: Story = {
             <h3>StackedAreaChart</h3>
             <StackedAreaChart
               data={stackedChartData}
-              xKey="date"
               series={[
                 { key: 'sparing', label: 'Sparing', color: 'var(--muted-sage)' },
                 { key: 'pensjon', label: 'Pensjon', color: 'var(--pale-blue)' },
@@ -261,7 +254,9 @@ export const KitchenSink: Story = {
           <div className="demo-card">
             <TableHeader
               title="Månedlig historikk"
-              yearFilter={{ years: [2024, 2023, 2022], selected: 2024, onChange: () => {} }}
+              years={[2024, 2023, 2022]}
+              selectedYear={2024}
+              onYearChange={() => {}}
               searchValue=""
               onSearchChange={() => {}}
             />
@@ -272,10 +267,10 @@ export const KitchenSink: Story = {
               rowIdKey="id"
             />
             <TableFooter
-              currentPage={1}
+              page={1}
               totalPages={3}
-              itemsShown={3}
-              totalItems={24}
+              showing={3}
+              total={24}
               onPageChange={() => {}}
               columnToggles={[]}
               onToggleColumn={() => {}}
@@ -301,7 +296,7 @@ export const KitchenSink: Story = {
               <h3>DateInput</h3>
               <DateInput
                 label="Dato"
-                value="01.06.2024"
+                value={new Date(2024, 5, 1)}
                 onChange={() => {}}
               />
             </div>
@@ -326,10 +321,10 @@ export const KitchenSink: Story = {
               />
             </div>
             <div className="demo-card">
-              <h3>ProgressBar (Success)</h3>
+              <h3>ProgressBar (Gold)</h3>
               <ProgressBar
                 value={100}
-                variant="success"
+                variant="gold"
                 leftLabel="Fullført!"
               />
             </div>
@@ -443,21 +438,21 @@ export const KitchenSink: Story = {
         <section className="demo-section">
           <h2 className="demo-section__title">Container Widths</h2>
 
-          <Container maxWidth="wide">
+          <Container width="wide">
             <div className="demo-container-box">
-              <code>wide (1200px)</code>
+              <code>wide</code>
             </div>
           </Container>
 
-          <Container maxWidth="narrow">
+          <Container width="default">
             <div className="demo-container-box">
-              <code>narrow (900px)</code>
+              <code>default</code>
             </div>
           </Container>
 
-          <Container maxWidth="xs">
+          <Container width="narrow">
             <div className="demo-container-box">
-              <code>xs (480px)</code>
+              <code>narrow</code>
             </div>
           </Container>
         </section>
@@ -474,11 +469,9 @@ export const KitchenSink: Story = {
 export const DashboardLayout: Story = {
   render: () => (
     <div className="demo-page demo-page--dashboard">
-      <Container maxWidth="wide">
-        <PageHeader
-          title="God morgen, Anders"
-          subtitle="November 2024"
-        />
+      <Container width="wide">
+        <h1 style={{ fontFamily: "Cormorant Garamond", fontWeight: 300, margin: 0 }}>God morgen, Anders</h1>
+        <p style={{ color: "var(--text-secondary)", margin: "4px 0 0" }}>November 2024</p>
 
         <div className="demo-hero">
           <HeroNumber
@@ -498,27 +491,26 @@ export const DashboardLayout: Story = {
 
         <div className="demo-grid demo-grid--1" style={{ marginTop: 32 }}>
           <MilestoneCard
-            title="Neste milepæl"
+            label="Neste milepæl"
             target={1500000}
             current={1234567}
-            unit="kr"
           />
         </div>
 
         <div className="demo-grid demo-grid--3" style={{ marginTop: 32 }}>
           <SectionLink
             title="Portefølje"
-            description="Detaljert oversikt over alle kontoer"
+            subtitle="Detaljert oversikt over alle kontoer"
             href="/portfolio"
           />
           <SectionLink
             title="Sparing & F.I.R.E."
-            description="Din vei mot økonomisk frihet"
+            subtitle="Din vei mot økonomisk frihet"
             href="/sparing"
           />
           <SectionLink
             title="Kalkulatorer"
-            description="Planlegg din finansielle fremtid"
+            subtitle="Planlegg din finansielle fremtid"
             href="/calculators"
           />
         </div>
@@ -536,11 +528,9 @@ export const FormsLayout: Story = {
   render: () => (
     <ToastProvider>
       <div className="demo-page">
-        <Container maxWidth="narrow">
-          <PageHeader
-            title="Min informasjon"
-            subtitle="Oppdater din profil og innstillinger"
-          />
+        <Container width="narrow">
+          <h1 style={{ fontFamily: "Cormorant Garamond", fontWeight: 300, margin: 0 }}>Min informasjon</h1>
+          <p style={{ color: "var(--text-secondary)", margin: "4px 0 0" }}>Oppdater din profil og innstillinger</p>
 
           <Card>
             <div className="demo-form">

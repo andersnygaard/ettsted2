@@ -91,6 +91,7 @@ const ToastDemo: React.FC<{ autoShow?: boolean; toastType?: 'success' | 'error' 
  * Success Toast Story
  */
 export const SuccessToast: Story = {
+  args: { children: null },
   render: () => (
     <ToastProvider>
       <ToastDemo autoShow toastType="success" />
@@ -102,6 +103,7 @@ export const SuccessToast: Story = {
  * Error Toast Story
  */
 export const ErrorToast: Story = {
+  args: { children: null },
   render: () => (
     <ToastProvider>
       <ToastDemo autoShow toastType="error" />
@@ -113,6 +115,7 @@ export const ErrorToast: Story = {
  * Warning Toast Story
  */
 export const WarningToast: Story = {
+  args: { children: null },
   render: () => (
     <ToastProvider>
       <ToastDemo autoShow toastType="warning" />
@@ -124,6 +127,7 @@ export const WarningToast: Story = {
  * Info Toast Story
  */
 export const InfoToast: Story = {
+  args: { children: null },
   render: () => (
     <ToastProvider>
       <ToastDemo autoShow toastType="info" />
@@ -157,6 +161,7 @@ const MultipleToastsDemo: React.FC = () => {
 };
 
 export const MultipleToasts: Story = {
+  args: { children: null },
   render: () => (
     <ToastProvider>
       <MultipleToastsDemo />
@@ -187,6 +192,7 @@ const ManualDismissDemo: React.FC = () => {
 };
 
 export const ManualDismiss: Story = {
+  args: { children: null },
   render: () => (
     <ToastProvider>
       <ManualDismissDemo />
@@ -198,6 +204,7 @@ export const ManualDismiss: Story = {
  * Interactive Demo
  */
 export const Interactive: Story = {
+  args: { children: null },
   render: () => (
     <ToastProvider>
       <ToastDemo />

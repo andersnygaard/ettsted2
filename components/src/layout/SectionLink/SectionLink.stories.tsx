@@ -46,6 +46,11 @@ export const Gjeld: Story = {
 };
 
 export const GridLayout: Story = {
+  args: {
+    title: 'Grid Layout',
+    subtitle: 'Multiple cards',
+    href: '/grid',
+  },
   render: () => (
     <BrowserRouter>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>

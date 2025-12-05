@@ -6,6 +6,7 @@
 
 import { OnboardingAccount } from '../types';
 import { AccountsList } from './AccountsList';
+import { PageHeader } from '@finans/components';
 import './StepAccounts.css';
 
 interface StepSparingProps {
@@ -30,12 +31,11 @@ export function StepSparing({
 }: StepSparingProps) {
   return (
     <div className="step-accounts">
-      <div className="step-accounts__header">
-        <h2 className="step-accounts__title">Sparing</h2>
-        <p className="step-accounts__subtitle">
-          Legg inn dine sparekontoer og investeringer
-        </p>
-      </div>
+      <PageHeader
+        title="Sparing"
+        subtitle="Legg inn dine sparekontoer og investeringer"
+        reduced={true}
+      />
 
       <AccountsList
         category="sparing"

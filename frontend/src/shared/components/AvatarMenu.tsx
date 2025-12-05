@@ -6,6 +6,7 @@ export interface AvatarMenuProps {
   initials: string;
   onEconomyClick: () => void;
   onLogout: () => void;
+  onDeleteAccount?: () => void;
 }
 
 /**
@@ -14,7 +15,7 @@ export interface AvatarMenuProps {
  * Shows user avatar with a dropdown menu containing economy setup and logout options.
  * Menu closes on outside click or Escape key.
  */
-export function AvatarMenu({ initials, onEconomyClick, onLogout }: AvatarMenuProps) {
+export function AvatarMenu({ initials, onEconomyClick, onLogout, onDeleteAccount }: AvatarMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -57,6 +58,11 @@ export function AvatarMenu({ initials, onEconomyClick, onLogout }: AvatarMenuPro
     onLogout();
   };
 
+  const handleDeleteClick = () => {
+    setIsOpen(false);
+    onDeleteAccount?.();
+  };
+
   return (
     <div className="avatar-menu" ref={menuRef}>
       <button
@@ -87,6 +93,27 @@ export function AvatarMenu({ initials, onEconomyClick, onLogout }: AvatarMenuPro
             Min økonomi
           </button>
           <div className="avatar-menu__divider" />
+          {onDeleteAccount && (
+            <>
+              <button
+                className="avatar-menu__item avatar-menu__item--danger"
+                onClick={handleDeleteClick}
+                role="menuitem"
+                type="button"
+              >
+                <span className="avatar-menu__icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    <line x1="10" y1="11" x2="10" y2="17" />
+                    <line x1="14" y1="11" x2="14" y2="17" />
+                  </svg>
+                </span>
+                Slett konto
+              </button>
+              <div className="avatar-menu__divider" />
+            </>
+          )}
           <button
             className="avatar-menu__item avatar-menu__item--danger"
             onClick={handleLogoutClick}

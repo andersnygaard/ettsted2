@@ -36,4 +36,14 @@
   color: var(--gold);
   line-height: 1;
   letter-spacing: -0.02em;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .milestone-target {
+    font-size: 36px;
+  }
 }

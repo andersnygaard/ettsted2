@@ -8,9 +8,10 @@ import {
   TableHeader,
   TableFooter,
   useToast,
+  Modal,
 } from '@finans/components';
 import type { Column, ColumnGroup, ColumnToggle, CellChangeEvent } from '@finans/components';
-import { PortfolioSkeleton, Modal } from '@/shared/components';
+import { PortfolioSkeleton } from '@/shared/components';
 import { useAuth } from '@/features/auth/useAuth';
 import { usePortfolioData, useUpdateSnapshot, useDeleteSnapshot } from './usePortfolioData';
 import { NewMonthModal } from './NewMonthModal';
@@ -420,7 +421,7 @@ export default function PortfolioPage() {
         <div className="container container--wide">
           <Breadcrumb
             items={[
-              { label: 'Oversikt', path: '/' },
+              { label: 'Hjem', path: '/dashboard' },
               { label: 'Portefølje' },
             ]}
           />
@@ -439,29 +440,27 @@ export default function PortfolioPage() {
         {/* Breadcrumb navigation */}
         <Breadcrumb
           items={[
-            { label: 'Oversikt', path: '/' },
+            { label: 'Hjem', path: '/dashboard' },
             { label: 'Portefølje' },
           ]}
         />
 
-        {/* Page header with title and actions */}
         <PageHeader
           title="Portefølje"
           subtitle="Alle data samlet — klikk på gruppeoverskrifter for å utvide/kollapse"
-          actions={
-            <>
-              <Button variant="secondary" onClick={handleExport}>
-                Eksporter
-              </Button>
-              <Button variant="secondary" onClick={() => navigate('/import')}>
-                Importer data
-              </Button>
-              <Button variant="primary" onClick={handleAddNewMonth}>
-                + Ny måned
-              </Button>
-            </>
-          }
         />
+
+        <div className="portfolio-page__actions">
+          <Button variant="secondary" onClick={handleExport}>
+            Eksporter
+          </Button>
+          <Button variant="secondary" onClick={() => navigate('/import')}>
+            Importer data
+          </Button>
+          <Button variant="primary" onClick={handleAddNewMonth}>
+            + Ny måned
+          </Button>
+        </div>
 
         {/* Table container */}
         <div className="table-container">
