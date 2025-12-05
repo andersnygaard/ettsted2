@@ -5,7 +5,7 @@
  */
 
 import { useState } from 'react';
-import { NumberInput } from './NumberInput';
+import { NumberInput } from '@finans/components';
 
 export function NumberInputExamples() {
   const [basicValue, setBasicValue] = useState<number | undefined>(123456.78);

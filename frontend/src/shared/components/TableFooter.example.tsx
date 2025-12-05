@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TableFooter, ColumnToggle } from './TableFooter';
+import { TableFooter, type ColumnToggle } from '@finans/components';
 
 /**
  * TableFooter Usage Example

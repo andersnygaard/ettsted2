@@ -19,7 +19,7 @@
   position: relative;
   width: 100%;
   max-width: 400px;
-  background-color: var(--warm-white, #FDFCFA);
+  background-color: var(--warm-white);
   border-radius: 8px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
   animation: modal-enter 0.2s ease-out;
@@ -39,9 +39,9 @@
 
 .login-modal__close {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  padding: 8px;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  padding: var(--space-xs);
   margin: 0;
   min-width: 44px;
   min-height: 44px;
@@ -51,7 +51,7 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--text-secondary, #6B6B6B);
+  color: var(--text-secondary);
   border-radius: 4px;
   transition: all 0.2s ease;
   font-size: 1.5rem;
@@ -60,8 +60,8 @@
 }
 
 .login-modal__close:hover {
-  background-color: var(--bone, #F5F2ED);
-  color: var(--charcoal, #2C2C2C);
+  background-color: var(--bone);
+  color: var(--charcoal);
 }
 
 .login-modal__content {
@@ -70,33 +70,33 @@
 }
 
 .login-modal__title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-heading);
   font-size: 1.75rem;
   font-weight: 400;
-  color: var(--charcoal, #2C2C2C);
+  color: var(--charcoal);
   margin: 0 0 0.5rem 0;
 }
 
 .login-modal__subtitle {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.9375rem;
-  color: var(--text-secondary, #6B6B6B);
+  color: var(--text-secondary);
   margin: 0 0 2rem 0;
 }
 
 .login-modal__buttons {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--space-sm);
 }
 
 .login-modal__btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  padding: 0.875rem 1.5rem;
-  font-family: 'DM Sans', sans-serif;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-xl);
+  font-family: var(--font-body);
   font-size: 0.9375rem;
   font-weight: 500;
   border-radius: 4px;
@@ -109,31 +109,31 @@
 }
 
 .login-modal__btn--google {
-  background-color: var(--warm-white, #FDFCFA);
-  color: var(--charcoal, #2C2C2C);
-  border: 1px solid var(--border, rgba(44, 44, 44, 0.2));
+  background-color: var(--warm-white);
+  color: var(--charcoal);
+  border: 1px solid var(--border);
 }
 
 .login-modal__btn--google:hover {
-  background-color: var(--bone, #F5F2ED);
+  background-color: var(--bone);
   border-color: rgba(44, 44, 44, 0.3);
 }
 
 .login-modal__btn--facebook {
-  background-color: #1877F2;
+  background-color: var(--facebook-blue);
   color: white;
   border: none;
 }
 
 .login-modal__btn--facebook:hover {
-  background-color: #166FE5;
+  background-color: var(--facebook-blue-hover);
 }
 
 .login-modal__divider {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin: 0.5rem 0;
+  gap: var(--space-md);
+  margin: var(--space-sm) 0;
 }
 
 .login-modal__divider::before,
@@ -141,24 +141,24 @@
   content: '';
   flex: 1;
   height: 1px;
-  background-color: var(--border, rgba(44, 44, 44, 0.15));
+  background-color: var(--border);
 }
 
 .login-modal__divider span {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.8125rem;
-  color: var(--text-secondary, #6B6B6B);
+  color: var(--text-secondary);
   text-transform: lowercase;
 }
 
 .login-modal__btn--demo {
-  background-color: var(--muted-sage, #8B9A7D);
+  background-color: var(--muted-sage);
   color: white;
   border: none;
 }
 
 .login-modal__btn--demo:hover:not(:disabled) {
-  background-color: #7A8A6D;
+  background-color: var(--sage-dark);
 }
 
 .login-modal__btn--demo:disabled {
@@ -167,16 +167,16 @@
 }
 
 .login-modal__error {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.8125rem;
-  color: var(--negative, #9D6B5A);
+  color: var(--negative);
   margin: 0.5rem 0 0 0;
 }
 
 .login-modal__terms {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.75rem;
-  color: var(--text-secondary, #6B6B6B);
+  color: var(--text-secondary);
   margin: 1.5rem 0 0 0;
   line-height: 1.5;
 }

@@ -118,13 +118,13 @@ input[type="checkbox"] {
 }
 
 input[type="checkbox"]:hover {
-  border-color: var(--muted-sage, #8B9A7D);
+  border-color: var(--muted-sage);
   background-color: rgba(139, 154, 125, 0.12);
 }
 
 input[type="checkbox"]:checked {
-  background-color: var(--muted-sage, #8B9A7D);
-  border-color: var(--muted-sage, #8B9A7D);
+  background-color: var(--muted-sage);
+  border-color: var(--muted-sage);
 }
 
 input[type="checkbox"]:checked::after {

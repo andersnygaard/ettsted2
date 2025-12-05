@@ -8,20 +8,20 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--bone, #F5F2ED);
+  background-color: var(--bone);
 }
 
 .onboarding-page__header {
   padding: 1.5rem 2rem;
-  border-bottom: 1px solid var(--border, rgba(44, 44, 44, 0.08));
+  border-bottom: 1px solid var(--border);
 }
 
 .onboarding-page__logo {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 400;
   letter-spacing: 0.1em;
-  color: var(--charcoal, #2C2C2C);
+  color: var(--charcoal);
   margin: 0;
   text-transform: lowercase;
 }

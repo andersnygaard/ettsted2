@@ -8,7 +8,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--space-xl);
 }
 
 .step-user .page-header {
@@ -16,19 +16,19 @@
 }
 
 .step-user__card {
-  padding: 28px;
+  padding: var(--space-2xl);
 }
 
 .step-user__form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-lg);
 }
 
 .step-user__field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-xs);
 }
 
 .step-user__field--half {
@@ -38,51 +38,51 @@
 
 .step-user__row {
   display: flex;
-  gap: 16px;
+  gap: var(--space-md);
 }
 
 .step-user__label {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 500;
-  color: var(--charcoal, #2C2C2C);
+  color: var(--charcoal);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .step-user__required {
-  color: var(--negative, #9D6B5A);
+  color: var(--negative);
 }
 
 .step-user__input {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 16px;
-  padding: 12px 16px;
-  border: 1px solid var(--border, rgba(44, 44, 44, 0.15));
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border);
   border-radius: 4px;
-  background-color: var(--warm-white, #FDFCFA);
-  color: var(--charcoal, #2C2C2C);
+  background-color: var(--warm-white);
+  color: var(--charcoal);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .step-user__input:focus {
   outline: none;
-  border-color: var(--muted-sage, #8B9A7D);
+  border-color: var(--muted-sage);
   box-shadow: 0 0 0 3px rgba(139, 154, 125, 0.15);
 }
 
 .step-user__input::placeholder {
-  color: var(--text-secondary, #6B6B6B);
+  color: var(--text-secondary);
   opacity: 0.6;
 }
 
 .step-user__input--number {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 15px;
 }
 
 .step-user__input--error {
-  border-color: var(--negative, #9D6B5A);
+  border-color: var(--negative);
 }
 
 .step-user__input--error:focus {
@@ -90,28 +90,28 @@
 }
 
 .step-user__error {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 12px;
-  color: var(--negative, #9D6B5A);
+  color: var(--negative);
 }
 
 .step-user__hint {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 12px;
-  color: var(--text-secondary, #6B6B6B);
+  color: var(--text-secondary);
 }
 
 .step-user__divider {
   height: 1px;
-  background-color: var(--border, rgba(44, 44, 44, 0.1));
-  margin: 8px 0;
+  background-color: var(--border);
+  margin: var(--space-xs) 0;
 }
 
 .step-user__section-title {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
-  color: var(--charcoal, #2C2C2C);
+  color: var(--charcoal);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 4px 0;

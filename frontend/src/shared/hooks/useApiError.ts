@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useToast } from '../components/Toast';
+import { useToast } from '@finans/components';
 import { ApiError } from '../api/client';
 
 /**

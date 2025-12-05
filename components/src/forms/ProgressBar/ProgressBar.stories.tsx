@@ -8,6 +8,13 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  argTypes: {
+    value: { control: { type: 'range', min: 0, max: 300, step: 1 } },
+    variant: { control: 'select', options: ['default', 'gold', 'blue'] },
+    height: { control: { type: 'range', min: 4, max: 20, step: 1 } },
+    leftLabel: { control: 'text' },
+    rightLabel: { control: 'text' },
+  },
 } satisfies Meta<typeof ProgressBar>;
 
 export default meta;
@@ -97,6 +104,19 @@ export const FullProgress: Story = {
   },
 };
 
+export const OverfilledProgress: Story = {
+  args: {
+    value: 212.5,
+    variant: 'default',
+    height: 8,
+    leftLabel: 'Dekning',
+    rightLabel: '212.5%',
+  },
+  parameters: {
+    docs: { description: { story: 'Progress can exceed 100% for values like debt coverage (savings/debt)' } },
+  },
+};
+
 export const TallProgressBar: Story = {
   args: {
     value: 65,
@@ -122,5 +142,38 @@ export const WithoutLabels: Story = {
     value: 60,
     variant: 'default',
     height: 8,
+  },
+};
+
+export const SmallHeight: Story = {
+  args: {
+    value: 45,
+    variant: 'default',
+    height: 4,
+    leftLabel: 'Progress',
+    rightLabel: '45%',
+  },
+};
+
+export const LargeHeight: Story = {
+  args: {
+    value: 80,
+    variant: 'gold',
+    height: 16,
+    leftLabel: 'Major milestone',
+    rightLabel: '80%',
+  },
+};
+
+export const NorwegianLabels: Story = {
+  args: {
+    value: 42.3,
+    variant: 'default',
+    height: 8,
+    leftLabel: 'Sparerate',
+    rightLabel: '42,3 %',
+  },
+  parameters: {
+    docs: { description: { story: 'Demonstrates Norwegian number formatting in labels' } },
   },
 };

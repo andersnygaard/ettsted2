@@ -23,9 +23,9 @@
   padding: 1rem;
   margin-bottom: 1.5rem;
   background-color: rgba(157, 107, 90, 0.1);
-  border: 1px solid var(--negative, #9D6B5A);
+  border: 1px solid var(--negative);
   border-radius: 4px;
-  color: var(--negative, #9D6B5A);
+  color: var(--negative);
 }
 
 .onboarding-wizard__error-banner i {
@@ -41,7 +41,7 @@
   gap: 1rem;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border, rgba(44, 44, 44, 0.08));
+  border-top: 1px solid var(--border);
 }
 
 .onboarding-wizard__btn {
@@ -49,7 +49,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.9375rem;
   font-weight: 500;
   border-radius: 4px;
@@ -69,25 +69,25 @@
 
 /* Primary Button */
 .onboarding-wizard__btn--primary {
-  background-color: var(--charcoal, #2C2C2C) !important;
-  color: var(--warm-white, #FDFCFA);
+  background-color: var(--charcoal) !important;
+  color: var(--warm-white);
   border: none;
   margin-left: auto;
 }
 
 .onboarding-wizard__btn--primary:hover:not(:disabled) {
-  background-color: var(--text-secondary, #6B6B6B) !important;
+  background-color: var(--text-secondary) !important;
 }
 
 /* Secondary Button */
 .onboarding-wizard__btn--secondary {
   background-color: transparent;
-  color: var(--charcoal, #2C2C2C);
-  border: 1px solid var(--border, rgba(44, 44, 44, 0.2));
+  color: var(--charcoal);
+  border: 1px solid var(--border);
 }
 
 .onboarding-wizard__btn--secondary:hover:not(:disabled) {
-  background-color: var(--bone, #F5F2ED);
+  background-color: var(--bone);
 }
 
 /* Loading Spinner */

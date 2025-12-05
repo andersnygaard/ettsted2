@@ -9,7 +9,7 @@
  * - Section links (3 navigation cards)
  */
 
-import { Skeleton } from '../Skeleton';
+import { Skeleton } from '@finans/components';
 import './PageSkeletons.css';
 
 export function DashboardSkeleton() {

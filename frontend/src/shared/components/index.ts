@@ -1,50 +1,70 @@
 /**
  * Shared Components Export
+ *
+ * This barrel export provides backward compatibility by re-exporting from @finans/components.
+ * New code should import directly from @finans/components.
+ *
+ * Components that are frontend-specific (not in @finans/components) are exported directly below.
  */
 
-export { AreaChart } from './AreaChart';
-export type { AreaChartProps, DataPoint } from './AreaChart';
-export { Avatar } from './Avatar';
-export type { AvatarProps } from './Avatar';
+// Re-export from @finans/components (consolidated components)
+export {
+  AreaChart,
+  type AreaChartProps,
+  type DataPoint,
+  Button,
+  type ButtonProps,
+  Card,
+  type CardProps,
+  Container,
+  type ContainerProps,
+  Avatar,
+  type AvatarProps,
+  HeroNumber,
+  type HeroNumberProps,
+  MilestoneCard,
+  type MilestoneCardProps,
+  ProgressBar,
+  type ProgressBarProps,
+  SectionLink,
+  type SectionLinkProps,
+  StatsRow,
+  type Stat,
+  type StatsRowProps,
+  ToastProvider,
+  useToast,
+  type Toast,
+  type ToastType,
+  SpreadsheetTable,
+  type SpreadsheetTableProps,
+  type ColumnGroup,
+  type Column,
+  type CellChangeEvent,
+  TableHeader,
+  type TableHeaderProps,
+  TableFooter,
+  type TableFooterProps,
+  type ColumnToggle,
+  NumberInput,
+  type NumberInputProps,
+  DateInput,
+  type DateInputProps,
+  CalculatorCard,
+  type CalculatorCardProps,
+  DonutChart,
+  type DonutChartProps,
+  StackedAreaChart,
+  type StackedAreaChartProps,
+  type Series,
+  type StackedDataPoint,
+  Skeleton,
+  type SkeletonProps,
+} from '@finans/components';
+
+// Frontend-specific components (not in @finans/components)
+export { default as AppHeader } from './AppHeader';
+export { default as Layout } from './Layout';
+export { default as LoadingSpinner } from './LoadingSpinner';
 export { AvatarMenu } from './AvatarMenu';
 export type { AvatarMenuProps } from './AvatarMenu';
-export { Button } from './Button';
-export type { ButtonProps } from './Button';
-export { Card } from './Card';
-export type { CardProps } from './Card';
-export { Container } from './Container';
-export type { ContainerProps } from './Container';
-export { default as AppHeader } from './AppHeader';
-export { default as ErrorBoundary } from './ErrorBoundary';
-export { default as LoadingSpinner } from './LoadingSpinner';
-export { HeroNumber } from './HeroNumber';
-export type { HeroNumberProps } from './HeroNumber';
-export { MilestoneCard } from './MilestoneCard';
-export type { MilestoneCardProps } from './MilestoneCard';
-export { ProgressBar } from './ProgressBar';
-export type { ProgressBarProps } from './ProgressBar';
-export { SectionLink } from './SectionLink';
-export type { SectionLinkProps } from './SectionLink';
-export { StatsRow } from './StatsRow';
-export type { Stat, StatsRowProps } from './StatsRow';
-export { ToastProvider, useToast } from './Toast';
-export type { Toast, ToastType } from './Toast';
-export { SpreadsheetTable } from './SpreadsheetTable';
-export type { SpreadsheetTableProps, ColumnGroup, Column, CellChangeEvent } from './SpreadsheetTable';
-export { TableHeader } from './TableHeader';
-export type { TableHeaderProps } from './TableHeader';
-export { TableFooter } from './TableFooter';
-export type { TableFooterProps, ColumnToggle } from './TableFooter';
-export { NumberInput } from './NumberInput';
-export type { NumberInputProps } from './NumberInput';
-export { DateInput } from './DateInput';
-export type { DateInputProps } from './DateInput';
-export { CalculatorCard } from './CalculatorCard';
-export type { CalculatorCardProps } from './CalculatorCard';
-export { DonutChart } from './DonutChart';
-export type { DonutChartProps } from './DonutChart';
-export { StackedAreaChart } from './StackedAreaChart';
-export type { StackedAreaChartProps, Series, StackedDataPoint } from './StackedAreaChart';
-export { Skeleton } from './Skeleton';
-export type { SkeletonProps } from './Skeleton';
 export { DashboardSkeleton, PortfolioSkeleton, SparingSkeleton, GjeldSkeleton, PensjonSkeleton } from './skeletons';

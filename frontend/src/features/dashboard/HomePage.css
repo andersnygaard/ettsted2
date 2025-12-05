@@ -70,7 +70,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-xs);
-  padding: 14px 28px;
+  padding: var(--space-sm) var(--space-2xl);
   font-family: var(--font-body);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
@@ -94,7 +94,7 @@
 }
 
 .landing-btn--primary:hover {
-  background: #1a1a1a;
+  background: var(--charcoal-hover);
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
@@ -112,7 +112,7 @@
 }
 
 .landing-btn--large {
-  padding: 18px 40px;
+  padding: var(--space-md) var(--space-3xl);
   font-size: var(--font-size-sm);
 }
 
@@ -171,8 +171,8 @@
 }
 
 .landing-feature-card__icon {
-  width: 48px;
-  height: 48px;
+  width: var(--space-4xl);
+  height: var(--space-4xl);
   display: flex;
   align-items: center;
   justify-content: center;

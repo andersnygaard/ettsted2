@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Avatar } from '@finans/components';
 import { useAuth } from '../../features/auth/useAuth';
 import { DeleteAccountModal } from '../../features/auth/DeleteAccountModal';
-import { Avatar } from './Avatar';
 import { AvatarMenu } from './AvatarMenu';
 import client from '../../shared/api/client';
 import './AppHeader.css';

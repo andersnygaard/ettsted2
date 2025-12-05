@@ -144,3 +144,69 @@ export const CustomColors: Story = {
     height: 200,
   },
 };
+
+export const MinimalData: Story = {
+  args: {
+    data: generatePensionData(2),
+    series: [
+      { key: 'arbeidsgiver', color: '#6a7a60', label: 'Arbeidsgiver' },
+      { key: 'nav', color: '#8b9a7d', label: 'NAV' },
+    ],
+    title: 'Minimal data (2 år)',
+    height: 200,
+  },
+  parameters: {
+    docs: { description: { story: 'Chart with minimal data points' } },
+  },
+};
+
+export const NoData: Story = {
+  args: {
+    data: [],
+    series: [
+      { key: 'arbeidsgiver', color: '#6a7a60', label: 'Arbeidsgiver' },
+      { key: 'nav', color: '#8b9a7d', label: 'NAV' },
+    ],
+    title: 'No data available',
+    height: 200,
+  },
+  parameters: {
+    docs: { description: { story: 'Empty state when no data is available' } },
+  },
+};
+
+export const LargeValues: Story = {
+  args: {
+    data: generatePensionData(10).map((d) => ({
+      ...d,
+      arbeidsgiver: d.arbeidsgiver * 10,
+      nav: d.nav * 10,
+    })),
+    series: [
+      { key: 'arbeidsgiver', color: '#6a7a60', label: 'Arbeidsgiver' },
+      { key: 'nav', color: '#8b9a7d', label: 'NAV' },
+    ],
+    title: 'Large values',
+    height: 200,
+  },
+  parameters: {
+    docs: { description: { story: 'Chart with large numerical values' } },
+  },
+};
+
+export const FourSeries: Story = {
+  args: {
+    data: generateSavingsData(12),
+    series: [
+      { key: 'aksjer', color: '#5a6d7a', label: 'Aksjer' },
+      { key: 'fond', color: '#b8c5d0', label: 'Fond' },
+      { key: 'krypto', color: '#c4a484', label: 'Krypto' },
+      { key: 'bankkonto', color: '#8b9a7d', label: 'Bankkonto' },
+    ],
+    title: 'Fire kategorier',
+    height: 250,
+  },
+  parameters: {
+    docs: { description: { story: 'Stacked chart with four data series' } },
+  },
+};

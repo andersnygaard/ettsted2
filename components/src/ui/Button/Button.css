@@ -6,8 +6,8 @@
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-lg);
   font-size: 11px;
   font-family: var(--font-body);
   text-transform: uppercase;
@@ -33,7 +33,7 @@
 }
 
 .btn--primary:hover:not(:disabled) {
-  background: #1a1a1a;
+  background: var(--charcoal-hover);
   transform: translateY(-1px);
 }
 

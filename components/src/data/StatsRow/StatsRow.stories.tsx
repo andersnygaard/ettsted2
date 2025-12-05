@@ -8,6 +8,9 @@ const meta = {
     layout: 'padded',
   },
   tags: ['autodocs'],
+  argTypes: {
+    stats: { control: 'object' },
+  },
 } satisfies Meta<typeof StatsRow>;
 
 export default meta;
@@ -20,6 +23,19 @@ export const ThreeColumns: Story = {
       { value: '12 500 kr', label: 'Siste måned' },
       { value: '24,5', label: 'Måneder fri' },
     ],
+  },
+};
+
+export const NorwegianFormatting: Story = {
+  args: {
+    stats: [
+      { value: '2 156 789,50 kr', label: 'Netto formue' },
+      { value: '42,3 %', label: 'Sparerate' },
+      { value: '67,8 %', label: 'Dekning' },
+    ],
+  },
+  parameters: {
+    docs: { description: { story: 'Demonstrates Norwegian number formatting with space thousands and comma decimals' } },
   },
 };
 
@@ -62,6 +78,15 @@ export const TwoColumns: Story = {
   },
 };
 
+export const TwoColumnsLarge: Story = {
+  args: {
+    stats: [
+      { value: '1 234 567 kr', label: 'Netto formue' },
+      { value: '+28,5 %', label: 'Årlig avkastning' },
+    ],
+  },
+};
+
 export const FourColumns: Story = {
   args: {
     stats: [
@@ -69,6 +94,48 @@ export const FourColumns: Story = {
       { value: '456 789 kr', label: 'Sum gjeld' },
       { value: '345 678 kr', label: 'Sum pensjon' },
       { value: '42,3 %', label: 'Sparerate' },
+    ],
+  },
+};
+
+export const FiveColumns: Story = {
+  args: {
+    stats: [
+      { value: '1 234 567 kr', label: 'Netto formue' },
+      { value: '970 194 kr', label: 'Sparing' },
+      { value: '456 789 kr', label: 'Gjeld' },
+      { value: '345 678 kr', label: 'Pensjon' },
+      { value: '+5,2 %', label: 'Avkastning' },
+    ],
+  },
+};
+
+export const SavingsMetrics: Story = {
+  args: {
+    stats: [
+      { value: '970 194 kr', label: 'Sum sparing' },
+      { value: '42,3 %', label: 'Sparerate' },
+      { value: '24,5', label: 'Måneder fri' },
+    ],
+  },
+};
+
+export const LargeNumbers: Story = {
+  args: {
+    stats: [
+      { value: '12 500 000 kr', label: 'Porteføljeverdi' },
+      { value: '2 500 000 kr', label: 'Gjeld' },
+      { value: '10 000 000 kr', label: 'Netto formue' },
+    ],
+  },
+};
+
+export const MixedFormats: Story = {
+  args: {
+    stats: [
+      { value: '67 år', label: 'Pensjonistalderen' },
+      { value: '15 år', label: 'År til FI' },
+      { value: '280 000 kr', label: 'Årlig uttak' },
     ],
   },
 };

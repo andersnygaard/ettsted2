@@ -23,6 +23,9 @@ export type { SkeletonProps } from './ui/Skeleton'
 export { Breadcrumb } from './ui/Breadcrumb'
 export type { BreadcrumbProps, BreadcrumbItem } from './ui/Breadcrumb'
 
+export { Placeholder } from './ui/Placeholder'
+export type { PlaceholderProps } from './ui/Placeholder'
+
 // Form Components
 export { NumberInput } from './forms/NumberInput'
 export type { NumberInputProps } from './forms/NumberInput'

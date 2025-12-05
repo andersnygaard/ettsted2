@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Avatar } from './Avatar';
+import { Avatar } from '@finans/components';
 import './AvatarMenu.css';
 
 export interface AvatarMenuProps {

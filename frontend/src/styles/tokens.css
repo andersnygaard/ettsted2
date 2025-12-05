@@ -28,6 +28,28 @@
   --positive: #5A7D5A;          /* Positive changes, growth - darker sage */
   --negative: #9D6B5A;          /* Negative changes, debt - muted red */
 
+  /* Gradient & Hover Variants */
+  --charcoal-light: #3a3a3a;    /* Lighter charcoal for gradients */
+  --charcoal-hover: #1a1a1a;    /* Darker charcoal for hover states */
+  --gold-light: #D4B876;        /* Lighter gold for gradients */
+  --negative-dark: #8b5d4d;     /* Darker negative for emphasis */
+
+  /* Category Colors (SpreadsheetTable) */
+  --category-sparing: #6a7a60;      /* Sparing/savings category */
+  --category-sparing-hover: #7a8a70; /* Sparing hover state */
+  --category-gjeld: #8a7060;         /* Gjeld/debt category */
+  --category-gjeld-hover: #9a8070;   /* Gjeld hover state */
+  --category-pensjon: #5a6d7a;       /* Pensjon/pension category */
+  --category-pensjon-hover: #6a7d8a; /* Pensjon hover state */
+
+  /* Third-party Brand Colors */
+  --facebook-blue: #1877F2;          /* Facebook brand blue */
+  --facebook-blue-hover: #166FE5;    /* Facebook hover blue */
+
+  /* Additional Accents */
+  --orange: #D4956A;                 /* Orange accent */
+  --sage-dark: #7A8A6D;              /* Dark sage */
+
   /* Borders */
   --border: rgba(44, 44, 44, 0.08);       /* Subtle borders */
   --border-strong: rgba(44, 44, 44, 0.15); /* More visible borders */

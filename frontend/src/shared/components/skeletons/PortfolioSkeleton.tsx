@@ -9,7 +9,7 @@
  * - Table footer with pagination
  */
 
-import { Skeleton } from '../Skeleton';
+import { Skeleton } from '@finans/components';
 import './PageSkeletons.css';
 
 export function PortfolioSkeleton() {

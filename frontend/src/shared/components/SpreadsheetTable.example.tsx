@@ -5,7 +5,7 @@
  * with realistic portfolio data.
  */
 
-import { SpreadsheetTable, ColumnGroup } from './SpreadsheetTable';
+import { SpreadsheetTable, type ColumnGroup } from '@finans/components';
 
 /**
  * Example: Portfolio Table with Full Data

@@ -85,7 +85,8 @@
       "Bash(timeout 15 pnpm:*)",
       "Bash(netstat:*)",
       "Bash(timeout:*)",
-      "Skill(storybook-stories)"
+      "Skill(storybook-stories)",
+      "SlashCommand(/discover-tasks)"
     ],
     "deny": [],
     "ask": [

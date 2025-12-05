@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useToast } from './Toast';
+import { useToast } from '@finans/components';
 import { useApiError } from '../hooks/useApiError';
 import client from '../api/client';
 

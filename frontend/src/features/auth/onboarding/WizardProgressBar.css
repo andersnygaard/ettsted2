@@ -6,8 +6,8 @@
 
 .wizard-progress {
   width: 100%;
-  padding: 24px 0;
-  margin-bottom: 32px;
+  padding: var(--space-xl) 0;
+  margin-bottom: var(--space-2xl);
 }
 
 .wizard-progress__track {
@@ -34,12 +34,12 @@
   right: 50%;
   width: 100%;
   height: 2px;
-  background-color: var(--border, rgba(44, 44, 44, 0.15));
+  background-color: var(--border);
   z-index: 0;
 }
 
 .wizard-progress__connector--active {
-  background-color: var(--muted-sage, #8B9A7D);
+  background-color: var(--muted-sage);
 }
 
 /* Step circle button */
@@ -47,8 +47,8 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 2px solid var(--border, rgba(44, 44, 44, 0.15));
-  background-color: var(--warm-white, #FDFCFA);
+  border: 2px solid var(--border);
+  background-color: var(--warm-white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,23 +56,23 @@
   z-index: 1;
   cursor: default;
   transition: all 0.2s ease;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
-  color: var(--text-secondary, #6B6B6B);
+  color: var(--text-secondary);
 }
 
 .wizard-progress__step--current {
-  border-color: var(--charcoal, #2C2C2C);
-  background-color: var(--charcoal, #2C2C2C);
-  color: var(--warm-white, #FDFCFA);
+  border-color: var(--charcoal);
+  background-color: var(--charcoal);
+  color: var(--warm-white);
   opacity: 1;
 }
 
 .wizard-progress__step--completed {
-  border-color: var(--muted-sage, #8B9A7D);
-  background-color: var(--muted-sage, #8B9A7D);
-  color: var(--warm-white, #FDFCFA);
+  border-color: var(--muted-sage);
+  background-color: var(--muted-sage);
+  color: var(--warm-white);
 }
 
 .wizard-progress__step--clickable {
@@ -85,13 +85,13 @@
 }
 
 .wizard-progress__step--clickable:focus-visible {
-  outline: 2px solid var(--muted-sage, #8B9A7D);
+  outline: 2px solid var(--muted-sage);
   outline-offset: 2px;
 }
 
 /* Step number */
 .wizard-progress__number {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 14px;
   font-weight: 500;
 }
@@ -105,16 +105,16 @@
 
 /* Step label */
 .wizard-progress__label {
-  margin-top: 8px;
-  font-family: 'DM Sans', sans-serif;
+  margin-top: var(--space-xs);
+  font-family: var(--font-body);
   font-size: 12px;
-  color: var(--text-secondary, #6B6B6B);
+  color: var(--text-secondary);
   text-align: center;
   transition: color 0.2s ease;
 }
 
 .wizard-progress__label--active {
-  color: var(--charcoal, #2C2C2C);
+  color: var(--charcoal);
   font-weight: 500;
 }
 

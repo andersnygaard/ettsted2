@@ -4,12 +4,11 @@ export interface PageHeaderProps {
   title: string;
   subtitle?: string;
   reduced?: boolean;
-  centered?: boolean;
 }
 
-export function PageHeader({ title, subtitle, reduced, centered }: PageHeaderProps) {
+export function PageHeader({ title, subtitle, reduced }: PageHeaderProps) {
   return (
-    <header className={`page-header ${centered ? 'centered' : ''}`}>
+    <header className="page-header">
       <h1 className={`page-header__title ${reduced ? 'reduced' : ''}`}>{title}</h1>
       {subtitle && <p className="page-header__subtitle">{subtitle}</p>}
     </header>

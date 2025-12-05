@@ -125,3 +125,55 @@ export const TallChart: Story = {
     height: 300,
   },
 };
+
+export const MinimalData: Story = {
+  args: {
+    data: generateData(2, 500000, 'up'),
+    color: 'var(--muted-sage)',
+    title: 'Minimal data',
+    height: 200,
+    showXAxis: true,
+  },
+  parameters: {
+    docs: { description: { story: 'Chart with minimal data points (2 months)' } },
+  },
+};
+
+export const NoData: Story = {
+  args: {
+    data: [],
+    color: 'var(--muted-sage)',
+    title: 'No data available',
+    height: 200,
+    showXAxis: true,
+  },
+  parameters: {
+    docs: { description: { story: 'Empty state when no data is available' } },
+  },
+};
+
+export const LargeValues: Story = {
+  args: {
+    data: generateData(12, 10000000, 'up'),
+    color: 'var(--muted-sage)',
+    title: 'Large portfolio values',
+    subtitle: 'Multi-million values',
+    height: 200,
+  },
+  parameters: {
+    docs: { description: { story: 'Chart with large numerical values' } },
+  },
+};
+
+export const CustomXAxisFormat: Story = {
+  args: {
+    data: generateData(12, 500000, 'up'),
+    color: 'var(--muted-sage)',
+    title: 'Custom date format',
+    height: 200,
+    xAxisFormat: (date: Date) => `${date.getDate()}/${date.getMonth() + 1}`,
+  },
+  parameters: {
+    docs: { description: { story: 'Chart with custom X-axis date formatting' } },
+  },
+};

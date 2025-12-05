@@ -8,7 +8,7 @@
 .new-month-modal__form {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: var(--space-2xl);
 }
 
 /**
@@ -17,14 +17,14 @@
 .new-month-modal__section {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-xs);
 }
 
 /**
  * Label styling
  */
 .new-month-modal__label {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
   color: var(--charcoal);
@@ -45,7 +45,7 @@
  */
 .new-month-modal__date-picker {
   display: flex;
-  gap: 12px;
+  gap: var(--space-sm);
   align-items: center;
 }
 
@@ -54,12 +54,12 @@
  */
 .new-month-modal__select {
   flex: 1;
-  padding: 10px 12px;
+  padding: var(--space-sm) var(--space-sm);
   border: 1px solid var(--border);
   border-radius: 4px;
   background-color: var(--warm-white);
   color: var(--charcoal);
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   cursor: pointer;
   transition: border-color 0.2s, background-color 0.2s;
@@ -86,10 +86,10 @@
  * Error message
  */
 .new-month-modal__error-message {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 12px;
   color: var(--negative);
-  margin-top: 4px;
+  margin-top: var(--space-xs);
 }
 
 /**
@@ -97,14 +97,14 @@
  * Uses DM Sans, small caps, secondary color
  */
 .new-month-modal__section-title {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-secondary);
   margin: 0;
-  padding-bottom: 8px;
+  padding-bottom: var(--space-xs);
   border-bottom: 1px solid var(--border);
 }
 
@@ -115,7 +115,7 @@
 .new-month-modal__fields {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
+  gap: var(--space-md);
 }
 
 /**
@@ -124,19 +124,19 @@
 .new-month-modal__actions {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
+  gap: var(--space-sm);
 }
 
 /**
  * Info message (values copied from previous snapshot)
  */
 .new-month-modal__info {
-  padding: 12px 16px;
+  padding: var(--space-sm) var(--space-md);
   background-color: rgba(139, 154, 125, 0.1);
   border: 1px solid var(--muted-sage);
   border-radius: 4px;
   color: var(--muted-sage);
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
 }
 
@@ -144,12 +144,12 @@
  * Error state
  */
 .new-month-modal__error {
-  padding: 12px 16px;
+  padding: var(--space-sm) var(--space-md);
   background-color: rgba(157, 107, 90, 0.1);
   border: 1px solid var(--negative);
   border-radius: 4px;
   color: var(--negative);
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
 }
 
@@ -157,12 +157,12 @@
  * Empty state
  */
 .new-month-modal__empty {
-  padding: 32px 16px;
+  padding: var(--space-2xl) var(--space-md);
   text-align: center;
 }
 
 .new-month-modal__empty p {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--text-secondary);
   margin: 0;

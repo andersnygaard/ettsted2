@@ -9,6 +9,15 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  argTypes: {
+    value: { control: 'number' },
+    label: { control: 'text' },
+    suffix: { control: 'text' },
+    placeholder: { control: 'text' },
+    error: { control: 'text' },
+    disabled: { control: 'boolean' },
+    required: { control: 'boolean' },
+  },
 } satisfies Meta<typeof NumberInput>;
 
 export default meta;
@@ -41,6 +50,19 @@ export const WithValue: Story = {
   },
 };
 
+export const NorwegianFormatting: Story = {
+  render: (args) => <NumberInputWrapper {...args} />,
+  args: {
+    value: 1234567.89,
+    label: 'Porteføljeverdi',
+    placeholder: '0',
+    suffix: 'kr',
+  },
+  parameters: {
+    docs: { description: { story: 'Demonstrates Norwegian number formatting with space as thousands separator and comma as decimal' } },
+  },
+};
+
 export const WithSuffix: Story = {
   render: (args) => <NumberInputWrapper {...args} />,
   args: {
@@ -60,6 +82,16 @@ export const Disabled: Story = {
   },
 };
 
+export const DisabledEmpty: Story = {
+  render: (args) => <NumberInputWrapper {...args} />,
+  args: {
+    value: undefined,
+    label: 'Beløp',
+    suffix: 'kr',
+    disabled: true,
+  },
+};
+
 export const ErrorState: Story = {
   render: (args) => <NumberInputWrapper {...args} />,
   args: {
@@ -67,6 +99,16 @@ export const ErrorState: Story = {
     label: 'Beløp',
     suffix: 'kr',
     error: 'Må være større enn 0',
+  },
+};
+
+export const ErrorWithValue: Story = {
+  render: (args) => <NumberInputWrapper {...args} />,
+  args: {
+    value: -50000,
+    label: 'Beløp',
+    suffix: 'kr',
+    error: 'Kan ikke være negativt',
   },
 };
 
@@ -95,5 +137,25 @@ export const WithoutLabel: Story = {
     value: undefined,
     placeholder: 'Skriv beløp',
     suffix: 'kr',
+  },
+};
+
+export const NoSuffix: Story = {
+  render: (args) => <NumberInputWrapper {...args} />,
+  args: {
+    value: 123456,
+    label: 'Prosent',
+    suffix: '%',
+  },
+};
+
+export const RequiredError: Story = {
+  render: (args) => <NumberInputWrapper {...args} />,
+  args: {
+    value: undefined,
+    label: 'Beløp',
+    suffix: 'kr',
+    required: true,
+    error: 'Dette feltet er påkrevd',
   },
 };

@@ -7,21 +7,21 @@
 .accounts-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-md);
 }
 
 .accounts-list__items {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-md);
 }
 
 /* Account Item Card */
 .accounts-list__item {
-  background-color: var(--warm-white, #FDFCFA);
-  border: 1px solid var(--border, rgba(44, 44, 44, 0.1));
+  background-color: var(--warm-white);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 16px;
+  padding: var(--space-md);
   transition: box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
@@ -36,8 +36,8 @@
 .accounts-list__item-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
 }
 
 /* Account Name Input */
@@ -48,45 +48,45 @@
 
 .accounts-list__name-input {
   width: 100%;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 500;
-  padding: 8px 12px;
+  padding: var(--space-xs) var(--space-sm);
   border: 1px solid transparent;
   border-radius: 4px;
   background-color: transparent;
-  color: var(--charcoal, #2C2C2C);
+  color: var(--charcoal);
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .accounts-list__name-input:hover {
-  background-color: var(--bone, #F5F2ED);
+  background-color: var(--bone);
 }
 
 .accounts-list__name-input:focus {
   outline: none;
-  border-color: var(--muted-sage, #8B9A7D);
-  background-color: var(--warm-white, #FDFCFA);
+  border-color: var(--muted-sage);
+  background-color: var(--warm-white);
 }
 
 .accounts-list__name-input::placeholder {
-  color: var(--text-secondary, #6B6B6B);
+  color: var(--text-secondary);
   opacity: 0.6;
 }
 
 .accounts-list__name-input--error {
-  border-color: var(--negative, #9D6B5A);
+  border-color: var(--negative);
 }
 
 /* Active Toggle */
 .accounts-list__toggle {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-xs);
   cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 12px;
-  color: var(--text-secondary, #6B6B6B);
+  color: var(--text-secondary);
   user-select: none;
 }
 
@@ -108,14 +108,14 @@
   border: none;
   border-radius: 4px;
   background-color: transparent;
-  color: var(--text-secondary, #6B6B6B);
+  color: var(--text-secondary);
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .accounts-list__delete:hover:not(:disabled) {
   background-color: rgba(157, 107, 90, 0.1);
-  color: var(--negative, #9D6B5A);
+  color: var(--negative);
 }
 
 .accounts-list__delete:disabled {
@@ -130,33 +130,33 @@
 
 /* Value Row */
 .accounts-list__value-row {
-  margin-top: 8px;
+  margin-top: var(--space-xs);
 }
 
 /* Loan Details */
 .accounts-list__loan-details {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border, rgba(44, 44, 44, 0.08));
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--border);
 }
 
 .accounts-list__loan-row {
   display: flex;
-  gap: 16px;
+  gap: var(--space-md);
 }
 
 .accounts-list__loan-field {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-xs);
 }
 
 .accounts-list__loan-label {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 500;
-  color: var(--text-secondary, #6B6B6B);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -164,42 +164,42 @@
 .accounts-list__loan-input-wrapper {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-xs);
 }
 
 .accounts-list__loan-input {
   width: 100%;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 14px;
-  padding: 8px 12px;
-  border: 1px solid var(--border, rgba(44, 44, 44, 0.15));
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--border);
   border-radius: 4px;
-  background-color: var(--warm-white, #FDFCFA);
-  color: var(--charcoal, #2C2C2C);
+  background-color: var(--warm-white);
+  color: var(--charcoal);
   transition: border-color 0.2s ease;
 }
 
 .accounts-list__loan-input:focus {
   outline: none;
-  border-color: var(--muted-sage, #8B9A7D);
+  border-color: var(--muted-sage);
 }
 
 .accounts-list__loan-input--error {
-  border-color: var(--negative, #9D6B5A);
+  border-color: var(--negative);
 }
 
 .accounts-list__loan-suffix {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 12px;
-  color: var(--text-secondary, #6B6B6B);
+  color: var(--text-secondary);
   white-space: nowrap;
 }
 
 /* Error Message */
 .accounts-list__error {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 11px;
-  color: var(--negative, #9D6B5A);
+  color: var(--negative);
   margin-top: 2px;
 }
 
@@ -208,14 +208,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--space-xs);
   width: 100%;
-  padding: 12px 16px;
-  border: 1px dashed var(--border, rgba(44, 44, 44, 0.15));
+  padding: var(--space-sm) var(--space-md);
+  border: 1px dashed var(--border);
   border-radius: 8px;
   background-color: transparent;
-  color: var(--text-secondary, #6B6B6B);
-  font-family: 'DM Sans', sans-serif;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -223,8 +223,8 @@
 }
 
 .accounts-list__add-btn:hover {
-  border-color: var(--muted-sage, #8B9A7D);
-  color: var(--muted-sage, #8B9A7D);
+  border-color: var(--muted-sage);
+  color: var(--muted-sage);
   background-color: rgba(139, 154, 125, 0.05);
 }
 
@@ -238,26 +238,26 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  background-color: var(--bone, #F5F2ED);
+  padding: var(--space-md);
+  background-color: var(--bone);
   border-radius: 8px;
-  margin-top: 8px;
+  margin-top: var(--space-xs);
 }
 
 .accounts-list__total-label {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
-  color: var(--charcoal, #2C2C2C);
+  color: var(--charcoal);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .accounts-list__total-value {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-heading);
   font-size: 24px;
   font-weight: 400;
-  color: var(--charcoal, #2C2C2C);
+  color: var(--charcoal);
 }
 
 /* Responsive */
@@ -268,6 +268,6 @@
 
   .accounts-list__loan-row {
     flex-direction: column;
-    gap: 12px;
+    gap: var(--space-sm);
   }
 }

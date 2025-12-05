@@ -75,13 +75,13 @@
 }
 
 .login-btn--facebook {
-  background-color: #1877F2;
+  background-color: var(--facebook-blue);
   color: white;
   border: none;
 }
 
 .login-btn--facebook:hover {
-  background-color: #166FE5;
+  background-color: var(--facebook-blue-hover);
   transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
 }

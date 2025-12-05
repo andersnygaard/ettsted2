@@ -9,7 +9,7 @@
  * - Stacked area chart
  */
 
-import { Skeleton } from '../Skeleton';
+import { Skeleton } from '@finans/components';
 import './PageSkeletons.css';
 
 export function PensjonSkeleton() {

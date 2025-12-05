@@ -151,7 +151,7 @@
 }
 
 .chart-area-fill--secondary {
-  fill: var(--orange, #D4956A);
+  fill: var(--orange);
 }
 
 .chart-x-axis {
@@ -188,7 +188,7 @@
 }
 
 .chart-legend__nav::before {
-  background: var(--orange, #D4956A);
+  background: var(--orange);
 }
 
 /* Narrow container for focused pages */

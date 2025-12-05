@@ -1,13 +1,18 @@
 # Planning Board - Finans
 
-**Current Focus**: All polish tasks complete! Ready for next phase.
+**Current Focus**: All design system tasks complete! Ready for next phase.
 
 ---
 
 ## Dependency Graph
 
 ```
-(All tasks completed)
+001-consolidate-components
+  └── 002-hardcoded-colors → 006-design-docs
+  └── 003-hardcoded-fonts → 006-design-docs
+  └── 004-centralize-animations
+  └── 005-spacing-tokens
+  └── 007-storybook-coverage
 ```
 
 ---
@@ -28,6 +33,27 @@
 
 ## Recently Completed
 
+### 007 - Improve Storybook Coverage (2025-12-05)
+Enhanced 11 component stories with 41+ new stories. Added argTypes, play functions, Norwegian formatting demos.
+
+### 006 - Design System Documentation (2025-12-05)
+Created .docs/design-system/ with 6 comprehensive files: PRINCIPLES, TOKENS, COMPONENTS, PATTERNS, ACCESSIBILITY.
+
+### 005 - Spacing Tokens Usage (2025-12-05)
+Replaced 110+ hardcoded pixel values with spacing tokens in 16 CSS files. Consistent visual rhythm.
+
+### 004 - Centralize Animations (2025-12-05)
+Removed duplicate @keyframes fadeUp from 4 files. Single source of truth in animations.css.
+
+### 003 - Hardcoded Fonts to Tokens (2025-12-05)
+Replaced 44 font-family values with tokens in 11 CSS files. All fonts now use --font-heading, --font-body, --font-mono.
+
+### 002 - Hardcoded Colors to Tokens (2025-12-05)
+Added 20 new color tokens. Replaced hardcoded hex values in 23 CSS files. Removed all fallback values.
+
+### 001 - Consolidate Duplicate Components (2025-12-05)
+Eliminated 41 duplicate files from frontend. All shared components now import from @finans/components. Single source of truth established.
+
 ### 139 - New Month Copy Previous (2025-12-05)
 Pre-fills new month modal with values from most recent snapshot. Shows "Verdier kopiert fra [dato]" message.
 
@@ -43,79 +69,13 @@ Global checkbox styling with lighter muted-sage background, hover states, checke
 ### 135 - Date Header Z-Index (2025-12-05)
 Increased SpreadsheetTable date header z-index from 20 to 25 for proper sticky stacking.
 
-### 134 - Close Button Positioning (2025-12-05)
-Standardized close buttons across all modals: 12px from corner, 44x44px touch target.
-
-### 133 - Terms Dialog Tabs Clearer (2025-12-05)
-Underline-style tabs with clear active/inactive states and border-bottom indicator.
-
-### 130 - Negative Net Worth Focus Positives (2025-12-05)
-Dashboard shows "Sum sparing" as hero when net worth is negative. Milestone tracks savings progress.
-
-### 129 - App Header Logo Two Lines (2025-12-05)
-Logo now displays on two lines: "finans." / "ettsted.no". Added white-space: pre CSS.
-
-### 128 - Consistent Breadcrumbs (2025-12-05)
-Added breadcrumbs to all main pages: Portefølje, Sparing, Gjeld, Pensjon, Kalkulatorer. Format: "Hjem → [Page]".
-
-### 127 - Consistent Page Headers (2025-12-05)
-All main pages now left-aligned. Kalkulatorer landing page centered (intentional). Added `centered` prop to PageHeader component.
-
-### 126 - Page Card Grid Component (2025-12-04)
-Reusable 2-column grid in /components. Props: columns, gap, reversed. 8 Storybook stories. All 4 calculator pages updated.
-
-### 125 - Wizard Form Card Design (2025-12-04)
-Wrapped Step 1 form in Card component. White background improves input field contrast.
-
-### 124 - Wizard Button Consistent Color (2025-12-04)
-Added `!important` to button styles to override BeerCSS cascade. Button now consistently black.
-
-### 123 - Rename Calculator Routes (2025-12-04)
-Routes renamed to Norwegian: `/kalkulatorer/rentes-rente`, `/kalkulatorer/lan`. Redirects added for backward compatibility.
-
-### 132 - User Self-Delete GDPR (2025-12-04)
-GDPR-compliant account deletion. DELETE /api/v1/users/me endpoint. DeleteAccountModal with SLETT confirmation. Logs out and redirects to home.
-
-### 131 - Monte Carlo Graph on Submit (2025-12-04)
-Graph only updates on "Kjør simulering" click. Tracks submitted years separately from input state.
-
-### 122 - CSS Polish Batch (2025-12-04)
-Added --border-subtle token. Updated 16 CSS files with subtle borders, text-overflow fixes, mobile responsive font sizes.
-
-### 121 - Economy Allow Negative Gjeld (2025-12-04)
-Allow negative gjeld input in economy wizard. Values stored as positive (Math.abs). Helper text added.
-
-### 120 - Import Agent Preload Accounts (2025-12-04)
-Preloads user accounts in system prompt with fuzzy matching rules. Reduces latency by eliminating tool call overhead.
-
-### 119 - Cleanup Unused Files (2025-12-04)
-Deleted unused documentation files: backend/TESTING-AUTH-MIDDLEWARE.md, backend/test-user-endpoints.md, frontend/src/shared/utils/README.md.
-
-### 118 - Terms/Privacy Dialog (2025-12-03)
-Clickable terms link in login screens. Tabbed dialog with Vilkår/Personvern content.
-
-### 117 - Import Page UI (2025-12-03)
-Chat interface at /import for LLM data extraction. Messages, data preview, confirm/cancel flow.
-
-### 116 - Import Routes (2025-12-03)
-POST /api/v1/import/chat and /batch endpoints. Rate limiting, Zod validation, conversation history.
-
-### 115 - Langfuse Integration (2025-12-03)
-LLM observability with Langfuse Cloud (EU). Traces OpenAI calls with token usage.
-
-### 114 - OpenAI Service (2025-12-03)
-OpenAI SDK integration with function calling for `batch_insert_snapshots`. Norwegian data extraction.
-
-### 108 - Sparing Use API Data Bug Fix (2025-12-03)
-Removed hardcoded values from useSparingData.ts. Now fetches real data from `/api/v1/sparing` and `/api/v1/users/me`.
-
 ---
 
 ## Statistics
 
 | Status | Count |
 |--------|-------|
-| Done | 139 |
+| Done | 146 |
 | Backlog | 0 |
 | In Progress | 0 |
 

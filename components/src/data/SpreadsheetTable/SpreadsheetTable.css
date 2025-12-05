@@ -35,7 +35,7 @@
   color: var(--warm-white);
   font-size: 10px;
   letter-spacing: 0.12em;
-  padding: 10px 16px;
+  padding: var(--space-sm) var(--space-md);
   text-align: center;
   cursor: pointer;
   user-select: none;
@@ -49,32 +49,32 @@
 }
 
 .spreadsheet .group-header-row th:hover {
-  background: #3a3a3a;
+  background: var(--charcoal-light);
 }
 
 /* Group-specific colors */
 .spreadsheet .group-header-row th.group-sparing {
-  background: #5a6d7a;
+  background: var(--category-pensjon);
 }
 
 .spreadsheet .group-header-row th.group-sparing:hover {
-  background: #6a7d8a;
+  background: var(--category-pensjon-hover);
 }
 
 .spreadsheet .group-header-row th.group-gjeld {
-  background: #8a7060;
+  background: var(--category-gjeld);
 }
 
 .spreadsheet .group-header-row th.group-gjeld:hover {
-  background: #9a8070;
+  background: var(--category-gjeld-hover);
 }
 
 .spreadsheet .group-header-row th.group-pensjon {
-  background: #6a7a60;
+  background: var(--category-sparing);
 }
 
 .spreadsheet .group-header-row th.group-pensjon:hover {
-  background: #7a8a70;
+  background: var(--category-sparing-hover);
 }
 
 /* Date header (first column in group row) */
@@ -94,7 +94,7 @@
 /* Group toggle arrow */
 .group-toggle {
   display: inline-block;
-  margin-left: 8px;
+  margin-left: var(--space-xs);
   font-size: 10px;
   opacity: 0.7;
   transition: transform 0.2s ease;
@@ -113,7 +113,7 @@
   top: 0;
   background: var(--bone);
   text-align: right;
-  padding: 12px 16px;
+  padding: var(--space-sm) var(--space-md);
   font-size: 9px;
   font-weight: 500;
   text-transform: uppercase;
@@ -150,10 +150,10 @@
    ======================================== */
 
 .spreadsheet td {
-  padding: 0px 8px;
+  padding: 0px var(--space-xs);
   text-align: right;
   border-bottom: 1px solid var(--border);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   white-space: nowrap;
   transition: background 0.15s ease;
@@ -161,7 +161,7 @@
 
 .spreadsheet td:first-child {
   text-align: left;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-weight: 500;
   position: sticky;
   left: 0;
@@ -231,7 +231,7 @@
    ======================================== */
 
 .date-cell {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 500;
 }
@@ -253,15 +253,15 @@
 
 /* Cell in editing mode */
 .cell-editing {
-  padding: 4px !important;
+  padding: var(--space-xs) !important;
   background: var(--warm-white) !important;
 }
 
 /* Cell input field */
 .cell-input {
   width: 100%;
-  padding: 8px;
-  font-family: 'JetBrains Mono', monospace;
+  padding: var(--space-xs);
+  font-family: var(--font-mono);
   font-size: 11px;
   text-align: right;
   border: 1px solid var(--pale-blue);
@@ -308,7 +308,7 @@
 .action-cell {
   text-align: center;
   width: 50px;
-  padding: 8px 12px;
+  padding: var(--space-xs) var(--space-sm);
   background: var(--warm-white);
   position: sticky;
   right: 0;
@@ -367,16 +367,16 @@
 
   .spreadsheet th {
     font-size: 8px;
-    padding: 10px 12px;
+    padding: var(--space-sm) var(--space-sm);
   }
 
   .spreadsheet td {
     font-size: 10px;
-    padding: 10px 12px;
+    padding: var(--space-sm) var(--space-sm);
   }
 
   .spreadsheet .group-header-row th {
     font-size: 9px;
-    padding: 8px 12px;
+    padding: var(--space-xs) var(--space-sm);
   }
 }

@@ -19,6 +19,28 @@
   --positive: #5A7D5A;
   --negative: #9D6B5A;
 
+  /* Gradient & Hover Variants */
+  --charcoal-light: #3a3a3a;
+  --charcoal-hover: #1a1a1a;
+  --gold-light: #D4B876;
+  --negative-dark: #8b5d4d;
+
+  /* Category Colors */
+  --category-sparing: #6a7a60;
+  --category-sparing-hover: #7a8a70;
+  --category-gjeld: #8a7060;
+  --category-gjeld-hover: #9a8070;
+  --category-pensjon: #5a6d7a;
+  --category-pensjon-hover: #6a7d8a;
+
+  /* Third-party Brand Colors */
+  --facebook-blue: #1877F2;
+  --facebook-blue-hover: #166FE5;
+
+  /* Additional Accents */
+  --orange: #D4956A;
+  --sage-dark: #7A8A6D;
+
   /* Borders & Dividers */
   --border: rgba(44, 44, 44, 0.08);
 

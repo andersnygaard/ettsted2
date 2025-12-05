@@ -1,11 +1,12 @@
 .page-header {
   display: block;
-  padding-bottom: var(--space-3xl);
+  padding-bottom: var(--space-6xl);
   text-align: center;
 
-  &.centered {
-    text-align: center;
+  &.reduced {
+    padding-bottom: var(--space-3xl);
   }
+
 }
 
 .page-header__title {
@@ -14,7 +15,7 @@
   font-weight: var(--font-weight-light);
   color: var(--charcoal);
   line-height: 1.2;
-  margin-bottom: var(--space-xs);
+  margin-bottom: var(--space-sm);
 
   &.reduced {
     font-size: var(--font-size-xl);

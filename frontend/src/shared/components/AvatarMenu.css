@@ -1,6 +1,6 @@
 .avatar-menu {
   position: relative;
-  z-index: var(--z-dropdown, 100);
+  z-index: var(--z-dropdown);
 }
 
 .avatar-menu__trigger {
@@ -33,7 +33,7 @@
   border: 1px solid var(--border);
   border-radius: 4px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  z-index: var(--z-overlay, 900);
+  z-index: var(--z-overlay);
   animation: avatarMenuFadeIn 0.15s ease;
 }
 
@@ -51,12 +51,12 @@
 .avatar-menu__item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-sm);
   width: calc(100% - 46px);
-  padding: 16px;
+  padding: var(--space-md);
   border: none;
   background: none;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--charcoal);
   text-align: left;
@@ -92,5 +92,5 @@
 .avatar-menu__divider {
   height: 1px;
   background-color: var(--border);
-  margin: 4px 0;
+  margin: var(--space-xs) 0;
 }

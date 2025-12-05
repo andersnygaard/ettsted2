@@ -70,8 +70,9 @@ PARSING RULES:
 1. Norwegian number formats: spaces = thousands separator, comma = decimal (e.g., "175 584,24" = 175584.24)
 2. Remove "kr" currency symbols when parsing
 3. Dates: dd.MM.yyyy format (e.g., "01.09.2022")
-4. "kr -" or "-" = 0 or no value
-5. Asset classes: aksjer, fond, krypto, bankkonto, lån, pensjon
+4. ALWAYS use the FIRST day of the month for all dates. Normalize "15.12.2025" → "01.12.2025", "desember 2025" → "01.12.2025". This is a monthly tracking app - all snapshots must be on the 1st.
+5. "kr -" or "-" = 0 or no value
+6. Asset classes: aksjer, fond, krypto, bankkonto, lån, pensjon
 
 USER'S CONFIGURED ACCOUNTS:
 ${accountsList || '  (No accounts configured yet)'}

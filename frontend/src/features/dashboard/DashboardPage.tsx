@@ -2,7 +2,7 @@ import { useAuth } from '../auth/useAuth';
 import { formatCurrency } from '../../shared/utils/numberFormat';
 import { Link } from 'react-router-dom';
 import { useDashboardData } from './useDashboardData';
-import { PageHeader } from '@finans/components';
+import { PageHeader, Placeholder } from '@finans/components';
 import './DashboardPage.css';
 
 function DashboardPage() {
@@ -59,6 +59,7 @@ function DashboardPage() {
   if (isLoading) {
     return (
       <div className="dashboard-page">
+        <Placeholder/>
         <PageHeader title={`God morgen, ${firstName}`} subtitle="Laster..." />
       </div>
     );
@@ -67,6 +68,7 @@ function DashboardPage() {
   if (error) {
     return (
       <div className="dashboard-page">
+        <Placeholder/>
         <PageHeader title={`God morgen, ${firstName}`} subtitle="Feil ved lasting av data" />
       </div>
     );
@@ -74,6 +76,7 @@ function DashboardPage() {
 
   return (
     <div className="dashboard-page">
+      <Placeholder/>
       <PageHeader title={`God morgen, ${firstName}`} subtitle={monthYear} />
 
       {/* Hero Section - Net Worth or Sum Sparing */}

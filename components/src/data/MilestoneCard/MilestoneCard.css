@@ -10,10 +10,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding: 40px;
+  gap: var(--space-md);
+  padding: var(--space-3xl);
   max-width: 600px;
-  background: linear-gradient(135deg, #2c2c2c 0%, #3a3a3a 100%);
+  background: linear-gradient(135deg, var(--charcoal) 0%, var(--charcoal-light) 100%);
   border-radius: 2px;
   border: 1px solid rgba(245, 242, 237, 0.1);
 }
