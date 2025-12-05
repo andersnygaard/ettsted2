@@ -81,35 +81,19 @@ export default function ImportPage() {
       <div className="chatbot">
         {/* Messages area */}
         <div className="chatbot__messages">
-          {messages.length === 0 ? (
-            <div className="chatbot__empty">
-              <div className="chatbot__empty-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                  <polyline points="14,2 14,8 20,8" />
-                  <line x1="16" y1="13" x2="8" y2="13" />
-                  <line x1="16" y1="17" x2="8" y2="17" />
-                  <polyline points="10,9 9,9 8,9" />
-                </svg>
+          <>
+            {messages.map((msg) => (
+              <ChatMessage key={msg.id} message={msg} />
+            ))}
+            {isLoading && (
+              <div className="chatbot__typing">
+                <span className="chatbot__typing-dot"></span>
+                <span className="chatbot__typing-dot"></span>
+                <span className="chatbot__typing-dot"></span>
               </div>
-              <h3>Klar til å importere</h3>
-              <p>Lim inn data fra Excel, nettbank eller skriv det selv. Agenten finner datoer og kontoer automatisk.</p>
-            </div>
-          ) : (
-            <>
-              {messages.map((msg) => (
-                <ChatMessage key={msg.id} message={msg} />
-              ))}
-              {isLoading && (
-                <div className="chatbot__typing">
-                  <span className="chatbot__typing-dot"></span>
-                  <span className="chatbot__typing-dot"></span>
-                  <span className="chatbot__typing-dot"></span>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </>
-          )}
+            )}
+            <div ref={messagesEndRef} />
+          </>
         </div>
 
         {/* Input area */}
@@ -142,7 +126,7 @@ export default function ImportPage() {
         <Button variant="secondary" onClick={() => navigate('/portfolio')}>
           Tilbake til portefølje
         </Button>
-        {messages.length > 0 && (
+        {messages.length > 2 && (
           <Button variant="secondary" onClick={handleReset}>
             Ny samtale
           </Button>

@@ -28,6 +28,7 @@
   display: flex;
   flex-direction: column;
   animation: terms-dialog-enter 0.2s ease-out;
+  overflow: hidden;
 }
 
 @keyframes terms-dialog-enter {
@@ -44,10 +45,12 @@
 /* Close button */
 .terms-dialog__close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 2rem;
-  height: 2rem;
+  top: 12px;
+  right: 12px;
+  padding: 8px;
+  margin: 0;
+  min-width: 44px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -70,22 +73,26 @@
 /* Tab container */
 .terms-dialog__tabs {
   display: flex;
-  border-bottom: 1px solid var(--border, rgba(44, 44, 44, 0.08));
+  gap: 8px;
+  border-bottom: 2px solid var(--border, rgba(44, 44, 44, 0.08));
   flex-shrink: 0;
-  padding: 1rem 1.5rem 0;
+  padding: 0 1.5rem;
+  margin-bottom: 0;
 }
 
 /* Individual tabs */
 .terms-dialog__tab {
-  padding: 0.75rem 1.5rem 0.75rem 0;
-  background: none;
+  padding: 12px 24px;
+  background: transparent;
   border: none;
+  border-bottom: 2px solid transparent;
   cursor: pointer;
   font-family: var(--font-body, 'DM Sans', sans-serif);
   font-size: 0.9375rem;
   color: var(--text-secondary, #6B6B6B);
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
   position: relative;
+  font-weight: 400;
 }
 
 .terms-dialog__tab:hover {
@@ -96,16 +103,8 @@
 .terms-dialog__tab--active {
   color: var(--charcoal, #2C2C2C);
   font-weight: 500;
-}
-
-.terms-dialog__tab--active::after {
-  content: '';
-  position: absolute;
-  bottom: -1rem;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--charcoal, #2C2C2C);
+  border-bottom-color: var(--charcoal, #2C2C2C);
+  margin-bottom: -2px;
 }
 
 /* Scrollable content area */
@@ -192,11 +191,12 @@
   }
 
   .terms-dialog__tabs {
-    padding: 1rem 1rem 0;
+    padding: 0 1rem;
+    gap: 4px;
   }
 
   .terms-dialog__tab {
-    padding: 0.75rem 1rem 0.75rem 0;
+    padding: 12px 16px;
   }
 
   .terms-dialog__content {

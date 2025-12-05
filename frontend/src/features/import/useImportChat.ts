@@ -74,13 +74,29 @@ function getUserFriendlyError(err: Error & { code?: string; statusCode?: number 
 }
 
 /**
+ * Initial messages shown when import page loads
+ */
+const INITIAL_MESSAGES: Message[] = [
+  {
+    id: 'init-user',
+    role: 'user',
+    content: 'Hei',
+  },
+  {
+    id: 'init-agent',
+    role: 'assistant',
+    content: 'Jeg kan bare hjelpe med å importere porteføljedata. Lim inn data fra Excel eller nettbank, så hjelper jeg deg.',
+  },
+];
+
+/**
  * Hook for managing import chat state and API interactions
  *
  * The import agent executes tools directly - no confirmation step needed.
  * Actions are tracked and displayed in real-time.
  */
 export function useImportChat() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [lastStats, setLastStats] = useState<{
     snapshotsCreated: number;
@@ -165,7 +181,7 @@ export function useImportChat() {
    * Reset chat to initial state
    */
   const reset = () => {
-    setMessages([]);
+    setMessages(INITIAL_MESSAGES);
     setConversationId(null);
     setLastStats(null);
   };

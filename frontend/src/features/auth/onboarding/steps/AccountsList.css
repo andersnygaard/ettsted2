@@ -91,10 +91,7 @@
 }
 
 .accounts-list__toggle input {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--muted-sage, #8B9A7D);
-  cursor: pointer;
+  /* Inherits global checkbox styling */
 }
 
 .accounts-list__toggle-label {

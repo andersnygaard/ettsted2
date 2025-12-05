@@ -15,6 +15,7 @@ export interface DashboardData {
   sparerate: number;
   nextMilestone: number;
   currentTowardsMilestone: number;
+  sparingMonthlyChange: number;
 }
 
 /**
@@ -29,7 +30,8 @@ function getEmptyDashboardData(): DashboardData {
     pensjon: 0,
     sparerate: 0,
     nextMilestone: 100000,
-    currentTowardsMilestone: 0
+    currentTowardsMilestone: 0,
+    sparingMonthlyChange: 0
   };
 }
 
@@ -104,10 +106,17 @@ async function fetchDashboardData(): Promise<DashboardData> {
 
     // Calculate monthly change percentage (based on net worth)
     let monthlyChange = 0;
+    let sparingMonthlyChange = 0;
     if (previous) {
       const previousNetWorth = calculateNetWorth(previous.accounts);
+      const previousSumSparing = calculateCategorySum(previous.accounts, 'sparing');
+
       if (previousNetWorth !== 0) {
         monthlyChange = ((netWorth - previousNetWorth) / Math.abs(previousNetWorth)) * 100;
+      }
+
+      if (previousSumSparing !== 0) {
+        sparingMonthlyChange = ((sumSparing - previousSumSparing) / previousSumSparing) * 100;
       }
     }
 
@@ -121,7 +130,8 @@ async function fetchDashboardData(): Promise<DashboardData> {
       pensjon,
       sparerate: 0, // Calculated in DashboardPage from user profile
       nextMilestone,
-      currentTowardsMilestone: netWorth
+      currentTowardsMilestone: netWorth,
+      sparingMonthlyChange
     };
   } catch (error) {
     console.error('Error fetching dashboard data:', error);

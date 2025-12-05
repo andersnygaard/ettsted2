@@ -45,10 +45,9 @@
 }
 
 .table-footer__checkbox {
+  /* Inherits global checkbox styling, but with slightly smaller size */
   width: 14px;
   height: 14px;
-  cursor: pointer;
-  accent-color: var(--muted-sage);
 }
 
 .table-footer__toggle-label {
@@ -125,11 +124,7 @@
   }
 }
 
-/* Focus styles for accessibility */
-.table-footer__checkbox:focus-visible {
-  outline: 2px solid var(--muted-sage);
-  outline-offset: 2px;
-}
+/* Focus styles for accessibility - uses global checkbox focus styles */
 
 .table-footer__page-btn:focus-visible {
   outline: 2px solid var(--charcoal);

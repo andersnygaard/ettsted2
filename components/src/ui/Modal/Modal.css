@@ -20,6 +20,7 @@
 
 /* Modal container */
 .modal {
+  position: relative;
   background: var(--warm-white);
   border-radius: var(--radius-sm);
   width: auto;
@@ -32,7 +33,7 @@
 /* Modal header */
 .modal__header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   padding: var(--space-xl);
   border-bottom: 1px solid var(--border);
@@ -50,15 +51,19 @@
 
 /* Close button */
 .modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
   background: none;
   border: none;
   font-size: 32px;
   line-height: 1;
   color: var(--text-secondary);
   cursor: pointer;
-  padding: 0;
-  width: 32px;
-  height: 32px;
+  padding: 8px;
+  margin: 0;
+  min-width: 44px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;

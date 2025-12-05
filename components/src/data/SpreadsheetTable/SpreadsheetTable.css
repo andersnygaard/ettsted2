@@ -82,7 +82,7 @@
   cursor: default;
   position: sticky;
   left: 0;
-  z-index: 20;
+  z-index: 25;
   border-right: 2px solid var(--border-strong);
   width: 100px;
 }

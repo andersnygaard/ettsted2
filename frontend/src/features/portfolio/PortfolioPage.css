@@ -18,7 +18,7 @@
 /* Page actions */
 .portfolio-page__actions {
   display: flex;
-  justify-content: center;
+  justify-content: right;
   gap: var(--space-sm);
   margin-bottom: var(--space-2xl);
 }

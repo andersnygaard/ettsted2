@@ -516,6 +516,7 @@ export default function PortfolioPage() {
         isOpen={isNewMonthModalOpen}
         onClose={() => setIsNewMonthModalOpen(false)}
         onSuccess={handleNewMonthSuccess}
+        latestSnapshot={portfolioData[0]}
       />
 
       {/* Delete confirmation modal */}

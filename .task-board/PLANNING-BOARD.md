@@ -1,47 +1,13 @@
 # Planning Board - Finans
 
-**Current Focus**: User-requested polish and improvements
+**Current Focus**: All polish tasks complete! Ready for next phase.
 
 ---
 
 ## Dependency Graph
 
 ```
-127 Consistent Page Headers
- └── No dependencies
-
-128 Consistent Breadcrumbs
- └── No dependencies
-
-129 App Header Logo Two Lines
- └── No dependencies
-
-130 Negative Net Worth Focus Positives
- └── No dependencies
-
-132 User Self-Delete GDPR
- └── No dependencies
-
-133 Terms Dialog Tabs Clearer
- └── No dependencies
-
-134 Close Button Positioning
- └── No dependencies
-
-135 Date Header Z-Index
- └── No dependencies
-
-136 Checkbox Lighter Background
- └── No dependencies
-
-137 Import Agent Initial Messages
- └── No dependencies
-
-138 New Month Datepicker
- └── No dependencies
-
-139 New Month Copy Previous
- └── 138 (same modal)
+(All tasks completed)
 ```
 
 ---
@@ -50,31 +16,41 @@
 
 | # | Task | Type | Effort | Status |
 |---|------|------|--------|--------|
-| 130 | Negative Net Worth Focus Positives | FEATURE | Medium | Ready |
-| 133 | Terms Dialog Tabs Clearer | REFACTOR | Small | Ready |
-| 134 | Close Button Positioning | REFACTOR | Small | Ready |
-| 135 | Date Header Z-Index | REFACTOR | Quick | Ready |
-| 136 | Checkbox Lighter Background | REFACTOR | Quick | Ready |
+| - | Backlog empty | - | - | - |
 
 ---
 
 ## Full Backlog
 
-### Medium Priority
-- **130** - Negative Net Worth Focus Positives (Medium)
-- **133** - Terms Dialog Tabs Clearer (Small)
-- **134** - Close Button Positioning (Small)
-- **135** - Date Header Z-Index (Quick)
-- **137** - Import Agent Initial Messages (Small)
-- **138** - New Month Datepicker (Medium)
-- **139** - New Month Copy Previous (Medium)
-
-### Low Priority
-- **136** - Checkbox Lighter Background (Quick)
+(Empty - all tasks completed)
 
 ---
 
 ## Recently Completed
+
+### 139 - New Month Copy Previous (2025-12-05)
+Pre-fills new month modal with values from most recent snapshot. Shows "Verdier kopiert fra [dato]" message.
+
+### 138 - New Month Datepicker (2025-12-05)
+Month/year dropdown picker replacing text input. Norwegian month names, prevents future selection.
+
+### 137 - Import Agent Initial Messages (2025-12-05)
+Pre-populated chat messages on import page: "Hei" + instructions for pasting data.
+
+### 136 - Checkbox Lighter Background (2025-12-05)
+Global checkbox styling with lighter muted-sage background, hover states, checked indicator.
+
+### 135 - Date Header Z-Index (2025-12-05)
+Increased SpreadsheetTable date header z-index from 20 to 25 for proper sticky stacking.
+
+### 134 - Close Button Positioning (2025-12-05)
+Standardized close buttons across all modals: 12px from corner, 44x44px touch target.
+
+### 133 - Terms Dialog Tabs Clearer (2025-12-05)
+Underline-style tabs with clear active/inactive states and border-bottom indicator.
+
+### 130 - Negative Net Worth Focus Positives (2025-12-05)
+Dashboard shows "Sum sparing" as hero when net worth is negative. Milestone tracks savings progress.
 
 ### 129 - App Header Logo Two Lines (2025-12-05)
 Logo now displays on two lines: "finans." / "ettsted.no". Added white-space: pre CSS.
@@ -139,12 +115,8 @@ Removed hardcoded values from useSparingData.ts. Now fetches real data from `/ap
 
 | Status | Count |
 |--------|-------|
-| Done | 131 |
-| Backlog | 8 |
+| Done | 139 |
+| Backlog | 0 |
 | In Progress | 0 |
-
-**Backlog Breakdown**:
-- REFACTOR: 4 tasks (133, 134, 135, 136)
-- FEATURE: 4 tasks (130, 137, 138, 139)
 
 **Last Updated**: 2025-12-05

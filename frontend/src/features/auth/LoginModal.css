@@ -23,6 +23,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
   animation: modal-enter 0.2s ease-out;
+  overflow: hidden;
 }
 
 @keyframes modal-enter {
@@ -38,10 +39,12 @@
 
 .login-modal__close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 2rem;
-  height: 2rem;
+  top: 12px;
+  right: 12px;
+  padding: 8px;
+  margin: 0;
+  min-width: 44px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -25,7 +25,8 @@ function DashboardPage() {
     pensjon: 0,
     sparerate: 0,
     nextMilestone: 100000,
-    currentTowardsMilestone: 0
+    currentTowardsMilestone: 0,
+    sparingMonthlyChange: 0
   };
 
   // Get current month/year in Norwegian
@@ -35,12 +36,22 @@ function DashboardPage() {
     year: 'numeric',
   });
 
+  // Determine if net worth is negative and adjust metrics accordingly
+  const isNegativeNetWorth = data.netWorth < 0;
+
+  // Hero metrics: use savings when net worth is negative
+  const heroValue = isNegativeNetWorth ? data.sumSparing : data.netWorth;
+  const heroLabel = isNegativeNetWorth ? 'Sum sparing' : 'Netto formue';
+  const heroChange = isNegativeNetWorth ? data.sparingMonthlyChange : data.monthlyChange;
+
+  // Milestone: track savings progress when net worth is negative
+  const milestoneBase = isNegativeNetWorth ? data.sumSparing : data.currentTowardsMilestone;
   const milestoneProgress = Math.max(
     0,
-    Math.min((data.currentTowardsMilestone / data.nextMilestone) * 100, 100)
+    Math.min((milestoneBase / data.nextMilestone) * 100, 100)
   );
   const milestoneRemaining = Math.max(
-    data.nextMilestone - data.currentTowardsMilestone,
+    data.nextMilestone - milestoneBase,
     0
   );
 
@@ -65,21 +76,28 @@ function DashboardPage() {
     <div className="dashboard-page">
       <PageHeader title={`God morgen, ${firstName}`} subtitle={monthYear} />
 
-      {/* Hero Section - Net Worth */}
+      {/* Hero Section - Net Worth or Sum Sparing */}
       <div className="hero-section">
-        <div className="hero-label">Netto formue</div>
-        <div className="hero-value">{formatCurrency(data.netWorth)}</div>
-        <div className={`hero-change ${data.monthlyChange >= 0 ? 'positive' : 'negative'}`}>
-          {data.monthlyChange >= 0 ? '+' : ''}{data.monthlyChange.toFixed(2).replace('.', ',')}% denne måneden
+        <div className="hero-label">{heroLabel}</div>
+        <div className="hero-value">{formatCurrency(heroValue)}</div>
+        <div className={`hero-change ${heroChange >= 0 ? 'positive' : 'negative'}`}>
+          {heroChange >= 0 ? '+' : ''}{heroChange.toFixed(2).replace('.', ',')}% denne måneden
         </div>
       </div>
 
       {/* Quick Stats Grid */}
       <div className="quick-stats">
-        <Link to="/portfolio" className="quick-stat">
-          <div className="quick-stat-value">{formatCurrency(data.sumSparing)}</div>
-          <div className="quick-stat-label">Sum sparing</div>
-        </Link>
+        {isNegativeNetWorth ? (
+          <Link to="/portfolio" className="quick-stat">
+            <div className="quick-stat-value">{formatCurrency(data.netWorth)}</div>
+            <div className="quick-stat-label">Netto formue</div>
+          </Link>
+        ) : (
+          <Link to="/portfolio" className="quick-stat">
+            <div className="quick-stat-value">{formatCurrency(data.sumSparing)}</div>
+            <div className="quick-stat-label">Sum sparing</div>
+          </Link>
+        )}
         <Link to="/portfolio" className="quick-stat">
           <div className="quick-stat-value">{formatCurrency(data.sumGjeld)}</div>
           <div className="quick-stat-label">Sum gjeld</div>

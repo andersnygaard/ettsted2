@@ -5,7 +5,8 @@
  * Allows users to enter the month and account values for all tracked accounts.
  *
  * Features:
- * - Month selection using DateInput (always 1st of month)
+ * - Month/year picker using dropdown selects (always 1st of month)
+ * - Prevents selecting future months
  * - Account value inputs grouped by category (Sparing, Gjeld, Pensjon)
  * - Dynamic accounts from user.accounts configuration
  * - Form validation (required date, valid numbers)
@@ -16,9 +17,10 @@
  */
 
 import { useState, useMemo, useEffect } from 'react';
-import { Modal, Button, DateInput, NumberInput } from '@finans/components';
+import { Modal, Button, NumberInput } from '@finans/components';
 import { useAuth } from '@/features/auth/useAuth';
 import type { AccountConfig } from '@/features/auth/types';
+import type { PortfolioRow } from './usePortfolioData';
 import { useCreateSnapshot } from './usePortfolioData';
 import './NewMonthModal.css';
 
@@ -26,6 +28,7 @@ export interface NewMonthModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
+  latestSnapshot?: PortfolioRow;
 }
 
 type CategoryType = 'sparing' | 'gjeld' | 'pensjon';
@@ -51,14 +54,36 @@ interface FormErrors {
   general?: string;
 }
 
-export function NewMonthModal({ isOpen, onClose, onSuccess }: NewMonthModalProps) {
+export function NewMonthModal({ isOpen, onClose, onSuccess, latestSnapshot }: NewMonthModalProps) {
   const { user } = useAuth();
   const createSnapshot = useCreateSnapshot();
 
+  // Norwegian month names
+  const MONTHS = [
+    'Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni',
+    'Juli', 'August', 'September', 'Oktober', 'November', 'Desember',
+  ];
+
   // Form state - dynamic based on user accounts
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const [formData, setFormData] = useState<Record<string, number | undefined>>({});
   const [errors, setErrors] = useState<FormErrors>({});
+
+  // Generate available years (2020 to current year)
+  const availableYears = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    return Array.from({ length: currentYear - 2019 }, (_, i) => 2020 + i);
+  }, []);
+
+  // Check if a month/year combination is in the future
+  const isMonthDisabled = useMemo(() => {
+    return (monthIndex: number, year: number) => {
+      const now = new Date();
+      return year > now.getFullYear() ||
+             (year === now.getFullYear() && monthIndex > now.getMonth());
+    };
+  }, []);
 
   // Group accounts by category
   const accountsByCategory = useMemo(() => {
@@ -76,14 +101,33 @@ export function NewMonthModal({ isOpen, onClose, onSuccess }: NewMonthModalProps
     return grouped;
   }, [user?.accounts]);
 
-  // Reset form when modal opens
+  // Reset form when modal opens and pre-fill with latest snapshot values
   useEffect(() => {
     if (isOpen) {
-      setSelectedDate(new Date());
-      setFormData({});
+      const now = new Date();
+      setSelectedMonth(now.getMonth());
+      setSelectedYear(now.getFullYear());
       setErrors({});
+
+      // Pre-fill account values from latest snapshot
+      if (latestSnapshot) {
+        const initialValues: Record<string, number> = {};
+        latestSnapshot.accounts.forEach((acc) => {
+          // Find matching account config by name
+          const accountConfig = user?.accounts?.find(
+            (cfg) => cfg.name.toLowerCase() === acc.name.toLowerCase()
+          );
+          if (accountConfig) {
+            // Store gjeld as positive value (will be converted to negative during submission)
+            initialValues[accountConfig.id] = Math.abs(acc.value);
+          }
+        });
+        setFormData(initialValues);
+      } else {
+        setFormData({});
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, latestSnapshot, user?.accounts]);
 
   /**
    * Handle account value change
@@ -96,12 +140,11 @@ export function NewMonthModal({ isOpen, onClose, onSuccess }: NewMonthModalProps
   };
 
   /**
-   * Format date as dd.MM.yyyy
+   * Format date as dd.MM.yyyy using selected month and year
    */
-  const formatDate = (date: Date): string => {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
+  const formatDate = (monthIndex: number, year: number): string => {
+    const day = '01';
+    const month = String(monthIndex + 1).padStart(2, '0');
     return `${day}.${month}.${year}`;
   };
 
@@ -111,9 +154,9 @@ export function NewMonthModal({ isOpen, onClose, onSuccess }: NewMonthModalProps
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    // Validate date
-    if (!selectedDate || isNaN(selectedDate.getTime())) {
-      newErrors.date = 'Dato er påkrevd';
+    // Validate date (check if month is disabled)
+    if (isMonthDisabled(selectedMonth, selectedYear)) {
+      newErrors.date = 'Valgt måned er i fremtiden';
     }
 
     setErrors(newErrors);
@@ -145,7 +188,7 @@ export function NewMonthModal({ isOpen, onClose, onSuccess }: NewMonthModalProps
 
     try {
       await createSnapshot.mutateAsync({
-        date: formatDate(selectedDate!),
+        date: formatDate(selectedMonth, selectedYear),
         accounts,
         totalNetWorth,
       });
@@ -175,7 +218,9 @@ export function NewMonthModal({ isOpen, onClose, onSuccess }: NewMonthModalProps
    * Reset form and close modal
    */
   const handleClose = () => {
-    setSelectedDate(new Date());
+    const now = new Date();
+    setSelectedMonth(now.getMonth());
+    setSelectedYear(now.getFullYear());
     setFormData({});
     setErrors({});
     onClose();
@@ -212,6 +257,13 @@ export function NewMonthModal({ isOpen, onClose, onSuccess }: NewMonthModalProps
       }
     >
       <form onSubmit={handleSubmit} className="new-month-modal__form">
+        {/* Info when values are copied from previous snapshot */}
+        {latestSnapshot && (
+          <div className="new-month-modal__info" role="status">
+            Verdier kopiert fra {latestSnapshot.date} — endre etter behov
+          </div>
+        )}
+
         {/* General error */}
         {errors.general && (
           <div className="new-month-modal__error" role="alert">
@@ -221,16 +273,47 @@ export function NewMonthModal({ isOpen, onClose, onSuccess }: NewMonthModalProps
 
         {/* Date selection */}
         <div className="new-month-modal__section">
-          <DateInput
-            value={selectedDate}
-            onChange={setSelectedDate}
-            label="Måned"
-            monthPicker
-            required
-            error={errors.date}
-            disabled={isLoading}
-            placeholder="MM.yyyy"
-          />
+          <label className="new-month-modal__label">
+            Måned
+            <span className="new-month-modal__required">*</span>
+          </label>
+          <div className="new-month-modal__date-picker">
+            <select
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(parseInt(e.target.value, 10))}
+              disabled={isLoading}
+              className="new-month-modal__select"
+              aria-label="Velg måned"
+            >
+              {MONTHS.map((month, index) => (
+                <option
+                  key={month}
+                  value={index}
+                  disabled={isMonthDisabled(index, selectedYear)}
+                >
+                  {month}
+                </option>
+              ))}
+            </select>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(parseInt(e.target.value, 10))}
+              disabled={isLoading}
+              className="new-month-modal__select"
+              aria-label="Velg år"
+            >
+              {availableYears.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+          {errors.date && (
+            <span className="new-month-modal__error-message" role="alert">
+              {errors.date}
+            </span>
+          )}
         </div>
 
         {/* Dynamic account sections */}
