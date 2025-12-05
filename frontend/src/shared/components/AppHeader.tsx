@@ -133,7 +133,7 @@ export default function AppHeader() {
       <header className="app-header">
         <div className="app-header__container">
           <Link to="/" className="app-header__logo">
-            {isAuthenticated ? 'finans.' : 'finans.ettsted.no'}
+            {'finans.\nettsted.no'}
           </Link>
 
           {isAuthenticated && (

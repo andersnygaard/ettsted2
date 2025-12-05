@@ -2,6 +2,10 @@
   display: block;
   padding-bottom: var(--space-3xl);
   text-align: center;
+
+  &.centered {
+    text-align: center;
+  }
 }
 
 .page-header__title {

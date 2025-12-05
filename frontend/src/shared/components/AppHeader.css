@@ -31,6 +31,8 @@
   text-decoration: none;
   color: var(--charcoal);
   transition: opacity var(--transition-fast);
+  white-space: pre;
+  line-height: 1.2;
 }
 
 .app-header__logo:hover {
@@ -175,7 +177,7 @@
   }
 
   .app-header__logo {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .app-header__nav {

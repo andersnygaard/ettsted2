@@ -50,11 +50,11 @@
 
 | # | Task | Type | Effort | Status |
 |---|------|------|--------|--------|
-| 129 | App Header Logo Two Lines | FEATURE | Small | Ready |
 | 130 | Negative Net Worth Focus Positives | FEATURE | Medium | Ready |
 | 133 | Terms Dialog Tabs Clearer | REFACTOR | Small | Ready |
 | 134 | Close Button Positioning | REFACTOR | Small | Ready |
 | 135 | Date Header Z-Index | REFACTOR | Quick | Ready |
+| 136 | Checkbox Lighter Background | REFACTOR | Quick | Ready |
 
 ---
 
@@ -70,12 +70,14 @@
 - **139** - New Month Copy Previous (Medium)
 
 ### Low Priority
-- **129** - App Header Logo Two Lines (Small)
 - **136** - Checkbox Lighter Background (Quick)
 
 ---
 
 ## Recently Completed
+
+### 129 - App Header Logo Two Lines (2025-12-05)
+Logo now displays on two lines: "finans." / "ettsted.no". Added white-space: pre CSS.
 
 ### 128 - Consistent Breadcrumbs (2025-12-05)
 Added breadcrumbs to all main pages: Portefølje, Sparing, Gjeld, Pensjon, Kalkulatorer. Format: "Hjem → [Page]".
@@ -137,12 +139,12 @@ Removed hardcoded values from useSparingData.ts. Now fetches real data from `/ap
 
 | Status | Count |
 |--------|-------|
-| Done | 130 |
-| Backlog | 9 |
+| Done | 131 |
+| Backlog | 8 |
 | In Progress | 0 |
 
 **Backlog Breakdown**:
 - REFACTOR: 4 tasks (133, 134, 135, 136)
-- FEATURE: 5 tasks (129, 130, 137, 138, 139)
+- FEATURE: 4 tasks (130, 137, 138, 139)
 
 **Last Updated**: 2025-12-05
