@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Manual testing file for Norwegian localization utilities
  *

@@ -4,6 +4,7 @@
  */
 
 .sparing-page {
+  background: var(--bone);
   padding-top: var(--space-xl);
   padding-bottom: var(--space-2xl);
 }

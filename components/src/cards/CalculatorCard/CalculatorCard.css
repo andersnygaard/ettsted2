@@ -4,7 +4,8 @@
  */
 
 .calc-card {
-  background: var(--warm-white);
+  background: var(--card-bg);
+  border: var(--border-subtle);
   padding: 40px;
   border-radius: var(--radius-sm);
   text-decoration: none;
@@ -32,7 +33,7 @@
 }
 
 .calc-icon {
-  width: 56px;
+  width: 100%;
   height: 56px;
   border-radius: var(--radius-md);
   background: var(--bone);

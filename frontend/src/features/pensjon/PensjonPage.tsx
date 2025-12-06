@@ -1,9 +1,8 @@
-import { PageSkeleton, HeroNumber, StackedAreaChart } from '@finans/components';
+import { PageSkeleton, HeroNumber, StackedAreaChart, BreakdownCard } from '@finans/components';
 import type { StackedDataPoint, Series } from '@finans/components';
-import { PensjonSkeleton } from '@/shared/components/skeletons';
+import { PensjonSkeleton } from '@/shared/components';
 import { formatCurrency } from '@/shared/utils/numberFormat';
 import { usePensjonData } from './usePensjonData';
-import { BreakdownCards, BreakdownItem } from './BreakdownCards';
 import { OtpSection } from './OtpSection';
 import './PensjonPage.css';
 
@@ -71,25 +70,6 @@ function PensjonPage() {
   const arbeidsgiverPercent = arbeidsgiverItem?.percent || 0;
   const navPercent = navItem?.percent || 0;
 
-  // Breakdown items for cards
-  const breakdownItems: BreakdownItem[] = [
-    {
-      icon: '🏢',
-      iconLabel: 'Arbeidsgiver',
-      value: arbeidsgiver,
-      label: 'Pensjon arbeidsgiver',
-      percentage: Math.round(arbeidsgiverPercent),
-      variant: 'arbeidsgiver',
-    },
-    {
-      icon: '🏛️',
-      iconLabel: 'NAV',
-      value: nav,
-      label: 'Pensjon NAV',
-      percentage: Math.round(navPercent),
-      variant: 'nav',
-    },
-  ];
 
   // Chart data from history
   const chartData: StackedDataPoint[] = pensjonData.history.map(h => ({
@@ -117,7 +97,24 @@ function PensjonPage() {
           changeLabel={`Estimert ved pensjonering: ${formatCurrency(pensjonData.estimatedAtRetirement)}`}
         />
 
-        <BreakdownCards items={breakdownItems} />
+        <section className="breakdown-section">
+          <BreakdownCard
+            icon="🏢"
+            iconLabel="Arbeidsgiver"
+            value={arbeidsgiver}
+            label="Pensjon arbeidsgiver"
+            percentage={Math.round(arbeidsgiverPercent)}
+            variant="primary"
+          />
+          <BreakdownCard
+            icon="🏛️"
+            iconLabel="NAV"
+            value={nav}
+            label="Pensjon NAV"
+            percentage={Math.round(navPercent)}
+            variant="secondary"
+          />
+        </section>
 
         <OtpSection percentage={Math.round(pensjonData.otpPercent)} trend="up" />
 

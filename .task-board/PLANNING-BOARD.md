@@ -23,60 +23,27 @@
 
 | # | Task | Type | Priority | Effort |
 |---|------|------|----------|--------|
-| 166 | Update jws vulnerability (CVE-2025-65945) | Security | HIGH | Simple |
-| 168 | Consolidate parseDate() duplication | Refactor | HIGH | Simple |
-| 167 | Add safeguard for dev routes | Security | MODERATE | Simple |
-| 169 | Fix SpreadsheetTable color swap | Bug | MEDIUM | Simple |
-| 170-172 | Accessibility fixes (3 items) | A11Y | MEDIUM | Simple |
+| 185 | Missing Storybook stories | Feature | LOW | Medium |
 
 ---
 
 ## Full Backlog
 
-### Security (HIGH)
-- 166-SECURITY-update-jws-vulnerability (CVE-2025-65945)
-- 167-SECURITY-dev-routes-safeguard
-
-### Code Quality (HIGH)
-- 168-REFACTOR-consolidate-parsedate (5 duplications → shared util)
-- 156-REFACTOR-controller-dry-pattern (backend error handling)
-- 173-REFACTOR-sparing-gjeld-api-service (raw fetch → axios)
-
-### Bugs (MEDIUM)
-- 169-BUG-spreadsheet-color-swap (Sparing/Pensjon colors wrong)
-- 176-BUG-main-padding-gap (main element padding artifacts)
-- 178-BUG-delete-modal-icon-alignment (warning icon misaligned)
-
-### Accessibility (MEDIUM)
-- 170-A11Y-avatar-aria-label
-- 171-A11Y-statcard-keyboard
-- 172-A11Y-modal-close-label
-
-### Refactors (MEDIUM)
-- 177-REFACTOR-consolidate-settings-economy (delete duplicate SettingsPage)
-- 174-REFACTOR-extract-constants (magic numbers)
-- 175-REFACTOR-query-invalidation-helper
-
-### Design (MEDIUM)
-- 179-DESIGN-buttons-white-background (solid backgrounds)
-- 180-DESIGN-surface-color-consistency (use #faf6f4 for cards)
-
-### Features/Animations (BACKLOG)
-- 145-FEATURE-enhanced-hover-animations
-- 146-FEATURE-page-transition-animations
-- 147-FEATURE-hero-number-counting-animation
-- 151-FEATURE-chart-entry-animations
-- 152-REFACTOR-animation-utility-consolidation
-- 153-FEATURE-progress-bar-animations
-- 154-FEATURE-modal-transition-improvements
-- 155-FEATURE-skeleton-loading-consistency
-- 157-FEATURE-input-focus-animations
-- 158-FEATURE-navigation-active-indicator
-- 159-FEATURE-responsive-animation-adjustments
+### Features (LOW)
+- 185-FEATURE-missing-storybook-stories (documentation)
 
 ---
 
 ## Recently Completed
+
+### 184 - Remove Console.log Statements (2025-12-06)
+Added ESLint rule, cleaned up debug logs from production code.
+
+### 182 - Monte Carlo E2E Test (2025-12-06)
+Re-enabled Monte Carlo in E2E tests. Passes 10/10 runs.
+
+### 181 - Dashboard SectionLink URLs (2025-12-06)
+Fixed incorrect hrefs on Sparing & Kalkulatorer links.
 
 ### 149 - Year Badge "+-" Format (2025-12-06)
 Fixed hardcoded "+" prefix in SparingPage.
@@ -102,8 +69,8 @@ Fixed asset class categorization in backend.
 
 | Status | Count |
 |--------|-------|
-| Done | 156 |
-| Backlog | 18 |
-| In Progress | 1 |
+| Done | 159 |
+| Backlog | 1 |
+| In Progress | 0 |
 
-**Last Updated**: 2025-12-06 (Task Discovery)
+**Last Updated**: 2025-12-06

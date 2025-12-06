@@ -5,6 +5,7 @@
 
 /* Shared calculator page styles */
 .calculator-page {
+  background: var(--bone);
   padding-top: var(--space-md);
 }
 
@@ -14,6 +15,10 @@
   grid-template-columns: 1fr 1fr;
   gap: 24px;
   margin-bottom: var(--space-lg);
+}
+
+.calculator-layout > * {
+  border: var(--border-subtle);
 }
 
 @media (max-width: 768px) {

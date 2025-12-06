@@ -1,6 +1,7 @@
 /* LoginPage - Nordic Minimal Design */
 
 .login-page {
+  background: var(--bone);
   display: flex;
   align-items: center;
   justify-content: center;

@@ -4,6 +4,7 @@
  */
 
 .landing-page {
+  background: var(--bone);
   width: 100%;
 }
 
@@ -272,7 +273,7 @@
   }
 
   .landing-btn {
-    width: 100%;
+    width: calc(100% - 76px);
     max-width: 280px;
     justify-content: center;
   }

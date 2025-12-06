@@ -10,7 +10,8 @@
   justify-content: center;
   gap: 4px;
   padding: 24px 20px;
-  background: var(--warm-white);
+  background: var(--card-bg);
+  border: var(--border-subtle);
   border-radius: 2px;
   text-decoration: none;
   color: inherit;
@@ -57,4 +58,11 @@
 .stat-card--clickable:focus {
   outline: 2px solid var(--muted-sage);
   outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stat-card {
+    width: 100%;
+  }
 }

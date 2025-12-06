@@ -15,7 +15,7 @@ export const CALCULATOR_PAGES = [
   { path: '/kalkulatorer/rentes-rente', name: 'Rentes rente' },
   { path: '/kalkulatorer/fire', name: 'F.I.R.E.' },
   { path: '/kalkulatorer/lan', name: 'Lån' },
-  // Monte Carlo excluded - known flaky auth issue (TODO: investigate)
+  { path: '/kalkulatorer/monte-carlo', name: 'Monte Carlo' },
 ] as const;
 
 /** All pages to test */

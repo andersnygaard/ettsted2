@@ -41,6 +41,7 @@
 - **Pattern**: Sanity check suite with fixtures
 - **Focus**: Page health, navigation, auth flows
 - **Docs**: See [e2e/README.md](../e2e/README.md)
+- **Note**: No unit tests - E2E only for now
 
 ---
 

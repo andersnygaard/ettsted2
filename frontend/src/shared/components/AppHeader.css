@@ -12,13 +12,13 @@
 }
 
 .app-header__container {
-  max-width: var(--container-max-width);
   margin: 0 auto;
   padding: 0 var(--space-4xl);
   display: flex;
   align-items: center;
   gap: 48px;
   overflow: visible;
+  width:100%;
 }
 
 /* Logo */
@@ -33,6 +33,7 @@
   transition: opacity var(--transition-fast);
   white-space: pre;
   line-height: 1.2;
+  padding-left:32px;
 }
 
 .app-header__logo:hover {
@@ -142,6 +143,10 @@
 
   .app-header__nav-item {
     font-size: 10px;
+  }
+
+  .landing-btn {
+    width: calc(100% - 76px);
   }
 }
 

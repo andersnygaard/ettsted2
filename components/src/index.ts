@@ -40,15 +40,22 @@ export type { ProgressBarProps } from './forms/ProgressBar'
 export { formatNumber, parseNumber } from './forms/utils/numberFormat'
 export { formatDate, parseNorwegianDate, getFirstDayOfMonth } from './forms/utils/dateFormat'
 
+// Cards
+export { BreakdownCard } from './cards/BreakdownCard'
+export type { BreakdownCardProps } from './cards/BreakdownCard'
+
+export { StatCard } from './cards/StatCard'
+export type { StatCardProps } from './cards/StatCard'
+
+export { CalculatorCard } from './cards/CalculatorCard'
+export type { CalculatorCardProps } from './cards/CalculatorCard'
+
+export { MilestoneCard } from './cards/MilestoneCard'
+export type { MilestoneCardProps } from './cards/MilestoneCard'
+
 // Data Display Components
 export { HeroNumber } from './data/HeroNumber'
 export type { HeroNumberProps } from './data/HeroNumber'
-
-export { StatCard } from './data/StatCard'
-export type { StatCardProps } from './data/StatCard'
-
-export { MilestoneCard } from './data/MilestoneCard'
-export type { MilestoneCardProps } from './data/MilestoneCard'
 
 export { StatsRow } from './data/StatsRow'
 export type { StatsRowProps, Stat } from './data/StatsRow'
@@ -84,9 +91,6 @@ export type { DonutChartProps } from './charts/DonutChart'
 // Layout Components
 export { SectionLink } from './layout/SectionLink'
 export type { SectionLinkProps } from './layout/SectionLink'
-
-export { CalculatorCard } from './layout/CalculatorCard'
-export type { CalculatorCardProps } from './layout/CalculatorCard'
 
 export { PageHeader } from './layout/PageHeader/PageHeader'
 export type { PageHeaderProps } from './layout/PageHeader/PageHeader'

@@ -4,6 +4,7 @@
  */
 
 .calculators-page {
+  background: var(--bone);
   padding-top: var(--space-xl);
 }
 

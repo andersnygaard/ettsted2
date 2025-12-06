@@ -1,8 +1,11 @@
 /* Dashboard Page - Nordic Minimal Design */
 
 .dashboard-page {
+  background: var(--bone);
+}
+
+.dashboard-page .container {
   max-width: 1200px;
-  margin: 0 auto;
   padding: var(--space-xl) var(--space-4xl) 0;
 }
 
@@ -73,48 +76,6 @@
   margin-right: auto;
 }
 
-.quick-stat {
-  background: var(--card-bg););
-  padding: var(--space-2xl);
-  border-radius: 2px;
-  border: var(--border-subtle);
-  text-align: center;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  opacity: 0;
-  animation: fadeUp 0.5s ease forwards;
-}
-
-.quick-stat:nth-child(1) { animation-delay: 0.1s; }
-.quick-stat:nth-child(2) { animation-delay: 0.15s; }
-.quick-stat:nth-child(3) { animation-delay: 0.2s; }
-.quick-stat:nth-child(4) { animation-delay: 0.25s; }
-
-@media (hover: hover) {
-  .quick-stat:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
-  }
-}
-
-.quick-stat-value {
-  font-family: var(--font-heading);
-  font-size: 32px;
-  font-weight: 400;
-  margin-bottom: var(--space-xs);
-  color: var(--charcoal);
-  white-space: nowrap;
-}
-
-.quick-stat-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-secondary);
-  white-space: nowrap;
-}
-
 /* Milestone Section */
 .milestone-section {
   max-width: 600px;
@@ -179,7 +140,25 @@
   gap: var(--space-lg);
 }
 
-.section-link {
-  background: var(--card-bg);
-  padding: var(--space-2xl);
-  border-radius: 2px;.btn--secondary {
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-value {
+    font-size: 48px;
+  }
+
+  .quick-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .section-links {
+    grid-template-columns: 1fr;
+  }
+
+  .milestone-section {
+    padding: var(--space-sm);
+  }
+
+  .milestone-value {
+    font-size: 36px;
+  }
+}

@@ -4,6 +4,7 @@
  */
 
 .pensjon-page {
+  background: var(--bone);
   padding-top: var(--space-xl);
   padding-bottom: var(--space-2xl);
 }
@@ -22,65 +23,10 @@
   }
 }
 
-.breakdown-card {
-  background: var(--warm-white);
-  padding: var(--space-lg);
-  border: var(--border-subtle);
-  border-radius: 2px;
-  text-align: center;
-  animation: fadeUp 0.5s ease forwards;
-  opacity: 0;
-}
-
-.breakdown-card:nth-child(1) {
-  animation-delay: 0.1s;
-}
-
-.breakdown-card:nth-child(2) {
-  animation-delay: 0.15s;
-}
-
-.breakdown-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto var(--space-sm);
-  font-size: 20px;
-}
-
-.breakdown-icon--arbeidsgiver {
-  background: rgba(184, 197, 208, 0.3);
-}
-
-.breakdown-icon--nav {
-  background: rgba(212, 149, 106, 0.2);
-}
-
-.breakdown-value {
-  font-family: var(--font-heading);
-  font-size: 36px;
-  font-weight: 400;
-  margin-bottom: var(--space-xs);
-}
-
-.breakdown-label {
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin-bottom: 4px;
-}
-
-.breakdown-percent {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  color: var(--muted-sage);
-}
-
 /* OTP Section */
 .otp-section {
-  background: var(--warm-white);
+  background: var(--card-bg);
+  border: var(--border-subtle);
   padding: var(--space-lg);
   border-radius: 2px;
   margin-bottom: var(--space-lg);

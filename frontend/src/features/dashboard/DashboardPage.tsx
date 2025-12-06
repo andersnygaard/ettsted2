@@ -1,13 +1,14 @@
 import { useAuth } from '../auth/useAuth';
 import { formatCurrency } from '../../shared/utils/numberFormat';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDashboardData } from './useDashboardData';
-import { PageSkeleton } from '@finans/components';
+import { PageSkeleton, StatCard, SectionLink } from '@finans/components';
 import { DashboardSkeleton } from '@/shared/components/skeletons';
 import { MILESTONES } from '@/config/constants';
 import './DashboardPage.css';
 
 function DashboardPage() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { data: dashboardData, isLoading, error } = useDashboardData();
   const firstName = user?.nickname?.split(' ')[0] || 'bruker';
@@ -105,31 +106,26 @@ function DashboardPage() {
 
         {/* Quick Stats Grid */}
         <div className="quick-stats">
-          {isNegativeNetWorth ? (
-            <Link to="/portfolio" className="quick-stat">
-              <div className="quick-stat-value">{formatCurrency(data.netWorth)}</div>
-              <div className="quick-stat-label">Netto formue</div>
-            </Link>
-          ) : (
-            <Link to="/portfolio" className="quick-stat">
-              <div className="quick-stat-value">{formatCurrency(data.sumSparing)}</div>
-              <div className="quick-stat-label">Sum sparing</div>
-            </Link>
-          )}
-          <Link to="/portfolio" className="quick-stat">
-            <div className="quick-stat-value">{formatCurrency(data.sumGjeld)}</div>
-            <div className="quick-stat-label">Sum gjeld</div>
-          </Link>
-          <Link to="/portfolio" className="quick-stat">
-            <div className="quick-stat-value">{formatCurrency(data.pensjon)}</div>
-            <div className="quick-stat-label">Pensjon</div>
-          </Link>
-          <Link to="/portfolio" className="quick-stat">
-            <div className="quick-stat-value">
-              {sparerate.toFixed(2).replace('.', ',')}%
-            </div>
-            <div className="quick-stat-label">Sparerate</div>
-          </Link>
+          <StatCard
+            value={isNegativeNetWorth ? formatCurrency(data.netWorth) : formatCurrency(data.sumSparing)}
+            label={isNegativeNetWorth ? 'Netto formue' : 'Sum sparing'}
+            onClick={() => navigate('/portfolio')}
+          />
+          <StatCard
+            value={formatCurrency(data.sumGjeld)}
+            label="Sum gjeld"
+            onClick={() => navigate('/portfolio')}
+          />
+          <StatCard
+            value={formatCurrency(data.pensjon)}
+            label="Pensjon"
+            onClick={() => navigate('/portfolio')}
+          />
+          <StatCard
+            value={`${sparerate.toFixed(2).replace('.', ',')}%`}
+            label="Sparerate"
+            onClick={() => navigate('/portfolio')}
+          />
         </div>
 
         {/* Milestone Section */}
@@ -150,27 +146,21 @@ function DashboardPage() {
 
         {/* Section Links */}
         <div className="section-links">
-          <Link to="/portfolio" className="section-link">
-            <div>
-              <div className="section-link-title">Portefølje</div>
-              <div className="section-link-subtitle">Se alle kontoer og historikk</div>
-            </div>
-            <span className="section-link-arrow">→</span>
-          </Link>
-          <Link to="/portfolio" className="section-link">
-            <div>
-              <div className="section-link-title">Sparing & F.I.R.E.</div>
-              <div className="section-link-subtitle">Fremgang mot økonomisk frihet</div>
-            </div>
-            <span className="section-link-arrow">→</span>
-          </Link>
-          <Link to="/calculators" className="section-link">
-            <div>
-              <div className="section-link-title">Kalkulatorer</div>
-              <div className="section-link-subtitle">Rente, lån og simuleringer</div>
-            </div>
-            <span className="section-link-arrow">→</span>
-          </Link>
+          <SectionLink
+            title="Portefølje"
+            subtitle="Se alle kontoer og historikk"
+            href="/portfolio"
+          />
+          <SectionLink
+            title="Sparing & F.I.R.E."
+            subtitle="Fremgang mot økonomisk frihet"
+            href="/sparing"
+          />
+          <SectionLink
+            title="Kalkulatorer"
+            subtitle="Rente, lån og simuleringer"
+            href="/kalkulatorer"
+          />
         </div>
     </PageSkeleton>
   );

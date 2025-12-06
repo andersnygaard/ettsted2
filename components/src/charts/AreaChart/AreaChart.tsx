@@ -36,7 +36,7 @@ export function AreaChart({
 }: AreaChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 400 });
+  const [dimensions, setDimensions] = useState({ width: 0 });
 
   // Handle resize
   useEffect(() => {
@@ -53,7 +53,7 @@ export function AreaChart({
 
   // Draw chart
   useEffect(() => {
-    if (!svgRef.current || !data.length) return;
+    if (!svgRef.current || !data.length || dimensions.width === 0) return;
 
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove();

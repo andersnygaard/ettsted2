@@ -123,7 +123,6 @@ export function PortfolioTableFooterExample() {
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
     // Here you would also fetch new data for the page
-    console.log(`Fetching data for page ${newPage}`);
   };
 
   const handleToggleColumn = (groupId: string) => {
@@ -133,7 +132,6 @@ export function PortfolioTableFooterExample() {
       )
     );
     // Here you would also update the table to show/hide columns
-    console.log(`Toggling column group: ${groupId}`);
   };
 
   return (

@@ -18,7 +18,8 @@
 }
 
 .stats-row__item {
-  background: var(--warm-white);
+  background: var(--card-bg);
+  border: var(--border-subtle);
   padding: var(--space-lg);
   border-radius: 2px;
   text-align: center;

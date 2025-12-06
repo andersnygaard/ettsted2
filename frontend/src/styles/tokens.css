@@ -53,11 +53,11 @@
   /* Borders */
   --border: rgba(44, 44, 44, 0.08);       /* Subtle borders */
   --border-strong: rgba(44, 44, 44, 0.15); /* More visible borders */
-  --border-subtle: 0.5px solid #efefef;    /* Very subtle card borders */
+  --border-subtle: 0.5px solid #E5E2DE;    /* Very subtle card borders */
   --surface: #faf6f4;  
   
   /* Cards*/
-   --card-bg: #fefefe;       /* Primary card background */
+   --card-bg: #faf6f4;       /* Primary card background */
 
   /* Buttons */
   --btn-primary-bg: var(--charcoal);
@@ -65,9 +65,9 @@
   --btn-primary-hover-bg: #444433;
   --btn-primary-disabled-bg: var(--carcoal-hover);
 
-  --btn-secondary-bg: #fefefe;
-  --btn-secondary-hover-bg: #f5f2ed;
-  --btn-secondary-disabled-bg: #faf6f4;
+  --btn-secondary-bg: transparent;
+  --btn-secondary-hover-bg: var(--bone);
+  --btn-secondary-disabled-bg: transparent;
   --btn-secondary-color: var(--charcoal);
 
   /* ============================================

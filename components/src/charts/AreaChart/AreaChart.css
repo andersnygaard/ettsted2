@@ -4,7 +4,8 @@
  */
 
 .area-chart {
-  background: var(--warm-white);
+  background: var(--card-bg);
+  border: var(--border-subtle);
   padding: var(--space-lg);
   border-radius: 2px;
   animation: fadeUp 0.6s ease forwards;
@@ -32,10 +33,12 @@
 
 .area-chart__container {
   position: relative;
+  overflow: hidden;
 }
 
 .area-chart__svg {
   display: block;
+  overflow: hidden;
 }
 
 .area-chart__x-axis {
