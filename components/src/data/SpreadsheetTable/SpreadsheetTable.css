@@ -372,11 +372,16 @@
 
   .spreadsheet td {
     font-size: 10px;
-    padding: var(--space-sm) var(--space-sm);
+    padding: var(--space-xs);
   }
 
   .spreadsheet .group-header-row th {
     font-size: 9px;
     padding: var(--space-xs) var(--space-sm);
+  }
+
+  .action-cell {
+    position: static;
+    border-left: none;
   }
 }

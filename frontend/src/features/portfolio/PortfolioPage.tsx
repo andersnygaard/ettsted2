@@ -58,7 +58,6 @@ export default function PortfolioPage() {
   const milestones = portfolioDataWithMilestones?.milestones ?? {};
 
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
-  const [searchValue, setSearchValue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [visibleGroups, setVisibleGroups] = useState<Set<string>>(
     new Set(['sparing', 'gjeld', 'pensjon'])
@@ -231,16 +230,8 @@ export default function PortfolioPage() {
       });
     }
 
-    // Filter by search (searches date column)
-    if (searchValue.trim()) {
-      const searchLower = searchValue.toLowerCase().trim();
-      filtered = filtered.filter((row) =>
-        row.date.toLowerCase().includes(searchLower)
-      );
-    }
-
     return filtered;
-  }, [tableData, selectedYear, searchValue]);
+  }, [tableData, selectedYear]);
 
   // Pagination
   const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
@@ -252,11 +243,6 @@ export default function PortfolioPage() {
   // Reset to page 1 when filters change
   const handleYearChange = (year: number | null) => {
     setSelectedYear(year);
-    setCurrentPage(1);
-  };
-
-  const handleSearchChange = (value: string) => {
-    setSearchValue(value);
     setCurrentPage(1);
   };
 
@@ -457,14 +443,12 @@ export default function PortfolioPage() {
 
         {/* Table container */}
         <div className="table-container">
-          {/* Table header with year filter and search */}
+          {/* Table header with year filter */}
           <TableHeader
             title="Månedlig historikk"
             years={availableYears}
             selectedYear={selectedYear}
             onYearChange={handleYearChange}
-            searchValue={searchValue}
-            onSearchChange={handleSearchChange}
           />
 
           {/* Spreadsheet table */}

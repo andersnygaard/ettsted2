@@ -32,12 +32,6 @@
   .calculator-info {
     padding: var(--space-lg);
   }
-
-  .result-value {
-    font-size: 32px;
-    white-space: normal;
-    word-break: break-word;
-  }
 }
 
 /* Input card styles */
@@ -78,6 +72,20 @@
   color: var(--charcoal);
   line-height: 1.1;
   white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .result-value {
+    font-size: 32px;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .result-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
 }
 
 /* Result breakdown list */

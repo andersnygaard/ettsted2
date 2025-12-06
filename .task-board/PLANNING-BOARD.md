@@ -1,6 +1,6 @@
 # Planning Board - Finans
 
-**Current Focus**: Code quality and accessibility from due diligence audit (2025-12-06)
+**Current Focus**: CI/CD improvements and documentation polish (2025-12-06)
 
 ---
 
@@ -15,7 +15,7 @@
 | 85/100 | Security | Good (corrected) |
 | **83/100** | **Overall** | Production-ready |
 
-> **Note**: Tasks 164-165 (secrets exposure) were false positives - .env files properly gitignored.
+> **Note**: Many due diligence items were false positives (parseDate, ErrorBoundary, accessibility) - all already implemented correctly.
 
 ---
 
@@ -23,11 +23,17 @@
 
 | # | Task | Type | Priority | Effort |
 |---|------|------|----------|--------|
-| 185 | Missing Storybook stories | Feature | LOW | Medium |
+| 186 | CI security audit | Feature | MEDIUM | Simple |
+| 187 | CI E2E tests | Feature | MEDIUM | Medium |
+| 185 | Missing Storybook stories | Feature | LOW | Simple |
 
 ---
 
 ## Full Backlog
+
+### Features (MEDIUM)
+- 186-FEATURE-ci-security-audit (add pnpm audit to CI)
+- 187-FEATURE-ci-e2e-tests (run Playwright in CI)
 
 ### Features (LOW)
 - 185-FEATURE-missing-storybook-stories (documentation)
@@ -73,7 +79,7 @@ Fixed asset class categorization in backend.
 | Status | Count |
 |--------|-------|
 | Done | 160 |
-| Backlog | 1 |
+| Backlog | 3 |
 | In Progress | 0 |
 
-**Last Updated**: 2025-12-06
+**Last Updated**: 2025-12-06 (Task Discovery)

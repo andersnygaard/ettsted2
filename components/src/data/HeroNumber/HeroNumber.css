@@ -12,6 +12,7 @@
   justify-content: center;
   gap: 12px;
   text-align: center;
+  margin-bottom: var(--space-5xl);
 }
 
 /* Label - Small caps, muted color */

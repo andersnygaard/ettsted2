@@ -93,10 +93,10 @@ function CompoundCalculatorPage() {
     years: 10,
   });
 
-  // Set initial amount from portfolio data when loaded
+  // Set initial amount from portfolio data when loaded (never negative)
   useEffect(() => {
     if (sparingData && !defaultsInitialized.initialAmount) {
-      setInputs((prev) => ({ ...prev, initialAmount: sparingData.sumSparing ?? 0 }));
+      setInputs((prev) => ({ ...prev, initialAmount: Math.max(0, sparingData.sumSparing ?? 0) }));
       setDefaultsInitialized((prev) => ({ ...prev, initialAmount: true }));
     }
   }, [sparingData, defaultsInitialized.initialAmount]);
@@ -118,9 +118,15 @@ function CompoundCalculatorPage() {
     key: K,
     value: number | undefined
   ) => {
+    // Ensure amounts are never negative
+    const clampedValue = value ?? 0;
+    const finalValue = (key === 'initialAmount' || key === 'monthlyDeposit')
+      ? Math.max(0, clampedValue)
+      : clampedValue;
+
     setInputs((prev) => ({
       ...prev,
-      [key]: value ?? 0,
+      [key]: finalValue,
     }));
   };
 

@@ -114,7 +114,7 @@ export function StackedAreaChart({
         .attr('fill', colorMap.get(layerData.key) || '#ccc');
 
       if (prefersReducedMotion) {
-        areaPath.attr('opacity', 0.15);
+        areaPath.attr('opacity', 0.35);
       } else {
         // Stagger animations - each layer animates slightly after the previous
         areaPath
@@ -125,7 +125,7 @@ export function StackedAreaChart({
           .delay(200 + index * 100)
           .ease(d3.easeCubicOut)
           .attr('transform', 'translate(0, 0) scale(1, 1)')
-          .attr('opacity', 0.15);
+          .attr('opacity', 0.35);
       }
     });
 

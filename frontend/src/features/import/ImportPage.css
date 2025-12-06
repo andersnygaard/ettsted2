@@ -311,6 +311,7 @@
 
   .chatbot__input {
     padding: 12px 16px;
+    min-height:100px;
     font-size: 16px; /* Prevents iOS zoom */
   }
 
@@ -325,6 +326,6 @@
   }
 
   .import-page__footer button {
-    width: 100%;
+    width: auto;
   }
 }
