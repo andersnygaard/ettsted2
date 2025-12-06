@@ -38,8 +38,9 @@
 
 ### Testing (`/e2e`)
 - **Framework**: Playwright
-- **Pattern**: Page Object Model
-- **Focus**: Critical user flows (login, portfolio tracking, calculations)
+- **Pattern**: Sanity check suite with fixtures
+- **Focus**: Page health, navigation, auth flows
+- **Docs**: See [e2e/README.md](../e2e/README.md)
 
 ---
 

@@ -5,15 +5,15 @@
   "private": true,
   "scripts": {
     "test": "playwright test",
-    "test:frontend": "playwright test --project=frontend",
-    "test:backend": "playwright test --project=backend",
+    "test:watch": "playwright test --headed --timeout=0",
+    "test:screenshots": "npx cross-env SCREENSHOTS=1 playwright test",
     "test:ui": "playwright test --ui",
-    "test:headed": "playwright test --headed",
     "report": "playwright show-report"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",
-    "@types/node": "^20.10.0"
+    "@types/node": "^20.10.0",
+    "cross-env": "^7.0.3"
   },
   "engines": {
     "node": ">=18.0.0"

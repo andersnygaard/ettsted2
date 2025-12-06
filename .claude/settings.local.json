@@ -86,7 +86,11 @@
       "Bash(netstat:*)",
       "Bash(timeout:*)",
       "Skill(storybook-stories)",
-      "SlashCommand(/discover-tasks)"
+      "SlashCommand(/discover-tasks)",
+      "Bash(taskkill //F //PID 61984)",
+      "Bash(for:*)",
+      "Bash(do mv \"$f\" \"TEMP_$f\")",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": [
