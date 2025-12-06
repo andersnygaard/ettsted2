@@ -14,13 +14,10 @@
   opacity: 0;
 }
 
-.donut-chart::before {
-  content: '';
+.donut-chart__svg {
   position: absolute;
-  width: 72%;
-  height: 72%;
-  background: var(--warm-white);
-  border-radius: 50%;
+  top: 0;
+  left: 0;
 }
 
 .donut-chart__inner {
@@ -43,4 +40,12 @@
   letter-spacing: 0.08em;
   color: var(--text-secondary);
   margin-top: 4px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .donut-chart {
+    animation: none;
+    opacity: 1;
+  }
 }

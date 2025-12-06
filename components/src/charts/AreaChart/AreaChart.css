@@ -46,31 +46,10 @@
   color: var(--text-secondary);
 }
 
-/* Animation classes for chart elements */
-.area-chart__fill {
-  opacity: 0;
-  animation: fadeIn 0.6s ease forwards;
-  animation-delay: 0.2s;
-}
-
-.area-chart__line {
-  stroke-dasharray: 1000;
-  stroke-dashoffset: 1000;
-  animation: drawLine 1s ease forwards;
-  animation-delay: 0.3s;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 0.1;
-  }
-}
-
-@keyframes drawLine {
-  to {
-    stroke-dashoffset: 0;
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .area-chart {
+    animation: none;
+    opacity: 1;
   }
 }

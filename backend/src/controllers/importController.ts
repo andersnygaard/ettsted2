@@ -11,9 +11,10 @@
  * - Full Langfuse tracing for observability
  */
 
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { randomUUID } from 'crypto';
 import { runImportAgent } from '../services/importAgentService';
+import { asyncHandler } from '../middleware/errorHandler';
 import { logger } from '../utils/logger';
 import OpenAI from 'openai';
 
@@ -57,70 +58,61 @@ const conversations = new Map<string, OpenAI.ChatCompletionMessageParam[]>();
  *
  * @param req - Express request
  * @param res - Express response
- * @param next - Express next function
  */
-export async function chatImport(req: Request, res: Response, next: NextFunction): Promise<void> {
-  try {
-    const { message, conversationId } = req.body;
-    const userId = req.user!.userId;
+export const chatImport = asyncHandler(async (req: Request, res: Response) => {
+  const { message, conversationId } = req.body;
+  const userId = req.user!.userId;
 
-    logger.debug('Import agent request received', {
+  logger.debug('Import agent request received', {
+    userId,
+    messageLength: message.length,
+    hasConversationId: !!conversationId
+  });
+
+  // Get or create conversation history
+  let history: OpenAI.ChatCompletionMessageParam[] = [];
+  if (conversationId && conversations.has(conversationId)) {
+    history = conversations.get(conversationId) || [];
+    logger.debug('Using existing conversation', {
       userId,
-      messageLength: message.length,
-      hasConversationId: !!conversationId
+      conversationId,
+      messageCount: history.length
     });
-
-    // Get or create conversation history
-    let history: OpenAI.ChatCompletionMessageParam[] = [];
-    if (conversationId && conversations.has(conversationId)) {
-      history = conversations.get(conversationId) || [];
-      logger.debug('Using existing conversation', {
-        userId,
-        conversationId,
-        messageCount: history.length
-      });
-    }
-
-    // Run the import agent
-    const result = await runImportAgent(message, userId, history);
-
-    // Generate conversation ID if new
-    const newConversationId = conversationId || randomUUID();
-
-    // Update conversation history with user message and agent response
-    history.push({ role: 'user', content: message });
-    if (result.message) {
-      history.push({ role: 'assistant', content: result.message });
-    }
-
-    // Store updated history
-    conversations.set(newConversationId, history);
-
-    logger.info('Import agent completed', {
-      userId,
-      conversationId: newConversationId,
-      success: result.success,
-      snapshotsCreated: result.snapshotsCreated,
-      snapshotsUpdated: result.snapshotsUpdated,
-      totalTokens: result.totalTokens,
-      actionCount: result.actions.length
-    });
-
-    res.json({
-      data: {
-        ...result,
-        conversationId: newConversationId
-      },
-      success: true
-    });
-  } catch (error) {
-    logger.error('Error running import agent', {
-      userId: req.user!.userId,
-      error: error instanceof Error ? error.message : String(error)
-    });
-    next(error);
   }
-}
+
+  // Run the import agent
+  const result = await runImportAgent(message, userId, history);
+
+  // Generate conversation ID if new
+  const newConversationId = conversationId || randomUUID();
+
+  // Update conversation history with user message and agent response
+  history.push({ role: 'user', content: message });
+  if (result.message) {
+    history.push({ role: 'assistant', content: result.message });
+  }
+
+  // Store updated history
+  conversations.set(newConversationId, history);
+
+  logger.info('Import agent completed', {
+    userId,
+    conversationId: newConversationId,
+    success: result.success,
+    snapshotsCreated: result.snapshotsCreated,
+    snapshotsUpdated: result.snapshotsUpdated,
+    totalTokens: result.totalTokens,
+    actionCount: result.actions.length
+  });
+
+  res.json({
+    data: {
+      ...result,
+      conversationId: newConversationId
+    },
+    success: true
+  });
+});
 
 /**
  * Legacy batch insert endpoint (kept for backward compatibility)
@@ -129,7 +121,7 @@ export async function chatImport(req: Request, res: Response, next: NextFunction
  *
  * @deprecated Use chatImport instead - the agent handles insertion directly
  */
-export async function batchInsert(_req: Request, res: Response, _next: NextFunction): Promise<void> {
+export const batchInsert = asyncHandler(async (_req: Request, res: Response) => {
   res.status(410).json({
     error: {
       message: 'This endpoint is deprecated. Use POST /api/v1/import/chat instead - the agent imports data directly.',
@@ -137,4 +129,4 @@ export async function batchInsert(_req: Request, res: Response, _next: NextFunct
     },
     success: false
   });
-}
+});

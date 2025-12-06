@@ -16,10 +16,18 @@ export interface StatCardProps {
 }
 
 export function StatCard({ value, label, onClick }: StatCardProps) {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
     <div
       className={`stat-card ${onClick ? 'stat-card--clickable' : ''}`}
       onClick={onClick}
+      onKeyDown={handleKeyDown}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
     >

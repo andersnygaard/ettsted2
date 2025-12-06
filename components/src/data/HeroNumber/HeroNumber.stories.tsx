@@ -10,9 +10,20 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     label: { control: 'text' },
-    value: { control: 'text' },
+    value: {
+      control: 'text',
+      description: 'Value to display - can be a formatted string or a raw number. If a number is provided, it will be animated and formatted as Norwegian currency.',
+    },
     change: { control: 'number' },
     changeLabel: { control: 'text' },
+    animate: {
+      control: 'boolean',
+      description: 'Enable counting animation (only applies when value is a number)',
+    },
+    animationDuration: {
+      control: { type: 'number', min: 100, max: 3000, step: 100 },
+      description: 'Animation duration in milliseconds',
+    },
   },
 } satisfies Meta<typeof HeroNumber>;
 
@@ -134,5 +145,69 @@ export const LargePositiveChange: Story = {
   },
   parameters: {
     docs: { description: { story: 'Large positive change value' } },
+  },
+};
+
+export const AnimatedValue: Story = {
+  args: {
+    label: 'Netto formue',
+    value: 1234567.89,
+    change: 5.42,
+    changeLabel: 'denne måneden',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Number animates from 0 to final value using counting animation. Pass a number instead of a formatted string to enable animation.',
+      },
+    },
+  },
+};
+
+export const AnimatedNoChange: Story = {
+  args: {
+    label: 'Sum sparing',
+    value: 970194.50,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Animated value without change indicator',
+      },
+    },
+  },
+};
+
+export const AnimatedSlowMotion: Story = {
+  args: {
+    label: 'Firetall',
+    value: 6400000,
+    change: 12.8,
+    changeLabel: 'siste år',
+    animationDuration: 2000,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Slower animation (2 seconds) for demonstration purposes',
+      },
+    },
+  },
+};
+
+export const AnimatedDisabled: Story = {
+  args: {
+    label: 'Pensjon',
+    value: 345678.90,
+    change: 3.2,
+    changeLabel: 'i år',
+    animate: false,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Animation disabled - number appears immediately',
+      },
+    },
   },
 };

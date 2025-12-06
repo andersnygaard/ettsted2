@@ -11,7 +11,7 @@ const meta: Meta<typeof Avatar> = {
       options: ['small', 'medium', 'large'],
       control: { type: 'radio' }
     },
-    initials: { control: 'text' }
+    name: { control: 'text' }
   }
 }
 
@@ -20,21 +20,21 @@ type Story = StoryObj<typeof Avatar>
 
 export const Small: Story = {
   args: {
-    initials: 'JD',
+    name: 'John Doe',
     size: 'small'
   }
 }
 
 export const Medium: Story = {
   args: {
-    initials: 'AB',
+    name: 'Alice Brown',
     size: 'medium'
   }
 }
 
 export const Large: Story = {
   args: {
-    initials: 'CD',
+    name: 'Charlie Davis',
     size: 'large'
   }
 }
@@ -42,16 +42,16 @@ export const Large: Story = {
 export const AllSizes: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-      <Avatar initials="JD" size="small" />
-      <Avatar initials="JD" size="medium" />
-      <Avatar initials="JD" size="large" />
+      <Avatar name="John Doe" size="small" />
+      <Avatar name="John Doe" size="medium" />
+      <Avatar name="John Doe" size="large" />
     </div>
   )
 }
 
 export const WithLongName: Story = {
   args: {
-    initials: 'Jonathan Doe',
+    name: 'Jonathan Doe',
     size: 'large'
   }
 }

@@ -1,7 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { snapshotApi } from '@/shared/api/services';
+import { QUERY_KEYS, invalidateAllPortfolioQueries } from '@/shared/api/queryHelpers';
 import type { MonthlySnapshot, Account } from '@/shared/types';
 import { getAccountCategory } from '@/shared/types';
+import { parseDate } from '@/shared/utils/dateFormat';
+import { PORTFOLIO_MILESTONES, QUERY_CONFIG } from '@/config/constants';
 
 /**
  * Portfolio row for spreadsheet table display
@@ -27,13 +30,6 @@ export interface PortfolioData {
   milestones: Record<string, number[]>;
 }
 
-/**
- * Parse Norwegian date format (dd.MM.yyyy) to Date object
- */
-function parseDate(dateStr: string): Date {
-  const [day, month, year] = dateStr.split('.');
-  return new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
-}
 
 /**
  * Calculate category totals for a set of accounts
@@ -62,12 +58,6 @@ function calculateTotals(accounts: Account[]): { sparing: number; gjeld: number;
 function detectMilestones(snapshots: MonthlySnapshot[]): Record<string, number[]> {
   const milestones: Record<string, number[]> = {};
 
-  const thresholds = [
-    10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
-    100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000,
-    1000000, 2000000, 3000000, 4000000, 5000000
-  ];
-
   // Sort by date ascending so we can compare consecutive snapshots
   const sorted = [...snapshots].sort((a, b) =>
     parseDate(a.date).getTime() - parseDate(b.date).getTime()
@@ -90,7 +80,7 @@ function detectMilestones(snapshots: MonthlySnapshot[]): Record<string, number[]
       const currAbsValue = Math.abs(currValue);
 
       // Find all thresholds crossed between previous and current
-      const crossed = thresholds.filter(
+      const crossed = PORTFOLIO_MILESTONES.filter(
         t => prevAbsValue < t && currAbsValue >= t
       );
 
@@ -151,10 +141,10 @@ async function fetchPortfolioData(): Promise<PortfolioData> {
  */
 export function usePortfolioData() {
   return useQuery({
-    queryKey: ['portfolio'],
+    queryKey: QUERY_KEYS.PORTFOLIO,
     queryFn: fetchPortfolioData,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: 1
+    staleTime: QUERY_CONFIG.STALE_TIME,
+    retry: QUERY_CONFIG.RETRY_COUNT
   });
 }
 
@@ -172,14 +162,7 @@ export function useCreateSnapshot() {
     mutationFn: async (data: Omit<MonthlySnapshot, 'id' | 'userId' | 'createdAt' | 'updatedAt'>) => {
       return await snapshotApi.create(data);
     },
-    onSuccess: () => {
-      // Invalidate all related queries
-      queryClient.invalidateQueries({ queryKey: ['portfolio'] });
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-      queryClient.invalidateQueries({ queryKey: ['sparing'] });
-      queryClient.invalidateQueries({ queryKey: ['gjeld'] });
-      queryClient.invalidateQueries({ queryKey: ['pensjon'] });
-    }
+    onSuccess: () => invalidateAllPortfolioQueries(queryClient)
   });
 }
 
@@ -203,14 +186,7 @@ export function useUpdateSnapshot() {
     }) => {
       return await snapshotApi.update(id, data);
     },
-    onSuccess: () => {
-      // Invalidate all related queries
-      queryClient.invalidateQueries({ queryKey: ['portfolio'] });
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-      queryClient.invalidateQueries({ queryKey: ['sparing'] });
-      queryClient.invalidateQueries({ queryKey: ['gjeld'] });
-      queryClient.invalidateQueries({ queryKey: ['pensjon'] });
-    }
+    onSuccess: () => invalidateAllPortfolioQueries(queryClient)
   });
 }
 
@@ -228,13 +204,6 @@ export function useDeleteSnapshot() {
     mutationFn: async (id: string) => {
       await snapshotApi.delete(id);
     },
-    onSuccess: () => {
-      // Invalidate all related queries
-      queryClient.invalidateQueries({ queryKey: ['portfolio'] });
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-      queryClient.invalidateQueries({ queryKey: ['sparing'] });
-      queryClient.invalidateQueries({ queryKey: ['gjeld'] });
-      queryClient.invalidateQueries({ queryKey: ['pensjon'] });
-    }
+    onSuccess: () => invalidateAllPortfolioQueries(queryClient)
   });
 }

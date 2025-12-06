@@ -1,4 +1,4 @@
-import { PageHeader, HeroNumber, StackedAreaChart, Breadcrumb } from '@finans/components';
+import { PageSkeleton, HeroNumber, StackedAreaChart } from '@finans/components';
 import type { StackedDataPoint, Series } from '@finans/components';
 import { PensjonSkeleton } from '@/shared/components/skeletons';
 import { formatCurrency } from '@/shared/utils/numberFormat';
@@ -19,30 +19,41 @@ function PensjonPage() {
   const { data: pensjonData, isLoading, error } = usePensjonData();
 
   if (isLoading) {
-    return <PensjonSkeleton />;
+    return (
+      <PageSkeleton
+        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Pensjon' }]}
+        title="Pensjon"
+        subtitle="Oppspart pensjon og fremtidig utbetaling"
+        className="pensjon-page"
+      >
+        <PensjonSkeleton />
+      </PageSkeleton>
+    );
   }
 
   if (error) {
     return (
-      <main className="pensjon-page">
-        <div className="container container--narrow">
-          <p>Feil ved lasting av pensjonsdata. Prøv igjen senere.</p>
-        </div>
-      </main>
+      <PageSkeleton
+        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Pensjon' }]}
+        title="Pensjon"
+        subtitle="Feil ved lasting av pensjonsdata. Prøv igjen senere."
+        className="pensjon-page"
+      >
+        <></>
+      </PageSkeleton>
     );
   }
 
   if (!pensjonData || pensjonData.sumPensjon === 0) {
     return (
-      <main className="pensjon-page">
-        <div className="container container--narrow">
-          <PageHeader
-            title="Pensjon"
-            subtitle="Oppspart pensjon og fremtidig utbetaling"
-          />
-          <p>Ingen pensjonsdata tilgjengelig. Legg til pensjonskontoer i porteføljen.</p>
-        </div>
-      </main>
+      <PageSkeleton
+        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Pensjon' }]}
+        title="Pensjon"
+        subtitle="Ingen pensjonsdata tilgjengelig. Legg til pensjonskontoer i porteføljen."
+        className="pensjon-page"
+      >
+        <></>
+      </PageSkeleton>
     );
   }
 
@@ -93,19 +104,12 @@ function PensjonPage() {
   ];
 
   return (
-    <main className="pensjon-page">
-      <div className="container container--narrow">
-        <Breadcrumb
-          items={[
-            { label: 'Hjem', path: '/dashboard' },
-            { label: 'Pensjon' },
-          ]}
-        />
-
-        <PageHeader
-          title="Pensjon"
-          subtitle="Oppspart pensjon og fremtidig utbetaling"
-        />
+    <PageSkeleton
+      breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Pensjon' }]}
+      title="Pensjon"
+      subtitle="Oppspart pensjon og fremtidig utbetaling"
+      className="pensjon-page"
+    >
 
         <HeroNumber
           label="Sum pensjon"
@@ -117,14 +121,13 @@ function PensjonPage() {
 
         <OtpSection percentage={Math.round(pensjonData.otpPercent)} trend="up" />
 
-        <StackedAreaChart
-          data={chartData}
-          series={chartSeries}
-          title="Pensjonsutvikling"
-          height={200}
-        />
-      </div>
-    </main>
+      <StackedAreaChart
+        data={chartData}
+        series={chartSeries}
+        title="Pensjonsutvikling"
+        height={200}
+      />
+    </PageSkeleton>
   );
 }
 

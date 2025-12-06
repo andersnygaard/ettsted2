@@ -1,9 +1,15 @@
-/* animations.css - Nordic Minimal animations */
+/* animations.css - Nordic Minimal animations
+ * Single source of truth for all animation definitions and utilities
+ */
+
+/* ============================================
+   KEYFRAMES - Core animations
+   ============================================ */
 
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -20,6 +26,56 @@
   }
 }
 
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 60%, 100% {
+    opacity: 0.3;
+    transform: scale(0.9);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES - Animation presets
+   ============================================ */
+
+/* Page entrance animation on route mount */
+.page-enter {
+  opacity: 0;
+  animation: fadeUp 0.35s ease-out forwards;
+}
+
+/* Fade animations */
 .animate-fade-up {
   opacity: 0;
   animation: fadeUp 0.5s ease forwards;
@@ -30,36 +86,233 @@
   animation: fadeIn 0.5s ease forwards;
 }
 
-/* Staggered delays */
+/* Scale animation */
+.animate-scale-in {
+  opacity: 0;
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+/* ============================================
+   DURATION UTILITIES
+   ============================================ */
+
+.animate-duration-fast {
+  animation-duration: 200ms;
+}
+
+.animate-duration-normal {
+  animation-duration: 400ms;
+}
+
+.animate-duration-slow {
+  animation-duration: 800ms;
+}
+
+/* ============================================
+   DELAY UTILITIES - 50ms increments
+   ============================================ */
+
 .animate-delay-1 {
-  animation-delay: 0.1s;
+  animation-delay: 0.05s;
 }
 
 .animate-delay-2 {
-  animation-delay: 0.15s;
+  animation-delay: 0.1s;
 }
 
 .animate-delay-3 {
-  animation-delay: 0.2s;
+  animation-delay: 0.15s;
 }
 
 .animate-delay-4 {
-  animation-delay: 0.25s;
+  animation-delay: 0.2s;
 }
 
 .animate-delay-5 {
-  animation-delay: 0.3s;
+  animation-delay: 0.25s;
 }
 
 .animate-delay-6 {
+  animation-delay: 0.3s;
+}
+
+.animate-delay-7 {
   animation-delay: 0.35s;
 }
 
-/* Reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-  .animate-fade-up,
+.animate-delay-8 {
+  animation-delay: 0.4s;
+}
+
+.animate-delay-9 {
+  animation-delay: 0.45s;
+}
+
+.animate-delay-10 {
+  animation-delay: 0.5s;
+}
+
+/* Legacy page section delays (deprecated - use animate-delay-* instead) */
+.page-section-delay-0 {
+  animation-delay: 0s;
+}
+
+.page-section-delay-1 {
+  animation-delay: 0.05s;
+}
+
+.page-section-delay-2 {
+  animation-delay: 0.1s;
+}
+
+.page-section-delay-3 {
+  animation-delay: 0.15s;
+}
+
+.page-section-delay-4 {
+  animation-delay: 0.2s;
+}
+
+.page-section-delay-5 {
+  animation-delay: 0.25s;
+}
+
+/* ============================================
+   MOBILE/TABLET OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 768px) {
+  /* Reduce fadeUp distance on mobile */
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(6px); /* Reduced from 10px */
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Reduce animation durations on mobile */
+  .page-enter {
+    animation-duration: 0.25s; /* Reduced from 350ms */
+  }
+
+  .animate-fade-up {
+    animation-duration: 0.35s; /* Reduced from 0.5s */
+  }
+
   .animate-fade-in {
-    opacity: 1;
+    animation-duration: 0.35s; /* Reduced from 0.5s */
+  }
+
+  .animate-scale-in {
+    animation-duration: 0.25s; /* Reduced from 0.3s */
+  }
+
+  /* Reduce delay increments for faster staggered animations */
+  .animate-delay-1 {
+    animation-delay: 0.03s;
+  }
+
+  .animate-delay-2 {
+    animation-delay: 0.06s;
+  }
+
+  .animate-delay-3 {
+    animation-delay: 0.09s;
+  }
+
+  .animate-delay-4 {
+    animation-delay: 0.12s;
+  }
+
+  .animate-delay-5 {
+    animation-delay: 0.15s;
+  }
+
+  .animate-delay-6 {
+    animation-delay: 0.18s;
+  }
+
+  .animate-delay-7 {
+    animation-delay: 0.21s;
+  }
+
+  .animate-delay-8 {
+    animation-delay: 0.24s;
+  }
+
+  .animate-delay-9 {
+    animation-delay: 0.27s;
+  }
+
+  .animate-delay-10 {
+    animation-delay: 0.3s;
+  }
+
+  /* Reduce legacy page section delays */
+  .page-section-delay-1 {
+    animation-delay: 0.03s;
+  }
+
+  .page-section-delay-2 {
+    animation-delay: 0.06s;
+  }
+
+  .page-section-delay-3 {
+    animation-delay: 0.09s;
+  }
+
+  .page-section-delay-4 {
+    animation-delay: 0.12s;
+  }
+
+  .page-section-delay-5 {
+    animation-delay: 0.15s;
+  }
+}
+
+/* ============================================
+   HOVER-ONLY ANIMATIONS
+   ============================================ */
+
+/* Only apply hover transforms on devices that support hover */
+@media (hover: hover) {
+  /* These hover effects are optimized for desktop/non-touch devices */
+}
+
+/* Touch devices - reduce hover transforms for better performance */
+@media (hover: none) {
+  /* No specific overrides needed here, but this allows for touch-specific rules */
+  /* Touch feedback is handled by active states instead of hover states */
+}
+
+/* ============================================
+   ACCESSIBILITY - Reduced motion preference
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Disable all animations for animation utilities */
+  .page-enter,
+  .animate-fade-up,
+  .animate-fade-in,
+  .animate-scale-in {
     animation: none;
+    opacity: 1;
+  }
+
+  /* Disable transforms on hover */
+  *:hover {
+    transform: none !important;
   }
 }

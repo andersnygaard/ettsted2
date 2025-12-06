@@ -27,14 +27,17 @@
 
 /* Primary Variant */
 .btn--primary {
-  background: var(--charcoal);
-  color: var(--warm-white);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-color);
   border: 1px solid var(--charcoal);
 }
 
-.btn--primary:hover:not(:disabled) {
-  background: var(--charcoal-hover);
-  transform: translateY(-1px);
+/* Desktop hover effects */
+@media (hover: hover) {
+  .btn--primary:hover:not(:disabled) {
+    background: var(--btn-primary-hover-bg);
+    transform: translateY(-1px);
+  }
 }
 
 .btn--primary:active:not(:disabled) {
@@ -43,18 +46,18 @@
 
 /* Secondary Variant */
 .btn--secondary {
-  background: transparent;
+  background: var(--btn-secondary-bg);
   border: 1px solid var(--muted-sage);
   color: var(--charcoal);
 }
 
 .btn--secondary:hover:not(:disabled) {
-  background: var(--warm-white);
+  background: var(--btn-secondary-hover-bg);
   border-color: var(--charcoal);
 }
 
 .btn--secondary:active:not(:disabled) {
-  background: var(--bone);
+  background: var(--btn-secondary-disabled-bg);
 }
 
 /* Disabled State */

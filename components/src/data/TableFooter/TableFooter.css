@@ -68,7 +68,7 @@
   font-size: var(--font-size-xs);
   font-family: var(--font-body);
   border: 1px solid var(--border-strong);
-  background: transparent;
+  background: var(--warm-white);
   color: var(--charcoal);
   cursor: pointer;
   border-radius: var(--radius-sm);

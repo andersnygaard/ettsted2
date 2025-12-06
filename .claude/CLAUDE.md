@@ -176,6 +176,9 @@ pnpm-workspace.yaml - pnpm workspace config
 | **Pensjon** | Pension breakdown (OTP vs NAV), historical chart | [draft-1-pensjon.html](.docs/design-drafts/draft-1-pensjon.html) |
 | **Kalkulatorer** | Compound, F.I.R.E., Loan, Monte Carlo calculators | [draft-1-kalkulatorer.html](.docs/design-drafts/draft-1-kalkulatorer.html) |
 | **Import** | LLM chatbot for pasting/importing portfolio data | - |
+| **Min Økonomi** | User settings: profile, accounts config (via OnboardingWizard) | - |
+
+**Note**: "Min Økonomi" is the single settings page. No separate "Innstillinger" page exists.
 
 **Key Features**:
 - Collapsible column groups in SpreadsheetTable

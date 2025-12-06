@@ -56,19 +56,28 @@
   transition: transform var(--transition-medium);
 }
 
-/* Hover state - lift and arrow moves right */
-.section-link:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+/* Desktop hover state - lift and arrow moves right */
+@media (hover: hover) {
+  .section-link:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+  }
+
+  .section-link:hover .section-link__arrow {
+    transform: translateX(4px);
+  }
 }
 
-.section-link:hover .section-link__arrow {
-  transform: translateX(4px);
-}
+/* Mobile/tablet active state */
+@media (hover: none) {
+  .section-link:active {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  }
 
-/* Active state - subtle press effect */
-.section-link:active {
-  transform: translateY(-2px);
+  .section-link:active .section-link__arrow {
+    transform: translateX(2px);
+  }
 }
 
 /* Focus state for accessibility */

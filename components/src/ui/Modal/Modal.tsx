@@ -1,11 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import './Modal.css'
 
 /**
  * Modal Component
  *
  * A reusable modal dialog with header, body, and optional footer sections.
- * Includes overlay backdrop, keyboard navigation, and focus trap for accessibility.
+ * Includes overlay backdrop, keyboard navigation, focus trap, and smooth animations.
  *
  * Based on Nordic Minimal design system.
  */
@@ -26,13 +26,25 @@ export function Modal({
   footer,
   closeOnOverlay = true
 }: ModalProps) {
+  const [isClosing, setIsClosing] = useState(false)
+
+  // Handle close with exit animation
+  const handleClose = () => {
+    setIsClosing(true)
+    // Wait for exit animation (200ms) before calling onClose
+    setTimeout(() => {
+      onClose()
+      setIsClosing(false)
+    }, 200)
+  }
+
   useEffect(() => {
     if (!isOpen) return
 
     // Handle Escape key
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose()
+        handleClose()
       }
     }
 
@@ -48,7 +60,7 @@ export function Modal({
       document.removeEventListener('keydown', handleEscape)
       document.body.style.overflow = originalOverflow
     }
-  }, [isOpen, onClose])
+  }, [isOpen, handleClose])
 
   // Focus trap implementation
   useEffect(() => {
@@ -94,11 +106,11 @@ export function Modal({
     }
   }, [isOpen])
 
-  if (!isOpen) return null
+  if (!isOpen && !isClosing) return null
 
   const handleOverlayClick = () => {
     if (closeOnOverlay) {
-      onClose()
+      handleClose()
     }
   }
 
@@ -107,14 +119,20 @@ export function Modal({
   }
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className="modal" onClick={handleModalClick}>
+    <div
+      className={`modal-overlay ${!isClosing ? 'open' : ''}`}
+      onClick={handleOverlayClick}
+    >
+      <div
+        className={`modal ${!isClosing ? 'open' : ''}`}
+        onClick={handleModalClick}
+      >
         <div className="modal__header">
           <h2 className="modal__title">{title}</h2>
           <button
             className="modal__close"
-            onClick={onClose}
-            aria-label="Close modal"
+            onClick={handleClose}
+            aria-label="Lukk"
             type="button"
           >
             ×

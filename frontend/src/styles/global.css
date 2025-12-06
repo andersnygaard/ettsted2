@@ -31,6 +31,7 @@ body::before {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: var(--bone);
 }
 
 /* Typography */
@@ -147,4 +148,32 @@ input[type="checkbox"]:focus {
 input[type="checkbox"]:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Text Input Styling - Nordic Minimal */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="date"],
+textarea,
+select {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="text"]:focus-visible,
+input[type="email"]:focus-visible,
+input[type="number"]:focus-visible,
+input[type="password"]:focus-visible,
+input[type="search"]:focus-visible,
+input[type="tel"]:focus-visible,
+input[type="url"]:focus-visible,
+input[type="date"]:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(44, 44, 44, 0.1);
 }

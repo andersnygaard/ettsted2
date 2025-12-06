@@ -93,22 +93,24 @@
   border-color: var(--charcoal);
 }
 
-.landing-btn--primary:hover {
-  background: var(--charcoal-hover);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+@media (hover: hover) {
+  .landing-btn--primary:hover {
+    background: var(--charcoal-hover);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+  }
+
+  .landing-btn--secondary:hover {
+    background: var(--warm-white);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+  }
 }
 
 .landing-btn--secondary {
-  background: transparent;
+  background: var(--warm-white);
   color: var(--charcoal);
   border-color: var(--border-strong);
-}
-
-.landing-btn--secondary:hover {
-  background: var(--warm-white);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
 }
 
 .landing-btn--large {
@@ -165,9 +167,11 @@
   transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.landing-feature-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+@media (hover: hover) {
+  .landing-feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+  }
 }
 
 .landing-feature-card__icon {

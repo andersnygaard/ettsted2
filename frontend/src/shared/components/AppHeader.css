@@ -67,15 +67,25 @@
   color: var(--charcoal);
 }
 
-/* Optional: Add underline to active nav item */
-.app-header__nav-item.active::after {
+/* Animated underline indicator for nav items */
+.app-header__nav-item::after {
   content: '';
   position: absolute;
   bottom: -4px;
   left: 0;
-  right: 0;
-  height: 1px;
+  width: 0;
+  height: 2px;
   background: var(--charcoal);
+  transition: width var(--transition-fast) ease;
+  transform-origin: left;
+}
+
+.app-header__nav-item:hover::after {
+  width: 100%;
+}
+
+.app-header__nav-item.active::after {
+  width: 100%;
 }
 
 /* User Avatar */
@@ -106,9 +116,11 @@
   transition: opacity var(--transition-fast), transform var(--transition-fast);
 }
 
-.app-header__login-btn:hover {
-  opacity: 0.85;
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .app-header__login-btn:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+  }
 }
 
 /* Responsive design */
@@ -174,6 +186,7 @@
 @media (max-width: 640px) {
   .app-header {
     padding: var(--space-lg) 0;
+    width: 100%;
   }
 
   .app-header__logo {
@@ -209,16 +222,11 @@
   visibility: visible;
 }
 
-/* Mobile menu panel - slides from right */
+/* Mobile menu panel - full width */
 .app-header__mobile-menu {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 280px;
-  max-width: 85vw;
+  inset: 0;
   background: var(--warm-white);
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
   transform: translateX(100%);
   transition: transform 0.3s ease;
   z-index: 999;
@@ -290,6 +298,7 @@
   text-align: left;
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
+  position: relative;
 }
 
 .app-header__mobile-nav-item:hover {
@@ -301,6 +310,24 @@
   color: var(--charcoal);
   font-weight: var(--font-weight-medium);
   background-color: rgba(44, 44, 44, 0.04);
+}
+
+/* Animated left border indicator for mobile nav active item */
+.app-header__mobile-nav-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--charcoal);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.2s ease;
+}
+
+.app-header__mobile-nav-item.active::before {
+  transform: scaleY(1);
 }
 
 .app-header__mobile-nav-item svg {

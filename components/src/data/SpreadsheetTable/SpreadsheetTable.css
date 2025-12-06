@@ -54,11 +54,11 @@
 
 /* Group-specific colors */
 .spreadsheet .group-header-row th.group-sparing {
-  background: var(--category-pensjon);
+  background: var(--category-sparing);
 }
 
 .spreadsheet .group-header-row th.group-sparing:hover {
-  background: var(--category-pensjon-hover);
+  background: var(--category-sparing-hover);
 }
 
 .spreadsheet .group-header-row th.group-gjeld {
@@ -70,11 +70,11 @@
 }
 
 .spreadsheet .group-header-row th.group-pensjon {
-  background: var(--category-sparing);
+  background: var(--category-pensjon);
 }
 
 .spreadsheet .group-header-row th.group-pensjon:hover {
-  background: var(--category-sparing-hover);
+  background: var(--category-pensjon-hover);
 }
 
 /* Date header (first column in group row) */

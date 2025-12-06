@@ -9,8 +9,9 @@
  * - DELETE /api/v1/accounts/:id - Soft delete account
  */
 
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import * as accountService from '../services/accountService';
+import { asyncHandler } from '../middleware/errorHandler';
 import { logger } from '../utils/logger';
 
 /**
@@ -19,31 +20,22 @@ import { logger } from '../utils/logger';
  *
  * @param req - Express request (req.user populated by validateAuth middleware)
  * @param res - Express response
- * @param next - Express next function for error handling
  *
  * @returns 200 with array of all accounts
  */
-export async function getAllAccounts(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> {
-  try {
-    const userId = req.user!.userId;
+export const getAllAccounts = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user!.userId;
 
-    logger.debug('Fetching all accounts', { userId });
+  logger.debug('Fetching all accounts', { userId });
 
-    const accounts = await accountService.getAccounts(userId);
+  const accounts = await accountService.getAccounts(userId);
 
-    logger.info('All accounts retrieved', { userId, count: accounts.length });
-    res.status(200).json({
-      data: accounts,
-      success: true
-    });
-  } catch (error) {
-    next(error);
-  }
-}
+  logger.info('All accounts retrieved', { userId, count: accounts.length });
+  res.json({
+    data: accounts,
+    success: true
+  });
+});
 
 /**
  * GET /api/v1/accounts/active
@@ -51,31 +43,22 @@ export async function getAllAccounts(
  *
  * @param req - Express request (req.user populated by validateAuth middleware)
  * @param res - Express response
- * @param next - Express next function for error handling
  *
  * @returns 200 with array of active accounts
  */
-export async function getActiveAccounts(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> {
-  try {
-    const userId = req.user!.userId;
+export const getActiveAccounts = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user!.userId;
 
-    logger.debug('Fetching active accounts', { userId });
+  logger.debug('Fetching active accounts', { userId });
 
-    const accounts = await accountService.getActiveAccounts(userId);
+  const accounts = await accountService.getActiveAccounts(userId);
 
-    logger.info('Active accounts retrieved', { userId, count: accounts.length });
-    res.status(200).json({
-      data: accounts,
-      success: true
-    });
-  } catch (error) {
-    next(error);
-  }
-}
+  logger.info('Active accounts retrieved', { userId, count: accounts.length });
+  res.json({
+    data: accounts,
+    success: true
+  });
+});
 
 /**
  * POST /api/v1/accounts
@@ -91,31 +74,22 @@ export async function getActiveAccounts(
  *
  * @param req - Express request
  * @param res - Express response
- * @param next - Express next function for error handling
  *
  * @returns 201 with created account
  */
-export async function createAccount(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> {
-  try {
-    const userId = req.user!.userId;
+export const createAccount = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user!.userId;
 
-    logger.debug('Creating account', { userId, name: req.body.name });
+  logger.debug('Creating account', { userId, name: req.body.name });
 
-    const account = await accountService.createAccount(userId, req.body);
+  const account = await accountService.createAccount(userId, req.body);
 
-    logger.info('Account created', { userId, accountId: account.id, name: account.name });
-    res.status(201).json({
-      data: account,
-      success: true
-    });
-  } catch (error) {
-    next(error);
-  }
-}
+  logger.info('Account created', { userId, accountId: account.id, name: account.name });
+  res.status(201).json({
+    data: account,
+    success: true
+  });
+});
 
 /**
  * PATCH /api/v1/accounts/:id
@@ -130,32 +104,23 @@ export async function createAccount(
  *
  * @param req - Express request with accountId in params
  * @param res - Express response
- * @param next - Express next function for error handling
  *
  * @returns 200 with updated account, or 404 if not found
  */
-export async function updateAccount(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> {
-  try {
-    const userId = req.user!.userId;
-    const { id } = req.params;
+export const updateAccount = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user!.userId;
+  const { id } = req.params;
 
-    logger.debug('Updating account', { userId, accountId: id });
+  logger.debug('Updating account', { userId, accountId: id });
 
-    const account = await accountService.updateAccount(userId, id, req.body);
+  const account = await accountService.updateAccount(userId, id, req.body);
 
-    logger.info('Account updated', { userId, accountId: id });
-    res.status(200).json({
-      data: account,
-      success: true
-    });
-  } catch (error) {
-    next(error);
-  }
-}
+  logger.info('Account updated', { userId, accountId: id });
+  res.json({
+    data: account,
+    success: true
+  });
+});
 
 /**
  * DELETE /api/v1/accounts/:id
@@ -165,26 +130,17 @@ export async function updateAccount(
  *
  * @param req - Express request with accountId in params
  * @param res - Express response
- * @param next - Express next function for error handling
  *
  * @returns 204 No Content on success
  */
-export async function deleteAccount(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> {
-  try {
-    const userId = req.user!.userId;
-    const { id } = req.params;
+export const deleteAccount = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user!.userId;
+  const { id } = req.params;
 
-    logger.debug('Deleting account', { userId, accountId: id });
+  logger.debug('Deleting account', { userId, accountId: id });
 
-    await accountService.deleteAccount(userId, id);
+  await accountService.deleteAccount(userId, id);
 
-    logger.info('Account deleted', { userId, accountId: id });
-    res.status(204).send();
-  } catch (error) {
-    next(error);
-  }
-}
+  logger.info('Account deleted', { userId, accountId: id });
+  res.status(204).send();
+});

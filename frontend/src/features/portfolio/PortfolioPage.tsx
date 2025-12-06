@@ -1,8 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Breadcrumb,
-  PageHeader,
+  PageSkeleton,
   Button,
   SpreadsheetTable,
   TableHeader,
@@ -406,49 +405,43 @@ export default function PortfolioPage() {
   // Show loading state
   if (isLoading) {
     return (
-      <main className="portfolio-page">
-        <div className="container container--wide">
-          <PortfolioSkeleton />
-        </div>
-      </main>
+      <PageSkeleton
+        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Portefølje' }]}
+        title="Portefølje"
+        subtitle="Laster..."
+        width="wide"
+        className="portfolio-page"
+      >
+        <PortfolioSkeleton />
+      </PageSkeleton>
     );
   }
 
   // Show error state
   if (error) {
     return (
-      <main className="portfolio-page">
-        <div className="container container--wide">
-          <Breadcrumb
-            items={[
-              { label: 'Hjem', path: '/dashboard' },
-              { label: 'Portefølje' },
-            ]}
-          />
-          <PageHeader title="Portefølje" subtitle="Kunne ikke laste data" />
-          <div className="portfolio-page__error">
-            En feil oppstod ved lasting av porteføljedata. Prøv igjen senere.
-          </div>
+      <PageSkeleton
+        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Portefølje' }]}
+        title="Portefølje"
+        subtitle="Kunne ikke laste data"
+        width="wide"
+        className="portfolio-page"
+      >
+        <div className="portfolio-page__error">
+          En feil oppstod ved lasting av porteføljedata. Prøv igjen senere.
         </div>
-      </main>
+      </PageSkeleton>
     );
   }
 
   return (
-    <main className="portfolio-page">
-      <div className="container container--wide">
-        {/* Breadcrumb navigation */}
-        <Breadcrumb
-          items={[
-            { label: 'Hjem', path: '/dashboard' },
-            { label: 'Portefølje' },
-          ]}
-        />
-
-        <PageHeader
-          title="Portefølje"
-          subtitle="Alle data samlet — klikk på gruppeoverskrifter for å utvide/kollapse"
-        />
+    <PageSkeleton
+      breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Portefølje' }]}
+      title="Portefølje"
+      subtitle="Alle data samlet — klikk på gruppeoverskrifter for å utvide/kollapse"
+      width="wide"
+      className="portfolio-page"
+    >
 
         <div className="portfolio-page__actions">
           <Button variant="secondary" onClick={handleExport}>
@@ -509,7 +502,6 @@ export default function PortfolioPage() {
             />
           )}
         </div>
-      </div>
 
       {/* New month modal */}
       <NewMonthModal
@@ -549,6 +541,6 @@ export default function PortfolioPage() {
           Denne handlingen kan ikke angres.
         </p>
       </Modal>
-    </main>
+    </PageSkeleton>
   );
 }

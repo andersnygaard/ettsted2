@@ -66,7 +66,9 @@ router.use('/import', validateAuth, importRoutes);
 router.use('/', validateAuth, summaryRoutes);
 
 // Development-only routes (database seeding, reset)
-if (process.env.NODE_ENV === 'development') {
+// Requires both NODE_ENV=development AND explicit DEV_MODE_ENABLED=true
+if (process.env.NODE_ENV === 'development' &&
+    process.env.DEV_MODE_ENABLED === 'true') {
   router.use('/dev', devRoutes);
 }
 

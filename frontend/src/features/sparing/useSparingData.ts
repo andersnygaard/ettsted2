@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { snapshotApi } from '@/shared/api/services';
+import { snapshotApi, sparingApi, userApi } from '@/shared/api/services';
+import { QUERY_KEYS } from '@/shared/api/queryHelpers';
 import type { MonthlySnapshot, Account } from '@/shared/types';
-import { ASSET_CLASS_CATEGORIES } from '@/shared/types';
+import { getAccountCategory } from '@/shared/types';
+import { parseDate } from '@/shared/utils/dateFormat';
+import { GROWTH_RATES, FIRE, QUERY_CONFIG } from '@/config/constants';
 
 /**
  * F.I.R.E. metrics and historical data for Sparing page
@@ -43,27 +46,17 @@ function getEmptySparingData(): SparingData {
 
 /**
  * Calculate sum of sparing accounts
+ * Uses getAccountCategory for consistency with backend and dashboard
  */
 function calculateSumSparing(accounts: Account[]): number {
   return accounts.reduce((sum, account) => {
-    const assetClassLower = account.assetClass.toLowerCase();
-    // Include if it's in sparing category OR not in gjeld/pensjon categories
-    const isGjeld = ASSET_CLASS_CATEGORIES.gjeld.includes(assetClassLower);
-    const isPensjon = ASSET_CLASS_CATEGORIES.pensjon.includes(assetClassLower);
-    if (!isGjeld && !isPensjon) {
+    if (getAccountCategory(account.assetClass) === 'sparing') {
       return sum + account.value;
     }
     return sum;
   }, 0);
 }
 
-/**
- * Parse Norwegian date format (dd.MM.yyyy) to Date object
- */
-function parseDate(dateStr: string): Date {
-  const [day, month, year] = dateStr.split('.');
-  return new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
-}
 
 /**
  * Check if a date is the start of the year
@@ -132,7 +125,7 @@ function calculateYearsToValue(
   currentValue: number,
   targetValue: number,
   annualSavings: number,
-  growthRate: number = 0.07 // 7% annual growth assumption
+  growthRate: number = GROWTH_RATES.DEFAULT
 ): number {
   if (currentValue >= targetValue) {
     return 0;
@@ -168,17 +161,10 @@ function calculateYearsToValue(
 async function fetchSparingData(): Promise<SparingData> {
   try {
     // Fetch both sparing metrics and user profile in parallel
-    const [sparingResponse, userResponse] = await Promise.all([
-      fetch('/api/v1/sparing'),
-      fetch('/api/v1/users/me')
+    const [sparingData, userData] = await Promise.all([
+      sparingApi.getSummary(),
+      userApi.getMe()
     ]);
-
-    if (!sparingResponse.ok || !userResponse.ok) {
-      throw new Error('API error fetching sparing data');
-    }
-
-    const { data: sparingData } = await sparingResponse.json();
-    const { data: userData } = await userResponse.json();
 
     if (!sparingData) {
       return getEmptySparingData();
@@ -244,7 +230,7 @@ async function fetchSparingData(): Promise<SparingData> {
       const annualIncome = (profile.monthlySalary || 0) * 12;
       const annualExpenses = profile.annualExpenses || 0;
       const annualSavings = annualIncome - annualExpenses;
-      const annualGrowthRate = 0.07; // 7% assumption
+      const annualGrowthRate = GROWTH_RATES.DEFAULT;
 
       // Calculate years until F.I.R.E. target is reached
       const yearsToFire = calculateYearsToValue(
@@ -274,7 +260,7 @@ async function fetchSparingData(): Promise<SparingData> {
       fireProgress: sparingData.fireProgress,
       minRetireAge,
       yearsToSalary,
-      annualWithdrawal: sparingData.sumSparing * 0.04, // 4% rule
+      annualWithdrawal: sparingData.sumSparing * FIRE.SAFE_WITHDRAWAL_RATE,
       totalGrowth,
       history: parsedHistory
     };
@@ -300,9 +286,9 @@ async function fetchSparingData(): Promise<SparingData> {
  */
 export function useSparingData() {
   return useQuery({
-    queryKey: ['sparing'],
+    queryKey: QUERY_KEYS.SPARING,
     queryFn: fetchSparingData,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: 1
+    staleTime: QUERY_CONFIG.STALE_TIME,
+    retry: QUERY_CONFIG.RETRY_COUNT
   });
 }

@@ -90,7 +90,8 @@
       "Bash(taskkill //F //PID 61984)",
       "Bash(for:*)",
       "Bash(do mv \"$f\" \"TEMP_$f\")",
-      "Bash(done)"
+      "Bash(done)",
+      "Skill(due-diligence)"
     ],
     "deny": [],
     "ask": [

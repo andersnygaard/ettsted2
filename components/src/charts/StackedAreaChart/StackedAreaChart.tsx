@@ -100,14 +100,34 @@ export function StackedAreaChart({
     // Create color mapping
     const colorMap = new Map(series.map((s) => [s.key, s.color]));
 
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // Draw areas (in reverse order so first series is on top visually)
-    g.selectAll('.stacked-area')
-      .data(stackedData.slice().reverse())
-      .join('path')
-      .attr('class', 'stacked-area__fill')
-      .attr('d', area)
-      .attr('fill', (d) => colorMap.get(d.key) || '#ccc')
-      .attr('opacity', 0.15);
+    const reversedData = stackedData.slice().reverse();
+
+    reversedData.forEach((layerData, index) => {
+      const areaPath = g
+        .append('path')
+        .attr('class', 'stacked-area__fill')
+        .attr('d', area(layerData))
+        .attr('fill', colorMap.get(layerData.key) || '#ccc');
+
+      if (prefersReducedMotion) {
+        areaPath.attr('opacity', 0.15);
+      } else {
+        // Stagger animations - each layer animates slightly after the previous
+        areaPath
+          .attr('opacity', 0)
+          .attr('transform', `translate(0, ${chartHeight}) scale(1, 0)`)
+          .transition()
+          .duration(800)
+          .delay(200 + index * 100)
+          .ease(d3.easeCubicOut)
+          .attr('transform', 'translate(0, 0) scale(1, 1)')
+          .attr('opacity', 0.15);
+      }
+    });
 
     // Create line generator for top edge of each area
     const lineGenerator = d3
@@ -117,15 +137,28 @@ export function StackedAreaChart({
       .curve(d3.curveMonotoneX);
 
     // Draw lines on top of areas (in reverse order to match areas)
-    g.selectAll('.stacked-area-line')
-      .data(stackedData.slice().reverse())
-      .join('path')
-      .attr('class', 'stacked-area__line')
-      .attr('d', lineGenerator)
-      .attr('fill', 'none')
-      .attr('stroke', (d) => colorMap.get(d.key) || '#ccc')
-      .attr('stroke-width', 2)
-      .attr('stroke-linecap', 'round');
+    reversedData.forEach((layerData, index) => {
+      const linePath = g
+        .append('path')
+        .attr('class', 'stacked-area__line')
+        .attr('d', lineGenerator(layerData))
+        .attr('fill', 'none')
+        .attr('stroke', colorMap.get(layerData.key) || '#ccc')
+        .attr('stroke-width', 2)
+        .attr('stroke-linecap', 'round');
+
+      if (!prefersReducedMotion) {
+        const totalLength = (linePath.node() as SVGPathElement).getTotalLength();
+        linePath
+          .attr('stroke-dasharray', `${totalLength} ${totalLength}`)
+          .attr('stroke-dashoffset', totalLength)
+          .transition()
+          .duration(1000)
+          .delay(300 + index * 100)
+          .ease(d3.easeCubicOut)
+          .attr('stroke-dashoffset', 0);
+      }
+    });
   }, [data, series, dimensions]);
 
   // Generate x-axis labels

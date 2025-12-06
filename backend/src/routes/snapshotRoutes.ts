@@ -24,8 +24,8 @@ import {
   deleteSnapshot,
   getSnapshotAccounts,
   addAccount,
-  updateAccount,
-  deleteAccount
+  updateSnapshotAccount,
+  deleteSnapshotAccount
 } from '../controllers/snapshotController';
 import { validateBody, validateParams, validateQuery } from '../middleware/validate';
 import {
@@ -125,7 +125,7 @@ router.patch(
   '/:id/accounts/:accountId',
   validateParams(snapshotAndAccountIdSchema),
   validateBody(accountUpdateSchema),
-  updateAccount
+  updateSnapshotAccount
 );
 
 /**
@@ -137,7 +137,7 @@ router.patch(
 router.delete(
   '/:id/accounts/:accountId',
   validateParams(snapshotAndAccountIdSchema),
-  deleteAccount
+  deleteSnapshotAccount
 );
 
 export default router;

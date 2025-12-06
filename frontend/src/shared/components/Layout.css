@@ -12,12 +12,6 @@
 
 .app-layout > main {
   flex: 1;
-  padding: var(--space-xl) 0 var(--space-2xl); /* 24px top, 64px bottom */
+  padding: 0;
 }
 
-/* Responsive padding */
-@media (max-width: 768px) {
-  .app-layout > main {
-    padding: var(--space-md) 0 var(--space-2xl); /* 16px top, 32px bottom on mobile */
-  }
-}

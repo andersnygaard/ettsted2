@@ -1,4 +1,4 @@
-import { PageHeader, CalculatorCard, Breadcrumb } from '@finans/components';
+import { PageSkeleton, CalculatorCard } from '@finans/components';
 import './CalculatorsPage.css';
 
 /**
@@ -46,22 +46,14 @@ const calculators = [
  */
 function CalculatorsPage() {
   return (
-    <main className="calculators-page">
-      <div className="container container--narrow">
-        <Breadcrumb
-          items={[
-            { label: 'Hjem', path: '/dashboard' },
-            { label: 'Kalkulatorer' },
-          ]}
-        />
-
-        <PageHeader
-          title="Kalkulatorer"
-          subtitle="Verktøy for å planlegge din økonomi"
-          centered
-        />
-
-        <div className="calc-grid">
+    <PageSkeleton
+      breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Kalkulatorer' }]}
+      title="Kalkulatorer"
+      subtitle="Verktøy for å planlegge din økonomi"
+      centered
+      className="calculators-page"
+    >
+      <div className="calc-grid">
           {calculators.map((calc, index) => (
             <CalculatorCard
               key={calc.href}
@@ -73,9 +65,8 @@ function CalculatorsPage() {
               className={`animate-fade-up animate-delay-${index + 1}`}
             />
           ))}
-        </div>
       </div>
-    </main>
+    </PageSkeleton>
   );
 }
 

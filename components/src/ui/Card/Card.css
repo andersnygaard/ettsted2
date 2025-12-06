@@ -9,7 +9,18 @@
   transition: transform var(--transition-medium), box-shadow var(--transition-medium);
 }
 
-.card--hoverable:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.06);
+/* Desktop hover effects - only on devices that support hover */
+@media (hover: hover) {
+  .card--hoverable:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.06);
+  }
+}
+
+/* Mobile/tablet - reduce or disable hover transforms for better performance */
+@media (hover: none) {
+  .card--hoverable:active {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+  }
 }

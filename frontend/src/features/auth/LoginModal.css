@@ -1,7 +1,7 @@
 /**
  * LoginModal Styles
  *
- * Modal dialog for OAuth login options.
+ * Modal dialog for OAuth login options with smooth animations.
  */
 
 .login-modal__backdrop {
@@ -13,6 +13,12 @@
   justify-content: center;
   z-index: var(--z-modal, 1000);
   padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.login-modal__backdrop.open {
+  opacity: 1;
 }
 
 .login-modal {
@@ -22,19 +28,15 @@
   background-color: var(--warm-white);
   border-radius: 8px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
-  animation: modal-enter 0.2s ease-out;
+  transform: scale(0.95);
+  opacity: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
   overflow: hidden;
 }
 
-@keyframes modal-enter {
-  from {
-    opacity: 0;
-    transform: scale(0.95) translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+.login-modal.open {
+  transform: scale(1);
+  opacity: 1;
 }
 
 .login-modal__close {
@@ -179,6 +181,23 @@
   color: var(--text-secondary);
   margin: 1.5rem 0 0 0;
   line-height: 1.5;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .login-modal__backdrop,
+  .login-modal {
+    transition: none;
+  }
+
+  .login-modal__backdrop.open {
+    opacity: 1;
+  }
+
+  .login-modal.open {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* Responsive */

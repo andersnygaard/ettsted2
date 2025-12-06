@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { snapshotApi } from '@/shared/api/services';
+import { QUERY_KEYS } from '@/shared/api/queryHelpers';
 import type { Account } from '@/shared/types';
 import { getAccountCategory } from '@/shared/types';
+import { parseDate } from '@/shared/utils/dateFormat';
+import { GROWTH_RATES, RETIREMENT, QUERY_CONFIG } from '@/config/constants';
 
 /**
  * Pension source breakdown
@@ -36,13 +39,6 @@ function calculateSumPensjon(accounts: Account[]): number {
   }, 0);
 }
 
-/**
- * Parse Norwegian date format (dd.MM.yyyy) to Date object
- */
-function parseDate(dateStr: string): Date {
-  const [day, month, year] = dateStr.split('.');
-  return new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
-}
 
 /**
  * Empty pensjon data (no snapshots yet)
@@ -63,11 +59,11 @@ function getEmptyPensjonData(): PensjonData {
  */
 function estimatePensjonAtRetirement(
   currentValue: number,
-  currentAge: number = 35,
-  retirementAge: number = 67
+  currentAge: number = RETIREMENT.DEFAULT_CURRENT_AGE,
+  retirementAge: number = RETIREMENT.DEFAULT_RETIREMENT_AGE
 ): number {
   const yearsToRetirement = retirementAge - currentAge;
-  const annualGrowth = 0.05; // 5% conservative estimate
+  const annualGrowth = GROWTH_RATES.CONSERVATIVE;
 
   if (yearsToRetirement <= 0) {
     return currentValue;
@@ -168,9 +164,9 @@ async function fetchPensjonData(): Promise<PensjonData> {
  */
 export function usePensjonData() {
   return useQuery({
-    queryKey: ['pensjon'],
+    queryKey: QUERY_KEYS.PENSJON,
     queryFn: fetchPensjonData,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: 1
+    staleTime: QUERY_CONFIG.STALE_TIME,
+    retry: QUERY_CONFIG.RETRY_COUNT
   });
 }

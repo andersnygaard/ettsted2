@@ -1,8 +1,6 @@
-import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useState, useMemo } from 'react';
 import { Breadcrumb, PageHeader, Card, NumberInput } from '@finans/components';
 import { formatCurrency, formatNumber } from '@/shared/utils/numberFormat';
-import client from '@/shared/api/client';
 import MonteCarloChart from './MonteCarloChart';
 import './CompoundCalculatorPage.css'; // Reuse shared calculator styles
 
@@ -14,7 +12,7 @@ import './CompoundCalculatorPage.css'; // Reuse shared calculator styles
  *
  * Features:
  * - Input fields for portfolio value, annual withdrawal, years, expected return, volatility
- * - Run Monte Carlo simulation via backend API
+ * - Client-side Monte Carlo simulation
  * - Result display: success rate, percentile bands
  * - D3.js visualization showing scenario paths
  *
@@ -42,11 +40,96 @@ interface MonteCarloResult {
 }
 
 /**
- * Call Monte Carlo simulation API
+ * Generate a random number from normal distribution using Box-Muller transform
  */
-async function runMonteCarloSimulation(inputs: MonteCarloInputs): Promise<MonteCarloResult> {
-  const response = await client.post('/calculators/monte-carlo', inputs);
-  return response.data.data;
+function randomNormal(mean: number, stdDev: number): number {
+  const u1 = Math.random();
+  const u2 = Math.random();
+  const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+  return mean + z * stdDev;
+}
+
+/**
+ * Run Monte Carlo retirement simulation locally
+ *
+ * Simulates portfolio growth/depletion over time with random returns.
+ * Each simulation assumes:
+ * - Annual returns follow a normal distribution
+ * - Fixed annual withdrawal amount
+ * - Portfolio stops growing once depleted
+ */
+function runMonteCarloSimulation(inputs: MonteCarloInputs): MonteCarloResult {
+  const { portfolioValue, annualWithdrawal, years, expectedReturn, volatility, simulations } = inputs;
+
+  const results: number[] = [];
+  const scenarios: number[][] = [];
+
+  // Convert percentages to decimals
+  const expectedReturnDecimal = expectedReturn / 100;
+  const volatilityDecimal = volatility / 100;
+
+  // Run each simulation
+  for (let sim = 0; sim < simulations; sim++) {
+    let balance = portfolioValue;
+    const yearlyBalances: number[] = [balance];
+
+    // Simulate each year
+    for (let year = 0; year < years; year++) {
+      // Generate random return based on normal distribution
+      const annualReturn = randomNormal(expectedReturnDecimal, volatilityDecimal);
+
+      // Apply return to balance
+      balance = balance * (1 + annualReturn);
+
+      // Apply withdrawal (only if balance is positive)
+      if (balance > 0) {
+        balance -= annualWithdrawal;
+      }
+
+      // Don't allow balance to go below zero
+      balance = Math.max(0, balance);
+
+      yearlyBalances.push(balance);
+
+      // Stop simulation if balance depleted
+      if (balance <= 0) {
+        break;
+      }
+    }
+
+    // Record final balance
+    results.push(yearlyBalances[yearlyBalances.length - 1]);
+
+    // Keep sample of scenarios (first 100) for frontend visualization
+    if (sim < 100) {
+      scenarios.push(yearlyBalances);
+    }
+  }
+
+  // Calculate success rate (% of simulations that maintained positive balance)
+  const successfulSimulations = results.filter(balance => balance > 0).length;
+  const successRate = (successfulSimulations / simulations) * 100;
+
+  // Sort results for percentile calculation
+  const sorted = [...results].sort((a, b) => a - b);
+
+  // Calculate percentiles
+  const percentile10 = sorted[Math.floor(simulations * 0.1)] || 0;
+  const percentile25 = sorted[Math.floor(simulations * 0.25)] || 0;
+  const percentile50 = sorted[Math.floor(simulations * 0.5)] || 0;
+  const percentile75 = sorted[Math.floor(simulations * 0.75)] || 0;
+  const percentile90 = sorted[Math.floor(simulations * 0.9)] || 0;
+
+  return {
+    successRate: Math.round(successRate * 100) / 100, // Round to 2 decimal places
+    percentile10,
+    percentile25,
+    percentile50,
+    percentile75,
+    percentile90,
+    scenarios,
+    simulationsRun: simulations
+  };
 }
 
 function MonteCarloPage() {
@@ -59,11 +142,7 @@ function MonteCarloPage() {
     simulations: 1000,
   });
 
-  const [submittedYears, setSubmittedYears] = useState<number | null>(null);
-
-  const { mutate, data: result, isPending, error } = useMutation({
-    mutationFn: runMonteCarloSimulation,
-  });
+  const result = useMemo(() => runMonteCarloSimulation(inputs), [inputs]);
 
   const updateInput = <K extends keyof MonteCarloInputs>(
     key: K,
@@ -73,11 +152,6 @@ function MonteCarloPage() {
       ...prev,
       [key]: value ?? 0,
     }));
-  };
-
-  const handleRunSimulation = () => {
-    setSubmittedYears(inputs.years);
-    mutate(inputs);
   };
 
   // Calculate withdrawal rate as percentage of portfolio
@@ -133,21 +207,6 @@ function MonteCarloPage() {
               onChange={(v) => updateInput('volatility', v)}
               suffix="%"
             />
-
-            <button
-              className="btn-primary"
-              onClick={handleRunSimulation}
-              disabled={isPending}
-              style={{ marginTop: '16px', width: '100%' }}
-            >
-              {isPending ? 'Simulerer...' : 'Kjør simulering'}
-            </button>
-
-            {error && (
-              <div style={{ color: 'var(--negative)', marginTop: '12px', fontSize: '14px' }}>
-                {error instanceof Error ? error.message : 'En feil oppstod'}
-              </div>
-            )}
           </Card>
 
           {result && (
@@ -202,7 +261,7 @@ function MonteCarloPage() {
                 p75: result.percentile75,
                 p90: result.percentile90,
               }}
-              years={submittedYears || inputs.years}
+              years={inputs.years}
             />
           </div>
         )}

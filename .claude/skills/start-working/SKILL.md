@@ -38,6 +38,7 @@ The skill automates selecting, planning, implementing, and completing tasks foll
 Each task MUST be executed using the **Task tool** with a subagent:
 - **Default model: `haiku`** - fast and efficient for most tasks
 - **Use `sonnet` only for**: D3.js visualizations, complex business logic, architectural decisions
+- **ALWAYS include CLAUDE.md context** in subagent prompts - reference project patterns, conventions, and tech stack
 
 ### 4. TASKS ARE DONE IN ORDER
 Tasks are numbered for dependency reasons. Execute them **sequentially, in order**:
@@ -61,7 +62,7 @@ The script will:
 
 **Frontend tasks without Playwright verification are INCOMPLETE.**
 
-### 6. USE BUILT-IN TOOLS, NOT BASH COMMANDS
+### 6. ALWAYS PREFER TO USE TOOLS OVER BASH OR CLI!!!
 Subagents MUST use built-in tools instead of bash equivalents. **This is non-negotiable.**
 
 | ❌ NEVER USE | ✅ ALWAYS USE |
@@ -338,7 +339,7 @@ pnpm dev
   - **Zustand**: Client state (UI preferences, local state)
   - **React Context**: Auth state only
 - **Components**: Functional components with TypeScript
-- **Styling**: BeerCSS classes + Material UI icons
+- **Styling**: Nordic Minimal CSS + Material UI icons
 - **Forms**: React Hook Form + Zod validation
 - **Norwegian**: All UI text in Norwegian, use format utilities from `shared/utils/`
 
@@ -687,6 +688,8 @@ Task tool:
     .task-board/in-progress/081-FEATURE-user-routes.md
 
     This task is tracked in the task board system.
+
+    🚨 READ CLAUDE.md FIRST - it contains all project patterns, conventions, and tech stack.
     Follow all patterns from CLAUDE.md.
     Update the task file in .task-board/in-progress/ with progress.
     Mark acceptance criteria as complete in the task file.
@@ -720,6 +723,8 @@ Task tool:
     .task-board/in-progress/048-FEATURE-area-chart-component.md
 
     This task is tracked in the task board system.
+
+    🚨 READ CLAUDE.md FIRST - it contains all project patterns, conventions, and tech stack.
     This involves complex D3.js visualization work.
     Update the task file in .task-board/in-progress/ with progress.
 
@@ -823,7 +828,7 @@ https://localhost:8081/_explorer/
 - Functional components only
 - Custom hooks for reusable logic
 - Destructure props in function signature
-- Use BeerCSS classes for styling
+- Use Nordic Minimal CSS classes for styling
 
 **Express/Backend**:
 - Async/await (no callbacks)
@@ -993,7 +998,6 @@ finans/
 │   │   │   ├── hooks/     # Custom hooks
 │   │   │   ├── utils/     # Utilities (Norwegian formatting)
 │   │   │   └── api/       # Axios client, TanStack Query
-│   │   └── stores/        # Zustand stores
 │   ├── .env               # Environment variables (gitignored)
 │   └── package.json
 ├── components/            # Shared component library
@@ -1004,7 +1008,7 @@ finans/
 │   ├── PLANNING-BOARD.md  # Current priorities (max 3-5)
 │   ├── README.md          # System documentation
 │   ├── WORKFLOW.md        # Complete workflow guide
-│   ├── backlog/           # Planned tasks (001-020)
+│   ├── backlog/           # Planned tasks
 │   ├── in-progress/       # Active work (limit 1-2)
 │   ├── done/              # Completed tasks
 │   └── on-hold/           # Deferred tasks

@@ -14,6 +14,8 @@ const meta = {
     height: { control: { type: 'range', min: 4, max: 20, step: 1 } },
     leftLabel: { control: 'text' },
     rightLabel: { control: 'text' },
+    animate: { control: 'boolean' },
+    delay: { control: { type: 'number', min: 0, max: 1000, step: 50 } },
   },
 } satisfies Meta<typeof ProgressBar>;
 
@@ -175,5 +177,47 @@ export const NorwegianLabels: Story = {
   },
   parameters: {
     docs: { description: { story: 'Demonstrates Norwegian number formatting in labels' } },
+  },
+};
+
+export const AnimatedProgress: Story = {
+  args: {
+    value: 65,
+    variant: 'gold',
+    height: 8,
+    leftLabel: 'Animation demo',
+    rightLabel: '65%',
+    animate: true,
+  },
+  parameters: {
+    docs: { description: { story: 'Progress bar animates from 0% to target width on mount (600ms ease-out)' } },
+  },
+};
+
+export const AnimatedWithDelay: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '300px' }}>
+      <ProgressBar value={30} variant="default" height={8} leftLabel="First" rightLabel="30%" animate delay={0} />
+      <ProgressBar value={50} variant="default" height={8} leftLabel="Second" rightLabel="50%" animate delay={100} />
+      <ProgressBar value={75} variant="default" height={8} leftLabel="Third" rightLabel="75%" animate delay={200} />
+      <ProgressBar value={90} variant="default" height={8} leftLabel="Fourth" rightLabel="90%" animate delay={300} />
+    </div>
+  ),
+  parameters: {
+    docs: { description: { story: 'Multiple progress bars with staggered animations using delay prop for sequential fill effect' } },
+  },
+};
+
+export const NoAnimation: Story = {
+  args: {
+    value: 75,
+    variant: 'default',
+    height: 8,
+    leftLabel: 'Static progress',
+    rightLabel: '75%',
+    animate: false,
+  },
+  parameters: {
+    docs: { description: { story: 'Progress bar renders at final width immediately without animation' } },
   },
 };

@@ -34,18 +34,7 @@
   border-radius: 4px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   z-index: var(--z-overlay);
-  animation: avatarMenuFadeIn 0.15s ease;
-}
-
-@keyframes avatarMenuFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  animation: fadeUp 0.15s ease;
 }
 
 .avatar-menu__item {

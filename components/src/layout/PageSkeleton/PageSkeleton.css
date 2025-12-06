@@ -1,0 +1,63 @@
+/**
+ * PageSkeleton Component Styles
+ *
+ * Minimal styling - relies on existing container and PageHeader classes.
+ * This component is primarily a structural wrapper.
+ *
+ * Page transitions: Applied on mount via fadeUp animation
+ */
+
+/* Keyframe definition - must be defined here for component library */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-skeleton {
+  /* Page entrance animation - applied on mount */
+  opacity: 0;
+  animation: fadeUp 0.35s ease-out forwards;
+}
+
+.page-skeleton__content {
+  /* Content area - children render here */
+  /* No additional spacing needed - components handle their own margins */
+}
+
+/* Breadcrumb staggered entry */
+.page-skeleton :is(.breadcrumb) {
+  opacity: 0;
+  animation: fadeUp 0.35s ease-out forwards;
+  animation-delay: 0.05s;
+}
+
+/* PageHeader staggered entry */
+.page-skeleton :is(.page-header) {
+  opacity: 0;
+  animation: fadeUp 0.35s ease-out forwards;
+  animation-delay: 0.1s;
+}
+
+/* Content staggered entry */
+.page-skeleton__content {
+  opacity: 0;
+  animation: fadeUp 0.35s ease-out forwards;
+  animation-delay: 0.15s;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .page-skeleton,
+  .page-skeleton :is(.breadcrumb),
+  .page-skeleton :is(.page-header),
+  .page-skeleton__content {
+    opacity: 1;
+    animation: none;
+  }
+}

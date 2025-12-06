@@ -23,6 +23,8 @@ import {
   deleteSnapshot as deleteSnapshotService
 } from '../services/portfolioService';
 import { MonthlySnapshot, Account } from '../models/Portfolio';
+import { asyncHandler } from '../middleware/errorHandler';
+import { NotFoundError } from '../errors';
 import { logger } from '../utils/logger';
 
 /**
@@ -47,43 +49,28 @@ function calculateTotalNetWorth(accounts: Account[]): number {
  *
  * @returns 200 with array of snapshots
  */
-export async function getAllSnapshots(req: Request, res: Response): Promise<void> {
-  try {
-    const userId = req.user!.userId;
+export const getAllSnapshots = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user!.userId;
 
-    // Parse query parameters
-    const orderBy = (req.query.orderBy as 'date' | 'createdAt') || 'date';
-    const ascending = req.query.ascending === 'true';
-    const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : undefined;
+  // Parse query parameters
+  const orderBy = (req.query.orderBy as 'date' | 'createdAt') || 'date';
+  const ascending = req.query.ascending === 'true';
+  const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : undefined;
 
-    logger.debug('Fetching all snapshots for user', { userId, orderBy, ascending, limit });
+  logger.debug('Fetching all snapshots for user', { userId, orderBy, ascending, limit });
 
-    const snapshots = await getSnapshotsByUserId(userId, {
-      orderBy,
-      ascending,
-      limit
-    });
+  const snapshots = await getSnapshotsByUserId(userId, {
+    orderBy,
+    ascending,
+    limit
+  });
 
-    logger.info('Snapshots retrieved', { userId, count: snapshots.length });
-    res.status(200).json({
-      data: snapshots,
-      success: true
-    });
-  } catch (error) {
-    logger.error('Error fetching snapshots', {
-      userId: req.user!.userId,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    });
-
-    res.status(500).json({
-      error: {
-        message: 'Failed to fetch snapshots',
-        code: 'INTERNAL_SERVER_ERROR'
-      },
-      success: false
-    });
-  }
-}
+  logger.info('Snapshots retrieved', { userId, count: snapshots.length });
+  res.json({
+    data: snapshots,
+    success: true
+  });
+});
 
 /**
  * Create new monthly snapshot
@@ -101,62 +88,47 @@ export async function getAllSnapshots(req: Request, res: Response): Promise<void
  *
  * @returns 201 with created snapshot
  */
-export async function createSnapshot(req: Request, res: Response): Promise<void> {
-  try {
-    const userId = req.user!.userId;
-    const { date, accounts } = req.body;
+export const createSnapshot = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user!.userId;
+  const { date, accounts } = req.body;
 
-    logger.debug('Creating new snapshot', { userId, date, accountCount: accounts.length });
+  logger.debug('Creating new snapshot', { userId, date, accountCount: accounts.length });
 
-    // Generate IDs for snapshot and accounts
-    const snapshotId = randomUUID();
-    const accountsWithIds: Account[] = accounts.map((account: Omit<Account, 'id'>) => ({
-      ...account,
-      id: randomUUID()
-    }));
+  // Generate IDs for snapshot and accounts
+  const snapshotId = randomUUID();
+  const accountsWithIds: Account[] = accounts.map((account: Omit<Account, 'id'>) => ({
+    ...account,
+    id: randomUUID()
+  }));
 
-    // Calculate total net worth
-    const totalNetWorth = calculateTotalNetWorth(accountsWithIds);
+  // Calculate total net worth
+  const totalNetWorth = calculateTotalNetWorth(accountsWithIds);
 
-    const snapshot: MonthlySnapshot = {
-      id: snapshotId,
-      userId,
-      date,
-      accounts: accountsWithIds,
-      totalNetWorth,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
+  const snapshot: MonthlySnapshot = {
+    id: snapshotId,
+    userId,
+    date,
+    accounts: accountsWithIds,
+    totalNetWorth,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  };
 
-    const createdSnapshot = await createSnapshotService(snapshot);
+  const createdSnapshot = await createSnapshotService(snapshot);
 
-    logger.info('Snapshot created successfully', {
-      snapshotId,
-      userId,
-      date,
-      totalNetWorth,
-      accountCount: accountsWithIds.length
-    });
+  logger.info('Snapshot created successfully', {
+    snapshotId,
+    userId,
+    date,
+    totalNetWorth,
+    accountCount: accountsWithIds.length
+  });
 
-    res.status(201).json({
-      data: createdSnapshot,
-      success: true
-    });
-  } catch (error) {
-    logger.error('Error creating snapshot', {
-      userId: req.user!.userId,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    });
-
-    res.status(500).json({
-      error: {
-        message: 'Failed to create snapshot',
-        code: 'INTERNAL_SERVER_ERROR'
-      },
-      success: false
-    });
-  }
-}
+  res.status(201).json({
+    data: createdSnapshot,
+    success: true
+  });
+});
 
 /**
  * Get specific snapshot by ID
@@ -168,48 +140,25 @@ export async function createSnapshot(req: Request, res: Response): Promise<void>
  *
  * @returns 200 with snapshot, or 404 if not found
  */
-export async function getSnapshot(req: Request, res: Response): Promise<void> {
-  try {
-    const userId = req.user!.userId;
-    const snapshotId = req.params.id;
+export const getSnapshot = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user!.userId;
+  const snapshotId = req.params.id;
 
-    logger.debug('Fetching snapshot', { userId, snapshotId });
+  logger.debug('Fetching snapshot', { userId, snapshotId });
 
-    const snapshot = await getSnapshotById(userId, snapshotId);
+  const snapshot = await getSnapshotById(userId, snapshotId);
 
-    if (!snapshot) {
-      logger.warn('Snapshot not found', { userId, snapshotId });
-      res.status(404).json({
-        error: {
-          message: 'Snapshot not found',
-          code: 'NOT_FOUND'
-        },
-        success: false
-      });
-      return;
-    }
-
-    logger.info('Snapshot retrieved', { userId, snapshotId });
-    res.status(200).json({
-      data: snapshot,
-      success: true
-    });
-  } catch (error) {
-    logger.error('Error fetching snapshot', {
-      userId: req.user!.userId,
-      snapshotId: req.params.id,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    });
-
-    res.status(500).json({
-      error: {
-        message: 'Failed to fetch snapshot',
-        code: 'INTERNAL_SERVER_ERROR'
-      },
-      success: false
-    });
+  if (!snapshot) {
+    logger.warn('Snapshot not found', { userId, snapshotId });
+    throw new NotFoundError('Snapshot not found');
   }
-}
+
+  logger.info('Snapshot retrieved', { userId, snapshotId });
+  res.json({
+    data: snapshot,
+    success: true
+  });
+});
 
 /**
  * Update snapshot
@@ -227,60 +176,37 @@ export async function getSnapshot(req: Request, res: Response): Promise<void> {
  *
  * @returns 200 with updated snapshot, or 404 if not found
  */
-export async function updateSnapshot(req: Request, res: Response): Promise<void> {
-  try {
-    const userId = req.user!.userId;
-    const snapshotId = req.params.id;
-    const updates = req.body;
+export const updateSnapshot = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user!.userId;
+  const snapshotId = req.params.id;
+  const updates = req.body;
 
-    logger.debug('Updating snapshot', { userId, snapshotId, fields: Object.keys(updates) });
+  logger.debug('Updating snapshot', { userId, snapshotId, fields: Object.keys(updates) });
 
-    // Check if snapshot exists
-    const existingSnapshot = await getSnapshotById(userId, snapshotId);
-    if (!existingSnapshot) {
-      logger.warn('Snapshot not found for update', { userId, snapshotId });
-      res.status(404).json({
-        error: {
-          message: 'Snapshot not found',
-          code: 'NOT_FOUND'
-        },
-        success: false
-      });
-      return;
-    }
-
-    // If accounts are being updated, generate IDs for new accounts and recalculate total
-    if (updates.accounts) {
-      updates.accounts = updates.accounts.map((account: Account | Omit<Account, 'id'>) => ({
-        ...account,
-        id: (account as Account).id || randomUUID()
-      }));
-      updates.totalNetWorth = calculateTotalNetWorth(updates.accounts);
-    }
-
-    const updatedSnapshot = await updateSnapshotService(userId, snapshotId, updates);
-
-    logger.info('Snapshot updated successfully', { userId, snapshotId, fields: Object.keys(updates) });
-    res.status(200).json({
-      data: updatedSnapshot,
-      success: true
-    });
-  } catch (error) {
-    logger.error('Error updating snapshot', {
-      userId: req.user!.userId,
-      snapshotId: req.params.id,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    });
-
-    res.status(500).json({
-      error: {
-        message: 'Failed to update snapshot',
-        code: 'INTERNAL_SERVER_ERROR'
-      },
-      success: false
-    });
+  // Check if snapshot exists
+  const existingSnapshot = await getSnapshotById(userId, snapshotId);
+  if (!existingSnapshot) {
+    logger.warn('Snapshot not found for update', { userId, snapshotId });
+    throw new NotFoundError('Snapshot not found');
   }
-}
+
+  // If accounts are being updated, generate IDs for new accounts and recalculate total
+  if (updates.accounts) {
+    updates.accounts = updates.accounts.map((account: Account | Omit<Account, 'id'>) => ({
+      ...account,
+      id: (account as Account).id || randomUUID()
+    }));
+    updates.totalNetWorth = calculateTotalNetWorth(updates.accounts);
+  }
+
+  const updatedSnapshot = await updateSnapshotService(userId, snapshotId, updates);
+
+  logger.info('Snapshot updated successfully', { userId, snapshotId, fields: Object.keys(updates) });
+  res.json({
+    data: updatedSnapshot,
+    success: true
+  });
+});
 
 /**
  * Delete snapshot
@@ -292,50 +218,27 @@ export async function updateSnapshot(req: Request, res: Response): Promise<void>
  *
  * @returns 200 on success, or 404 if not found
  */
-export async function deleteSnapshot(req: Request, res: Response): Promise<void> {
-  try {
-    const userId = req.user!.userId;
-    const snapshotId = req.params.id;
+export const deleteSnapshot = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user!.userId;
+  const snapshotId = req.params.id;
 
-    logger.debug('Deleting snapshot', { userId, snapshotId });
+  logger.debug('Deleting snapshot', { userId, snapshotId });
 
-    // Check if snapshot exists
-    const existingSnapshot = await getSnapshotById(userId, snapshotId);
-    if (!existingSnapshot) {
-      logger.warn('Snapshot not found for deletion', { userId, snapshotId });
-      res.status(404).json({
-        error: {
-          message: 'Snapshot not found',
-          code: 'NOT_FOUND'
-        },
-        success: false
-      });
-      return;
-    }
-
-    await deleteSnapshotService(userId, snapshotId);
-
-    logger.info('Snapshot deleted successfully', { userId, snapshotId });
-    res.status(200).json({
-      data: { message: 'Snapshot deleted successfully' },
-      success: true
-    });
-  } catch (error) {
-    logger.error('Error deleting snapshot', {
-      userId: req.user!.userId,
-      snapshotId: req.params.id,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    });
-
-    res.status(500).json({
-      error: {
-        message: 'Failed to delete snapshot',
-        code: 'INTERNAL_SERVER_ERROR'
-      },
-      success: false
-    });
+  // Check if snapshot exists
+  const existingSnapshot = await getSnapshotById(userId, snapshotId);
+  if (!existingSnapshot) {
+    logger.warn('Snapshot not found for deletion', { userId, snapshotId });
+    throw new NotFoundError('Snapshot not found');
   }
-}
+
+  await deleteSnapshotService(userId, snapshotId);
+
+  logger.info('Snapshot deleted successfully', { userId, snapshotId });
+  res.json({
+    data: { message: 'Snapshot deleted successfully' },
+    success: true
+  });
+});
 
 /**
  * Get accounts for a snapshot
@@ -347,48 +250,25 @@ export async function deleteSnapshot(req: Request, res: Response): Promise<void>
  *
  * @returns 200 with array of accounts, or 404 if snapshot not found
  */
-export async function getSnapshotAccounts(req: Request, res: Response): Promise<void> {
-  try {
-    const userId = req.user!.userId;
-    const snapshotId = req.params.id;
+export const getSnapshotAccounts = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user!.userId;
+  const snapshotId = req.params.id;
 
-    logger.debug('Fetching accounts for snapshot', { userId, snapshotId });
+  logger.debug('Fetching accounts for snapshot', { userId, snapshotId });
 
-    const snapshot = await getSnapshotById(userId, snapshotId);
+  const snapshot = await getSnapshotById(userId, snapshotId);
 
-    if (!snapshot) {
-      logger.warn('Snapshot not found for accounts', { userId, snapshotId });
-      res.status(404).json({
-        error: {
-          message: 'Snapshot not found',
-          code: 'NOT_FOUND'
-        },
-        success: false
-      });
-      return;
-    }
-
-    logger.info('Accounts retrieved', { userId, snapshotId, count: snapshot.accounts.length });
-    res.status(200).json({
-      data: snapshot.accounts,
-      success: true
-    });
-  } catch (error) {
-    logger.error('Error fetching accounts', {
-      userId: req.user!.userId,
-      snapshotId: req.params.id,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    });
-
-    res.status(500).json({
-      error: {
-        message: 'Failed to fetch accounts',
-        code: 'INTERNAL_SERVER_ERROR'
-      },
-      success: false
-    });
+  if (!snapshot) {
+    logger.warn('Snapshot not found for accounts', { userId, snapshotId });
+    throw new NotFoundError('Snapshot not found');
   }
-}
+
+  logger.info('Accounts retrieved', { userId, snapshotId, count: snapshot.accounts.length });
+  res.json({
+    data: snapshot.accounts,
+    success: true
+  });
+});
 
 /**
  * Add account to snapshot
@@ -408,73 +288,50 @@ export async function getSnapshotAccounts(req: Request, res: Response): Promise<
  *
  * @returns 201 with updated snapshot, or 404 if snapshot not found
  */
-export async function addAccount(req: Request, res: Response): Promise<void> {
-  try {
-    const userId = req.user!.userId;
-    const snapshotId = req.params.id;
-    const accountData = req.body;
+export const addAccount = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user!.userId;
+  const snapshotId = req.params.id;
+  const accountData = req.body;
 
-    logger.debug('Adding account to snapshot', { userId, snapshotId, accountName: accountData.name });
+  logger.debug('Adding account to snapshot', { userId, snapshotId, accountName: accountData.name });
 
-    // Check if snapshot exists
-    const existingSnapshot = await getSnapshotById(userId, snapshotId);
-    if (!existingSnapshot) {
-      logger.warn('Snapshot not found for adding account', { userId, snapshotId });
-      res.status(404).json({
-        error: {
-          message: 'Snapshot not found',
-          code: 'NOT_FOUND'
-        },
-        success: false
-      });
-      return;
-    }
-
-    // Create new account with generated ID
-    const newAccount: Account = {
-      id: randomUUID(),
-      name: accountData.name,
-      assetClass: accountData.assetClass,
-      value: accountData.value,
-      notes: accountData.notes
-    };
-
-    // Add to accounts array and recalculate total
-    const updatedAccounts = [...existingSnapshot.accounts, newAccount];
-    const totalNetWorth = calculateTotalNetWorth(updatedAccounts);
-
-    const updatedSnapshot = await updateSnapshotService(userId, snapshotId, {
-      accounts: updatedAccounts,
-      totalNetWorth
-    });
-
-    logger.info('Account added successfully', {
-      userId,
-      snapshotId,
-      accountId: newAccount.id,
-      accountName: newAccount.name
-    });
-
-    res.status(201).json({
-      data: updatedSnapshot,
-      success: true
-    });
-  } catch (error) {
-    logger.error('Error adding account', {
-      userId: req.user!.userId,
-      snapshotId: req.params.id,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    });
-
-    res.status(500).json({
-      error: {
-        message: 'Failed to add account',
-        code: 'INTERNAL_SERVER_ERROR'
-      },
-      success: false
-    });
+  // Check if snapshot exists
+  const existingSnapshot = await getSnapshotById(userId, snapshotId);
+  if (!existingSnapshot) {
+    logger.warn('Snapshot not found for adding account', { userId, snapshotId });
+    throw new NotFoundError('Snapshot not found');
   }
-}
+
+  // Create new account with generated ID
+  const newAccount: Account = {
+    id: randomUUID(),
+    name: accountData.name,
+    assetClass: accountData.assetClass,
+    value: accountData.value,
+    notes: accountData.notes
+  };
+
+  // Add to accounts array and recalculate total
+  const updatedAccounts = [...existingSnapshot.accounts, newAccount];
+  const totalNetWorth = calculateTotalNetWorth(updatedAccounts);
+
+  const updatedSnapshot = await updateSnapshotService(userId, snapshotId, {
+    accounts: updatedAccounts,
+    totalNetWorth
+  });
+
+  logger.info('Account added successfully', {
+    userId,
+    snapshotId,
+    accountId: newAccount.id,
+    accountName: newAccount.name
+  });
+
+  res.status(201).json({
+    data: updatedSnapshot,
+    success: true
+  });
+});
 
 /**
  * Update account in snapshot
@@ -494,81 +351,50 @@ export async function addAccount(req: Request, res: Response): Promise<void> {
  *
  * @returns 200 with updated snapshot, or 404 if not found
  */
-export async function updateAccount(req: Request, res: Response): Promise<void> {
-  try {
-    const userId = req.user!.userId;
-    const snapshotId = req.params.id;
-    const accountId = req.params.accountId;
-    const updates = req.body;
+export const updateSnapshotAccount = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user!.userId;
+  const snapshotId = req.params.id;
+  const accountId = req.params.accountId;
+  const updates = req.body;
 
-    logger.debug('Updating account', { userId, snapshotId, accountId, fields: Object.keys(updates) });
+  logger.debug('Updating account', { userId, snapshotId, accountId, fields: Object.keys(updates) });
 
-    // Check if snapshot exists
-    const existingSnapshot = await getSnapshotById(userId, snapshotId);
-    if (!existingSnapshot) {
-      logger.warn('Snapshot not found for updating account', { userId, snapshotId });
-      res.status(404).json({
-        error: {
-          message: 'Snapshot not found',
-          code: 'NOT_FOUND'
-        },
-        success: false
-      });
-      return;
-    }
-
-    // Find and update the account
-    const accountIndex = existingSnapshot.accounts.findIndex(a => a.id === accountId);
-    if (accountIndex === -1) {
-      logger.warn('Account not found in snapshot', { userId, snapshotId, accountId });
-      res.status(404).json({
-        error: {
-          message: 'Account not found',
-          code: 'NOT_FOUND'
-        },
-        success: false
-      });
-      return;
-    }
-
-    // Update account fields
-    const updatedAccounts = [...existingSnapshot.accounts];
-    updatedAccounts[accountIndex] = {
-      ...updatedAccounts[accountIndex],
-      ...updates,
-      id: accountId // Ensure ID is not changed
-    };
-
-    // Recalculate total
-    const totalNetWorth = calculateTotalNetWorth(updatedAccounts);
-
-    const updatedSnapshot = await updateSnapshotService(userId, snapshotId, {
-      accounts: updatedAccounts,
-      totalNetWorth
-    });
-
-    logger.info('Account updated successfully', { userId, snapshotId, accountId });
-    res.status(200).json({
-      data: updatedSnapshot,
-      success: true
-    });
-  } catch (error) {
-    logger.error('Error updating account', {
-      userId: req.user!.userId,
-      snapshotId: req.params.id,
-      accountId: req.params.accountId,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    });
-
-    res.status(500).json({
-      error: {
-        message: 'Failed to update account',
-        code: 'INTERNAL_SERVER_ERROR'
-      },
-      success: false
-    });
+  // Check if snapshot exists
+  const existingSnapshot = await getSnapshotById(userId, snapshotId);
+  if (!existingSnapshot) {
+    logger.warn('Snapshot not found for updating account', { userId, snapshotId });
+    throw new NotFoundError('Snapshot not found');
   }
-}
+
+  // Find and update the account
+  const accountIndex = existingSnapshot.accounts.findIndex(a => a.id === accountId);
+  if (accountIndex === -1) {
+    logger.warn('Account not found in snapshot', { userId, snapshotId, accountId });
+    throw new NotFoundError('Account not found');
+  }
+
+  // Update account fields
+  const updatedAccounts = [...existingSnapshot.accounts];
+  updatedAccounts[accountIndex] = {
+    ...updatedAccounts[accountIndex],
+    ...updates,
+    id: accountId // Ensure ID is not changed
+  };
+
+  // Recalculate total
+  const totalNetWorth = calculateTotalNetWorth(updatedAccounts);
+
+  const updatedSnapshot = await updateSnapshotService(userId, snapshotId, {
+    accounts: updatedAccounts,
+    totalNetWorth
+  });
+
+  logger.info('Account updated successfully', { userId, snapshotId, accountId });
+  res.json({
+    data: updatedSnapshot,
+    success: true
+  });
+});
 
 /**
  * Delete account from snapshot
@@ -580,70 +406,39 @@ export async function updateAccount(req: Request, res: Response): Promise<void> 
  *
  * @returns 200 with updated snapshot, or 404 if not found
  */
-export async function deleteAccount(req: Request, res: Response): Promise<void> {
-  try {
-    const userId = req.user!.userId;
-    const snapshotId = req.params.id;
-    const accountId = req.params.accountId;
+export const deleteSnapshotAccount = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user!.userId;
+  const snapshotId = req.params.id;
+  const accountId = req.params.accountId;
 
-    logger.debug('Deleting account', { userId, snapshotId, accountId });
+  logger.debug('Deleting account', { userId, snapshotId, accountId });
 
-    // Check if snapshot exists
-    const existingSnapshot = await getSnapshotById(userId, snapshotId);
-    if (!existingSnapshot) {
-      logger.warn('Snapshot not found for deleting account', { userId, snapshotId });
-      res.status(404).json({
-        error: {
-          message: 'Snapshot not found',
-          code: 'NOT_FOUND'
-        },
-        success: false
-      });
-      return;
-    }
-
-    // Find the account
-    const accountIndex = existingSnapshot.accounts.findIndex(a => a.id === accountId);
-    if (accountIndex === -1) {
-      logger.warn('Account not found for deletion', { userId, snapshotId, accountId });
-      res.status(404).json({
-        error: {
-          message: 'Account not found',
-          code: 'NOT_FOUND'
-        },
-        success: false
-      });
-      return;
-    }
-
-    // Remove account and recalculate total
-    const updatedAccounts = existingSnapshot.accounts.filter(a => a.id !== accountId);
-    const totalNetWorth = calculateTotalNetWorth(updatedAccounts);
-
-    const updatedSnapshot = await updateSnapshotService(userId, snapshotId, {
-      accounts: updatedAccounts,
-      totalNetWorth
-    });
-
-    logger.info('Account deleted successfully', { userId, snapshotId, accountId });
-    res.status(200).json({
-      data: updatedSnapshot,
-      success: true
-    });
-  } catch (error) {
-    logger.error('Error deleting account', {
-      userId: req.user!.userId,
-      snapshotId: req.params.id,
-      accountId: req.params.accountId,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    });
-
-    res.status(500).json({
-      error: {
-        message: 'Failed to delete account',
-        code: 'INTERNAL_SERVER_ERROR'
-      },
-      success: false
-    });
+  // Check if snapshot exists
+  const existingSnapshot = await getSnapshotById(userId, snapshotId);
+  if (!existingSnapshot) {
+    logger.warn('Snapshot not found for deleting account', { userId, snapshotId });
+    throw new NotFoundError('Snapshot not found');
   }
-}
+
+  // Find the account
+  const accountIndex = existingSnapshot.accounts.findIndex(a => a.id === accountId);
+  if (accountIndex === -1) {
+    logger.warn('Account not found for deletion', { userId, snapshotId, accountId });
+    throw new NotFoundError('Account not found');
+  }
+
+  // Remove account and recalculate total
+  const updatedAccounts = existingSnapshot.accounts.filter(a => a.id !== accountId);
+  const totalNetWorth = calculateTotalNetWorth(updatedAccounts);
+
+  const updatedSnapshot = await updateSnapshotService(userId, snapshotId, {
+    accounts: updatedAccounts,
+    totalNetWorth
+  });
+
+  logger.info('Account deleted successfully', { userId, snapshotId, accountId });
+  res.json({
+    data: updatedSnapshot,
+    success: true
+  });
+});

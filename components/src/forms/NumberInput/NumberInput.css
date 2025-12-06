@@ -48,7 +48,7 @@
   border-radius: 0;
   padding: var(--space-sm) 0;
   outline: none;
-  transition: border-color var(--transition-fast);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
   /* Remove iOS input styling */
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -61,8 +61,9 @@
 }
 
 /* Focus state */
-.number-input__field:focus {
+.number-input__field:focus-visible {
   border-bottom-color: var(--charcoal);
+  box-shadow: 0 0 0 2px rgba(44, 44, 44, 0.1);
 }
 
 /* Suffix */
@@ -81,8 +82,9 @@
   color: var(--negative);
 }
 
-.number-input--error .number-input__field:focus {
+.number-input--error .number-input__field:focus-visible {
   border-bottom-color: var(--negative);
+  box-shadow: 0 0 0 2px rgba(157, 107, 90, 0.2);
 }
 
 .number-input__error-message {

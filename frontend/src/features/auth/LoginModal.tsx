@@ -21,15 +21,26 @@ export function LoginModal({ isOpen, onClose, returnUrl = '/auth/callback' }: Lo
   const [isDemoLoading, setIsDemoLoading] = useState(false);
   const [demoError, setDemoError] = useState<string | null>(null);
   const [showTerms, setShowTerms] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
+  // Handle close with exit animation
+  const handleClose = useCallback(() => {
+    setIsClosing(true);
+    // Wait for exit animation (200ms) before calling onClose
+    setTimeout(() => {
+      onClose();
+      setIsClosing(false);
+    }, 200);
+  }, [onClose]);
 
   // Handle escape key to close modal
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        handleClose();
       }
     },
-    [onClose]
+    [handleClose]
   );
 
   useEffect(() => {
@@ -46,7 +57,7 @@ export function LoginModal({ isOpen, onClose, returnUrl = '/auth/callback' }: Lo
     };
   }, [isOpen, handleKeyDown]);
 
-  if (!isOpen) return null;
+  if (!isOpen && !isClosing) return null;
 
   const handleGoogleLogin = () => {
     window.location.href = `/.auth/login/google?post_login_redirect_uri=${encodeURIComponent(returnUrl)}`;
@@ -70,17 +81,17 @@ export function LoginModal({ isOpen, onClose, returnUrl = '/auth/callback' }: Lo
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
-      onClose();
+      handleClose();
     }
   };
 
   return (
-    <div className="login-modal__backdrop" onClick={handleBackdropClick}>
-      <div className="login-modal" role="dialog" aria-modal="true" aria-labelledby="login-modal-title">
+    <div className={`login-modal__backdrop ${!isClosing ? 'open' : ''}`} onClick={handleBackdropClick}>
+      <div className={`login-modal ${!isClosing ? 'open' : ''}`} role="dialog" aria-modal="true" aria-labelledby="login-modal-title">
         <button
           type="button"
           className="login-modal__close"
-          onClick={onClose}
+          onClick={handleClose}
           aria-label="Lukk"
         >
           ×

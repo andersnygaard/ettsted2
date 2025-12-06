@@ -42,17 +42,6 @@ export default function AppHeader() {
     return location.pathname.startsWith(path);
   };
 
-  // Get user initials from nickname or fallback to "AN"
-  const getUserInitials = () => {
-    if (!user || !user.nickname) {
-      return 'AN';
-    }
-    const parts = user.nickname.split(' ');
-    if (parts.length >= 2) {
-      return (parts[0][0] + parts[1][0]).toUpperCase();
-    }
-    return user.nickname.slice(0, 2).toUpperCase();
-  };
 
   // Close mobile menu on outside click or escape
   useEffect(() => {
@@ -152,7 +141,8 @@ export default function AppHeader() {
 
               <div className="app-header__avatar">
                 <AvatarMenu
-                  initials={getUserInitials()}
+                  name={user?.nickname || 'Bruker'}
+                  onSettingsClick={() => navigate('/economy')}
                   onEconomyClick={() => navigate('/economy')}
                   onLogout={logout}
                   onDeleteAccount={handleDeleteAccountClick}
@@ -193,7 +183,7 @@ export default function AppHeader() {
           >
             {/* Mobile menu header with avatar */}
             <div className="app-header__mobile-header">
-              <Avatar initials={getUserInitials()} size="medium" />
+              <Avatar name={user?.nickname || 'Bruker'} size="medium" />
               <span className="app-header__mobile-nickname">{user?.nickname || 'Bruker'}</span>
               <button
                 className="app-header__mobile-close"

@@ -207,9 +207,9 @@ router.get('/gjeld', async (req: Request, res: Response, next: NextFunction) => 
     const sumSparing = calc.calculateSumByCategory(latest.accounts, 'sparing');
     const remaining = Math.max(0, sumGjeld - sumSparing);
 
-    // Get loan accounts
+    // Get loan accounts (gjeld or lån assetClass)
     const loans = latest.accounts
-      .filter((a) => a.assetClass === 'lån')
+      .filter((a) => ['gjeld', 'lån', 'loan', 'debt'].includes(a.assetClass.toLowerCase()))
       .map((a) => ({ name: a.name, value: a.value }));
 
     // Build history for chart

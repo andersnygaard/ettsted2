@@ -79,7 +79,8 @@
   justify-content: center;
   text-align: center;
   padding: var(--space-5xl) var(--space-xl);
-  animation: fadeUp 0.6s ease;
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards;
 }
 
 .chatbot__empty-icon {
@@ -139,7 +140,8 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   width: fit-content;
-  animation: fadeUp 0.3s ease;
+  opacity: 0;
+  animation: fadeUp 0.3s ease forwards;
 }
 
 .chatbot__typing-dot {
@@ -156,17 +158,6 @@
 
 .chatbot__typing-dot:nth-child(3) {
   animation-delay: 0.4s;
-}
-
-@keyframes pulse {
-  0%, 60%, 100% {
-    opacity: 0.3;
-    transform: scale(0.9);
-  }
-  30% {
-    opacity: 1;
-    transform: scale(1);
-  }
 }
 
 /* ============================================

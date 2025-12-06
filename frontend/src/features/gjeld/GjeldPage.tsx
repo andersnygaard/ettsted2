@@ -1,10 +1,11 @@
-import { PageHeader, HeroNumber, AreaChart, Breadcrumb } from '@finans/components';
+import { PageSkeleton, HeroNumber, AreaChart } from '@finans/components';
 import type { DataPoint } from '@finans/components';
 import { formatCurrency } from '@/shared/utils/numberFormat';
 import { useGjeldData } from './useGjeldData';
 import { useAuth } from '../auth/useAuth';
 import { DekningSection } from './DekningSection';
 import { LoansList, Loan } from './LoansList';
+import { GjeldSkeleton } from '@/shared/components/skeletons';
 import './GjeldPage.css';
 
 /**
@@ -22,22 +23,28 @@ function GjeldPage() {
   // Handle loading state
   if (isLoading) {
     return (
-      <main className="gjeld-page">
-        <div className="container container--narrow">
-          <PageHeader title="Gjeld" subtitle="Laster..." />
-        </div>
-      </main>
+      <PageSkeleton
+        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Gjeld' }]}
+        title="Gjeld"
+        subtitle="Oversikt over lån og nedbetaling"
+        className="gjeld-page"
+      >
+        <GjeldSkeleton />
+      </PageSkeleton>
     );
   }
 
   // Handle error state
   if (error) {
     return (
-      <main className="gjeld-page">
-        <div className="container container--narrow">
-          <PageHeader title="Gjeld" subtitle="Feil ved lasting av data" />
-        </div>
-      </main>
+      <PageSkeleton
+        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Gjeld' }]}
+        title="Gjeld"
+        subtitle="Feil ved lasting av data"
+        className="gjeld-page"
+      >
+        <></>
+      </PageSkeleton>
     );
   }
 
@@ -66,11 +73,8 @@ function GjeldPage() {
     };
   });
 
-  // Convert history for chart - use DataPoint format
-  const debtHistory: DataPoint[] = data.history.map(h => ({
-    date: h.date,
-    value: h.value
-  }));
+  // Use history directly (already in DataPoint format)
+  const debtHistory: DataPoint[] = data.history;
 
   // Calculate change percentage (handle division by zero)
   const changePercentage = data.sumGjeld > 0 ? (data.monthlyChange / data.sumGjeld) * 100 : 0;
@@ -81,19 +85,12 @@ function GjeldPage() {
   const sumSparing = (data.dekning / 100) * data.sumGjeld;
 
   return (
-    <main className="gjeld-page">
-      <div className="container container--narrow">
-        <Breadcrumb
-          items={[
-            { label: 'Hjem', path: '/dashboard' },
-            { label: 'Gjeld' },
-          ]}
-        />
-
-        <PageHeader
-          title="Gjeld"
-          subtitle="Oversikt over lån og nedbetaling"
-        />
+    <PageSkeleton
+      breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Gjeld' }]}
+      title="Gjeld"
+      subtitle="Oversikt over lån og nedbetaling"
+      className="gjeld-page"
+    >
 
         <HeroNumber
           label="Sum gjeld"
@@ -109,15 +106,14 @@ function GjeldPage() {
 
         <LoansList loans={loans} />
 
-        <AreaChart
-          data={debtHistory}
-          title="Gjeldsutvikling"
-          subtitle="Nedgang over tid"
-          color="var(--pale-blue)"
-          height={180}
-        />
-      </div>
-    </main>
+      <AreaChart
+        data={debtHistory}
+        title="Gjeldsutvikling"
+        subtitle="Nedgang over tid"
+        color="var(--pale-blue)"
+        height={180}
+      />
+    </PageSkeleton>
   );
 }
 

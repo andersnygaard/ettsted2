@@ -38,9 +38,3 @@
   font-size: var(--font-size-md);
   color: var(--text-secondary);
 }
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}

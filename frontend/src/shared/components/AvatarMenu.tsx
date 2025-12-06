@@ -3,7 +3,8 @@ import { Avatar } from '@finans/components';
 import './AvatarMenu.css';
 
 export interface AvatarMenuProps {
-  initials: string;
+  name: string;
+  onSettingsClick: () => void;
   onEconomyClick: () => void;
   onLogout: () => void;
   onDeleteAccount?: () => void;
@@ -12,10 +13,10 @@ export interface AvatarMenuProps {
 /**
  * Avatar with dropdown menu
  *
- * Shows user avatar with a dropdown menu containing economy setup and logout options.
+ * Shows user avatar with a dropdown menu containing settings, economy setup, and logout options.
  * Menu closes on outside click or Escape key.
  */
-export function AvatarMenu({ initials, onEconomyClick, onLogout, onDeleteAccount }: AvatarMenuProps) {
+export function AvatarMenu({ name, onSettingsClick, onEconomyClick, onLogout, onDeleteAccount }: AvatarMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -48,6 +49,11 @@ export function AvatarMenu({ initials, onEconomyClick, onLogout, onDeleteAccount
     setIsOpen(!isOpen);
   };
 
+  const handleSettingsClick = () => {
+    setIsOpen(false);
+    onSettingsClick();
+  };
+
   const handleEconomyClick = () => {
     setIsOpen(false);
     onEconomyClick();
@@ -72,11 +78,25 @@ export function AvatarMenu({ initials, onEconomyClick, onLogout, onDeleteAccount
         aria-haspopup="menu"
         type="button"
       >
-        <Avatar initials={initials} size="medium" />
+        <Avatar name={name} size="medium" />
       </button>
 
       {isOpen && (
         <div className="avatar-menu__dropdown" role="menu">
+          <button
+            className="avatar-menu__item"
+            onClick={handleSettingsClick}
+            role="menuitem"
+            type="button"
+          >
+            <span className="avatar-menu__icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m6.08 0l4.24-4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m6.08 0l4.24 4.24" />
+              </svg>
+            </span>
+            Innstillinger
+          </button>
           <button
             className="avatar-menu__item"
             onClick={handleEconomyClick}

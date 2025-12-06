@@ -70,8 +70,8 @@
 .login-btn--google:hover {
   background-color: var(--bone);
   border-color: var(--charcoal);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
 }
 
 .login-btn--facebook {
@@ -82,8 +82,8 @@
 
 .login-btn--facebook:hover {
   background-color: var(--facebook-blue-hover);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
 }
 
 .login-terms {

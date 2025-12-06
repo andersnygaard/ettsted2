@@ -1,7 +1,8 @@
-import { PageHeader, HeroNumber, StatsRow, AreaChart, Breadcrumb } from '@finans/components';
+import { PageSkeleton, HeroNumber, StatsRow, AreaChart } from '@finans/components';
 import { formatCurrency } from '@/shared/utils/numberFormat';
 import { useSparingData } from './useSparingData';
 import { FireSection } from './FireSection';
+import { SparingSkeleton } from '@/shared/components/skeletons';
 import './SparingPage.css';
 
 /**
@@ -17,35 +18,46 @@ function SparingPage() {
 
   if (isLoading) {
     return (
-      <main className="sparing-page">
-        <div className="container container--narrow">
-          <p>Laster sparingsdata...</p>
-        </div>
-      </main>
+      <PageSkeleton
+        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Sparing' }]}
+        title="Sparing"
+        subtitle="Din vei mot økonomisk frihet"
+        className="sparing-page"
+      >
+        <SparingSkeleton />
+      </PageSkeleton>
     );
   }
 
   if (error) {
     return (
-      <main className="sparing-page">
-        <div className="container container--narrow">
-          <p>Feil ved lasting av sparingsdata. Prøv igjen senere.</p>
-        </div>
-      </main>
+      <PageSkeleton
+        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Sparing' }]}
+        title="Sparing"
+        subtitle="Feil ved lasting av sparingsdata. Prøv igjen senere."
+        className="sparing-page"
+      >
+        <></>
+      </PageSkeleton>
     );
   }
 
   if (!sparingData) {
     return (
-      <main className="sparing-page">
-        <div className="container container--narrow">
-          <p>Ingen sparingsdata tilgjengelig. Legg til dine første portefølje-data.</p>
-        </div>
-      </main>
+      <PageSkeleton
+        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Sparing' }]}
+        title="Sparing"
+        subtitle="Ingen sparingsdata tilgjengelig. Legg til dine første portefølje-data."
+        className="sparing-page"
+      >
+        <></>
+      </PageSkeleton>
     );
   }
 
   const yearlyGrowth = (sparingData.totalGrowth * (sparingData.yearlyChange / 100)) || 0;
+  const yearlyGrowthFormatted = formatCurrency(yearlyGrowth);
+  const yearlyGrowthPrefix = yearlyGrowth >= 0 ? '+' : '';
 
   const fireData = {
     fireNumber: sparingData.fireNumber,
@@ -56,25 +68,18 @@ function SparingPage() {
   };
 
   return (
-    <main className="sparing-page">
-      <div className="container container--narrow">
-        <Breadcrumb
-          items={[
-            { label: 'Hjem', path: '/dashboard' },
-            { label: 'Sparing' },
-          ]}
-        />
-
-        <PageHeader
-          title="Sparing"
-          subtitle="Din vei mot økonomisk frihet"
-        />
+    <PageSkeleton
+      breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Sparing' }]}
+      title="Sparing"
+      subtitle="Din vei mot økonomisk frihet"
+      className="sparing-page"
+    >
 
         <HeroNumber
           label="Sum sparing"
           value={formatCurrency(sparingData.sumSparing)}
           change={sparingData.yearlyChange}
-          changeLabel={`i ${new Date().getFullYear()} · +${formatCurrency(yearlyGrowth)}`}
+          changeLabel={`i ${new Date().getFullYear()} · ${yearlyGrowthPrefix}${yearlyGrowthFormatted}`}
         />
 
         <StatsRow
@@ -87,15 +92,14 @@ function SparingPage() {
 
         <FireSection {...fireData} />
 
-        <AreaChart
-          data={sparingData.history}
-          title="Spareutvikling"
-          subtitle={`+${formatCurrency(sparingData.totalGrowth)} total`}
-          color="var(--muted-sage)"
-          height={200}
-        />
-      </div>
-    </main>
+      <AreaChart
+        data={sparingData.history}
+        title="Spareutvikling"
+        subtitle={`+${formatCurrency(sparingData.totalGrowth)} total`}
+        color="var(--muted-sage)"
+        height={200}
+      />
+    </PageSkeleton>
   );
 }
 

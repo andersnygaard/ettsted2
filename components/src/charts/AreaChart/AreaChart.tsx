@@ -93,16 +93,32 @@ export function AreaChart({
       .y((d) => y(d.value))
       .curve(d3.curveMonotoneX);
 
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // Area fill
-    g.append('path')
+    const areaPath = g
+      .append('path')
       .datum(data)
       .attr('class', 'area-chart__fill')
       .attr('fill', color)
-      .attr('fill-opacity', 0.1)
       .attr('d', area);
 
+    if (prefersReducedMotion) {
+      areaPath.attr('fill-opacity', 0.1);
+    } else {
+      areaPath
+        .attr('fill-opacity', 0)
+        .transition()
+        .duration(800)
+        .delay(200)
+        .ease(d3.easeCubicOut)
+        .attr('fill-opacity', 0.1);
+    }
+
     // Line stroke
-    g.append('path')
+    const linePath = g
+      .append('path')
       .datum(data)
       .attr('class', 'area-chart__line')
       .attr('fill', 'none')
@@ -110,6 +126,18 @@ export function AreaChart({
       .attr('stroke-width', 2)
       .attr('stroke-linecap', 'round')
       .attr('d', line);
+
+    if (!prefersReducedMotion) {
+      const totalLength = (linePath.node() as SVGPathElement).getTotalLength();
+      linePath
+        .attr('stroke-dasharray', `${totalLength} ${totalLength}`)
+        .attr('stroke-dashoffset', totalLength)
+        .transition()
+        .duration(1000)
+        .delay(300)
+        .ease(d3.easeCubicOut)
+        .attr('stroke-dashoffset', 0);
+    }
   }, [data, color, height, dimensions]);
 
   // Generate x-axis labels

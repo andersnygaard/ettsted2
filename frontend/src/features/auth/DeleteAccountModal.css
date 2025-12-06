@@ -27,6 +27,7 @@
   max-height: 80vh;
   overflow-y: auto;
   position: relative;
+  animation: modalEnter 0.3s ease-out;
 }
 
 .delete-account-modal__close {
@@ -78,11 +79,15 @@
   border-left: 4px solid var(--negative);
   border-radius: 4px;
   margin-bottom: var(--space-lg);
+  align-items: flex-start;
 }
 
 .delete-account-modal__warning-icon {
   color: var(--negative);
   flex-shrink: 0;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  margin-top: 2px;
 }
 
 .delete-account-modal__warning-text {
@@ -191,13 +196,4 @@
 
 .delete-account-modal__btn--delete:disabled {
   background-color: var(--text-secondary);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }

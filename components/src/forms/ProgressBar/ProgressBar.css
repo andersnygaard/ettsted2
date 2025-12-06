@@ -31,7 +31,8 @@
     var(--muted-sage) 0%,
     var(--muted-sage) 100%
   );
-  transition: width var(--transition-medium);
+  /* Animation: fill width from 0 to target over 600ms with ease-out */
+  transition: width 0.6s ease-out;
 }
 
 /* Default variant - muted sage green */
@@ -78,4 +79,11 @@
 /* Right label uses monospace for currency/numbers */
 .progress-bar__label-right {
   font-family: var(--font-mono);
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar__fill {
+    transition: none;
+  }
 }

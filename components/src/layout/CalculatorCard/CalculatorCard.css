@@ -15,9 +15,20 @@
   display: block;
 }
 
-.calc-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+/* Desktop hover effects */
+@media (hover: hover) {
+  .calc-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+  }
+}
+
+/* Mobile/tablet active state */
+@media (hover: none) {
+  .calc-card:active {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  }
 }
 
 .calc-icon {

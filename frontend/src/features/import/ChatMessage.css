@@ -10,18 +10,8 @@
   display: flex;
   flex-direction: column;
   max-width: 100%;
-  animation: messageIn 0.4s ease;
-}
-
-@keyframes messageIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  opacity: 0;
+  animation: fadeUp 0.4s ease forwards;
 }
 
 /* ============================================

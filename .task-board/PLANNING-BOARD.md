@@ -1,73 +1,100 @@
 # Planning Board - Finans
 
-**Current Focus**: All design system tasks complete! Ready for next phase.
+**Current Focus**: Code quality and accessibility from due diligence audit (2025-12-06)
 
 ---
 
-## Dependency Graph
+## Due Diligence Findings
 
-```
-001-consolidate-components
-  └── 002-hardcoded-colors → 006-design-docs
-  └── 003-hardcoded-fonts → 006-design-docs
-  └── 004-centralize-animations
-  └── 005-spacing-tokens
-  └── 007-storybook-coverage
-```
+**Report**: [.docs/DUE-DILIGENCE-REPORT.md](../.docs/DUE-DILIGENCE-REPORT.md)
+
+| Score | Area | Status |
+|-------|------|--------|
+| 85/100 | Design | Good |
+| 80/100 | Code Quality | Good |
+| 85/100 | Security | Good (corrected) |
+| **83/100** | **Overall** | Production-ready |
+
+> **Note**: Tasks 164-165 (secrets exposure) were false positives - .env files properly gitignored.
 
 ---
 
 ## Top Priorities
 
-| # | Task | Type | Effort | Status |
-|---|------|------|--------|--------|
-| - | Backlog empty | - | - | - |
+| # | Task | Type | Priority | Effort |
+|---|------|------|----------|--------|
+| 166 | Update jws vulnerability (CVE-2025-65945) | Security | HIGH | Simple |
+| 168 | Consolidate parseDate() duplication | Refactor | HIGH | Simple |
+| 167 | Add safeguard for dev routes | Security | MODERATE | Simple |
+| 169 | Fix SpreadsheetTable color swap | Bug | MEDIUM | Simple |
+| 170-172 | Accessibility fixes (3 items) | A11Y | MEDIUM | Simple |
 
 ---
 
 ## Full Backlog
 
-(Empty - all tasks completed)
+### Security (HIGH)
+- 166-SECURITY-update-jws-vulnerability (CVE-2025-65945)
+- 167-SECURITY-dev-routes-safeguard
+
+### Code Quality (HIGH)
+- 168-REFACTOR-consolidate-parsedate (5 duplications → shared util)
+- 156-REFACTOR-controller-dry-pattern (backend error handling)
+- 173-REFACTOR-sparing-gjeld-api-service (raw fetch → axios)
+
+### Bugs (MEDIUM)
+- 169-BUG-spreadsheet-color-swap (Sparing/Pensjon colors wrong)
+- 176-BUG-main-padding-gap (main element padding artifacts)
+- 178-BUG-delete-modal-icon-alignment (warning icon misaligned)
+
+### Accessibility (MEDIUM)
+- 170-A11Y-avatar-aria-label
+- 171-A11Y-statcard-keyboard
+- 172-A11Y-modal-close-label
+
+### Refactors (MEDIUM)
+- 177-REFACTOR-consolidate-settings-economy (delete duplicate SettingsPage)
+- 174-REFACTOR-extract-constants (magic numbers)
+- 175-REFACTOR-query-invalidation-helper
+
+### Design (MEDIUM)
+- 179-DESIGN-buttons-white-background (solid backgrounds)
+- 180-DESIGN-surface-color-consistency (use #faf6f4 for cards)
+
+### Features/Animations (BACKLOG)
+- 145-FEATURE-enhanced-hover-animations
+- 146-FEATURE-page-transition-animations
+- 147-FEATURE-hero-number-counting-animation
+- 151-FEATURE-chart-entry-animations
+- 152-REFACTOR-animation-utility-consolidation
+- 153-FEATURE-progress-bar-animations
+- 154-FEATURE-modal-transition-improvements
+- 155-FEATURE-skeleton-loading-consistency
+- 157-FEATURE-input-focus-animations
+- 158-FEATURE-navigation-active-indicator
+- 159-FEATURE-responsive-animation-adjustments
 
 ---
 
 ## Recently Completed
 
-### 007 - Improve Storybook Coverage (2025-12-05)
-Enhanced 11 component stories with 41+ new stories. Added argTypes, play functions, Norwegian formatting demos.
+### 149 - Year Badge "+-" Format (2025-12-06)
+Fixed hardcoded "+" prefix in SparingPage.
 
-### 006 - Design System Documentation (2025-12-05)
-Created .docs/design-system/ with 6 comprehensive files: PRINCIPLES, TOKENS, COMPONENTS, PATTERNS, ACCESSIBILITY.
+### 148 - Settings Route Broken (2025-12-06)
+Created SettingsPage with profile editing.
 
-### 005 - Spacing Tokens Usage (2025-12-05)
-Replaced 110+ hardcoded pixel values with spacing tokens in 16 CSS files. Consistent visual rhythm.
+### 150 - Milestone Shows Achieved Value (2025-12-06)
+Fixed milestone calculation to use sumSparing.
 
-### 004 - Centralize Animations (2025-12-05)
-Removed duplicate @keyframes fadeUp from 4 files. Single source of truth in animations.css.
+### 143 - Monte Carlo Results Empty (2025-12-06)
+Moved simulation to client-side useMemo.
 
-### 003 - Hardcoded Fonts to Tokens (2025-12-05)
-Replaced 44 font-family values with tokens in 11 CSS files. All fonts now use --font-heading, --font-body, --font-mono.
+### 142 - Gjeld Chart Shows No Data (2025-12-06)
+Fixed useGjeldData hook to use aggregated endpoint.
 
-### 002 - Hardcoded Colors to Tokens (2025-12-05)
-Added 20 new color tokens. Replaced hardcoded hex values in 23 CSS files. Removed all fallback values.
-
-### 001 - Consolidate Duplicate Components (2025-12-05)
-Eliminated 41 duplicate files from frontend. All shared components now import from @finans/components. Single source of truth established.
-
-### 139 - New Month Copy Previous (2025-12-05)
-Pre-fills new month modal with values from most recent snapshot. Shows "Verdier kopiert fra [dato]" message.
-
-### 138 - New Month Datepicker (2025-12-05)
-Month/year dropdown picker replacing text input. Norwegian month names, prevents future selection.
-
-### 137 - Import Agent Initial Messages (2025-12-05)
-Pre-populated chat messages on import page: "Hei" + instructions for pasting data.
-
-### 136 - Checkbox Lighter Background (2025-12-05)
-Global checkbox styling with lighter muted-sage background, hover states, checked indicator.
-
-### 135 - Date Header Z-Index (2025-12-05)
-Increased SpreadsheetTable date header z-index from 20 to 25 for proper sticky stacking.
+### 141 - Dashboard vs Sparing Data Mismatch (2025-12-06)
+Fixed asset class categorization in backend.
 
 ---
 
@@ -75,8 +102,8 @@ Increased SpreadsheetTable date header z-index from 20 to 25 for proper sticky s
 
 | Status | Count |
 |--------|-------|
-| Done | 146 |
-| Backlog | 0 |
-| In Progress | 0 |
+| Done | 156 |
+| Backlog | 18 |
+| In Progress | 1 |
 
-**Last Updated**: 2025-12-05
+**Last Updated**: 2025-12-06 (Task Discovery)

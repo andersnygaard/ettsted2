@@ -19,13 +19,21 @@ import { UserProfile } from '../models/User';
  * Determine category from asset class
  *
  * Maps assetClass string to category type.
+ * Case-insensitive matching.
  *
  * @param assetClass - Asset class string (e.g., "aksjer", "lån", "pensjon")
  * @returns Category: 'sparing' | 'gjeld' | 'pensjon'
  */
 function getCategory(assetClass: string): 'sparing' | 'gjeld' | 'pensjon' {
-  if (assetClass === 'lån') return 'gjeld';
-  if (assetClass === 'pensjon') return 'pensjon';
+  const classLower = assetClass.toLowerCase();
+
+  // Gjeld categories: "gjeld", "lån", "loan", "debt"
+  if (['gjeld', 'lån', 'loan', 'debt'].includes(classLower)) return 'gjeld';
+
+  // Pensjon categories: "pensjon", "pension"
+  if (['pensjon', 'pension'].includes(classLower)) return 'pensjon';
+
+  // Everything else defaults to sparing: "aksjer", "fond", "krypto", "bankkonto"
   return 'sparing';
 }
 

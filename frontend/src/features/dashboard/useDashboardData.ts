@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { snapshotApi } from '@/shared/api/services';
+import { QUERY_KEYS } from '@/shared/api/queryHelpers';
 import type { Account, AssetCategory } from '@/shared/types';
 import { getAccountCategory } from '@/shared/types';
+import { parseDate } from '@/shared/utils/dateFormat';
+import { MILESTONES, QUERY_CONFIG } from '@/config/constants';
 
 /**
  * Dashboard data aggregated from portfolio snapshots
@@ -29,7 +32,7 @@ function getEmptyDashboardData(): DashboardData {
     sumGjeld: 0,
     pensjon: 0,
     sparerate: 0,
-    nextMilestone: 100000,
+    nextMilestone: MILESTONES[0],
     currentTowardsMilestone: 0,
     sparingMonthlyChange: 0
   };
@@ -63,13 +66,7 @@ function calculateNetWorth(accounts: Account[]): number {
  * Find the next milestone target
  */
 function findNextMilestone(current: number): number {
-  const milestones = [
-    100000, 250000, 500000, 750000,
-    1000000, 2000000, 3000000, 4000000, 5000000,
-    7500000, 10000000, 15000000, 20000000
-  ];
-
-  const nextMilestone = milestones.find(m => m > current);
+  const nextMilestone = MILESTONES.find(m => m > current);
   if (nextMilestone) {
     return nextMilestone;
   }
@@ -120,7 +117,7 @@ async function fetchDashboardData(): Promise<DashboardData> {
       }
     }
 
-    const nextMilestone = findNextMilestone(netWorth);
+    const nextMilestone = findNextMilestone(sumSparing);
 
     return {
       netWorth,
@@ -130,7 +127,7 @@ async function fetchDashboardData(): Promise<DashboardData> {
       pensjon,
       sparerate: 0, // Calculated in DashboardPage from user profile
       nextMilestone,
-      currentTowardsMilestone: netWorth,
+      currentTowardsMilestone: sumSparing,
       sparingMonthlyChange
     };
   } catch (error) {
@@ -139,13 +136,6 @@ async function fetchDashboardData(): Promise<DashboardData> {
   }
 }
 
-/**
- * Parse Norwegian date format (dd.MM.yyyy) to Date object
- */
-function parseDate(dateStr: string): Date {
-  const [day, month, year] = dateStr.split('.');
-  return new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
-}
 
 /**
  * Hook to fetch and aggregate dashboard data
@@ -160,9 +150,9 @@ function parseDate(dateStr: string): Date {
  */
 export function useDashboardData() {
   return useQuery({
-    queryKey: ['dashboard'],
+    queryKey: QUERY_KEYS.DASHBOARD,
     queryFn: fetchDashboardData,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: 1
+    staleTime: QUERY_CONFIG.STALE_TIME,
+    retry: QUERY_CONFIG.RETRY_COUNT
   });
 }

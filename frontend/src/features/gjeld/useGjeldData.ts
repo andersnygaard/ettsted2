@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { snapshotApi } from '@/shared/api/services';
+import { snapshotApi, gjeldApi } from '@/shared/api/services';
+import { QUERY_KEYS } from '@/shared/api/queryHelpers';
 import type { Account } from '@/shared/types';
 import { getAccountCategory } from '@/shared/types';
+import { parseDate } from '@/shared/utils/dateFormat';
+import { QUERY_CONFIG } from '@/config/constants';
 
 /**
  * Information about a single loan
@@ -10,18 +13,6 @@ interface LoanInfo {
   id: string;
   name: string;
   balance: number;
-}
-
-/**
- * Gjeld (debt) metrics and historical data
- */
-export interface GjeldData {
-  sumGjeld: number;
-  monthlyChange: number;
-  dekning: number; // Coverage: sparing / gjeld * 100
-  remaining: number; // How much gjeld remains uncovered
-  loans: LoanInfo[];
-  history: { date: Date; value: number }[];
 }
 
 /**
@@ -37,24 +28,17 @@ function calculateSumGjeld(accounts: Account[]): number {
 }
 
 /**
- * Calculate sum of sparing (savings) accounts
+ * Gjeld (debt) metrics and historical data
  */
-function calculateSumSparing(accounts: Account[]): number {
-  return accounts.reduce((sum, account) => {
-    if (getAccountCategory(account.assetClass) === 'sparing') {
-      return sum + account.value;
-    }
-    return sum;
-  }, 0);
+export interface GjeldData {
+  sumGjeld: number;
+  monthlyChange: number;
+  dekning: number; // Coverage: sparing / gjeld * 100
+  remaining: number; // How much gjeld remains uncovered
+  loans: LoanInfo[];
+  history: { date: Date; value: number }[];
 }
 
-/**
- * Parse Norwegian date format (dd.MM.yyyy) to Date object
- */
-function parseDate(dateStr: string): Date {
-  const [day, month, year] = dateStr.split('.');
-  return new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
-}
 
 /**
  * Empty gjeld data (no snapshots yet)
@@ -75,59 +59,52 @@ function getEmptyGjeldData(): GjeldData {
  */
 async function fetchGjeldData(): Promise<GjeldData> {
   try {
-    const snapshots = await snapshotApi.getAll();
+    // Fetch aggregated gjeld data from endpoint
+    const gjeldData = await gjeldApi.getSummary();
 
-    if (!snapshots || snapshots.length === 0) {
+    if (!gjeldData) {
       return getEmptyGjeldData();
     }
 
-    // Sort by date descending (most recent first)
-    const sorted = [...snapshots].sort((a, b) => {
-      const dateA = parseDate(a.date);
-      const dateB = parseDate(b.date);
-      return dateB.getTime() - dateA.getTime();
-    });
+    // Fetch snapshots separately to get monthly change
+    const snapshots = await snapshotApi.getAll();
 
-    const latest = sorted[0];
-    const previous = sorted[1];
+    let monthlyChange = 0;
+    if (snapshots && snapshots.length >= 2) {
+      const sorted = [...snapshots].sort((a, b) => {
+        const dateA = parseDate(a.date);
+        const dateB = parseDate(b.date);
+        return dateB.getTime() - dateA.getTime();
+      });
 
-    const sumGjeld = calculateSumGjeld(latest.accounts);
-    const sumSparing = calculateSumSparing(latest.accounts);
+      const latest = sorted[0];
+      const previous = sorted[1];
 
-    // Monthly change (absolute, not percentage - gjeld goes down)
-    const prevGjeld = previous ? calculateSumGjeld(previous.accounts) : sumGjeld;
-    const monthlyChange = sumGjeld - prevGjeld;
+      const sumGjeld = calculateSumGjeld(latest.accounts);
+      const prevGjeld = calculateSumGjeld(previous.accounts);
+      monthlyChange = sumGjeld - prevGjeld;
+    }
 
-    // Dekning (coverage) - what % of gjeld is covered by sparing
-    const dekning = sumGjeld > 0 ? (sumSparing / sumGjeld) * 100 : 100;
+    // Parse history dates from API response (which are strings)
+    const parsedHistory = (gjeldData.history || []).map((item: { date: string; value: number }) => ({
+      date: parseDate(item.date),
+      value: item.value
+    }));
 
-    // Remaining - how much gjeld is uncovered
-    const remaining = Math.max(0, sumGjeld - sumSparing);
-
-    // Extract loan details
-    const loans: LoanInfo[] = latest.accounts
-      .filter((account) => getAccountCategory(account.assetClass) === 'gjeld')
-      .map((acc) => ({
-        id: acc.id,
-        name: acc.name,
-        balance: Math.abs(acc.value)
-      }));
-
-    // History for chart (reversed to chronological order)
-    const history = sorted
-      .map((s) => ({
-        date: parseDate(s.date),
-        value: calculateSumGjeld(s.accounts)
-      }))
-      .reverse();
+    // Extract loan info
+    const loans: LoanInfo[] = (gjeldData.loans || []).map((loan: { name: string; value: number }) => ({
+      id: loan.name.toLowerCase().replace(/\s+/g, '-'),
+      name: loan.name,
+      balance: Math.abs(loan.value)
+    }));
 
     return {
-      sumGjeld,
+      sumGjeld: gjeldData.sumGjeld,
       monthlyChange,
-      dekning,
-      remaining,
+      dekning: gjeldData.dekning,
+      remaining: gjeldData.remaining,
       loans,
-      history
+      history: parsedHistory
     };
   } catch (error) {
     console.error('Error fetching gjeld data:', error);
@@ -150,9 +127,9 @@ async function fetchGjeldData(): Promise<GjeldData> {
  */
 export function useGjeldData() {
   return useQuery({
-    queryKey: ['gjeld'],
+    queryKey: QUERY_KEYS.GJELD,
     queryFn: fetchGjeldData,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: 1
+    staleTime: QUERY_CONFIG.STALE_TIME,
+    retry: QUERY_CONFIG.RETRY_COUNT
   });
 }
