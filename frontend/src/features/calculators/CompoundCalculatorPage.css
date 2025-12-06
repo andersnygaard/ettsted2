@@ -19,11 +19,24 @@
 
 .calculator-layout > * {
   border: var(--border-subtle);
+  min-width: 0;
 }
 
 @media (max-width: 768px) {
   .calculator-layout {
     grid-template-columns: 1fr;
+  }
+
+  .calculator-inputs,
+  .calculator-results,
+  .calculator-info {
+    padding: var(--space-lg);
+  }
+
+  .result-value {
+    font-size: 32px;
+    white-space: normal;
+    word-break: break-word;
   }
 }
 

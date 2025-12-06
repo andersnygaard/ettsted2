@@ -59,3 +59,10 @@
   color: var(--negative);
   background-color: rgba(157, 107, 90, 0.08);
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-value {
+    font-size: var(--font-size-3xl);
+  }
+}

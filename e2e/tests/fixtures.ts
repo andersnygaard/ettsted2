@@ -8,6 +8,8 @@ export const PROTECTED_PAGES = [
   { path: '/gjeld', name: 'Gjeld' },
   { path: '/pensjon', name: 'Pensjon' },
   { path: '/kalkulatorer', name: 'Kalkulatorer' },
+  { path: '/import', name: 'Importer data' },
+  { path: '/min-okonomi', name: 'Min økonomi' },
 ] as const;
 
 /** Calculator sub-pages */

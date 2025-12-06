@@ -41,7 +41,7 @@ export function DonutChart({
 
     // Background arc (full circle)
     const backgroundArc = d3
-      .arc()
+      .arc<null>()
       .innerRadius(innerRadius)
       .outerRadius(radius)
       .startAngle(0)
@@ -49,13 +49,13 @@ export function DonutChart({
 
     g.append('path')
       .attr('class', 'donut-chart__background')
-      .attr('d', backgroundArc as any)
+      .attr('d', backgroundArc(null))
       .attr('fill', 'var(--bone)');
 
     // Foreground arc (percentage)
     const endAngle = (clampedPercentage / 100) * 2 * Math.PI;
     const foregroundArc = d3
-      .arc()
+      .arc<null>()
       .innerRadius(innerRadius)
       .outerRadius(radius)
       .startAngle(0);
@@ -69,11 +69,11 @@ export function DonutChart({
       .attr('fill', 'var(--muted-sage)');
 
     if (prefersReducedMotion) {
-      foregroundPath.attr('d', foregroundArc.endAngle(endAngle) as any);
+      foregroundPath.attr('d', foregroundArc.endAngle(endAngle)(null));
     } else {
       // Animate arc from 0 to target percentage
       foregroundPath
-        .attr('d', foregroundArc.endAngle(0) as any)
+        .attr('d', foregroundArc.endAngle(0)(null))
         .transition()
         .duration(1000)
         .delay(200)
@@ -81,8 +81,7 @@ export function DonutChart({
         .attrTween('d', function () {
           const interpolate = d3.interpolate(0, endAngle);
           return function (t) {
-            const arc = foregroundArc.endAngle(interpolate(t));
-            return (arc as any)(null) as string;
+            return foregroundArc.endAngle(interpolate(t))(null) as string;
           };
         });
     }

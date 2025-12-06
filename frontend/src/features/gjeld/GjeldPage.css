@@ -209,8 +209,3 @@
   font-size: 10px;
   color: var(--text-secondary);
 }
-
-/* Narrow container for focused pages */
-.container--narrow {
-  max-width: 900px;
-}

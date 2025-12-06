@@ -28,6 +28,7 @@
 .portfolio-page .table-container {
   background: var(--warm-white);
   border-radius: 2px;
+  border: var(--border-subtle);
   overflow: hidden;
   opacity: 0;
   animation: fadeUp 0.5s ease forwards;
@@ -75,5 +76,19 @@
 
   .portfolio-page .container--wide {
     padding: 0 var(--space-lg);
+  }
+
+  .portfolio-page__actions {
+    flex-wrap: wrap;
+    justify-content: stretch;
+  }
+
+  .portfolio-page__actions .btn {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .portfolio-page .number-input__field {
+    width: 100%;
   }
 }

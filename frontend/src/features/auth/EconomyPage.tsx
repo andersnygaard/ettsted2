@@ -156,10 +156,6 @@ export default function EconomyPage() {
 
   return (
     <div className="onboarding-page">
-      <header className="onboarding-page__header">
-        <h1 className="onboarding-page__logo">finans</h1>
-      </header>
-
       <main className="onboarding-page__main">
         <PageHeader
           title="Min økonomi"

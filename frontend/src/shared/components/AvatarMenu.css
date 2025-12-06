@@ -41,7 +41,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  width: calc(100% - 46px);
+  width: 100%;
   padding: var(--space-md);
   border: none;
   background: none;

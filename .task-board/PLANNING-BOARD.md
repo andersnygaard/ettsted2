@@ -36,6 +36,9 @@
 
 ## Recently Completed
 
+### 186 - E2E Coverage Expansion (2025-12-06)
+Added `/import` and `/min-okonomi` to E2E test suite. All 5 tests pass with 14 pages covered.
+
 ### 184 - Remove Console.log Statements (2025-12-06)
 Added ESLint rule, cleaned up debug logs from production code.
 
@@ -69,7 +72,7 @@ Fixed asset class categorization in backend.
 
 | Status | Count |
 |--------|-------|
-| Done | 159 |
+| Done | 160 |
 | Backlog | 1 |
 | In Progress | 0 |
 

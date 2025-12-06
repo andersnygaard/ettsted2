@@ -63,8 +63,16 @@
 }
 
 .onboarding-wizard__btn:disabled {
-  opacity: 0.6;
   cursor: not-allowed;
+}
+
+.onboarding-wizard__btn--primary:disabled {
+  background-color: var(--text-secondary) !important;
+}
+
+.onboarding-wizard__btn--secondary:disabled {
+  color: var(--text-secondary);
+  border-color: var(--border);
 }
 
 /* Primary Button */

@@ -31,9 +31,12 @@ pnpm test
 - `/gjeld` - Gjeld
 - `/pensjon` - Pensjon
 - `/kalkulatorer` - Kalkulatorer
+- `/import` - Importer data (LLM chatbot)
+- `/min-okonomi` - Min økonomi (User settings)
 - `/kalkulatorer/rentes-rente` - Compound calculator
 - `/kalkulatorer/fire` - F.I.R.E. calculator
 - `/kalkulatorer/lan` - Loan calculator
+- `/kalkulatorer/monte-carlo` - Monte Carlo simulator
 
 ### Tests
 1. **Home page loads** - Landing page visible when logged out
@@ -80,9 +83,9 @@ If servers are already running, they're reused (`reuseExistingServer: true`).
 
 ## Known Issues
 
-1. **Monte Carlo page excluded** - Flaky auth issue, needs investigation
-2. **Mobile tests disabled** - Hits backend rate limits when running full suite
-3. **Rate limiting** - Backend limits 100 req/min, can cause failures on repeated runs
+1. **Mobile tests disabled** - Hits backend rate limits when running full suite
+2. **Rate limiting** - Backend limits 100 req/min, can cause failures on repeated runs
+3. **D3 Chart warnings** - Non-critical SVG path errors (NaN values) appear on pages with empty chart data
 
 ## File Structure
 

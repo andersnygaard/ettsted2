@@ -136,8 +136,3 @@
 .chart-legend__nav::before {
   background: var(--orange);
 }
-
-/* Narrow container for focused pages */
-.container--narrow {
-  max-width: 900px;
-}

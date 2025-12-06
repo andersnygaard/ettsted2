@@ -137,6 +137,14 @@ function AppRoutes() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="min-okonomi"
+            element={
+              <ProtectedRoute>
+                <EconomyPage />
+              </ProtectedRoute>
+            }
+          />
           {/* Legacy route redirects */}
           <Route path="calculators" element={<Navigate to="/kalkulatorer" replace />} />
           <Route path="login" element={<Navigate to="/dashboard" replace />} />

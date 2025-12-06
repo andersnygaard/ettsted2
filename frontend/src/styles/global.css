@@ -95,6 +95,10 @@ pre code {
   padding: var(--space-lg);
 }
 
+.container--narrow {
+  max-width: 900px;
+}
+
 .error-text {
   color: var(--negative);
 }

@@ -106,12 +106,6 @@ function calculateAnnuityLoan(
   let remainingBalance = loanAmount;
   const startYear = new Date().getFullYear();
 
-  amortization.push({
-    date: new Date(startYear, 0, 1),
-    principal: 0,
-    interest: 0,
-  });
-
   for (let year = 1; year <= termYears; year++) {
     let yearlyPrincipal = 0;
     let yearlyInterest = 0;
@@ -173,12 +167,6 @@ function calculateSerialLoan(
   const amortization: StackedDataPoint[] = [];
   let remainingBalance = loanAmount;
   const startYear = new Date().getFullYear();
-
-  amortization.push({
-    date: new Date(startYear, 0, 1),
-    principal: 0,
-    interest: 0,
-  });
 
   for (let year = 1; year <= termYears; year++) {
     let yearlyPrincipal = 0;
@@ -350,7 +338,6 @@ function LoanCalculatorPage() {
             xAxisFormat={(date) => {
               const year = date.getFullYear();
               const current = new Date().getFullYear();
-              if (year === current) return 'År 0';
               const yearOffset = year - current;
               return `År ${yearOffset}`;
             }}
