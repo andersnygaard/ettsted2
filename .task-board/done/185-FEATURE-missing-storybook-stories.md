@@ -18,10 +18,10 @@ Low - Documentation improvement, no user impact
 
 ## Acceptance Criteria
 
-- [ ] PageSkeleton.stories.tsx created with variants showing different props
-- [ ] Placeholder.stories.tsx created with usage examples
-- [ ] Stories follow existing patterns (autodocs tag, argTypes, etc.)
-- [ ] Storybook builds without errors
+- [x] PageSkeleton.stories.tsx created with variants showing different props
+- [x] Placeholder.stories.tsx created with usage examples
+- [x] Stories follow existing patterns (autodocs tag, argTypes, etc.)
+- [x] Storybook builds without errors
 
 ## Technical Approach
 
@@ -49,11 +49,36 @@ export const Default: Story = {
 };
 ```
 
-## Files to Create
+## Files Created
 
 - `components/src/layout/PageSkeleton/PageSkeleton.stories.tsx`
 - `components/src/ui/Placeholder/Placeholder.stories.tsx`
 
-## Effort Estimate
+## Resolution
 
-Simple - 1 hour
+**Completed**: 2025-12-06
+
+Created comprehensive Storybook stories for both components:
+
+**PageSkeleton.stories.tsx** (6 variants):
+- Default - Basic page layout
+- WithBreadcrumb - Shows breadcrumb navigation
+- WideContainer - Wide width variant
+- CenteredHeader - Centered header alignment
+- WithoutSubtitle - Minimal variant
+- DeepBreadcrumb - Multi-level breadcrumb
+
+**Placeholder.stories.tsx** (6 variants):
+- Default - 32px height
+- Small - 16px height
+- Large - 64px height
+- WithCSSUnit - Using rem units
+- WithPercentage - Using fixed pixels
+- MultipleSpacers - Real usage example
+
+**Bonus fix**: Fixed broken imports in AllComponents.stories.tsx:
+- Moved StatCard, MilestoneCard, CalculatorCard imports from incorrect paths to `../cards/`
+
+**Verification**:
+- ✅ Storybook builds without errors
+- ✅ Lint passes

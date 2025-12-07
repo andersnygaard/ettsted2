@@ -17,10 +17,10 @@ Medium - Security best practice, low effort, high value
 
 ## Acceptance Criteria
 
-- [ ] CI workflow includes `pnpm audit` step
-- [ ] Audit runs after dependency installation
-- [ ] Build fails on HIGH or CRITICAL vulnerabilities
-- [ ] Moderate/Low vulnerabilities logged as warnings (don't fail build)
+- [x] CI workflow includes `pnpm audit` step
+- [x] Audit runs after dependency installation
+- [x] Build fails on HIGH or CRITICAL vulnerabilities
+- [x] Moderate/Low vulnerabilities logged as warnings (don't fail build)
 
 ## Technical Approach
 
@@ -29,7 +29,6 @@ Add audit step to [ci.yml](.github/workflows/ci.yml):
 ```yaml
 - name: Security audit
   run: pnpm audit --audit-level=high
-  continue-on-error: false
 ```
 
 The `--audit-level=high` flag ensures only HIGH/CRITICAL fail the build. Moderate/low are informational.
@@ -45,3 +44,16 @@ Simple - 15 minutes
 ## Related Plans
 
 - Due diligence report recommends automated security scanning
+
+## Resolution
+
+**Completed**: 2025-12-06
+
+Added `pnpm audit --audit-level=high` step to CI workflow after dependency installation.
+
+**Local verification**:
+- 2 moderate vulnerabilities in esbuild (dev-only) - does NOT fail build
+- Exit code 0 with `--audit-level=high` (only HIGH/CRITICAL would fail)
+
+**Changes**:
+- `.github/workflows/ci.yml` - Added "Security audit" step at line 27-28

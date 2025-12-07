@@ -30,6 +30,7 @@ import './PortfolioPage.css';
  * Based on Nordic Minimal design system.
  */
 
+
 // Category colors for column groups
 const CATEGORY_COLORS: Record<string, string> = {
   sparing: '#5a6d7a',
@@ -153,10 +154,9 @@ export default function PortfolioPage() {
     if (!portfolioData || !user?.accounts) return [];
 
     return portfolioData.map((row) => {
-      const rowData: Record<string, any> = {
+      const rowData: Record<string, string | number | null | undefined> = {
         id: row.id, // Snapshot ID for editing
         date: row.date,
-        _deleteHandler: () => handleDeleteClick(row.id, row.date),
       };
 
       // Map each account value
@@ -210,7 +210,8 @@ export default function PortfolioPage() {
     if (!tableData.length) return [];
     const years = new Set<number>();
     tableData.forEach((row) => {
-      const parts = row.date.split('.');
+      const date = row.date as string;
+      const parts = date.split('.');
       const year = parseInt(parts[2], 10);
       years.add(year);
     });
@@ -224,7 +225,8 @@ export default function PortfolioPage() {
     // Filter by year
     if (selectedYear !== null) {
       filtered = filtered.filter((row) => {
-        const parts = row.date.split('.');
+        const date = row.date as string;
+        const parts = date.split('.');
         const year = parseInt(parts[2], 10);
         return year === selectedYear;
       });
@@ -290,7 +292,8 @@ export default function PortfolioPage() {
 
     // Build data rows
     const rows: string[][] = tableData.map((row) => {
-      const values: string[] = [row.date];
+      const date = row.date as string;
+      const values: string[] = [date];
       columnIds.forEach((colId) => {
         const value = row[colId];
         // Format numbers: replace . with , for Norwegian Excel
@@ -462,8 +465,9 @@ export default function PortfolioPage() {
               initialCollapsedGroups={['gjeld', 'pensjon']}
               onCellChange={handleCellChange}
               onRowDelete={(rowData) => {
-                const handler = rowData._deleteHandler as (() => void) | undefined;
-                handler?.();
+                const snapshotId = rowData.id as string;
+                const snapshotDate = rowData.date as string;
+                handleDeleteClick(snapshotId, snapshotDate);
               }}
             />
           ) : (

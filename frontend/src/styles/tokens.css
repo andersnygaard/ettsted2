@@ -164,6 +164,36 @@
   --opacity-medium: 0.12;             /* Background overlays */
   --opacity-strong: 0.15;             /* Stronger overlays */
 
+  /* Color Opacity Variants */
+  --pale-blue-light-3: rgba(184, 197, 208, 0.3);      /* Pale blue 30% opacity */
+  --pale-blue-light-2: rgba(184, 197, 208, 0.2);      /* Pale blue 20% opacity */
+  --pale-blue-light-15: rgba(184, 197, 208, 0.15);    /* Pale blue 15% opacity */
+  --pale-blue-light: rgba(184, 197, 208, 0.06);       /* Pale blue 6% opacity */
+
+  --terracotta-light: rgba(212, 149, 106, 0.2);       /* Terracotta 20% opacity */
+
+  --soft-terracotta-light-15: rgba(196, 164, 132, 0.15); /* Soft terracotta 15% opacity */
+  --soft-terracotta-light: rgba(196, 164, 132, 0.08);    /* Soft terracotta 8% opacity */
+
+  --muted-sage-light-2: rgba(139, 154, 125, 0.2);     /* Muted sage 20% opacity */
+  --muted-sage-light-15: rgba(139, 154, 125, 0.15);   /* Muted sage 15% opacity */
+  --muted-sage-light: rgba(139, 154, 125, 0.08);      /* Muted sage 8% opacity */
+  --muted-sage-light-4: rgba(139, 154, 125, 0.04);    /* Muted sage 4% opacity */
+
+  --bone-light: rgba(245, 242, 237, 0.1);             /* Bone 10% opacity */
+  --bone-dark: rgba(245, 242, 237, 0.6);              /* Bone 60% opacity */
+
+  --positive-light: rgba(90, 125, 90, 0.08);          /* Positive 8% opacity */
+
+  --negative-light-2: rgba(157, 107, 90, 0.2);        /* Negative 20% opacity */
+  --negative-light: rgba(157, 107, 90, 0.1);          /* Negative 10% opacity */
+  --negative-light-8: rgba(157, 107, 90, 0.08);       /* Negative 8% opacity */
+
+  --white-light: rgba(255, 255, 255, 0.1);            /* White 10% opacity */
+
+  --charcoal-dark-overlay: rgba(44, 44, 44, 0.5);     /* Charcoal 50% opacity (overlay) */
+  --charcoal-light-dark: rgba(0, 0, 0, 0.03);         /* Black 3% opacity */
+
 
   /* ============================================
      Z-INDEX LAYERS

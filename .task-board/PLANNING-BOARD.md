@@ -1,46 +1,62 @@
 # Planning Board - Finans
 
-**Current Focus**: CI/CD improvements and documentation polish (2025-12-06)
+**Current Focus**: Due Diligence Fixes (2025-12-07)
 
 ---
 
-## Due Diligence Findings
+## Due Diligence Findings (Updated 2025-12-07)
 
 **Report**: [.docs/DUE-DILIGENCE-REPORT.md](../.docs/DUE-DILIGENCE-REPORT.md)
 
 | Score | Area | Status |
 |-------|------|--------|
-| 85/100 | Design | Good |
-| 80/100 | Code Quality | Good |
-| 85/100 | Security | Good (corrected) |
-| **83/100** | **Overall** | Production-ready |
+| 82/100 | Design | Good - Minor token consistency needed |
+| 81/100 | Code Quality | Good - DRY violations in error classes |
+| 78/100 | Security | Good - Dev mode hardening recommended |
+| **80/100** | **Overall** | Production-ready |
 
-> **Note**: Many due diligence items were false positives (parseDate, ErrorBoundary, accessibility) - all already implemented correctly.
+### Issues Found (2025-12-07) - ALL RESOLVED ✅
+1. ~~**Frontend `any` types** - 4 instances in error handlers~~ → Fixed in task 188
+2. ~~**Duplicate error classes** - cosmosHelpers.ts duplicates AppError.ts~~ → Fixed in task 189
+3. ~~**Duplicate verifyDemoToken()** - Exists in both auth.ts and authRoutes.ts~~ → Fixed in task 190
+4. ~~**Hardcoded RGBA values** - 12+ instances should use CSS tokens~~ → Fixed in task 191
+5. ~~**ESLint config** - no-explicit-any set to 'warn' not 'error'~~ → Fixed in task 192
 
 ---
 
 ## Top Priorities
 
-| # | Task | Type | Priority | Effort |
-|---|------|------|----------|--------|
-| 186 | CI security audit | Feature | MEDIUM | Simple |
-| 187 | CI E2E tests | Feature | MEDIUM | Medium |
-| 185 | Missing Storybook stories | Feature | LOW | Simple |
+**All due diligence items completed!** 🎉
 
----
-
-## Full Backlog
-
-### Features (MEDIUM)
-- 186-FEATURE-ci-security-audit (add pnpm audit to CI)
-- 187-FEATURE-ci-e2e-tests (run Playwright in CI)
-
-### Features (LOW)
-- 185-FEATURE-missing-storybook-stories (documentation)
+Backlog is empty. Run `/discover-tasks` to find new work.
 
 ---
 
 ## Recently Completed
+
+### 192 - ESLint no-explicit-any to Error (2025-12-07)
+Changed rule from 'warn' to 'error' in all workspaces. Fixed remaining violation in PortfolioPage.tsx.
+
+### 191 - CSS Token RGBA Values (2025-12-07)
+Replaced 26 hardcoded rgba() values with CSS custom properties. Added 24 opacity variant tokens.
+
+### 190 - Extract verifyDemoToken (2025-12-07)
+Created shared tokenUtils.ts utility. Removed duplicate from auth.ts and authRoutes.ts.
+
+### 189 - Consolidate Error Classes (2025-12-07)
+Removed duplicate NotFoundError, ConflictError, ValidationError from cosmosHelpers.ts. Now imports from AppError.ts.
+
+### 188 - Fix Frontend any Types (2025-12-07)
+Created errorTypes.ts utility with type guards. Fixed 4 `any` types in AuthContext and OnboardingWizard.
+
+### 185 - Missing Storybook Stories (2025-12-07)
+Added stories for PageSkeleton and Placeholder components. Fixed broken imports in AllComponents.stories.tsx.
+
+### 187 - CI E2E Tests (2025-12-07)
+Added Playwright E2E tests to CI pipeline with CI mock mode for database-free testing.
+
+### 186 - CI Security Audit (2025-12-07)
+Added `pnpm audit --audit-level=high` to CI pipeline.
 
 ### 186 - E2E Coverage Expansion (2025-12-06)
 Added `/import` and `/min-okonomi` to E2E test suite. All 5 tests pass with 14 pages covered.
@@ -78,8 +94,8 @@ Fixed asset class categorization in backend.
 
 | Status | Count |
 |--------|-------|
-| Done | 160 |
-| Backlog | 3 |
+| Done | 168 |
+| Backlog | 0 |
 | In Progress | 0 |
 
-**Last Updated**: 2025-12-06 (Task Discovery)
+**Last Updated**: 2025-12-07

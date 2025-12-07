@@ -191,8 +191,9 @@ function MonteCarloChart({ scenarios, percentiles, years, height = 320 }: MonteC
     // Title
     svg
       .append('text')
-      .attr('x', margin.left)
+      .attr('x', containerWidth / 2)
       .attr('y', 20)
+      .attr('text-anchor', 'middle')
       .style('font-family', 'Cormorant Garamond, serif')
       .style('font-size', '18px')
       .style('fill', 'var(--charcoal)')

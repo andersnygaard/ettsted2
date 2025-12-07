@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { useAuth } from '../useAuth';
 import apiClient from '@/shared/api/client';
+import { getErrorMessage } from '@/shared/utils/errorTypes';
 import { WizardProgressBar } from './WizardProgressBar';
 import { StepUser } from './steps/StepUser';
 import { StepSparing } from './steps/StepSparing';
@@ -255,16 +256,16 @@ export function OnboardingWizard({ mode = 'create', initialState, onComplete }: 
         navigate('/dashboard');
       }
     },
-    onError: (error: any) => {
-      const message = error.response?.data?.error?.message || 'Kunne ikke fullføre oppsett';
+    onError: (error: unknown) => {
+      const message = getErrorMessage(error) || 'Kunne ikke fullføre oppsett';
       dispatch({ type: 'SET_SUBMIT_ERROR', error: message });
       dispatch({ type: 'SET_SUBMITTING', value: false });
     },
   });
 
   // API mutation for updating existing user (edit mode)
-  const updateMutation = useMutation({
-    mutationFn: async (data: { nickname: string; profile: OnboardingRequestBody['profile']; accounts: any[] }) => {
+  const updateMutation = useMutation<OnboardingResponse, Error, OnboardingRequestBody>({
+    mutationFn: async (data: OnboardingRequestBody) => {
       // Update user profile and accounts
       const response = await apiClient.patch('/users/me', {
         nickname: data.nickname,
@@ -275,7 +276,7 @@ export function OnboardingWizard({ mode = 'create', initialState, onComplete }: 
           category: acc.category,
           isActive: acc.isActive,
           sortOrder: index,
-          createdAt: acc.createdAt || new Date().toISOString(),
+          createdAt: new Date().toISOString(),
           ...(acc.category === 'gjeld' && acc.loanDetails ? { loanDetails: acc.loanDetails } : {}),
         })),
       });
@@ -289,8 +290,8 @@ export function OnboardingWizard({ mode = 'create', initialState, onComplete }: 
         navigate('/dashboard');
       }
     },
-    onError: (error: any) => {
-      const message = error.response?.data?.error?.message || 'Kunne ikke lagre endringer';
+    onError: (error: unknown) => {
+      const message = getErrorMessage(error) || 'Kunne ikke lagre endringer';
       dispatch({ type: 'SET_SUBMIT_ERROR', error: message });
       dispatch({ type: 'SET_SUBMITTING', value: false });
     },

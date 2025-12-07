@@ -25,11 +25,11 @@
 }
 
 .breakdown-card__icon--primary {
-  background: rgba(184, 197, 208, 0.3);
+  background: var(--pale-blue-light-3);
 }
 
 .breakdown-card__icon--secondary {
-  background: rgba(212, 149, 106, 0.2);
+  background: var(--terracotta-light);
 }
 
 .breakdown-card__value {

@@ -5,35 +5,22 @@
  */
 
 import { logger } from './logger';
+import {
+  NotFoundError,
+  ConflictError,
+  ValidationError,
+} from '../errors/AppError';
+
+// Re-export error classes for backwards compatibility
+export { NotFoundError, ConflictError, ValidationError };
 
 /**
- * Custom error classes for database operations
+ * Custom error class for database operations
  */
 export class DatabaseError extends Error {
   constructor(message: string, public readonly originalError?: unknown) {
     super(message);
     this.name = 'DatabaseError';
-  }
-}
-
-export class NotFoundError extends DatabaseError {
-  constructor(message: string = 'Resource not found') {
-    super(message);
-    this.name = 'NotFoundError';
-  }
-}
-
-export class ConflictError extends DatabaseError {
-  constructor(message: string = 'Resource already exists') {
-    super(message);
-    this.name = 'ConflictError';
-  }
-}
-
-export class ValidationError extends DatabaseError {
-  constructor(message: string = 'Validation failed') {
-    super(message);
-    this.name = 'ValidationError';
   }
 }
 

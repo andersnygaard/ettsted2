@@ -50,7 +50,7 @@
 /* Focus state */
 .date-input__field:focus-visible {
   border-bottom-color: var(--charcoal);
-  box-shadow: 0 0 0 2px rgba(44, 44, 44, 0.1);
+  box-shadow: 0 0 0 2px var(--charcoal-light-dark);
 }
 
 /* Error state */
@@ -61,7 +61,7 @@
 
 .date-input--error .date-input__field:focus-visible {
   border-bottom-color: var(--negative);
-  box-shadow: 0 0 0 2px rgba(157, 107, 90, 0.2);
+  box-shadow: 0 0 0 2px var(--negative-light-2);
 }
 
 .date-input__error-message {

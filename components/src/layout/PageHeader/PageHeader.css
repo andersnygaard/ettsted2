@@ -1,16 +1,11 @@
 .page-header {
   display: block;
   padding-bottom: var(--space-6xl);
-  text-align: left;
-
-  &.page-header--centered {
-    text-align: center;
-  }
+  text-align: center;
 
   &.reduced {
     padding-bottom: var(--space-3xl);
   }
-
 }
 
 .page-header__title {

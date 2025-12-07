@@ -1,98 +1,112 @@
-# Task Discovery Report - 2025-12-05
+# Task Discovery Report - 2025-12-07 (Updated)
 
 ## Summary
 
-**Focus**: Design System Consistency & Storybook
-**Tasks Created**: 7 new design-related tasks (001-007)
-**Total Backlog**: 7 tasks
+**Focus**: Due Diligence Audit Findings
+**Tasks Created**: 5 new refactor tasks (188-192)
+**Total Backlog**: 5 tasks
+**Total Completed**: 163 tasks
 
-## Issues Discovered
+---
 
-### 1. Duplicate Components (Critical)
-21 components exist in BOTH `frontend/src/shared/components/` AND `components/src/`:
-- Button, Card, Avatar, Container, Skeleton
-- HeroNumber, ProgressBar, MilestoneCard, SectionLink
-- TableHeader, TableFooter, DateInput, CalculatorCard
-- StatsRow, AreaChart, DonutChart, NumberInput
-- StackedAreaChart, SpreadsheetTable, ErrorBoundary, Toast
+## Discovery Source
 
-### 2. Hardcoded CSS Values
-- **Colors**: 50+ instances of hardcoded hex colors instead of tokens
-- **Fonts**: 21 instances of hardcoded font-family instead of `var(--font-*)`
-- **Animations**: `@keyframes fadeUp` duplicated in 5 files
-- **Spacing**: Many hardcoded pixel values instead of spacing tokens
+Tasks generated from the **Due Diligence Audit** (2025-12-07) which identified:
+- 4 instances of `any` types in frontend error handlers
+- Duplicate error classes in backend
+- Duplicate token verification function
+- Hardcoded CSS values instead of tokens
+- ESLint configuration gap
 
-### 3. Design Documentation
-- Current design guide outdated
-- No design principles documented
-- User requested `.docs/design-system/` folder
-
-### 4. Storybook Coverage
-- All components have stories but quality varies
-- Missing interaction tests
-- Some stories may lack all variants/states
+---
 
 ## Tasks Created
 
 | # | Type | Title | Priority | Effort |
 |---|------|-------|----------|--------|
-| 001 | REFACTOR | Consolidate Duplicate Components | High | 3-4 days |
-| 002 | REFACTOR | Replace Hardcoded Colors with CSS Tokens | High | 2-3 days |
-| 003 | REFACTOR | Replace Hardcoded Font-Family with Tokens | Medium | 1 day |
-| 004 | REFACTOR | Centralize Animation Keyframes | Low | 0.5 day |
-| 005 | REFACTOR | Standardize Spacing Token Usage | Medium | 2 days |
-| 006 | FEATURE | Create Design System Documentation | High | 2 days |
-| 007 | REFACTOR | Improve Storybook Coverage and Quality | Medium | 3 days |
+| 188 | REFACTOR | Fix Frontend `any` Types in Error Handlers | High | Small |
+| 189 | REFACTOR | Consolidate Duplicate Error Classes | High | Small |
+| 190 | REFACTOR | Extract Duplicate verifyDemoToken Function | High | Small |
+| 191 | REFACTOR | Replace Hardcoded RGBA Values with CSS Tokens | Medium | Medium |
+| 192 | REFACTOR | Change ESLint no-explicit-any to Error | Medium | Small |
 
-**Total Estimated Effort**: ~14 days
+**Total Estimated Effort**: ~6-8 hours
+
+---
+
+## CLAUDE.md Compliance: ✅ 100%
+
+| Requirement | Status |
+|-------------|--------|
+| All 8 pages | ✅ Implemented |
+| All API endpoints | ✅ Implemented |
+| SpreadsheetTable with collapsible groups | ✅ Implemented |
+| CSV export | ✅ Implemented |
+| Norwegian formatting | ✅ Implemented |
+| EasyAuth integration | ✅ Simulated (dev mode) |
+| CosmosDB with partition keys | ✅ Implemented |
+| Rate limiting | ✅ Implemented |
+| F.I.R.E. calculations | ✅ Implemented |
+| LLM import agent | ✅ Implemented |
+
+---
 
 ## Breakdown by Priority
 
-| Priority | Count | Total Effort |
-|----------|-------|--------------|
-| High | 3 | ~8 days |
-| Medium | 3 | ~6 days |
-| Low | 1 | ~0.5 day |
+| Priority | Count | Effort |
+|----------|-------|--------|
+| High | 3 | ~3 hours |
+| Medium | 2 | ~3-5 hours |
+
+---
 
 ## Breakdown by Type
 
 | Type | Count |
 |------|-------|
-| REFACTOR | 6 |
-| FEATURE | 1 |
-
-## Recommended Implementation Order
-
-### Phase 1: Document & Plan (2 days)
-1. **006-FEATURE-design-system-documentation.md** - Establish principles before refactoring
-
-### Phase 2: Component Cleanup (4 days)
-2. **001-REFACTOR-consolidate-duplicate-components.md** - Eliminate duplication
-
-### Phase 3: CSS Token Cleanup (4-5 days)
-3. **002-REFACTOR-hardcoded-colors-to-tokens.md** - Consistent colors
-4. **003-REFACTOR-hardcoded-fonts-to-tokens.md** - Font consistency
-5. **005-REFACTOR-spacing-tokens-usage.md** - Spacing consistency
-
-### Phase 4: Documentation & Polish (3-4 days)
-6. **007-REFACTOR-improve-storybook-coverage.md** - Better component docs
-7. **004-REFACTOR-centralize-animations.md** - Quick cleanup
-
-## Quality Bar Applied
-
-These tasks meet the quality bar because:
-- **Clear value**: Reduces maintenance burden, improves consistency
-- **Well-scoped**: Each task is 0.5-4 days, not weeks
-- **Actionable**: Specific files and patterns identified
-- **Domain-aligned**: Improves the Nordic Minimal design system
-
-## Next Steps
-
-1. Review generated tasks in `.task-board/backlog/`
-2. Add top 3 priorities to `PLANNING-BOARD.md`
-3. Start with `006-FEATURE-design-system-documentation.md`
-4. Use `start-working` skill to begin implementation
+| REFACTOR | 5 |
 
 ---
 
-*Previous discovery: 2025-12-03 - Tasks 108-113 for bugs and features*
+## Recommended Implementation Order
+
+### Phase 1: TypeScript Fixes (1-2 hours)
+1. **188** - Fix frontend `any` types (unblocks 192)
+2. **189** - Consolidate error classes
+3. **190** - Extract verifyDemoToken
+
+### Phase 2: Configuration & CSS (3-4 hours)
+4. **192** - ESLint any to error (depends on 188)
+5. **191** - CSS token RGBA values
+
+---
+
+## Dependencies
+
+```
+188 → 192  (ESLint change depends on fixing any types first)
+```
+
+---
+
+## Code Quality Metrics
+
+| Metric | Value |
+|--------|-------|
+| TODOs in code | 0 |
+| FIXMEs in code | 0 |
+| Components with stories | 29/29 (100%) |
+| E2E page coverage | 14 pages |
+| Due diligence score | 80/100 (Production-ready) |
+
+---
+
+## Next Steps
+
+1. Use `start-working` skill to begin with task 188
+2. Complete high-priority tasks first (188, 189, 190)
+3. Run due diligence again after completion to verify score improvement
+
+---
+
+*Previous reports: 2025-12-07 (initial - 0 tasks), 2025-12-05 (7 design tasks)*

@@ -7,6 +7,7 @@
 import { Router, Request, Response, IRouter } from 'express';
 import crypto from 'crypto';
 import { logger } from '../utils/logger';
+import { config } from '../config/environment';
 import { getUserById, createUser } from '../services/userService';
 import { getSnapshotsByUserId, createSnapshot } from '../services/portfolioService';
 import { User } from '../models/User';
@@ -49,48 +50,6 @@ function createDemoToken(): string {
   return `${headerB64}.${payloadB64}.${signature}`;
 }
 
-/**
- * Verify demo token signature
- */
-export function verifyDemoToken(token: string): { sub: string; email: string; name: string; iss: string } | null {
-  try {
-    const parts = token.split('.');
-    if (parts.length !== 3) return null;
-
-    const [headerB64, payloadB64, signature] = parts;
-
-    // Verify signature
-    const expectedSignature = crypto
-      .createHmac('sha256', DEMO_SECRET)
-      .update(`${headerB64}.${payloadB64}`)
-      .digest('base64url');
-
-    if (signature !== expectedSignature) {
-      logger.debug('Demo token signature mismatch');
-      return null;
-    }
-
-    // Decode and parse payload
-    const payload = JSON.parse(Buffer.from(payloadB64, 'base64url').toString('utf-8'));
-
-    // Check expiration
-    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
-      logger.debug('Demo token expired');
-      return null;
-    }
-
-    // Check issuer
-    if (payload.iss !== 'finans-demo') {
-      logger.debug('Demo token has wrong issuer');
-      return null;
-    }
-
-    return payload;
-  } catch (error) {
-    logger.error('Failed to verify demo token', { error });
-    return null;
-  }
-}
 
 /**
  * Get or create demo user
@@ -266,7 +225,25 @@ async function seedDemoSnapshots(): Promise<void> {
  */
 router.post('/demo-login', async (_req: Request, res: Response) => {
   try {
-    logger.info('Demo login requested');
+    logger.info('Demo login requested', { ciMockMode: config.ciMockMode });
+
+    // In CI mock mode, skip database operations
+    if (config.ciMockMode) {
+      const token = createDemoToken();
+      logger.info('Demo login successful (CI mock mode)', { userId: DEMO_USER_ID });
+
+      return res.status(200).json({
+        data: {
+          token,
+          user: {
+            id: DEMO_USER_ID,
+            nickname: 'Demo Bruker',
+            email: 'demo@finans.no',
+          },
+        },
+        success: true,
+      });
+    }
 
     // Get or create demo user and seed snapshots
     const user = await getOrCreateDemoUser();
@@ -277,7 +254,7 @@ router.post('/demo-login', async (_req: Request, res: Response) => {
 
     logger.info('Demo login successful', { userId: DEMO_USER_ID });
 
-    res.status(200).json({
+    return res.status(200).json({
       data: {
         token,
         user: {
@@ -290,7 +267,7 @@ router.post('/demo-login', async (_req: Request, res: Response) => {
     });
   } catch (error) {
     logger.error('Demo login failed', { error });
-    res.status(500).json({
+    return res.status(500).json({
       error: {
         message: 'Demo login failed',
         code: 'DEMO_LOGIN_FAILED',

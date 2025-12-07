@@ -12,6 +12,8 @@ import { Router, Request, Response, NextFunction, IRouter } from 'express';
 import * as portfolioService from '../services/portfolioService';
 import * as userService from '../services/userService';
 import * as calc from '../services/calculationService';
+import { config } from '../config/environment';
+import { mockSnapshots, getMockAggregatedData } from '../utils/mockData';
 
 const router: IRouter = Router();
 
@@ -35,6 +37,23 @@ const router: IRouter = Router();
  */
 router.get('/dashboard', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // CI mock mode - return hardcoded data
+    if (config.ciMockMode) {
+      const mockData = getMockAggregatedData();
+      return res.json({
+        data: {
+          netWorth: mockData.dashboard.nettoFormue,
+          monthlyChange: mockData.dashboard.endringProsent,
+          sumSparing: mockData.dashboard.sumSparing,
+          sumGjeld: mockData.dashboard.sumGjeld,
+          sumPensjon: mockData.dashboard.sumPensjon,
+          sparerate: mockData.dashboard.sparerate,
+          snapshotDate: mockSnapshots[mockSnapshots.length - 1].date,
+        },
+        success: true,
+      });
+    }
+
     const userId = req.user!.userId;
 
     // Get latest 2 snapshots for comparison
@@ -47,7 +66,7 @@ router.get('/dashboard', async (req: Request, res: Response, next: NextFunction)
     const user = await userService.getUserById(userId);
 
     if (snapshots.length === 0) {
-      res.json({
+      return res.json({
         data: {
           netWorth: 0,
           monthlyChange: 0,
@@ -58,7 +77,6 @@ router.get('/dashboard', async (req: Request, res: Response, next: NextFunction)
         },
         success: true,
       });
-      return;
     }
 
     const current = snapshots[0];
@@ -72,7 +90,7 @@ router.get('/dashboard', async (req: Request, res: Response, next: NextFunction)
     const previousNetWorth = previous ? calc.calculateNetWorth(previous.accounts) : netWorth;
     const monthlyChange = calc.calculateMonthlyChange(netWorth, previousNetWorth);
 
-    res.json({
+    return res.json({
       data: {
         netWorth,
         monthlyChange,
@@ -85,7 +103,7 @@ router.get('/dashboard', async (req: Request, res: Response, next: NextFunction)
       success: true,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -108,6 +126,22 @@ router.get('/dashboard', async (req: Request, res: Response, next: NextFunction)
  */
 router.get('/sparing', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // CI mock mode - return hardcoded data
+    if (config.ciMockMode) {
+      const mockData = getMockAggregatedData();
+      return res.json({
+        data: {
+          sumSparing: mockData.sparing.total,
+          sparerate: 25,
+          monthsFree: Math.round(mockData.sparing.total / (400000 / 12)),
+          fireNumber: 10000000,
+          fireProgress: (mockData.sparing.total / 10000000) * 100,
+          history: mockData.sparing.history,
+        },
+        success: true,
+      });
+    }
+
     const userId = req.user!.userId;
 
     const [snapshots, user] = await Promise.all([
@@ -119,7 +153,7 @@ router.get('/sparing', async (req: Request, res: Response, next: NextFunction) =
     ]);
 
     if (snapshots.length === 0 || !user) {
-      res.json({
+      return res.json({
         data: {
           sumSparing: 0,
           sparerate: 0,
@@ -130,7 +164,6 @@ router.get('/sparing', async (req: Request, res: Response, next: NextFunction) =
         },
         success: true,
       });
-      return;
     }
 
     const latest = snapshots[snapshots.length - 1];
@@ -146,7 +179,7 @@ router.get('/sparing', async (req: Request, res: Response, next: NextFunction) =
       value: calc.calculateSumByCategory(s.accounts, 'sparing'),
     }));
 
-    res.json({
+    return res.json({
       data: {
         sumSparing,
         sparerate,
@@ -158,7 +191,7 @@ router.get('/sparing', async (req: Request, res: Response, next: NextFunction) =
       success: true,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -180,6 +213,21 @@ router.get('/sparing', async (req: Request, res: Response, next: NextFunction) =
  */
 router.get('/gjeld', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // CI mock mode - return hardcoded data
+    if (config.ciMockMode) {
+      const mockData = getMockAggregatedData();
+      return res.json({
+        data: {
+          sumGjeld: mockData.gjeld.total,
+          dekning: mockData.gjeld.dekning,
+          remaining: Math.max(0, mockData.gjeld.total - mockData.sparing.total),
+          loans: mockData.gjeld.accounts.map(a => ({ name: a.name, value: a.value })),
+          history: mockData.gjeld.history,
+        },
+        success: true,
+      });
+    }
+
     const userId = req.user!.userId;
 
     const snapshots = await portfolioService.getSnapshotsByUserId(userId, {
@@ -188,7 +236,7 @@ router.get('/gjeld', async (req: Request, res: Response, next: NextFunction) => 
     });
 
     if (snapshots.length === 0) {
-      res.json({
+      return res.json({
         data: {
           sumGjeld: 0,
           dekning: 100,
@@ -198,7 +246,6 @@ router.get('/gjeld', async (req: Request, res: Response, next: NextFunction) => 
         },
         success: true,
       });
-      return;
     }
 
     const latest = snapshots[snapshots.length - 1];
@@ -218,7 +265,7 @@ router.get('/gjeld', async (req: Request, res: Response, next: NextFunction) => 
       value: calc.calculateSumByCategory(s.accounts, 'gjeld'),
     }));
 
-    res.json({
+    return res.json({
       data: {
         sumGjeld,
         dekning,
@@ -229,7 +276,7 @@ router.get('/gjeld', async (req: Request, res: Response, next: NextFunction) => 
       success: true,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -249,6 +296,19 @@ router.get('/gjeld', async (req: Request, res: Response, next: NextFunction) => 
  */
 router.get('/pensjon', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // CI mock mode - return hardcoded data
+    if (config.ciMockMode) {
+      const mockData = getMockAggregatedData();
+      return res.json({
+        data: {
+          sumPensjon: mockData.pensjon.total,
+          breakdown: mockData.pensjon.accounts.map(a => ({ name: a.name, value: a.value })),
+          history: mockData.pensjon.history,
+        },
+        success: true,
+      });
+    }
+
     const userId = req.user!.userId;
 
     const snapshots = await portfolioService.getSnapshotsByUserId(userId, {
@@ -257,7 +317,7 @@ router.get('/pensjon', async (req: Request, res: Response, next: NextFunction) =
     });
 
     if (snapshots.length === 0) {
-      res.json({
+      return res.json({
         data: {
           sumPensjon: 0,
           breakdown: [],
@@ -265,7 +325,6 @@ router.get('/pensjon', async (req: Request, res: Response, next: NextFunction) =
         },
         success: true,
       });
-      return;
     }
 
     const latest = snapshots[snapshots.length - 1];
@@ -282,7 +341,7 @@ router.get('/pensjon', async (req: Request, res: Response, next: NextFunction) =
       value: calc.calculateSumByCategory(s.accounts, 'pensjon'),
     }));
 
-    res.json({
+    return res.json({
       data: {
         sumPensjon,
         breakdown,
@@ -291,7 +350,7 @@ router.get('/pensjon', async (req: Request, res: Response, next: NextFunction) =
       success: true,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 

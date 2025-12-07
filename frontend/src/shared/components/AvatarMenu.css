@@ -29,6 +29,7 @@
   top: calc(100% + 8px);
   right: 0;
   min-width: 200px;
+  max-width: calc(100vw - 32px);
   background: var(--warm-white);
   border: 1px solid var(--border);
   border-radius: 4px;

@@ -66,6 +66,11 @@
   border-color: var(--charcoal);
   background-color: var(--charcoal);
   color: var(--warm-white);
+}
+
+/* Override disabled button opacity from browser/library defaults */
+.wizard-progress__step.wizard-progress__step--current[disabled],
+.wizard-progress__step.wizard-progress__step--completed[disabled] {
   opacity: 1;
 }
 

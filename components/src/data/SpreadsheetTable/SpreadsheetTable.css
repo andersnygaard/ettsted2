@@ -40,7 +40,7 @@
   cursor: pointer;
   user-select: none;
   transition: background 0.2s ease;
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid var(--white-light);
   position: sticky;
   top: 0;
   z-index: 15;
@@ -134,15 +134,15 @@
 
 /* Column group backgrounds */
 .spreadsheet th.col-sparing {
-  background: rgba(184, 197, 208, 0.15);
+  background: var(--pale-blue-light-15);
 }
 
 .spreadsheet th.col-gjeld {
-  background: rgba(196, 164, 132, 0.15);
+  background: var(--soft-terracotta-light-15);
 }
 
 .spreadsheet th.col-pensjon {
-  background: rgba(139, 154, 125, 0.15);
+  background: var(--muted-sage-light-15);
 }
 
 /* ========================================
@@ -172,24 +172,24 @@
 
 /* Row hover effects */
 .spreadsheet tr:hover td {
-  background: rgba(139, 154, 125, 0.04);
+  background: var(--muted-sage-light-4);
 }
 
 .spreadsheet tr:hover td:first-child {
-  background: rgba(139, 154, 125, 0.08);
+  background: var(--muted-sage-light);
 }
 
 /* Column group backgrounds */
 .spreadsheet td.col-sparing {
-  background: rgba(184, 197, 208, 0.06);
+  background: var(--pale-blue-light);
 }
 
 .spreadsheet td.col-gjeld {
-  background: rgba(196, 164, 132, 0.08);
+  background: var(--soft-terracotta-light);
 }
 
 .spreadsheet td.col-pensjon {
-  background: rgba(139, 154, 125, 0.08);
+  background: var(--muted-sage-light);
 }
 
 /* ========================================
@@ -246,7 +246,7 @@
 }
 
 .cell-editable:hover {
-  background: rgba(184, 197, 208, 0.2) !important;
+  background: var(--pale-blue-light-2) !important;
   outline: 1px solid var(--pale-blue);
   outline-offset: -1px;
 }
@@ -273,7 +273,7 @@
 
 .cell-input:focus {
   border-color: var(--muted-sage);
-  box-shadow: 0 0 0 2px rgba(139, 154, 125, 0.2);
+  box-shadow: 0 0 0 2px var(--muted-sage-light-2);
 }
 
 /* Remove number input spinners */
@@ -317,7 +317,7 @@
 }
 
 .spreadsheet tr:hover .action-cell {
-  background: rgba(139, 154, 125, 0.08);
+  background: var(--muted-sage-light);
 }
 
 .delete-button {
@@ -336,11 +336,11 @@
 
 .delete-button:hover {
   opacity: 1;
-  background: rgba(157, 107, 90, 0.1);
+  background: var(--negative-light);
 }
 
 .delete-button:active {
-  background: rgba(157, 107, 90, 0.2);
+  background: var(--negative-light-2);
 }
 
 .spreadsheet tr:hover .delete-button {

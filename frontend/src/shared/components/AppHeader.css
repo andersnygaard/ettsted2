@@ -18,7 +18,8 @@
   align-items: center;
   gap: 48px;
   overflow: visible;
-  width:100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Logo */

@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import client from '../../shared/api/client';
 import { clearAuthToken, getAuthData, setDemoToken, getDemoToken, isDevLoggedOut, setDevLoggedOut, clearDevLogout } from '../../shared/api/authToken';
+import { isStatusCode } from '../../shared/utils/errorTypes';
 import type { User, AuthContextType } from './types';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -53,14 +54,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setUser(null);
         setNeedsOnboarding(true);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Handle different error cases
-      if (error.statusCode === 404) {
+      if (isStatusCode(error, 404)) {
         // User authenticated via EasyAuth but not in our database
         // This means they need to complete onboarding
         setUser(null);
         setNeedsOnboarding(true);
-      } else if (error.statusCode === 401) {
+      } else if (isStatusCode(error, 401)) {
         // Not authenticated at all
         setUser(null);
         setHasEasyAuthSession(false);

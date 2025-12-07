@@ -14,12 +14,15 @@ import { ProgressBar } from '../forms/ProgressBar';
 
 // Data Components
 import { HeroNumber } from '../data/HeroNumber';
-import { StatCard } from '../data/StatCard';
-import { MilestoneCard } from '../data/MilestoneCard';
 import { StatsRow } from '../data/StatsRow';
 import { SpreadsheetTable } from '../data/SpreadsheetTable';
 import { TableHeader } from '../data/TableHeader';
 import { TableFooter } from '../data/TableFooter';
+
+// Card Components
+import { StatCard } from '../cards/StatCard';
+import { MilestoneCard } from '../cards/MilestoneCard';
+import { CalculatorCard } from '../cards/CalculatorCard';
 
 // Chart Components
 import { AreaChart } from '../charts/AreaChart';
@@ -29,7 +32,6 @@ import { DonutChart } from '../charts/DonutChart';
 // Layout Components
 import { Container } from '../layout/Container';
 import { SectionLink } from '../layout/SectionLink';
-import { CalculatorCard } from '../layout/CalculatorCard';
 
 // System Components
 import { ToastProvider, useToast } from '../system/Toast';

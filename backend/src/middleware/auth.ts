@@ -11,8 +11,8 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import crypto from 'crypto';
 import { logger } from '../utils/logger';
+import { verifyDemoToken } from '../utils/tokenUtils';
 
 interface JwtPayload {
   sub: string;
@@ -21,8 +21,6 @@ interface JwtPayload {
   iss?: string;
   exp?: number;
 }
-
-const DEMO_SECRET = process.env.DEMO_JWT_SECRET || 'demo-secret-key-for-development';
 
 /**
  * Decode JWT payload without validation.
@@ -40,42 +38,6 @@ function decodeJwtPayload(token: string): JwtPayload | null {
   }
 }
 
-/**
- * Verify demo token signature and expiration.
- * Demo tokens use HMAC-SHA256 for signing.
- */
-function verifyDemoToken(token: string): JwtPayload | null {
-  try {
-    const parts = token.split('.');
-    if (parts.length !== 3) return null;
-
-    const [headerB64, payloadB64, signature] = parts;
-
-    // Verify signature
-    const expectedSignature = crypto
-      .createHmac('sha256', DEMO_SECRET)
-      .update(`${headerB64}.${payloadB64}`)
-      .digest('base64url');
-
-    if (signature !== expectedSignature) {
-      logger.debug('Demo token signature mismatch');
-      return null;
-    }
-
-    // Decode and parse payload
-    const payload: JwtPayload = JSON.parse(Buffer.from(payloadB64, 'base64url').toString('utf-8'));
-
-    // Check expiration
-    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
-      logger.debug('Demo token expired');
-      return null;
-    }
-
-    return payload;
-  } catch {
-    return null;
-  }
-}
 
 /**
  * Determine provider from JWT issuer

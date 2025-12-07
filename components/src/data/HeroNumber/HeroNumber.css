@@ -45,20 +45,20 @@
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--text-secondary);
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: var(--charcoal-light-dark);
   border-radius: var(--radius-sm);
 }
 
 /* Positive change - sage green */
 .hero-change--positive {
   color: var(--positive);
-  background-color: rgba(90, 125, 90, 0.08);
+  background-color: var(--positive-light);
 }
 
 /* Negative change - terracotta red */
 .hero-change--negative {
   color: var(--negative);
-  background-color: rgba(157, 107, 90, 0.08);
+  background-color: var(--negative-light-8);
 }
 
 /* Responsive */

@@ -15,7 +15,7 @@
   max-width: 600px;
   background: linear-gradient(135deg, var(--charcoal) 0%, var(--charcoal-light) 100%);
   border-radius: 2px;
-  border: 1px solid rgba(245, 242, 237, 0.1);
+  border: 1px solid var(--bone-light);
 }
 
 /* Label - Small caps, muted white */
@@ -24,7 +24,7 @@
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(245, 242, 237, 0.6);
+  color: var(--bone-dark);
   font-weight: 500;
 }
 

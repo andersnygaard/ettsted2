@@ -44,6 +44,36 @@
   /* Borders & Dividers */
   --border: rgba(44, 44, 44, 0.08);
 
+  /* Color Opacity Variants */
+  --pale-blue-light-3: rgba(184, 197, 208, 0.3);
+  --pale-blue-light-2: rgba(184, 197, 208, 0.2);
+  --pale-blue-light-15: rgba(184, 197, 208, 0.15);
+  --pale-blue-light: rgba(184, 197, 208, 0.06);
+
+  --terracotta-light: rgba(212, 149, 106, 0.2);
+
+  --soft-terracotta-light-15: rgba(196, 164, 132, 0.15);
+  --soft-terracotta-light: rgba(196, 164, 132, 0.08);
+
+  --muted-sage-light-2: rgba(139, 154, 125, 0.2);
+  --muted-sage-light-15: rgba(139, 154, 125, 0.15);
+  --muted-sage-light: rgba(139, 154, 125, 0.08);
+  --muted-sage-light-4: rgba(139, 154, 125, 0.04);
+
+  --bone-light: rgba(245, 242, 237, 0.1);
+  --bone-dark: rgba(245, 242, 237, 0.6);
+
+  --positive-light: rgba(90, 125, 90, 0.08);
+
+  --negative-light-2: rgba(157, 107, 90, 0.2);
+  --negative-light: rgba(157, 107, 90, 0.1);
+  --negative-light-8: rgba(157, 107, 90, 0.08);
+
+  --white-light: rgba(255, 255, 255, 0.1);
+
+  --charcoal-dark-overlay: rgba(44, 44, 44, 0.5);
+  --charcoal-light-dark: rgba(0, 0, 0, 0.03);
+
   /* Typography */
   --font-heading: 'Cormorant Garamond', serif;
   --font-body: 'DM Sans', sans-serif;

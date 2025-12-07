@@ -38,6 +38,8 @@
 /* Input field */
 .number-input__field {
   flex: 1;
+  min-width: 0;
+  width: 100%;
   font-family: var(--font-mono);
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-regular);
@@ -63,7 +65,7 @@
 /* Focus state */
 .number-input__field:focus-visible {
   border-bottom-color: var(--charcoal);
-  box-shadow: 0 0 0 2px rgba(44, 44, 44, 0.1);
+  box-shadow: 0 0 0 2px var(--charcoal-light-dark);
 }
 
 /* Suffix */
@@ -84,7 +86,7 @@
 
 .number-input--error .number-input__field:focus-visible {
   border-bottom-color: var(--negative);
-  box-shadow: 0 0 0 2px rgba(157, 107, 90, 0.2);
+  box-shadow: 0 0 0 2px var(--negative-light-2);
 }
 
 .number-input__error-message {

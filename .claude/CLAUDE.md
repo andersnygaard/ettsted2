@@ -164,6 +164,9 @@ pnpm-workspace.yaml - pnpm workspace config
 - **Body**: DM Sans (sans-serif)
 - **Numbers/Data**: JetBrains Mono (monospace)
 
+### Layout Rules
+- **PageHeader**: Always centered (`text-align: center`). Never left-aligned.
+
 ---
 
 ## Pages

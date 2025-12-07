@@ -58,7 +58,7 @@
 .table-header__select:focus {
   outline: none;
   border-color: var(--charcoal);
-  box-shadow: 0 0 0 2px rgba(44, 44, 44, 0.1);
+  box-shadow: 0 0 0 2px var(--charcoal-light-dark);
 }
 
 .table-header__select:disabled {
@@ -92,7 +92,7 @@
   outline: none;
   border-color: var(--charcoal);
   background-color: var(--warm-white);
-  box-shadow: 0 0 0 2px rgba(44, 44, 44, 0.1);
+  box-shadow: 0 0 0 2px var(--charcoal-light-dark);
 }
 
 .table-header__search:disabled {

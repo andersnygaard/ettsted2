@@ -106,6 +106,7 @@ export type OnboardingAction =
 
 /**
  * API request body for onboarding endpoint
+ * Used for both POST /users/me/onboarding and PATCH /users/me
  */
 export interface OnboardingRequestBody {
   nickname: string;
@@ -117,6 +118,7 @@ export interface OnboardingRequestBody {
     fireNumber?: number;
   };
   accounts: Array<{
+    id?: string | undefined;
     name: string;
     category: Category;
     value: number;

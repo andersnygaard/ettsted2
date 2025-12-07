@@ -3,6 +3,7 @@
  *
  * Provides singleton CosmosDB client and container references.
  * Initializes database and containers on server startup.
+ * In CI mock mode, skips real database connection and uses mock data.
  */
 
 import { CosmosClient, Database, Container } from '@azure/cosmos';
@@ -18,18 +19,23 @@ const PORTFOLIOS_CONTAINER_ID = 'portfolios';
 // Throughput configuration (Request Units per second)
 const DEFAULT_THROUGHPUT = 400; // Minimum for cost efficiency
 
-// For local emulator: disable SSL cert verification (self-signed cert)
-const isLocalEmulator = config.cosmosDbEndpoint.includes('localhost');
-const agent = isLocalEmulator
-  ? new https.Agent({ rejectUnauthorized: false })
-  : undefined;
+// Skip real client creation in CI mock mode
+let client: CosmosClient | null = null;
 
-// Singleton CosmosDB client
-const client = new CosmosClient({
-  endpoint: config.cosmosDbEndpoint,
-  key: config.cosmosDbKey,
-  agent,
-});
+if (!config.ciMockMode) {
+  // For local emulator: disable SSL cert verification (self-signed cert)
+  const isLocalEmulator = config.cosmosDbEndpoint.includes('localhost');
+  const agent = isLocalEmulator
+    ? new https.Agent({ rejectUnauthorized: false })
+    : undefined;
+
+  // Singleton CosmosDB client
+  client = new CosmosClient({
+    endpoint: config.cosmosDbEndpoint,
+    key: config.cosmosDbKey,
+    agent,
+  });
+}
 
 // Container references (initialized during initializeDatabase)
 let database: Database;
@@ -41,10 +47,21 @@ let portfoliosContainer: Container;
  *
  * Creates database and containers if they don't exist.
  * Should be called on server startup before handling requests.
+ * In CI mock mode, skips real initialization.
  *
  * @throws Error if database initialization fails
  */
 export async function initializeDatabase(): Promise<void> {
+  // Skip database initialization in CI mock mode
+  if (config.ciMockMode) {
+    logger.info('CI mock mode enabled - skipping CosmosDB initialization');
+    return;
+  }
+
+  if (!client) {
+    throw new Error('CosmosDB client not initialized');
+  }
+
   try {
     logger.info('Initializing CosmosDB connection...');
 
