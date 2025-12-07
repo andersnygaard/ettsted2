@@ -1,0 +1,39 @@
+{
+  "id": "demo-user-001",
+  "nickname": "Ny Bruker",
+  "email": "demo@finans.no",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "profile": {
+    "monthlySalary": 50000,
+    "annualExpenses": 360000,
+    "birthYear": 1995,
+    "plannedRetirementAge": 65
+  },
+  "accounts": [
+    {
+      "id": "demo-acc-nordnet",
+      "name": "Nordnet",
+      "category": "sparing",
+      "isActive": true,
+      "sortOrder": 1,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "demo-acc-sparekonto",
+      "name": "Sparekonto",
+      "category": "sparing",
+      "isActive": true,
+      "sortOrder": 2,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "demo-acc-arbeidsgiver",
+      "name": "Arbeidsgiver",
+      "category": "pensjon",
+      "isActive": true,
+      "sortOrder": 1,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}

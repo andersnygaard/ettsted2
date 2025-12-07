@@ -1,0 +1,64 @@
+{
+  "id": "demo-user-001",
+  "nickname": "F.I.R.E. Bruker",
+  "email": "demo@finans.no",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "profile": {
+    "monthlySalary": 85000,
+    "annualExpenses": 360000,
+    "birthYear": 1975,
+    "plannedRetirementAge": 50,
+    "fireNumber": 9000000
+  },
+  "accounts": [
+    {
+      "id": "demo-acc-nordnet",
+      "name": "Nordnet",
+      "category": "sparing",
+      "isActive": true,
+      "sortOrder": 1,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "demo-acc-kron",
+      "name": "Kron",
+      "category": "sparing",
+      "isActive": true,
+      "sortOrder": 2,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "demo-acc-sparekonto",
+      "name": "Sparekonto",
+      "category": "sparing",
+      "isActive": true,
+      "sortOrder": 3,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "demo-acc-krypto",
+      "name": "Krypto",
+      "category": "sparing",
+      "isActive": true,
+      "sortOrder": 4,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "demo-acc-arbeidsgiver",
+      "name": "Arbeidsgiver",
+      "category": "pensjon",
+      "isActive": true,
+      "sortOrder": 1,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "demo-acc-folketrygden",
+      "name": "Folketrygden",
+      "category": "pensjon",
+      "isActive": true,
+      "sortOrder": 2,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}

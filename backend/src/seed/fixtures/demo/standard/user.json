@@ -1,0 +1,69 @@
+{
+  "id": "demo-user-001",
+  "nickname": "DemoBruker",
+  "email": "demo@finans.no",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "profile": {
+    "monthlySalary": 55000,
+    "annualExpenses": 400000,
+    "birthYear": 1990,
+    "plannedRetirementAge": 60,
+    "fireNumber": 10000000
+  },
+  "accounts": [
+    {
+      "id": "demo-acc-nordnet",
+      "name": "Nordnet",
+      "category": "sparing",
+      "isActive": true,
+      "sortOrder": 1,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "demo-acc-kron",
+      "name": "Kron",
+      "category": "sparing",
+      "isActive": true,
+      "sortOrder": 2,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "demo-acc-sparekonto",
+      "name": "Sparekonto",
+      "category": "sparing",
+      "isActive": true,
+      "sortOrder": 3,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "demo-acc-huslan",
+      "name": "Boliglån",
+      "category": "gjeld",
+      "isActive": true,
+      "sortOrder": 1,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "loanDetails": {
+        "interestRate": 5.0,
+        "remainingYears": 25,
+        "originalAmount": 3000000
+      }
+    },
+    {
+      "id": "demo-acc-arbeidsgiver",
+      "name": "Arbeidsgiver",
+      "category": "pensjon",
+      "isActive": true,
+      "sortOrder": 1,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "demo-acc-folketrygden",
+      "name": "Folketrygden",
+      "category": "pensjon",
+      "isActive": true,
+      "sortOrder": 2,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}

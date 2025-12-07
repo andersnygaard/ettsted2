@@ -145,7 +145,6 @@ export default function AppHeader() {
               <div className="app-header__avatar">
                 <AvatarMenu
                   name={user?.nickname || 'Bruker'}
-                  onSettingsClick={() => navigate('/economy')}
                   onEconomyClick={() => navigate('/economy')}
                   onLogout={logout}
                   onDeleteAccount={handleDeleteAccountClick}

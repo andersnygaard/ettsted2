@@ -7,10 +7,14 @@
 import { Router, Request, Response, IRouter } from 'express';
 import crypto from 'crypto';
 import { logger } from '../utils/logger';
-import { getUserById, createUser } from '../services/userService';
-import { getSnapshotsByUserId, createSnapshot } from '../services/portfolioService';
-import { User } from '../models/User';
-import { MonthlySnapshot } from '../models/Portfolio';
+import { getUserById, createUser, deleteUser } from '../services/userService';
+import { deleteAllSnapshotsForUser, createSnapshot } from '../services/portfolioService';
+import {
+  loadDemoProfile,
+  isValidDemoProfile,
+  DEMO_PROFILE_NAMES,
+  DemoProfileName,
+} from '../seed/fixtures/demo';
 
 const router: IRouter = Router();
 
@@ -19,6 +23,7 @@ const router: IRouter = Router();
  */
 const DEMO_USER_ID = 'demo-user-001';
 const DEMO_SECRET = process.env.DEMO_JWT_SECRET || 'demo-secret-key-for-development';
+const IS_DEV = process.env.NODE_ENV !== 'production';
 
 /**
  * Create a simple JWT token with HMAC-SHA256 signature.
@@ -51,167 +56,37 @@ function createDemoToken(): string {
 
 
 /**
- * Get or create demo user
+ * Clear and seed demo data from JSON fixtures
  */
-async function getOrCreateDemoUser(): Promise<User> {
-  let user = await getUserById(DEMO_USER_ID);
+async function seedDemoData(profileName: DemoProfileName): Promise<void> {
+  // Load profile from JSON fixtures
+  const { user, snapshots } = loadDemoProfile(profileName);
 
-  if (!user) {
-    // Create demo user with sample data
-    const demoUser: User = {
-      id: DEMO_USER_ID,
-      nickname: 'Demo Bruker',
-      email: 'demo@finans.no',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      profile: {
-        monthlySalary: 55000,
-        annualExpenses: 400000,
-        birthYear: 1990,
-        plannedRetirementAge: 60,
-        fireNumber: 10000000,
-      },
-      accounts: [
-        {
-          id: 'demo-acc-nordnet',
-          name: 'Nordnet',
-          category: 'sparing',
-          isActive: true,
-          sortOrder: 1,
-          createdAt: new Date(),
-        },
-        {
-          id: 'demo-acc-kron',
-          name: 'Kron',
-          category: 'sparing',
-          isActive: true,
-          sortOrder: 2,
-          createdAt: new Date(),
-        },
-        {
-          id: 'demo-acc-sparekonto',
-          name: 'Sparekonto',
-          category: 'sparing',
-          isActive: true,
-          sortOrder: 3,
-          createdAt: new Date(),
-        },
-        {
-          id: 'demo-acc-huslan',
-          name: 'Boliglån',
-          category: 'gjeld',
-          isActive: true,
-          sortOrder: 1,
-          createdAt: new Date(),
-          loanDetails: {
-            interestRate: 5.0,
-            remainingYears: 25,
-            originalAmount: 3000000,
-          },
-        },
-        {
-          id: 'demo-acc-arbeidsgiver',
-          name: 'Arbeidsgiver',
-          category: 'pensjon',
-          isActive: true,
-          sortOrder: 1,
-          createdAt: new Date(),
-        },
-        {
-          id: 'demo-acc-folketrygden',
-          name: 'Folketrygden',
-          category: 'pensjon',
-          isActive: true,
-          sortOrder: 2,
-          createdAt: new Date(),
-        },
-      ],
-    };
-
-    user = await createUser(demoUser);
-    logger.info('Demo user created', { userId: DEMO_USER_ID });
+  // Delete existing demo data (ignore errors if not found)
+  try {
+    await deleteAllSnapshotsForUser(DEMO_USER_ID);
+  } catch {
+    // Ignore - snapshots may not exist
   }
 
-  return user;
-}
-
-/**
- * Generate demo snapshots with realistic portfolio data
- */
-function generateDemoSnapshots(): Omit<MonthlySnapshot, 'createdAt' | 'updatedAt'>[] {
-  const snapshots: Omit<MonthlySnapshot, 'createdAt' | 'updatedAt'>[] = [];
-
-  // Generate 12 months of data (Dec 2024 to Nov 2025)
-  const baseValues = {
-    nordnet: 280000,
-    kron: 520000,
-    sparekonto: 95000,
-    huslan: -2400000,
-    arbeidsgiver: 450000,
-    folketrygden: 380000,
-  };
-
-  for (let i = 0; i < 12; i++) {
-    const date = new Date(2024, 11 + i, 1); // Start from Dec 2024
-    const dateStr = `01.${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`;
-    const monthId = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-
-    // Simulate growth with some variance
-    const growthFactor = 1 + (0.005 + Math.random() * 0.015); // 0.5-2% monthly growth
-    const nordnetValue = Math.round(baseValues.nordnet * Math.pow(growthFactor, i) + (Math.random() - 0.5) * 10000);
-    const kronValue = Math.round(baseValues.kron * Math.pow(growthFactor, i) + (Math.random() - 0.5) * 15000);
-    const sparekontoValue = Math.round(baseValues.sparekonto + i * 2000 + (Math.random() - 0.5) * 3000);
-    const huslanValue = Math.round(baseValues.huslan + i * 4000); // Paying down debt
-    const arbeidsgiverValue = Math.round(baseValues.arbeidsgiver * Math.pow(1.005, i) + i * 3000);
-    const folketrygdenValue = Math.round(baseValues.folketrygden + i * 1500);
-
-    const sparingSum = nordnetValue + kronValue + sparekontoValue;
-    const gjeldSum = huslanValue;
-    const pensjonSum = arbeidsgiverValue + folketrygdenValue;
-    const totalNetWorth = sparingSum + gjeldSum + pensjonSum;
-
-    snapshots.push({
-      id: `demo-snap-${monthId}`,
-      userId: DEMO_USER_ID,
-      date: dateStr,
-      accounts: [
-        { id: 'demo-acc-nordnet', name: 'Nordnet', assetClass: 'aksjer', value: nordnetValue },
-        { id: 'demo-acc-kron', name: 'Kron', assetClass: 'fond', value: kronValue },
-        { id: 'demo-acc-sparekonto', name: 'Sparekonto', assetClass: 'bankkonto', value: sparekontoValue },
-        { id: 'demo-acc-huslan', name: 'Boliglån', assetClass: 'gjeld', value: huslanValue },
-        { id: 'demo-acc-arbeidsgiver', name: 'Arbeidsgiver', assetClass: 'pensjon', value: arbeidsgiverValue },
-        { id: 'demo-acc-folketrygden', name: 'Folketrygden', assetClass: 'pensjon', value: folketrygdenValue },
-      ],
-      totalNetWorth,
-    });
+  try {
+    await deleteUser(DEMO_USER_ID);
+  } catch {
+    // Ignore - user may not exist
   }
 
-  return snapshots;
-}
+  // Create demo user
+  await createUser(user);
+  logger.info('Demo user created from fixture', { userId: DEMO_USER_ID, profile: profileName });
 
-/**
- * Seed demo snapshots if they don't exist
- */
-async function seedDemoSnapshots(): Promise<void> {
-  const existingSnapshots = await getSnapshotsByUserId(DEMO_USER_ID);
-
-  if (existingSnapshots.length > 0) {
-    logger.debug('Demo snapshots already exist', { count: existingSnapshots.length });
-    return;
+  // Create snapshots
+  for (const snapshot of snapshots) {
+    await createSnapshot(snapshot);
   }
-
-  const demoSnapshots = generateDemoSnapshots();
-  const now = new Date();
-
-  for (const snapshot of demoSnapshots) {
-    await createSnapshot({
-      ...snapshot,
-      createdAt: now,
-      updatedAt: now,
-    });
-  }
-
-  logger.info('Demo snapshots seeded', { count: demoSnapshots.length });
+  logger.info('Demo snapshots seeded from fixture', {
+    count: snapshots.length,
+    profile: profileName,
+  });
 }
 
 /**
@@ -221,19 +96,47 @@ async function seedDemoSnapshots(): Promise<void> {
  *
  * Creates a demo session without OAuth.
  * Returns a JWT token that can be used for API requests.
+ *
+ * Query params (dev only):
+ *   - profile: Demo profile to use (standard, empty, debt-heavy, fire-achieved)
  */
-router.post('/demo-login', async (_req: Request, res: Response) => {
+router.post('/demo-login', async (req: Request, res: Response) => {
   try {
-    logger.info('Demo login requested');
+    // Get profile from query param (dev only) or default to 'standard'
+    let profileName: DemoProfileName = 'standard';
+    const requestedProfile = req.query.profile as string | undefined;
 
-    // Get or create demo user and seed snapshots
-    const user = await getOrCreateDemoUser();
-    await seedDemoSnapshots();
+    if (requestedProfile) {
+      if (!IS_DEV) {
+        logger.warn('Profile selection attempted in production, using standard');
+      } else if (isValidDemoProfile(requestedProfile)) {
+        profileName = requestedProfile;
+      } else {
+        return res.status(400).json({
+          error: {
+            message: `Invalid profile. Available: ${DEMO_PROFILE_NAMES.join(', ')}`,
+            code: 'INVALID_PROFILE',
+          },
+          success: false,
+        });
+      }
+    }
+
+    logger.info('Demo login requested', { profile: profileName });
+
+    // Clear and seed demo data from fixtures
+    await seedDemoData(profileName);
+
+    // Get user for response
+    const user = await getUserById(DEMO_USER_ID);
+    if (!user) {
+      throw new Error('Demo user not found after seeding');
+    }
 
     // Generate demo token
     const token = createDemoToken();
 
-    logger.info('Demo login successful', { userId: DEMO_USER_ID });
+    logger.info('Demo login successful', { userId: DEMO_USER_ID, profile: profileName });
 
     return res.status(200).json({
       data: {
@@ -243,6 +146,7 @@ router.post('/demo-login', async (_req: Request, res: Response) => {
           nickname: user.nickname,
           email: user.email,
         },
+        profile: profileName,
       },
       success: true,
     });
@@ -256,6 +160,28 @@ router.post('/demo-login', async (_req: Request, res: Response) => {
       success: false,
     });
   }
+});
+
+/**
+ * Get available demo profiles (dev only)
+ *
+ * GET /api/v1/auth/demo-profiles
+ */
+router.get('/demo-profiles', (_req: Request, res: Response) => {
+  if (!IS_DEV) {
+    return res.status(404).json({
+      error: { message: 'Not found', code: 'NOT_FOUND' },
+      success: false,
+    });
+  }
+
+  return res.status(200).json({
+    data: {
+      profiles: DEMO_PROFILE_NAMES,
+      default: 'standard',
+    },
+    success: true,
+  });
 });
 
 export default router;

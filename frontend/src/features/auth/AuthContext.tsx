@@ -98,13 +98,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     window.location.href = `/.auth/login/${provider}?post_login_redirect_uri=${encodeURIComponent(returnUrl)}`;
   };
 
-  const demoLogin = async () => {
+  const demoLogin = async (profile?: string) => {
     // Clear dev logout flag so session works
     clearDevLogout();
 
     try {
-      // Call demo-login endpoint
-      const response = await client.post('/auth/demo-login');
+      // Call demo-login endpoint with optional profile
+      const url = profile ? `/auth/demo-login?profile=${profile}` : '/auth/demo-login';
+      const response = await client.post(url);
 
       if (response.data.success && response.data.data?.token) {
         // Store the demo token

@@ -1,0 +1,78 @@
+{
+  "id": "demo-user-001",
+  "nickname": "Gjeldstung Bruker",
+  "email": "demo@finans.no",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "profile": {
+    "monthlySalary": 45000,
+    "annualExpenses": 420000,
+    "birthYear": 1988,
+    "plannedRetirementAge": 67
+  },
+  "accounts": [
+    {
+      "id": "demo-acc-nordnet",
+      "name": "Nordnet",
+      "category": "sparing",
+      "isActive": true,
+      "sortOrder": 1,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "demo-acc-sparekonto",
+      "name": "Sparekonto",
+      "category": "sparing",
+      "isActive": true,
+      "sortOrder": 2,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "demo-acc-huslan",
+      "name": "Boliglån",
+      "category": "gjeld",
+      "isActive": true,
+      "sortOrder": 1,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "loanDetails": {
+        "interestRate": 5.5,
+        "remainingYears": 28,
+        "originalAmount": 4500000
+      }
+    },
+    {
+      "id": "demo-acc-studielan",
+      "name": "Studielån",
+      "category": "gjeld",
+      "isActive": true,
+      "sortOrder": 2,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "loanDetails": {
+        "interestRate": 5.0,
+        "remainingYears": 15,
+        "originalAmount": 400000
+      }
+    },
+    {
+      "id": "demo-acc-billan",
+      "name": "Billån",
+      "category": "gjeld",
+      "isActive": true,
+      "sortOrder": 3,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "loanDetails": {
+        "interestRate": 7.0,
+        "remainingYears": 4,
+        "originalAmount": 350000
+      }
+    },
+    {
+      "id": "demo-acc-arbeidsgiver",
+      "name": "Arbeidsgiver",
+      "category": "pensjon",
+      "isActive": true,
+      "sortOrder": 1,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}

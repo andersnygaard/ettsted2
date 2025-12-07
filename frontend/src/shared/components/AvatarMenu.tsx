@@ -1,10 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useId } from 'react';
 import { Avatar } from '@finans/components';
 import './AvatarMenu.css';
 
 export interface AvatarMenuProps {
   name: string;
-  onSettingsClick: () => void;
   onEconomyClick: () => void;
   onLogout: () => void;
   onDeleteAccount?: () => void;
@@ -13,14 +12,14 @@ export interface AvatarMenuProps {
 /**
  * Avatar with dropdown menu
  *
- * Shows user avatar with a dropdown menu containing settings, economy setup, and logout options.
+ * Shows user avatar with a dropdown menu containing economy setup and logout options.
  * Menu closes on outside click or Escape key.
  */
-export function AvatarMenu({ name, onSettingsClick, onEconomyClick, onLogout, onDeleteAccount }: AvatarMenuProps) {
+export function AvatarMenu({ name, onEconomyClick, onLogout, onDeleteAccount }: AvatarMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const menuId = useId();
 
-  // Close menu on outside click
   useEffect(() => {
     if (!isOpen) return;
 
@@ -45,65 +44,33 @@ export function AvatarMenu({ name, onSettingsClick, onEconomyClick, onLogout, on
     };
   }, [isOpen]);
 
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleSettingsClick = () => {
+  const createHandler = (callback: () => void) => () => {
     setIsOpen(false);
-    onSettingsClick();
-  };
-
-  const handleEconomyClick = () => {
-    setIsOpen(false);
-    onEconomyClick();
-  };
-
-  const handleLogoutClick = () => {
-    setIsOpen(false);
-    onLogout();
-  };
-
-  const handleDeleteClick = () => {
-    setIsOpen(false);
-    onDeleteAccount?.();
+    callback();
   };
 
   return (
     <div className="avatar-menu" ref={menuRef}>
       <button
         className="avatar-menu__trigger"
-        onClick={handleToggle}
+        onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-haspopup="menu"
+        aria-controls={menuId}
         type="button"
       >
         <Avatar name={name} size="medium" />
       </button>
 
       {isOpen && (
-        <div className="avatar-menu__dropdown" role="menu">
+        <div className="avatar-menu__dropdown" role="menu" id={menuId}>
           <button
             className="avatar-menu__item"
-            onClick={handleSettingsClick}
+            onClick={createHandler(onEconomyClick)}
             role="menuitem"
             type="button"
           >
-            <span className="avatar-menu__icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="3" />
-                <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m6.08 0l4.24-4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m6.08 0l4.24 4.24" />
-              </svg>
-            </span>
-            Innstillinger
-          </button>
-          <button
-            className="avatar-menu__item"
-            onClick={handleEconomyClick}
-            role="menuitem"
-            type="button"
-          >
-            <span className="avatar-menu__icon">
+            <span className="avatar-menu__icon" aria-hidden="true">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M12 6v12" />
@@ -112,16 +79,18 @@ export function AvatarMenu({ name, onSettingsClick, onEconomyClick, onLogout, on
             </span>
             Min økonomi
           </button>
-          <div className="avatar-menu__divider" />
+
+          <div className="avatar-menu__divider" role="separator" />
+
           {onDeleteAccount && (
             <>
               <button
                 className="avatar-menu__item avatar-menu__item--danger"
-                onClick={handleDeleteClick}
+                onClick={createHandler(onDeleteAccount)}
                 role="menuitem"
                 type="button"
               >
-                <span className="avatar-menu__icon">
+                <span className="avatar-menu__icon" aria-hidden="true">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <polyline points="3 6 5 6 21 6" />
                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
@@ -131,16 +100,17 @@ export function AvatarMenu({ name, onSettingsClick, onEconomyClick, onLogout, on
                 </span>
                 Slett konto
               </button>
-              <div className="avatar-menu__divider" />
+              <div className="avatar-menu__divider" role="separator" />
             </>
           )}
+
           <button
             className="avatar-menu__item avatar-menu__item--danger"
-            onClick={handleLogoutClick}
+            onClick={createHandler(onLogout)}
             role="menuitem"
             type="button"
           >
-            <span className="avatar-menu__icon">
+            <span className="avatar-menu__icon" aria-hidden="true">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                 <polyline points="16 17 21 12 16 7" />

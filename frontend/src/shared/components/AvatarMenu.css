@@ -4,15 +4,13 @@
 }
 
 .avatar-menu__trigger {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   padding: 0;
   border: none;
   background: none;
   cursor: pointer;
   border-radius: 50%;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease;
 }
 
 .avatar-menu__trigger:hover {
@@ -28,31 +26,32 @@
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  min-width: 200px;
-  max-width: calc(100vw - 32px);
   background: var(--warm-white);
   border: 1px solid var(--border);
-  border-radius: 4px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   z-index: var(--z-overlay);
-  animation: fadeUp 0.15s ease;
+  padding: var(--space-xs) 0;
 }
 
-.avatar-menu__item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  width: 100%;
-  padding: var(--space-md);
+.avatar-menu__dropdown .avatar-menu__item {
+  display: block;
+  width: 200px;
+  margin: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
   border: none;
+  border-radius: 0;
   background: none;
   font-family: var(--font-body);
   font-size: 14px;
+  font-weight: normal;
   color: var(--charcoal);
   text-align: left;
+  text-transform: none;
+  letter-spacing: normal;
   cursor: pointer;
   transition: background-color 0.15s ease;
   white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .avatar-menu__item:hover {
@@ -73,14 +72,19 @@
 }
 
 .avatar-menu__icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: var(--space-sm);
+  vertical-align: middle;
   opacity: 0.7;
+}
+
+.avatar-menu__icon svg {
+  display: block;
 }
 
 .avatar-menu__divider {
   height: 1px;
   background-color: var(--border);
-  margin: var(--space-xs) 0;
 }

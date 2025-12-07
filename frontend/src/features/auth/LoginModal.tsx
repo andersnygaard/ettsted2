@@ -10,6 +10,15 @@ import { useAuth } from './useAuth';
 import { TermsDialog } from './TermsDialog';
 import './LoginModal.css';
 
+const isDev = import.meta.env.VITE_APP_ENV === 'development';
+
+const DEMO_PROFILES = [
+  { id: 'standard', label: 'Standard', description: '24 mnd data' },
+  { id: 'empty', label: 'Tom', description: 'Ny bruker' },
+  { id: 'debt-heavy', label: 'Gjeldstung', description: 'Negativ formue' },
+  { id: 'fire-achieved', label: 'F.I.R.E.', description: 'Finansiell frihet' },
+] as const;
+
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -22,6 +31,7 @@ export function LoginModal({ isOpen, onClose, returnUrl = '/auth/callback' }: Lo
   const [demoError, setDemoError] = useState<string | null>(null);
   const [showTerms, setShowTerms] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState('standard');
 
   // Handle close with exit animation
   const handleClose = useCallback(() => {
@@ -67,12 +77,12 @@ export function LoginModal({ isOpen, onClose, returnUrl = '/auth/callback' }: Lo
     window.location.href = `/.auth/login/facebook?post_login_redirect_uri=${encodeURIComponent(returnUrl)}`;
   };
 
-  const handleDemoLogin = async () => {
+  const handleDemoLogin = async (profile?: string) => {
     setIsDemoLoading(true);
     setDemoError(null);
     try {
-      await demoLogin();
-      // demoLogin redirects on success, so we don't need to do anything here
+      await demoLogin(profile);
+      // demoLogin redirects on success
     } catch {
       setDemoError('Demo-innlogging feilet. Prøv igjen.');
       setIsDemoLoading(false);
@@ -150,20 +160,57 @@ export function LoginModal({ isOpen, onClose, returnUrl = '/auth/callback' }: Lo
               <span>eller</span>
             </div>
 
-            <button
-              type="button"
-              className="login-modal__btn login-modal__btn--demo"
-              onClick={handleDemoLogin}
-              disabled={isDemoLoading}
-            >
-              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-                <path
-                  fill="currentColor"
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
-                />
-              </svg>
-              <span>{isDemoLoading ? 'Laster...' : 'Prøv demo'}</span>
-            </button>
+            {isDev ? (
+              <div className="login-modal__demo-section">
+                <div className="login-modal__profile-selector">
+                  <label htmlFor="demo-profile" className="login-modal__profile-label">
+                    Demo-profil:
+                  </label>
+                  <select
+                    id="demo-profile"
+                    value={selectedProfile}
+                    onChange={(e) => setSelectedProfile(e.target.value)}
+                    className="login-modal__profile-select"
+                    disabled={isDemoLoading}
+                  >
+                    {DEMO_PROFILES.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.label} – {p.description}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <button
+                  type="button"
+                  className="login-modal__btn login-modal__btn--demo"
+                  onClick={() => handleDemoLogin(selectedProfile)}
+                  disabled={isDemoLoading}
+                >
+                  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                    <path
+                      fill="currentColor"
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+                    />
+                  </svg>
+                  <span>{isDemoLoading ? 'Laster...' : 'Prøv demo'}</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="login-modal__btn login-modal__btn--demo"
+                onClick={() => handleDemoLogin()}
+                disabled={isDemoLoading}
+              >
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                  <path
+                    fill="currentColor"
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+                  />
+                </svg>
+                <span>{isDemoLoading ? 'Laster...' : 'Prøv demo'}</span>
+              </button>
+            )}
 
             {demoError && (
               <p className="login-modal__error">{demoError}</p>
