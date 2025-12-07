@@ -11,6 +11,8 @@
     "start": "node dist/index.js",
     "lint": "eslint src --ext .ts",
     "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "db:seed": "ts-node src/seed/seed.ts",
     "db:reset": "ts-node -e \"require('./src/seed/reset').resetDatabase(require('./src/config/cosmosdb'))\""
   },
@@ -35,14 +37,17 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^20.10.0",
+    "@types/supertest": "^6.0.0",
     "@types/uuid": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^6.13.0",
     "@typescript-eslint/parser": "^6.13.0",
     "esbuild": "^0.27.0",
     "eslint": "^8.55.0",
     "nodemon": "^3.0.2",
+    "supertest": "^7.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^3.0.0"
   },
   "engines": {
     "node": ">=18.0.0"

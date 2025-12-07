@@ -5,14 +5,16 @@
  * All operations use parameterized queries to prevent NoSQL injection.
  */
 
-import { getUsersContainer } from '../config/cosmosdb';
+import { getUsersContainer, getPortfoliosContainer } from '../config/cosmosdb';
 import { User } from '../models/User';
+import { MonthlySnapshot } from '../models/Portfolio';
 import { logger } from '../utils/logger';
 import {
   handleCosmosError,
   isNotFoundError,
   buildParameterizedQuery,
 } from '../utils/cosmosHelpers';
+import { calculateNetWorth } from './calculationService';
 
 /**
  * Create a new user
@@ -90,6 +92,9 @@ export async function getUserByNickname(nickname: string): Promise<User | null> 
 /**
  * Update user
  *
+ * When accounts are updated, detects removed accounts and hard-deletes them
+ * from all snapshots to ensure calculations are correct.
+ *
  * @param userId - User ID (partition key)
  * @param updates - Partial user object with fields to update
  * @returns Updated user document
@@ -109,6 +114,15 @@ export async function updateUser(
       throw new Error('User not found');
     }
 
+    // Detect removed accounts if accounts are being updated
+    let removedAccountIds: string[] = [];
+    if (updates.accounts) {
+      const newAccountIds = new Set(updates.accounts.map((a) => a.id));
+      removedAccountIds = existingUser.accounts
+        .filter((a) => !newAccountIds.has(a.id))
+        .map((a) => a.id);
+    }
+
     // Merge updates (preserve id and createdAt, deep-merge profile)
     const updatedUser: User = {
       ...existingUser,
@@ -119,17 +133,62 @@ export async function updateUser(
         : existingUser.profile,
       id: existingUser.id, // Ensure id is not changed
       createdAt: existingUser.createdAt, // Ensure createdAt is not changed
-      updatedAt: new Date() // Always update timestamp
+      updatedAt: new Date(), // Always update timestamp
     };
 
     // Replace the document
     const { resource } = await container.item(userId, userId).replace(updatedUser);
     logger.info('User updated successfully', { userId, updates: Object.keys(updates) });
+
+    // Hard-delete removed accounts from all snapshots
+    if (removedAccountIds.length > 0) {
+      await removeAccountsFromSnapshots(userId, removedAccountIds);
+    }
+
     return resource as User;
   } catch (error) {
     logger.error('Failed to update user', { userId, error });
     throw handleCosmosError(error);
   }
+}
+
+/**
+ * Remove accounts from all snapshots for a user
+ *
+ * @param userId - User ID
+ * @param accountIds - Account IDs to remove
+ */
+async function removeAccountsFromSnapshots(
+  userId: string,
+  accountIds: string[]
+): Promise<void> {
+  const portfoliosContainer = getPortfoliosContainer();
+  const accountIdSet = new Set(accountIds);
+
+  const { resources: snapshots } = await portfoliosContainer.items
+    .query<MonthlySnapshot>({
+      query: 'SELECT * FROM portfolios p WHERE p.userId = @userId',
+      parameters: [{ name: '@userId', value: userId }],
+    })
+    .fetchAll();
+
+  let snapshotsUpdated = 0;
+  for (const snapshot of snapshots) {
+    const hadRemovedAccount = snapshot.accounts.some((a) => accountIdSet.has(a.id));
+    if (hadRemovedAccount) {
+      snapshot.accounts = snapshot.accounts.filter((a) => !accountIdSet.has(a.id));
+      snapshot.totalNetWorth = calculateNetWorth(snapshot.accounts);
+      snapshot.updatedAt = new Date();
+      await portfoliosContainer.item(snapshot.id, userId).replace(snapshot);
+      snapshotsUpdated++;
+    }
+  }
+
+  logger.info('Accounts removed from snapshots', {
+    userId,
+    accountIds,
+    snapshotsUpdated,
+  });
 }
 
 /**

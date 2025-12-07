@@ -1,101 +1,19 @@
-import './types/express';
-import express, { Application } from 'express';
-import helmet from 'helmet';
-import cors from 'cors';
-import cookieParser from 'cookie-parser';
+/**
+ * Server Entry Point
+ *
+ * Initializes the database and starts the Express server.
+ * For testing, import createApp from './app' instead to avoid auto-starting.
+ */
+
 import { Server } from 'http';
 import { config } from './config/environment';
 import { logger } from './utils/logger';
-import { errorHandler } from './middleware/errorHandler';
-import { requestLogger } from './middleware/requestLogger';
-import { generalRateLimiter } from './middleware/rateLimiter';
 import { initializeDatabase } from './config/cosmosdb';
 import { flushLangfuse } from './services/langfuseService';
-import routes from './routes';
+import { createApp } from './app';
 
-/**
- * Create and configure Express application
- */
-function createApp(): Application {
-  const app = express();
-
-  // Build CSP connectSrc directive with allowed origins
-  const connectSrc = [
-    "'self'",
-    // Include all allowed CORS origins in CSP connectSrc
-    ...config.allowedOrigins
-  ];
-
-  // Security middleware (Helmet - sets various HTTP headers)
-  app.use(helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-        fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:", "https:"],
-        connectSrc,
-      },
-    },
-  }));
-
-  // CORS middleware - only in development (production uses Azure EasyAuth same-origin)
-  if (config.nodeEnv === 'development') {
-    app.use(cors({
-      origin: (origin, callback) => {
-        // Allow no-origin requests in development (for Postman, curl, etc.)
-        if (config.nodeEnv === 'development' && !origin) {
-          return callback(null, true);
-        }
-
-        // Reject no-origin requests in production
-        if (!origin) {
-          logger.warn('CORS blocked request without Origin header');
-          return callback(new Error('CORS: Origin header required'));
-        }
-
-        // Check if origin is in allowed list
-        if (config.allowedOrigins.includes(origin)) {
-          callback(null, true);
-        } else {
-          logger.warn('CORS blocked request from origin', { origin });
-          callback(new Error('Not allowed by CORS'));
-        }
-      },
-      credentials: true,
-      allowedHeaders: [
-        'Content-Type',
-        'Authorization',
-        'X-MS-CLIENT-PRINCIPAL',
-        'X-MS-CLIENT-PRINCIPAL-ID',
-        'X-MS-CLIENT-PRINCIPAL-NAME',
-        'X-MS-CLIENT-PRINCIPAL-IDP'
-      ],
-    }));
-  }
-
-  // Body parser middleware
-  app.use(express.json({ limit: '10mb' }));
-  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-  // Cookie parser middleware
-  app.use(cookieParser());
-
-  // Request logging middleware
-  app.use(requestLogger);
-
-  // Rate limiting middleware (general)
-  app.use(generalRateLimiter);
-
-  // Mount API routes under /api/v1
-  app.use('/api/v1', routes);
-
-  // Error handling middleware (must be last!)
-  app.use(errorHandler);
-
-  return app;
-}
+// Re-export for backwards compatibility
+export { createApp } from './app';
 
 /**
  * Graceful shutdown handler
@@ -109,10 +27,6 @@ async function gracefulShutdown(server: Server): Promise<void> {
   // Stop accepting new connections
   server.close(() => {
     logger.info('Server closed, all connections finished');
-
-    // Close database connections (future)
-    // await cosmosClient.dispose();
-
     process.exit(0);
   });
 
@@ -140,7 +54,7 @@ async function startServer(): Promise<void> {
       logger.info('Server started successfully', {
         port: config.port,
         environment: config.nodeEnv,
-        allowedOrigins: config.allowedOrigins
+        allowedOrigins: config.allowedOrigins,
       });
     });
 
@@ -158,7 +72,6 @@ async function startServer(): Promise<void> {
       logger.error('Unhandled rejection', { reason, promise });
       gracefulShutdown(server);
     });
-
   } catch (error) {
     logger.error('Failed to start server', { error });
     process.exit(1);
@@ -167,5 +80,3 @@ async function startServer(): Promise<void> {
 
 // Start the server
 startServer();
-
-export { createApp };

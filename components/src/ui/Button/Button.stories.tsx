@@ -143,3 +143,58 @@ export const CustomClass: Story = {
     className: 'custom-button-class'
   }
 }
+
+export const FocusStates: Story = {
+  args: {
+    children: 'Press Tab to see focus outline',
+    variant: 'primary'
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Focus visible state for keyboard navigation. Press Tab to see the focus outline. WCAG 2.4.7 compliant.'
+      }
+    }
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    canvas.getByRole('button')
+    await userEvent.tab()
+    await new Promise(resolve => setTimeout(resolve, 500))
+  }
+}
+
+export const FocusStatesSecondary: Story = {
+  args: {
+    children: 'Secondary focus state',
+    variant: 'secondary'
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Focus visible state for secondary button. Press Tab to see the focus outline.'
+      }
+    }
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    canvas.getByRole('button')
+    await userEvent.tab()
+    await new Promise(resolve => setTimeout(resolve, 500))
+  }
+}
+
+export const FocusStatesDisabled: Story = {
+  args: {
+    children: 'Disabled button (no focus outline)',
+    variant: 'primary',
+    disabled: true
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Disabled buttons do not show focus outline even when focused programmatically.'
+      }
+    }
+  }
+}

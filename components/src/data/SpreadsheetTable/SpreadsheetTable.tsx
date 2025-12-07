@@ -46,6 +46,7 @@ export interface SpreadsheetTableProps {
   onCellChange?: (event: CellChangeEvent) => void; // Callback when cell value changes
   onRowDelete?: (rowData: RowData) => void; // Callback when delete button is clicked
   editingDisabled?: boolean; // Disable inline editing
+  caption?: string; // Accessible caption for the table (visually hidden)
 }
 
 /**
@@ -99,6 +100,7 @@ export function SpreadsheetTable({
   onCellChange,
   onRowDelete,
   editingDisabled = false,
+  caption,
 }: SpreadsheetTableProps) {
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
     () => new Set(initialCollapsedGroups)
@@ -107,6 +109,7 @@ export function SpreadsheetTable({
   // Editing state: { rowIndex, columnId } or null
   const [editingCell, setEditingCell] = useState<{ rowIndex: number; columnId: string } | null>(null);
   const [editValue, setEditValue] = useState<string>('');
+  const [editAnnouncement, setEditAnnouncement] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Focus input when editing starts
@@ -138,7 +141,22 @@ export function SpreadsheetTable({
   const startEditing = (rowIndex: number, columnId: string, currentValue: string | number | null | undefined) => {
     if (editingDisabled || !onCellChange) return;
 
+    // Find column label for announcement
+    let columnLabel = columnId;
+    for (const group of columnGroups) {
+      const col = group.columns.find(c => c.id === columnId);
+      if (col) {
+        columnLabel = col.label;
+        break;
+      }
+    }
+
+    const row = data[rowIndex];
+    const dateValue = row[dateKey] ?? 'Unknown';
+
     setEditingCell({ rowIndex, columnId });
+    setEditAnnouncement(`Editing ${columnLabel} for ${dateValue}`);
+
     // Convert value to string for input, handle undefined/null
     const valueStr = currentValue !== undefined && currentValue !== null
       ? String(currentValue)
@@ -170,6 +188,7 @@ export function SpreadsheetTable({
 
     setEditingCell(null);
     setEditValue('');
+    setEditAnnouncement('');
   };
 
   /**
@@ -178,6 +197,7 @@ export function SpreadsheetTable({
   const cancelEdit = () => {
     setEditingCell(null);
     setEditValue('');
+    setEditAnnouncement('');
   };
 
   /**
@@ -255,12 +275,19 @@ export function SpreadsheetTable({
 
   return (
     <div className="spreadsheet-wrapper">
+      <div aria-live="polite" className="sr-only">
+        {editAnnouncement}
+      </div>
       <table className="spreadsheet">
+        <caption className="sr-only">
+          {caption || 'Monthly portfolio snapshots with account values and totals'}
+        </caption>
         <thead>
           {/* Column Group Headers */}
           <tr className="group-header-row">
             <th
               rowSpan={2}
+              scope="col"
               className="date-header"
               style={{ background: 'var(--bone)', color: 'var(--charcoal)' }}
             >
@@ -274,6 +301,7 @@ export function SpreadsheetTable({
                 <th
                   key={group.id}
                   colSpan={colspan}
+                  scope="colgroup"
                   className={`group-${group.id} ${isCollapsed ? 'group-collapsed' : ''}`}
                   onClick={() => toggleGroup(group.id)}
                   style={{ background: group.color }}
@@ -286,6 +314,7 @@ export function SpreadsheetTable({
             {onRowDelete && (
               <th
                 rowSpan={2}
+                scope="col"
                 className="action-header"
                 style={{ background: 'var(--bone)', color: 'var(--charcoal)' }}
               >
@@ -305,6 +334,7 @@ export function SpreadsheetTable({
                   return [
                     <th
                       key={`${group.id}-total`}
+                      scope="col"
                       className={`col-${group.id} col-total col-group-end`}
                     >
                       {totalColumn.label}
@@ -320,6 +350,7 @@ export function SpreadsheetTable({
                 return (
                   <th
                     key={col.id}
+                    scope="col"
                     className={`col-${group.id} ${col.isTotal ? 'col-total' : ''} ${
                       isLastInGroup ? 'col-group-end' : ''
                     }`}

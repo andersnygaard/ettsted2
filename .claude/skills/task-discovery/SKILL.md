@@ -151,32 +151,52 @@ Discovery Agent: "Approved. Assign number 003."
 
 **Goal**: Assign sequential numbers and organize backlog
 
+**🚨 CRITICAL: Finding Next Task Number**
+
+**ALWAYS scan ALL three folders to find highest existing number:**
+
+```
+1. Glob pattern: .task-board/**/*.md
+2. Scan: backlog/, in-progress/, AND done/
+3. Extract numbers from filenames (e.g., 071-FEATURE-xxx.md → 071)
+4. Find highest number across ALL folders
+5. Next task = highest + 1
+```
+
+**Why include `done/`**: Completed tasks retain their numbers. Reusing numbers breaks history and causes confusion.
+
+**Example**:
+```
+done/ has: 001-070 (completed)
+in-progress/ has: 071
+backlog/ has: 072-075
+
+Next task number = 076
+```
+
 **Numbering Algorithm**:
 
-1. **Collect all tasks** (new + existing)
-2. **Categorize by priority**:
+1. **Find highest existing number** (across backlog/, in-progress/, done/)
+2. **Collect new tasks**
+3. **Categorize by priority**:
    - High priority tasks
    - Medium priority tasks
    - Low priority tasks
-3. **Within each priority, order by**:
+4. **Within each priority, order by**:
    - Dependencies (blocking tasks first)
    - Value (higher impact first)
    - Effort (quick wins before complex work)
-4. **Assign sequential numbers**: 001, 002, 003, ...
-5. **Rename files**: `TYPE-name.md` → `NNN-TYPE-name.md`
-   - Example: `FEATURE-dashboard.md` → `003-FEATURE-dashboard.md`
+5. **Assign sequential numbers** starting from highest + 1
+6. **Rename files**: `TYPE-name.md` → `NNN-TYPE-name.md`
 
 **File Naming Format**:
-- `001-FEATURE-portfolio-dashboard.md`
-- `002-REFACTOR-validation-consolidation.md`
-- `003-EXPLORE-langfuse-integration.md`
-- `004-EPIC-fire-planning-suite.md`
+- `076-FEATURE-portfolio-dashboard.md`
+- `077-REFACTOR-validation-consolidation.md`
+- `078-EXPLORE-langfuse-integration.md`
 
 **Global Sequence**: Numbers are globally sequential across all types (not per-type).
 
-**Handling Existing Numbered Tasks**:
-- If backlog already has numbered tasks, continue sequence from max number
-- If renumbering entire backlog, start from 001
+**NEVER renumber completed tasks in `done/`** - they are immutable history.
 
 ### Phase 5: Enhancement & Cleanup
 
@@ -482,11 +502,12 @@ After completion, provide summary:
 5. **Complete** - All template sections filled
 
 ### Numbering Quality
-1. **Priority-driven** - Highest priority gets lowest numbers
-2. **Dependency-aware** - Blocking tasks come first
-3. **Consistent format** - Always `NNN-TYPE-description.md`
-4. **Global sequence** - Don't restart numbering per type
-5. **Leave gaps** - Use 001, 002, 003 (easy to insert later)
+1. **Scan ALL folders** - Check backlog/, in-progress/, AND done/ for highest number
+2. **Never reuse numbers** - Completed tasks in done/ retain their numbers forever
+3. **Priority-driven** - Highest priority gets lowest available numbers
+4. **Dependency-aware** - Blocking tasks come first
+5. **Consistent format** - Always `NNN-TYPE-description.md`
+6. **Global sequence** - Don't restart numbering per type
 
 ### Organization Quality
 1. **No duplicates** - Merge overlapping tasks

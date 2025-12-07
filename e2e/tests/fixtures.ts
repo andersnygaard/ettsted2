@@ -152,3 +152,132 @@ export const test = base.extend<{ pageErrors: string[] }>({
 });
 
 export { expect };
+
+/**
+ * Portfolio Testing Helpers
+ */
+
+/**
+ * Create a new snapshot via the NewMonthModal
+ * @param page The Playwright page object
+ * @param data Object with monthIndex, year, and accountValues
+ */
+export async function createSnapshot(
+  page: Page,
+  data: {
+    monthIndex?: number;
+    year?: number;
+    accountValues?: Record<string, number>;
+  }
+): Promise<void> {
+  const { monthIndex = new Date().getMonth(), year = new Date().getFullYear() } = data;
+
+  // Click "Ny måned" button
+  const nyMaanedBtn = page.getByRole('button', { name: /\+ Ny måned/i });
+  await nyMaanedBtn.click();
+
+  // Wait for modal to open
+  const modal = page.getByRole('heading', { name: /ny måned/i });
+  await expect(modal).toBeVisible({ timeout: 5000 });
+
+  // Select month
+  const monthSelect = page.locator('select').first();
+  await monthSelect.selectOption(String(monthIndex));
+
+  // Select year
+  const yearSelect = page.locator('select').nth(1);
+  await yearSelect.selectOption(String(year));
+
+  // Fill in account values if provided
+  if (data.accountValues) {
+    const numberInputs = page.locator('input[type="number"]');
+    const inputs = await numberInputs.all();
+
+    for (let i = 0; i < inputs.length; i++) {
+      const input = inputs[i];
+      // Try to get the associated label or just fill them in order
+      const placeholder = await input.getAttribute('placeholder');
+      const ariaLabel = await input.getAttribute('aria-label');
+
+      // If we have a mapping for this input, use it
+      const key = placeholder || ariaLabel || `field_${i}`;
+      if (data.accountValues[key]) {
+        await input.fill(String(data.accountValues[key]));
+      }
+    }
+  }
+
+  // Click Lagre button
+  const lagereBtn = page.getByRole('button', { name: /lagre/i });
+  await lagereBtn.click();
+
+  // Wait for modal to close and API response
+  await page.waitForLoadState('networkidle');
+}
+
+/**
+ * Edit a cell value in the spreadsheet
+ * @param page The Playwright page object
+ * @param rowIndex Row index (0-based)
+ * @param columnIndex Column index among editable columns (0-based)
+ * @param value The new value to enter
+ */
+export async function editCell(
+  page: Page,
+  rowIndex: number,
+  columnIndex: number,
+  value: number | string
+): Promise<void> {
+  const dataRows = page.locator('tbody tr');
+  const row = dataRows.nth(rowIndex);
+
+  // Find editable cells in this row
+  const editableCells = row.locator('td.cell-editable');
+  const cell = editableCells.nth(columnIndex);
+
+  // Click to enter edit mode
+  await cell.click();
+
+  // Fill in the value
+  const input = cell.locator('input[type="number"]');
+  await input.fill(String(value));
+
+  // Press Enter to save
+  await input.press('Enter');
+
+  // Wait for API response
+  await page.waitForLoadState('networkidle');
+}
+
+/**
+ * Delete a snapshot
+ * @param page The Playwright page object
+ * @param rowIndex Row index to delete (0-based)
+ */
+export async function deleteSnapshot(page: Page, rowIndex: number): Promise<void> {
+  const dataRows = page.locator('tbody tr');
+  const row = dataRows.nth(rowIndex);
+
+  // Click delete button
+  const deleteBtn = row.locator('button[aria-label*="Slett"]').first();
+  await deleteBtn.click();
+
+  // Confirm deletion in modal
+  const confirmBtn = page.getByRole('button', { name: /slett/i }).last();
+  await confirmBtn.click();
+
+  // Wait for deletion to complete
+  await page.waitForLoadState('networkidle');
+}
+
+/**
+ * Export portfolio data to CSV
+ * @param page The Playwright page object
+ */
+export async function exportPortfolioData(page: Page): Promise<void> {
+  const eksportBtn = page.getByRole('button', { name: /eksporter/i });
+  await eksportBtn.click();
+
+  // Wait for download to start
+  await page.waitForTimeout(500);
+}

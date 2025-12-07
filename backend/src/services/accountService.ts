@@ -5,12 +5,14 @@
  * Accounts are managed as a collection within the User document in CosmosDB.
  */
 
-import { getUsersContainer } from '../config/cosmosdb';
+import { getUsersContainer, getPortfoliosContainer } from '../config/cosmosdb';
 import { User } from '../models/User';
 import { AccountConfig, Category } from '../models/Account';
+import { MonthlySnapshot } from '../models/Portfolio';
 import { logger } from '../utils/logger';
 import { handleCosmosError, isNotFoundError } from '../utils/cosmosHelpers';
 import { v4 as uuid } from 'uuid';
+import { calculateNetWorth } from './calculationService';
 
 /**
  * Get all accounts for a user
@@ -156,10 +158,10 @@ export async function updateAccount(
 }
 
 /**
- * Soft delete account (set isActive: false)
+ * Hard delete account
  *
- * Accounts are not hard deleted to preserve historical snapshot data.
- * Instead, isActive is set to false to hide them from UI.
+ * Removes the account from user.accounts AND from all snapshot.accounts.
+ * This ensures the account is completely removed from calculations.
  *
  * @param userId - User ID (partition key)
  * @param accountId - Account ID to delete
@@ -167,6 +169,46 @@ export async function updateAccount(
  * @throws DatabaseError if operation fails
  */
 export async function deleteAccount(userId: string, accountId: string): Promise<void> {
-  await updateAccount(userId, accountId, { isActive: false });
-  logger.info('Account soft deleted', { userId, accountId });
+  try {
+    const usersContainer = getUsersContainer();
+    const portfoliosContainer = getPortfoliosContainer();
+
+    // 1. Remove from user.accounts
+    const { resource: user } = await usersContainer.item(userId, userId).read<User>();
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const accountExists = user.accounts.some((a) => a.id === accountId);
+    if (!accountExists) {
+      throw new Error('Account not found');
+    }
+
+    user.accounts = user.accounts.filter((a) => a.id !== accountId);
+    user.updatedAt = new Date();
+    await usersContainer.item(userId, userId).replace(user);
+
+    // 2. Remove from all snapshots
+    const { resources: snapshots } = await portfoliosContainer.items
+      .query<MonthlySnapshot>({
+        query: 'SELECT * FROM portfolios p WHERE p.userId = @userId',
+        parameters: [{ name: '@userId', value: userId }],
+      })
+      .fetchAll();
+
+    for (const snapshot of snapshots) {
+      const hadAccount = snapshot.accounts.some((a) => a.id === accountId);
+      if (hadAccount) {
+        snapshot.accounts = snapshot.accounts.filter((a) => a.id !== accountId);
+        snapshot.totalNetWorth = calculateNetWorth(snapshot.accounts);
+        snapshot.updatedAt = new Date();
+        await portfoliosContainer.item(snapshot.id, userId).replace(snapshot);
+      }
+    }
+
+    logger.info('Account hard deleted', { userId, accountId, snapshotsUpdated: snapshots.length });
+  } catch (error) {
+    logger.error('Failed to delete account', { userId, accountId, error });
+    throw handleCosmosError(error);
+  }
 }

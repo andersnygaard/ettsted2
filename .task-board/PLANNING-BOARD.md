@@ -1,81 +1,65 @@
 # Planning Board - Finans
 
-**Current Focus**: Security Fixes & Code Quality (Post-Due Diligence 2025-12-07)
+**Current Focus**: All tasks complete! ✅
 
 ---
 
-## Due Diligence Findings (2025-12-07)
+## Due Diligence Summary (2025-12-07)
 
 **Report**: [.docs/DUE-DILIGENCE-REPORT.md](../.docs/DUE-DILIGENCE-REPORT.md)
 
 | Score | Area | Status |
 |-------|------|--------|
-| 86/100 | Design | Good |
-| 85/100 | Code Quality | Good |
-| 80/100 | Security | ✅ Improved |
-| **84/100** | **Overall** | Good |
-
-### Critical Issues - ALL FIXED ✅
-1. ~~**Dev mode auth bypass**~~ - ✅ FIXED (task 193)
-2. ~~**ORDER BY injection pattern**~~ - ✅ FIXED (task 194)
-3. ~~**PageSkeleton prop mismatch**~~ - ✅ FIXED (task 195)
-4. ~~**CSS typo**~~ - ✅ FIXED (task 196)
+| 82/100 | Design | Good |
+| 87/100 | Code Quality | Good |
+| 85/100 | Security | Good |
+| **85/100** | **Overall** | Good - Production Ready |
 
 ---
 
 ## Top Priorities
 
-**🎉 All due diligence tasks complete!**
-
-No pending priorities. Run `/discover-tasks` to find new work.
+_No pending tasks. All backlog items completed._
 
 ---
 
 ## Backlog Summary
 
-| # | Task | Type | Priority | Effort |
-|---|------|------|----------|--------|
-| - | *Backlog empty* | - | - | - |
+_Empty - all tasks completed._
 
 ---
 
 ## Recently Completed
 
+### 210 - Norwegian Validation Messages (2025-12-07)
+Translated all user-facing validation error messages to Norwegian. Backend logs remain in English.
+
+### 209 - SpreadsheetTable Accessibility (2025-12-07)
+Added caption, scope attributes, aria-live region for screen readers. WCAG compliant.
+
+### 208 - Form Select Focus States (2025-12-07)
+Added focus-visible styling to TableHeader select dropdown.
+
+### 207 - Button Focus States (2025-12-07)
+Added focus-visible styling to Button component. WCAG 2.4.7 compliant.
+
+### 206 - E2E Data Entry Tests (2025-12-07)
+Added Playwright tests for portfolio CRUD operations: create, edit, delete, export.
+
+### 205 - OnboardingWizard Storybook Stories (2025-12-07)
+Added 21 comprehensive Storybook stories covering all wizard steps and modes.
+
+### 204 - Schema Field Name Consistency (2025-12-07)
+Fixed username→nickname mismatch in userSetupSchema.
+
 ### 203 - Standardize English Variable Names (2025-12-07)
-Renamed Norwegian variable names and API fields to English across backend and frontend. Added defensive null handling.
+Renamed Norwegian variable names and API fields to English across backend and frontend.
 
 ### 202 - Add CSP Headers (2025-12-07)
-Added explicit Content Security Policy via Helmet. Allows Google Fonts, restricts scripts to self-origin.
+Added explicit Content Security Policy via Helmet.
 
 ### 201 - Fix CORS No-Origin (2025-12-07)
-Requests without Origin header now rejected in production. Dev/CI modes allow no-origin for testing.
-
-### 200 - Add Skip Link (2025-12-07)
-Added skip-to-content link for keyboard users. WCAG 2.4.1 compliance for accessibility.
-
-### 199 - Fix Query Key Consistency (2025-12-07)
-Added QUERY_KEYS.USER constant. Updated useUser and useImportChat to use constants.
-
-### 198 - Move Tokens to Components (2025-12-07)
-Moved tokens.css to components package. External consumers get working design system.
-
-### 197 - Consolidate Formatting Utils (2025-12-07)
-Moved numeral.js and date-fns utilities to components. Frontend imports from @finans/components.
-
-### 196 - Fix CSS Typo (2025-12-07)
-Fixed `--carcoal-hover` to `--charcoal-hover` in tokens.css. Button disabled state now renders correctly.
-
-### 195 - Fix PageSkeleton Prop Mismatch (2025-12-07)
-Removed unnecessary `centered` prop from PageSkeleton and consuming pages. PageHeader always centered by CSS.
-
-### 194 - Fix ORDER BY Injection (2025-12-07)
-Replaced string interpolation with safe allowlist pattern in portfolioService.ts. Eliminates NoSQL injection vector.
-
-### 193 - Remove Dev Auth Bypass (2025-12-07)
-Removed critical security vulnerability. Dev mode no longer auto-injects mock user. Requires explicit demo token.
-
-### 192 - ESLint no-explicit-any to Error (2025-12-07)
-Changed rule from 'warn' to 'error' in all workspaces. Fixed remaining violation in PortfolioPage.tsx.
+Requests without Origin header now rejected in production.
 
 ---
 
@@ -83,7 +67,7 @@ Changed rule from 'warn' to 'error' in all workspaces. Fixed remaining violation
 
 | Status | Count |
 |--------|-------|
-| Done | 179+ |
+| Done | 210 |
 | Backlog | 0 |
 | In Progress | 0 |
 

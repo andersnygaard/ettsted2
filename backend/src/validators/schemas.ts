@@ -43,7 +43,7 @@ const norwegianDateValidator = z.string().refine(
     );
   },
   {
-    message: 'Date must be in dd.MM.yyyy format (e.g., "01.01.2024") and be a valid date'
+    message: 'Dato må være i formatet dd.MM.yyyy og være en gyldig dato'
   }
 );
 
@@ -55,14 +55,14 @@ const norwegianDateValidator = z.string().refine(
  * User setup schema (first-time onboarding)
  */
 export const userSetupSchema = z.object({
-  username: z
+  nickname: z
     .string()
-    .min(3, 'Username must be at least 3 characters')
-    .max(30, 'Username must be at most 30 characters')
-    .regex(USERNAME_REGEX, 'Username can only contain letters, numbers, and underscores'),
+    .min(3, 'Kallenavn må være minst 3 tegn')
+    .max(30, 'Kallenavn kan ikke være mer enn 30 tegn')
+    .regex(USERNAME_REGEX, 'Kallenavn kan kun inneholde bokstaver, tall og understrek'),
   email: z
     .string()
-    .regex(EMAIL_REGEX, 'Invalid email format')
+    .regex(EMAIL_REGEX, 'Ugyldig e-postformat')
     .optional()
     .or(z.literal(''))
 });
@@ -73,31 +73,31 @@ export const userSetupSchema = z.object({
 export const userProfileSchema = z.object({
   monthlySalary: z
     .number()
-    .nonnegative('Monthly salary cannot be negative')
+    .nonnegative('Månedslønn kan ikke være negativ')
     .optional(),
   monthlySavings: z
     .number()
-    .nonnegative('Monthly savings cannot be negative')
+    .nonnegative('Månedlig sparing kan ikke være negativ')
     .optional(),
   annualExpenses: z
     .number()
-    .nonnegative('Annual expenses cannot be negative')
+    .nonnegative('Årlige utgifter kan ikke være negative')
     .optional(),
   birthYear: z
     .number()
-    .int('Birth year must be an integer')
-    .min(1900, 'Birth year must be 1900 or later')
-    .max(new Date().getFullYear(), 'Birth year cannot be in the future')
+    .int('Fødselsår må være et heltall')
+    .min(1900, 'Fødselsår må være 1900 eller senere')
+    .max(new Date().getFullYear(), 'Fødselsår kan ikke være i fremtiden')
     .optional(),
   plannedRetirementAge: z
     .number()
-    .int('Retirement age must be an integer')
-    .min(30, 'Retirement age must be at least 30')
-    .max(100, 'Retirement age cannot exceed 100')
+    .int('Pensjonsalder må være et heltall')
+    .min(30, 'Pensjonsalder må være minst 30')
+    .max(100, 'Pensjonsalder kan ikke være over 100')
     .optional(),
   fireNumber: z
     .number()
-    .nonnegative('F.I.R.E. number cannot be negative')
+    .nonnegative('F.I.R.E.-tall kan ikke være negativt')
     .optional()
 });
 
@@ -105,20 +105,20 @@ export const userProfileSchema = z.object({
  * Loan details schema (for gjeld accounts)
  */
 export const loanDetailsSchema = z.object({
-  interestRate: z.number().nonnegative('Interest rate cannot be negative'),
-  remainingYears: z.number().int().nonnegative('Remaining years cannot be negative'),
-  originalAmount: z.number().nonnegative('Original amount cannot be negative').optional()
+  interestRate: z.number().nonnegative('Rente kan ikke være negativ'),
+  remainingYears: z.number().int().nonnegative('Gjenværende år kan ikke være negativt'),
+  originalAmount: z.number().nonnegative('Opprinnelig beløp kan ikke være negativt').optional()
 });
 
 /**
  * Account config schema (user's account configurations)
  */
 export const accountConfigSchema = z.object({
-  id: z.string().min(1, 'Account id is required'),
-  name: z.string().min(1, 'Account name is required').max(100, 'Account name must be at most 100 characters'),
-  category: z.enum(['sparing', 'gjeld', 'pensjon'], { errorMap: () => ({ message: 'Category must be sparing, gjeld, or pensjon' }) }),
+  id: z.string().min(1, 'Konto-ID er påkrevd'),
+  name: z.string().min(1, 'Kontonavn er påkrevd').max(100, 'Kontonavn kan ikke være mer enn 100 tegn'),
+  category: z.enum(['sparing', 'gjeld', 'pensjon'], { errorMap: () => ({ message: 'Kategori må være sparing, gjeld eller pensjon' }) }),
   isActive: z.boolean(),
-  sortOrder: z.number().int().nonnegative('Sort order cannot be negative'),
+  sortOrder: z.number().int().nonnegative('Sorteringsrekkefølge kan ikke være negativ'),
   createdAt: z.string().optional(),
   loanDetails: loanDetailsSchema.optional()
 });
@@ -130,21 +130,21 @@ export const userUpdateSchema = z
   .object({
     email: z
       .string()
-      .regex(EMAIL_REGEX, 'Invalid email format')
+      .regex(EMAIL_REGEX, 'Ugyldig e-postformat')
       .optional()
       .or(z.literal('')),
     nickname: z
       .string()
-      .min(3, 'Nickname must be at least 3 characters')
-      .max(30, 'Nickname must be at most 30 characters')
-      .regex(USERNAME_REGEX, 'Nickname can only contain letters, numbers, and underscores')
+      .min(3, 'Kallenavn må være minst 3 tegn')
+      .max(30, 'Kallenavn kan ikke være mer enn 30 tegn')
+      .regex(USERNAME_REGEX, 'Kallenavn kan kun inneholde bokstaver, tall og understrek')
       .optional(),
     profile: userProfileSchema.optional(),
     preferences: z.record(z.unknown()).optional(),
     accounts: z.array(accountConfigSchema).optional()
   })
   .refine((data) => Object.keys(data).length > 0, {
-    message: 'At least one field to update is required'
+    message: 'Minst ett felt må oppdateres'
   });
 
 // ============================================================================
@@ -159,23 +159,23 @@ export const accountSchema = z.object({
   id: z.string().optional(), // Auto-generated if not provided
   name: z
     .string()
-    .min(1, 'Account name is required')
-    .max(100, 'Account name must be at most 100 characters'),
+    .min(1, 'Kontonavn er påkrevd')
+    .max(100, 'Kontonavn kan ikke være mer enn 100 tegn'),
   assetClass: z
     .string()
-    .min(1, 'Asset class is required')
-    .max(50, 'Asset class must be at most 50 characters'),
+    .min(1, 'Aktivaklasse er påkrevd')
+    .max(50, 'Aktivaklasse kan ikke være mer enn 50 tegn'),
   value: z
     .number()
-    .finite('Value must be a finite number'),
+    .finite('Verdi må være et gyldig tall'),
   notes: z
     .string()
-    .max(500, 'Notes must be at most 500 characters')
+    .max(500, 'Notater kan ikke være mer enn 500 tegn')
     .optional()
 }).refine(
   (data) => data.value >= 0 || data.assetClass === 'gjeld',
   {
-    message: 'Value cannot be negative (except for gjeld)',
+    message: 'Verdi kan ikke være negativ (unntatt for gjeld)',
     path: ['value']
   }
 );
@@ -188,25 +188,25 @@ export const accountUpdateSchema = z
   .object({
     name: z
       .string()
-      .min(1, 'Account name is required')
-      .max(100, 'Account name must be at most 100 characters')
+      .min(1, 'Kontonavn er påkrevd')
+      .max(100, 'Kontonavn kan ikke være mer enn 100 tegn')
       .optional(),
     assetClass: z
       .string()
-      .min(1, 'Asset class is required')
-      .max(50, 'Asset class must be at most 50 characters')
+      .min(1, 'Aktivaklasse er påkrevd')
+      .max(50, 'Aktivaklasse kan ikke være mer enn 50 tegn')
       .optional(),
     value: z
       .number()
-      .finite('Value must be a finite number')
+      .finite('Verdi må være et gyldig tall')
       .optional(),
     notes: z
       .string()
-      .max(500, 'Notes must be at most 500 characters')
+      .max(500, 'Notater kan ikke være mer enn 500 tegn')
       .optional()
   })
   .refine((data) => Object.keys(data).length > 0, {
-    message: 'At least one field to update is required'
+    message: 'Minst ett felt må oppdateres'
   })
   .refine(
     (data) => {
@@ -217,7 +217,7 @@ export const accountUpdateSchema = z
       return true;
     },
     {
-      message: 'Value cannot be negative (except for gjeld)',
+      message: 'Verdi kan ikke være negativ (unntatt for gjeld)',
       path: ['value']
     }
   );
@@ -233,7 +233,7 @@ export const snapshotCreateSchema = z.object({
   date: norwegianDateValidator,
   accounts: z
     .array(accountSchema)
-    .min(0, 'Accounts must be an array')
+    .min(0, 'Kontoer må være en liste')
 });
 
 /**
@@ -245,7 +245,7 @@ export const snapshotUpdateSchema = z
     accounts: z.array(accountSchema).optional()
   })
   .refine((data) => Object.keys(data).length > 0, {
-    message: 'At least one field to update is required'
+    message: 'Minst ett felt må oppdateres'
   });
 
 // ============================================================================
@@ -256,22 +256,22 @@ export const snapshotUpdateSchema = z
  * Snapshot ID param validation
  */
 export const snapshotIdSchema = z.object({
-  id: z.string().min(1, 'Snapshot ID is required')
+  id: z.string().min(1, 'Øyeblikksbilde-ID er påkrevd')
 });
 
 /**
  * Account ID param validation
  */
 export const accountIdSchema = z.object({
-  accountId: z.string().min(1, 'Account ID is required')
+  accountId: z.string().min(1, 'Konto-ID er påkrevd')
 });
 
 /**
  * Combined snapshot and account ID params
  */
 export const snapshotAndAccountIdSchema = z.object({
-  id: z.string().min(1, 'Snapshot ID is required'),
-  accountId: z.string().min(1, 'Account ID is required')
+  id: z.string().min(1, 'Øyeblikksbilde-ID er påkrevd'),
+  accountId: z.string().min(1, 'Konto-ID er påkrevd')
 });
 
 // ============================================================================
@@ -307,11 +307,11 @@ export const snapshotQuerySchema = z.object({
 export const createAccountConfigSchema = z.object({
   name: z
     .string()
-    .min(1, 'Account name is required')
-    .max(100, 'Account name must be at most 100 characters'),
+    .min(1, 'Kontonavn er påkrevd')
+    .max(100, 'Kontonavn kan ikke være mer enn 100 tegn'),
   category: z
     .enum(['sparing', 'gjeld', 'pensjon'], {
-      errorMap: () => ({ message: 'Category must be one of: sparing, gjeld, pensjon' })
+      errorMap: () => ({ message: 'Kategori må være sparing, gjeld eller pensjon' })
     }),
   isActive: z
     .boolean()
@@ -321,15 +321,15 @@ export const createAccountConfigSchema = z.object({
     .object({
       interestRate: z
         .number()
-        .min(0, 'Interest rate cannot be negative')
-        .max(100, 'Interest rate cannot exceed 100%'),
+        .min(0, 'Rente kan ikke være negativ')
+        .max(100, 'Rente kan ikke overstige 100 %'),
       remainingYears: z
         .number()
-        .min(0, 'Remaining years cannot be negative')
-        .max(50, 'Remaining years cannot exceed 50'),
+        .min(0, 'Gjenværende år kan ikke være negativt')
+        .max(50, 'Gjenværende år kan ikke overstige 50'),
       originalAmount: z
         .number()
-        .positive('Original amount must be positive')
+        .positive('Opprinnelig beløp må være positivt')
         .optional()
     })
     .optional()
@@ -342,43 +342,43 @@ export const updateAccountConfigSchema = z
   .object({
     name: z
       .string()
-      .min(1, 'Account name is required')
-      .max(100, 'Account name must be at most 100 characters')
+      .min(1, 'Kontonavn er påkrevd')
+      .max(100, 'Kontonavn kan ikke være mer enn 100 tegn')
       .optional(),
     isActive: z
       .boolean()
       .optional(),
     sortOrder: z
       .number()
-      .int('Sort order must be an integer')
-      .min(0, 'Sort order cannot be negative')
+      .int('Sorteringsrekkefølge må være et heltall')
+      .min(0, 'Sorteringsrekkefølge kan ikke være negativ')
       .optional(),
     loanDetails: z
       .object({
         interestRate: z
           .number()
-          .min(0, 'Interest rate cannot be negative')
-          .max(100, 'Interest rate cannot exceed 100%'),
+          .min(0, 'Rente kan ikke være negativ')
+          .max(100, 'Rente kan ikke overstige 100 %'),
         remainingYears: z
           .number()
-          .min(0, 'Remaining years cannot be negative')
-          .max(50, 'Remaining years cannot exceed 50'),
+          .min(0, 'Gjenværende år kan ikke være negativt')
+          .max(50, 'Gjenværende år kan ikke overstige 50'),
         originalAmount: z
           .number()
-          .positive('Original amount must be positive')
+          .positive('Opprinnelig beløp må være positivt')
           .optional()
       })
       .optional()
   })
   .refine(data => Object.keys(data).length > 0, {
-    message: 'At least one field to update is required'
+    message: 'Minst ett felt må oppdateres'
   });
 
 /**
  * Account config ID param validation
  */
 export const accountConfigIdSchema = z.object({
-  id: z.string().min(1, 'Account ID is required')
+  id: z.string().min(1, 'Konto-ID er påkrevd')
 });
 
 // ============================================================================

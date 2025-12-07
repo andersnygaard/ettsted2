@@ -60,6 +60,17 @@
   background: var(--btn-secondary-disabled-bg);
 }
 
+/* Focus State - Keyboard Navigation */
+.btn:focus-visible {
+  outline: 2px solid var(--charcoal);
+  outline-offset: 2px;
+}
+
+/* Disabled buttons should not show focus */
+.btn:disabled:focus-visible {
+  outline: none;
+}
+
 /* Disabled State */
 .btn:disabled {
   opacity: 0.5;

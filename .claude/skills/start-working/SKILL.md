@@ -1,15 +1,15 @@
 ---
 name: start-working
-description: Continue work on the next priority from the task backlog. Use this skill when the user asks to start working, continue work, or pick up the next task. Follows the task-board workflow (backlog → in-progress → done) with implementation tracking.
+description: Autonomously execute ALL tasks from the backlog until complete. Runs in a continuous loop - picks task, implements via subagent, moves to done, repeats. No user prompts between tasks. Follows task-board workflow (backlog → in-progress → done).
 ---
 
 # Start Working Skill
 
-This skill provides a structured workflow for continuing work on the next priority from the **task board system** (`.task-board/`). All work is tracked through the task board - no ad-hoc work outside the system.
+This skill **autonomously executes ALL tasks** from the task board until the backlog is empty. It runs in a continuous loop without stopping between tasks.
 
 **Task Board Flow**: `.task-board/backlog/` → `.task-board/in-progress/` → `.task-board/done/`
 
-The skill automates selecting, planning, implementing, and completing tasks following this strict workflow.
+**🚨 AUTONOMOUS MODE**: This skill does NOT stop between tasks. It continues until all tasks are complete or a critical blocker occurs.
 
 ---
 
@@ -746,19 +746,29 @@ Task tool:
     Provide summary with verification results and update task file.
 ```
 
-### Working Through the Backlog
+### Working Through the Backlog - AUTONOMOUS MODE
 
-This skill processes the **entire backlog** systematically, IN ORDER:
+**🚨 CRITICAL: This skill runs ALL tasks automatically until backlog is empty.**
 
-1. Read PLANNING-BOARD to get the FIRST numbered task
-2. Move task to in-progress/
-3. Spawn subagent with Task tool (haiku by default)
-4. Subagent implements and verifies (Playwright CLI for frontend)
-5. Move task to done/
-6. Get NEXT numbered task from PLANNING-BOARD
-7. Repeat
+This skill processes the **entire backlog** autonomously, IN ORDER, without stopping:
 
-The user can say "keep going" to continue through the backlog.
+```
+LOOP until backlog is empty:
+  1. Read PLANNING-BOARD to get the FIRST numbered task
+  2. Move task to in-progress/
+  3. Spawn subagent with Task tool (haiku by default)
+  4. Subagent implements and verifies (Playwright CLI for frontend)
+  5. Move task to done/
+  6. Update PLANNING-BOARD.md
+  7. AUTOMATICALLY continue to next task (NO user prompt needed)
+```
+
+**DO NOT STOP between tasks.** Continue until:
+- All tasks in PLANNING-BOARD are complete, OR
+- A critical blocker prevents progress, OR
+- User explicitly interrupts
+
+**After completing a task, IMMEDIATELY start the next one.** No waiting for user confirmation.
 
 ## Constraints and Guidelines
 
@@ -770,7 +780,7 @@ The user can say "keep going" to continue through the backlog.
 4. **Norwegian localization**: All UI text in Norwegian, use format utilities
 5. **Keep PLANNING-BOARD.md lean**: Maximum 3-5 items, concise status notes
 6. **Real-time updates**: Update task files in `.task-board/in-progress/` frequently
-7. **One task at a time**: Execute ONE task fully before starting the next
+7. **Sequential execution**: Execute tasks fully before starting the next (but continue automatically)
 8. **No breaking changes**: Maintain backward compatibility
 9. **Security first**: Never commit secrets, always validate input
 10. **Respect task ordering**: Tasks are numbered for dependency reasons
@@ -868,22 +878,24 @@ A work session is complete when:
 - [ ] Task file in `.task-board/in-progress/` updated with Progress Log
 - [ ] Task moved to `.task-board/done/` with Resolution
 
-### For the Overall Session:
+### For the Overall Session (AUTONOMOUS):
 - [ ] **🚨 All work tracked in `.task-board/`** (no ad-hoc work outside the system)
 - [ ] **🚨 Zero git commands executed** (by main agent or subagents)
+- [ ] **🚨 ALL tasks processed automatically** (no stopping between tasks)
 - [ ] Tasks processed IN ORDER from `PLANNING-BOARD.md` (no skipping)
 - [ ] Each task used a subagent (not done inline)
 - [ ] `PLANNING-BOARD.md` updated after each completion
 - [ ] Completed tasks moved to `.task-board/done/`
-- [ ] Next task from `.task-board/backlog/` added when current completes
+- [ ] Next task started IMMEDIATELY after current completes (no user prompt)
 
 ### Key Reminders:
-1. **🚨 USE TASK BOARD** - all work tracked in `.task-board/`, never work outside the system
-2. **🚨 NO GIT COMMANDS** - never run any git command, user handles version control
-3. **Use haiku by default** - only use sonnet for truly complex tasks
-4. **Tasks done IN ORDER** - respect numbering from PLANNING-BOARD.md
-5. **Playwright CLI for frontend** - no exceptions
-6. **Built-in tools over bash** - Read/Write/Edit/Glob/Grep, never cat/grep/find/sed
+1. **🚨 AUTONOMOUS MODE** - run ALL tasks without stopping, no user prompts between tasks
+2. **🚨 USE TASK BOARD** - all work tracked in `.task-board/`, never work outside the system
+3. **🚨 NO GIT COMMANDS** - never run any git command, user handles version control
+4. **Use haiku by default** - only use sonnet for truly complex tasks
+5. **Tasks done IN ORDER** - respect numbering from PLANNING-BOARD.md
+6. **Playwright CLI for frontend** - no exceptions
+7. **Built-in tools over bash** - Read/Write/Edit/Glob/Grep, never cat/grep/find/sed
 
 ## Handling Edge Cases
 

@@ -137,24 +137,47 @@ Before finishing, verify:
 
 ## File Naming Convention
 
-Use descriptive, kebab-case names with type prefix:
+Use numbered, descriptive, kebab-case names with type prefix:
 
-- **Features**: `FEATURE-[short-description].md`
-  - Example: `FEATURE-llm-data-import.md`
-  - Example: `FEATURE-monte-carlo-calculator.md`
-  - Example: `FEATURE-portfolio-dashboard.md`
+**Format**: `[NNN]-[TYPE]-[short-description].md`
 
-- **Refactors**: `REFACTOR-[short-description].md`
-  - Example: `REFACTOR-extract-calculator-logic.md`
-  - Example: `REFACTOR-consolidate-validation.md`
+### Task Numbering - CRITICAL
 
-- **Explorations**: `EXPLORE-[short-description].md`
-  - Example: `EXPLORE-langfuse-integration.md`
-  - Example: `EXPLORE-cosmosdb-performance.md`
+**🚨 ALWAYS scan ALL folders to find the next task number:**
 
-- **Epics**: `EPIC-[short-description].md`
-  - Example: `EPIC-portfolio-tracker.md`
-  - Example: `EPIC-fire-dashboard.md`
+```
+1. Glob pattern: .task-board/**/*.md
+2. Scan: backlog/, in-progress/, AND done/
+3. Extract numbers from filenames (e.g., 071-FEATURE-xxx.md → 071)
+4. Find highest number across ALL folders
+5. Next task = highest + 1
+```
+
+**Why include `done/`**: Completed tasks retain their numbers. Reusing numbers breaks history tracking and causes confusion.
+
+**Example**:
+```
+done/ has: 001-070 (completed)
+in-progress/ has: 071
+backlog/ has: 072-075
+
+Next task number = 076
+```
+
+### Type Prefixes
+
+- **Features**: `[NNN]-FEATURE-[short-description].md`
+  - Example: `076-FEATURE-llm-data-import.md`
+  - Example: `077-FEATURE-monte-carlo-calculator.md`
+
+- **Refactors**: `[NNN]-REFACTOR-[short-description].md`
+  - Example: `078-REFACTOR-extract-calculator-logic.md`
+
+- **Explorations**: `[NNN]-EXPLORE-[short-description].md`
+  - Example: `079-EXPLORE-langfuse-integration.md`
+
+- **Epics**: `[NNN]-EPIC-[short-description].md`
+  - Example: `080-EPIC-portfolio-tracker.md`
 
 ## Finans Project Context
 

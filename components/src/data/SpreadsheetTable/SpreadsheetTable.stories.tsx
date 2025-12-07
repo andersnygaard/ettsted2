@@ -206,3 +206,22 @@ export const LargeDataset: Story = {
     rowIdKey: 'id',
   },
 };
+
+export const AccessibilityDemo: Story = {
+  args: {
+    columnGroups,
+    data: mockData,
+    dateKey: 'date',
+    rowIdKey: 'id',
+    caption: 'Portfolio snapshots with account balances from August to November 2024',
+    onCellChange: (event) => console.log('Cell changed:', event),
+    onRowDelete: (row) => console.log('Row deleted:', row),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstrates accessibility features: table caption, scope attributes on headers, and aria-live announcements for edit mode.',
+      },
+    },
+  },
+};
