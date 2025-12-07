@@ -55,7 +55,7 @@ function PortfolioPage() {
         { id: 'firi', label: 'Firi' },
         { id: 'kron', label: 'Kron' },
         { id: 'skattKjop', label: 'Skatt/Kjøp' },
-        { id: 'sumSparing', label: 'Sum sparing', isTotal: true },
+        { id: 'sumSavings', label: 'Sum sparing', isTotal: true },
       ],
     },
     {
@@ -88,7 +88,7 @@ function PortfolioPage() {
       firi: 2634,
       kron: 344371,
       skattKjop: null,
-      sumSparing: 796498,
+      sumSavings: 796498,
       sbanken: 798450,
       sumGjeld: 798450,
       arbeidsgiver: 2850000,
@@ -102,7 +102,7 @@ function PortfolioPage() {
       firi: 2077,
       kron: 351156,
       skattKjop: null,
-      sumSparing: 812999,
+      sumSavings: 812999,
       sbanken: 805200,
       sumGjeld: 805200,
       arbeidsgiver: 2820000,
@@ -114,7 +114,7 @@ function PortfolioPage() {
   // Define milestones (values that crossed thresholds)
   const milestones = {
     yolo: [80000], // Crossed 80k threshold
-    sumSparing: [800000], // Crossed 800k threshold
+    sumSavings: [800000], // Crossed 800k threshold
   };
 
   return (

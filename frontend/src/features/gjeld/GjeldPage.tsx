@@ -1,6 +1,5 @@
-import { PageSkeleton, HeroNumber, AreaChart } from '@finans/components';
+import { PageSkeleton, HeroNumber, AreaChart, formatCurrency } from '@finans/components';
 import type { DataPoint } from '@finans/components';
-import { formatCurrency } from '@/shared/utils/numberFormat';
 import { useGjeldData } from './useGjeldData';
 import { useAuth } from '../auth/useAuth';
 import { DekningSection } from './DekningSection';
@@ -24,7 +23,7 @@ function GjeldPage() {
   if (isLoading) {
     return (
       <PageSkeleton
-        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Gjeld' }]}
+        breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Gjeld' }]}
         title="Gjeld"
         subtitle="Oversikt over lån og nedbetaling"
         className="gjeld-page"
@@ -38,7 +37,7 @@ function GjeldPage() {
   if (error) {
     return (
       <PageSkeleton
-        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Gjeld' }]}
+        breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Gjeld' }]}
         title="Gjeld"
         subtitle="Feil ved lasting av data"
         className="gjeld-page"
@@ -50,9 +49,9 @@ function GjeldPage() {
 
   // Use gjeldData or empty defaults
   const data = gjeldData || {
-    sumGjeld: 0,
+    totalDebt: 0,
     monthlyChange: 0,
-    dekning: 100,
+    coverage: 100,
     remaining: 0,
     loans: [],
     history: []
@@ -77,16 +76,16 @@ function GjeldPage() {
   const debtHistory: DataPoint[] = data.history;
 
   // Calculate change percentage (handle division by zero)
-  const changePercentage = data.sumGjeld > 0 ? (data.monthlyChange / data.sumGjeld) * 100 : 0;
+  const changePercentage = data.totalDebt > 0 ? (data.monthlyChange / data.totalDebt) * 100 : 0;
 
-  // Calculate sumSparing from dekning ratio
-  // dekning = (sumSparing / sumGjeld) * 100
-  // sumSparing = (dekning / 100) * sumGjeld
-  const sumSparing = (data.dekning / 100) * data.sumGjeld;
+  // Calculate sumSavings from coverage ratio
+  // coverage = (sumSavings / totalDebt) * 100
+  // sumSavings = (coverage / 100) * totalDebt
+  const sumSavings = (data.coverage / 100) * data.totalDebt;
 
   return (
     <PageSkeleton
-      breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Gjeld' }]}
+      breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Gjeld' }]}
       title="Gjeld"
       subtitle="Oversikt over lån og nedbetaling"
       className="gjeld-page"
@@ -94,14 +93,14 @@ function GjeldPage() {
 
         <HeroNumber
           label="Sum gjeld"
-          value={formatCurrency(data.sumGjeld)}
+          value={formatCurrency(data.totalDebt)}
           change={changePercentage}
           changeLabel="denne måneden"
         />
 
         <DekningSection
-          sumSparing={sumSparing}
-          sumGjeld={data.sumGjeld}
+          sumSavings={sumSavings}
+          sumGjeld={data.totalDebt}
         />
 
         <LoansList loans={loans} />

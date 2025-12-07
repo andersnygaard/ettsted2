@@ -10,7 +10,7 @@ export default function LoginPage() {
 
   // Redirect authenticated users to dashboard
   if (!isLoading && isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/oversikt" replace />;
   }
 
   // Redirect users who need onboarding

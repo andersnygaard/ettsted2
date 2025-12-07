@@ -23,11 +23,11 @@ function HomePage() {
 
           {isAuthenticated ? (
             <div className="landing-hero__actions">
-              <Link to="/dashboard" className="landing-btn landing-btn--primary">
+              <Link to="/oversikt" className="landing-btn landing-btn--primary">
                 <i>dashboard</i>
-                <span>Gå til Dashboard</span>
+                <span>Gå til Oversikt</span>
               </Link>
-              <Link to="/portfolio" className="landing-btn landing-btn--secondary">
+              <Link to="/portefolje" className="landing-btn landing-btn--secondary">
                 <i>account_balance</i>
                 <span>Se Portefølje</span>
               </Link>

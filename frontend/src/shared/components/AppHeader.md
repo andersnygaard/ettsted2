@@ -33,8 +33,8 @@ The header includes the following navigation items:
 
 | Label | Path |
 |-------|------|
-| Oversikt | / |
-| Portefølje | /portfolio |
+| Oversikt | /oversikt |
+| Portefølje | /portefolje |
 | Sparing | /sparing |
 | Gjeld | /gjeld |
 | Pensjon | /pensjon |
@@ -60,8 +60,8 @@ Styles are defined in `AppHeader.css` using CSS custom properties from the desig
 ## Active State
 
 Navigation items automatically highlight based on the current route:
-- Home (/): Exact match
-- Other routes: Prefix match (e.g., `/portfolio` matches `/portfolio/*`)
+- Oversikt (/oversikt): Exact match
+- Other routes: Prefix match (e.g., `/portefolje` matches `/portefolje/*`)
 
 Active state includes:
 - Darker text color

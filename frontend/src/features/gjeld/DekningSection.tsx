@@ -7,17 +7,16 @@
  * Based on Nordic Minimal design from draft-1-gjeld.html
  */
 
-import { DonutChart } from '@finans/components';
-import { formatCurrency } from '@/shared/utils/numberFormat';
+import { DonutChart, formatCurrency } from '@finans/components';
 
 export interface DekningSectionProps {
-  sumSparing: number;
+  sumSavings: number;
   sumGjeld: number;
 }
 
-export function DekningSection({ sumSparing, sumGjeld }: DekningSectionProps) {
-  const percentage = Math.min(100, (sumSparing / sumGjeld) * 100);
-  const remaining = Math.max(0, sumGjeld - sumSparing);
+export function DekningSection({ sumSavings, sumGjeld }: DekningSectionProps) {
+  const percentage = Math.min(100, (sumSavings / sumGjeld) * 100);
+  const remaining = Math.max(0, sumGjeld - sumSavings);
 
   return (
     <section className="dekning-section">

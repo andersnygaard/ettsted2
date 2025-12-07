@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Breadcrumb, PageHeader, Card, NumberInput } from '@finans/components';
-import { formatCurrency, formatNumber } from '@/shared/utils/numberFormat';
+import { Breadcrumb, PageHeader, Card, NumberInput, formatCurrency, formatNumber } from '@finans/components';
 import MonteCarloChart from './MonteCarloChart';
 import './CompoundCalculatorPage.css'; // Reuse shared calculator styles
 

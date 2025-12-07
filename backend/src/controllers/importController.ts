@@ -19,14 +19,22 @@ import { logger } from '../utils/logger';
 import OpenAI from 'openai';
 
 /**
+ * Conversation entry with ownership tracking
+ */
+interface ConversationEntry {
+  userId: string;
+  messages: OpenAI.ChatCompletionMessageParam[];
+}
+
+/**
  * In-memory conversation store for multi-turn chat
  *
- * Maps conversation ID to message history.
- * Key: conversationId, Value: array of OpenAI message objects
+ * Maps conversation ID to message history with user ownership.
+ * Key: conversationId, Value: { userId, messages }
  *
  * Note: For production, consider Redis for persistence across restarts
  */
-const conversations = new Map<string, OpenAI.ChatCompletionMessageParam[]>();
+const conversations = new Map<string, ConversationEntry>();
 
 /**
  * Run import agent to process user message and import data
@@ -69,22 +77,39 @@ export const chatImport = asyncHandler(async (req: Request, res: Response) => {
     hasConversationId: !!conversationId
   });
 
-  // Get or create conversation history
+  // Get or create conversation history with ownership validation
   let history: OpenAI.ChatCompletionMessageParam[] = [];
-  if (conversationId && conversations.has(conversationId)) {
-    history = conversations.get(conversationId) || [];
-    logger.debug('Using existing conversation', {
-      userId,
-      conversationId,
-      messageCount: history.length
-    });
+  let activeConversationId: string;
+
+  const existingConversation = conversationId ? conversations.get(conversationId) : undefined;
+
+  if (existingConversation) {
+    if (existingConversation.userId !== userId) {
+      // Ownership mismatch - generate new ID, don't overwrite original
+      logger.warn('Conversation ownership mismatch', {
+        conversationId,
+        requestingUserId: userId,
+        ownerUserId: existingConversation.userId,
+      });
+      activeConversationId = randomUUID();
+      history = [];
+    } else {
+      // Valid ownership - continue conversation
+      activeConversationId = conversationId;
+      history = existingConversation.messages;
+      logger.debug('Using existing conversation', {
+        userId,
+        conversationId,
+        messageCount: history.length,
+      });
+    }
+  } else {
+    // New conversation
+    activeConversationId = conversationId || randomUUID();
   }
 
-  // Run the import agent
-  const result = await runImportAgent(message, userId, history);
-
-  // Generate conversation ID if new
-  const newConversationId = conversationId || randomUUID();
+  // Run the import agent with sessionId for Langfuse conversation grouping
+  const result = await runImportAgent(message, userId, history, activeConversationId);
 
   // Update conversation history with user message and agent response
   history.push({ role: 'user', content: message });
@@ -92,12 +117,12 @@ export const chatImport = asyncHandler(async (req: Request, res: Response) => {
     history.push({ role: 'assistant', content: result.message });
   }
 
-  // Store updated history
-  conversations.set(newConversationId, history);
+  // Store updated history with ownership
+  conversations.set(activeConversationId, { userId, messages: history });
 
   logger.info('Import agent completed', {
     userId,
-    conversationId: newConversationId,
+    conversationId: activeConversationId,
     success: result.success,
     snapshotsCreated: result.snapshotsCreated,
     snapshotsUpdated: result.snapshotsUpdated,
@@ -108,7 +133,7 @@ export const chatImport = asyncHandler(async (req: Request, res: Response) => {
   res.json({
     data: {
       ...result,
-      conversationId: newConversationId
+      conversationId: activeConversationId
     },
     success: true
   });

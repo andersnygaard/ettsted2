@@ -114,7 +114,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         await fetchUser();
 
         // Redirect to dashboard
-        window.location.href = '/dashboard';
+        window.location.href = '/oversikt';
       }
     } catch (error) {
       console.error('Demo login failed:', error);

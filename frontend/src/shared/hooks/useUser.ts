@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEYS } from '../api/queryHelpers';
 import { userApi } from '../api/services';
 
 /**
@@ -14,7 +15,7 @@ import { userApi } from '../api/services';
  */
 export function useUser() {
   return useQuery({
-    queryKey: ['user'],
+    queryKey: QUERY_KEYS.USER,
     queryFn: userApi.getMe,
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 1
@@ -39,7 +40,7 @@ export function useUserSetup() {
   return useMutation({
     mutationFn: userApi.setup,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USER });
     }
   });
 }
@@ -62,7 +63,7 @@ export function useUpdateUser() {
   return useMutation({
     mutationFn: userApi.update,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USER });
     }
   });
 }

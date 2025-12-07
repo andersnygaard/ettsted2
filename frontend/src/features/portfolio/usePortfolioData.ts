@@ -3,7 +3,7 @@ import { snapshotApi } from '@/shared/api/services';
 import { QUERY_KEYS, invalidateAllPortfolioQueries } from '@/shared/api/queryHelpers';
 import type { MonthlySnapshot, Account } from '@/shared/types';
 import { getAccountCategory } from '@/shared/types';
-import { parseDate } from '@/shared/utils/dateFormat';
+import { parseDate } from '@finans/components';
 import { PORTFOLIO_MILESTONES, QUERY_CONFIG } from '@/config/constants';
 
 /**

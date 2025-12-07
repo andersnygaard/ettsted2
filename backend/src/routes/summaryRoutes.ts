@@ -12,13 +12,21 @@ import { Router, Request, Response, NextFunction, IRouter } from 'express';
 import * as portfolioService from '../services/portfolioService';
 import * as userService from '../services/userService';
 import * as calc from '../services/calculationService';
-import { config } from '../config/environment';
-import { mockSnapshots, getMockAggregatedData } from '../utils/mockData';
+import { compareDatesAsc } from '../utils/dateUtils';
+import { MonthlySnapshot } from '../models/Portfolio';
 
 const router: IRouter = Router();
 
 /**
- * GET /api/v1/dashboard
+ * Sort snapshots by date (oldest first)
+ * CosmosDB string sort on "dd.MM.yyyy" is incorrect, so we sort in JS
+ */
+function sortSnapshotsAsc(snapshots: MonthlySnapshot[]): MonthlySnapshot[] {
+  return [...snapshots].sort((a, b) => compareDatesAsc(a.date, b.date));
+}
+
+/**
+ * GET /api/v1/oversikt
  *
  * Dashboard overview with aggregated metrics
  *
@@ -27,65 +35,46 @@ const router: IRouter = Router();
  *   data: {
  *     netWorth: number
  *     monthlyChange: number (percentage)
- *     sumSparing: number
- *     sumGjeld: number
- *     sumPensjon: number
- *     sparerate: number (percentage)
+ *     sumSavings: number
+ *     totalDebt: number
+ *     totalPension: number
+ *     savingsRate: number (percentage)
  *     snapshotDate: string (dd.MM.yyyy)
  *   }
  * }
  */
-router.get('/dashboard', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/oversikt', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // CI mock mode - return hardcoded data
-    if (config.ciMockMode) {
-      const mockData = getMockAggregatedData();
-      return res.json({
-        data: {
-          netWorth: mockData.dashboard.nettoFormue,
-          monthlyChange: mockData.dashboard.endringProsent,
-          sumSparing: mockData.dashboard.sumSparing,
-          sumGjeld: mockData.dashboard.sumGjeld,
-          sumPensjon: mockData.dashboard.sumPensjon,
-          sparerate: mockData.dashboard.sparerate,
-          snapshotDate: mockSnapshots[mockSnapshots.length - 1].date,
-        },
-        success: true,
-      });
-    }
-
     const userId = req.user!.userId;
 
-    // Get latest 2 snapshots for comparison
-    const snapshots = await portfolioService.getSnapshotsByUserId(userId, {
-      orderBy: 'date',
-      ascending: false,
-      limit: 2,
-    });
+    const [rawSnapshots, user] = await Promise.all([
+      portfolioService.getSnapshotsByUserId(userId),
+      userService.getUserById(userId),
+    ]);
 
-    const user = await userService.getUserById(userId);
-
-    if (snapshots.length === 0) {
+    if (rawSnapshots.length === 0) {
       return res.json({
         data: {
           netWorth: 0,
           monthlyChange: 0,
-          sumSparing: 0,
-          sumGjeld: 0,
-          sumPensjon: 0,
-          sparerate: user?.profile ? calc.calculateSparerate(user.profile) : 0,
+          sumSavings: 0,
+          totalDebt: 0,
+          totalPension: 0,
+          savingsRate: user?.profile ? calc.calculateSavingsRate(user.profile) : 0,
         },
         success: true,
       });
     }
 
-    const current = snapshots[0];
-    const previous = snapshots[1];
+    // Sort by date (oldest first) then get last two
+    const sorted = sortSnapshotsAsc(rawSnapshots);
+    const current = sorted[sorted.length - 1];
+    const previous = sorted.length > 1 ? sorted[sorted.length - 2] : null;
 
     const netWorth = calc.calculateNetWorth(current.accounts);
-    const sumSparing = calc.calculateSumByCategory(current.accounts, 'sparing');
-    const sumGjeld = calc.calculateSumByCategory(current.accounts, 'gjeld');
-    const sumPensjon = calc.calculateSumByCategory(current.accounts, 'pensjon');
+    const sumSavings = calc.calculateSumByCategory(current.accounts, 'sparing');
+    const totalDebt = calc.calculateSumByCategory(current.accounts, 'gjeld');
+    const totalPension = calc.calculateSumByCategory(current.accounts, 'pensjon');
 
     const previousNetWorth = previous ? calc.calculateNetWorth(previous.accounts) : netWorth;
     const monthlyChange = calc.calculateMonthlyChange(netWorth, previousNetWorth);
@@ -94,10 +83,10 @@ router.get('/dashboard', async (req: Request, res: Response, next: NextFunction)
       data: {
         netWorth,
         monthlyChange,
-        sumSparing,
-        sumGjeld,
-        sumPensjon,
-        sparerate: user?.profile ? calc.calculateSparerate(user.profile) : 0,
+        sumSavings,
+        totalDebt,
+        totalPension,
+        savingsRate: user?.profile ? calc.calculateSavingsRate(user.profile) : 0,
         snapshotDate: current.date,
       },
       success: true,
@@ -115,8 +104,8 @@ router.get('/dashboard', async (req: Request, res: Response, next: NextFunction)
  * Response:
  * {
  *   data: {
- *     sumSparing: number
- *     sparerate: number (percentage)
+ *     sumSavings: number
+ *     savingsRate: number (percentage)
  *     monthsFree: number
  *     fireNumber: number
  *     fireProgress: number (0-100+)
@@ -126,37 +115,18 @@ router.get('/dashboard', async (req: Request, res: Response, next: NextFunction)
  */
 router.get('/sparing', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // CI mock mode - return hardcoded data
-    if (config.ciMockMode) {
-      const mockData = getMockAggregatedData();
-      return res.json({
-        data: {
-          sumSparing: mockData.sparing.total,
-          sparerate: 25,
-          monthsFree: Math.round(mockData.sparing.total / (400000 / 12)),
-          fireNumber: 10000000,
-          fireProgress: (mockData.sparing.total / 10000000) * 100,
-          history: mockData.sparing.history,
-        },
-        success: true,
-      });
-    }
-
     const userId = req.user!.userId;
 
-    const [snapshots, user] = await Promise.all([
-      portfolioService.getSnapshotsByUserId(userId, {
-        orderBy: 'date',
-        ascending: true,
-      }),
+    const [rawSnapshots, user] = await Promise.all([
+      portfolioService.getSnapshotsByUserId(userId),
       userService.getUserById(userId),
     ]);
 
-    if (snapshots.length === 0 || !user) {
+    if (rawSnapshots.length === 0 || !user) {
       return res.json({
         data: {
-          sumSparing: 0,
-          sparerate: 0,
+          sumSavings: 0,
+          savingsRate: 0,
           monthsFree: 0,
           fireNumber: 0,
           fireProgress: 0,
@@ -166,14 +136,17 @@ router.get('/sparing', async (req: Request, res: Response, next: NextFunction) =
       });
     }
 
+    // Sort by date (oldest first)
+    const snapshots = sortSnapshotsAsc(rawSnapshots);
     const latest = snapshots[snapshots.length - 1];
-    const sumSparing = calc.calculateSumByCategory(latest.accounts, 'sparing');
-    const sparerate = calc.calculateSparerate(user.profile);
-    const fireNumber = calc.calculateFireNumber(user.profile);
-    const monthsFree = calc.calculateMonthsFree(sumSparing, user.profile.annualExpenses);
-    const fireProgress = fireNumber > 0 ? (sumSparing / fireNumber) * 100 : 0;
 
-    // Build history for chart
+    const sumSavings = calc.calculateSumByCategory(latest.accounts, 'sparing');
+    const savingsRate = calc.calculateSavingsRate(user.profile);
+    const fireNumber = calc.calculateFireNumber(user.profile);
+    const monthsFree = calc.calculateMonthsFree(sumSavings, user.profile.annualExpenses);
+    const fireProgress = fireNumber > 0 ? (sumSavings / fireNumber) * 100 : 0;
+
+    // Build history for chart (already sorted oldest first)
     const history = snapshots.map((s) => ({
       date: s.date,
       value: calc.calculateSumByCategory(s.accounts, 'sparing'),
@@ -181,8 +154,8 @@ router.get('/sparing', async (req: Request, res: Response, next: NextFunction) =
 
     return res.json({
       data: {
-        sumSparing,
-        sparerate,
+        sumSavings,
+        savingsRate,
         monthsFree,
         fireNumber,
         fireProgress,
@@ -203,8 +176,8 @@ router.get('/sparing', async (req: Request, res: Response, next: NextFunction) =
  * Response:
  * {
  *   data: {
- *     sumGjeld: number
- *     dekning: number (percentage, 0-100+)
+ *     totalDebt: number
+ *     coverage: number (percentage, 0-100+)
  *     remaining: number (debt not covered by savings)
  *     loans: Array<{ name: string, value: number }>
  *     history: Array<{ date: string, value: number }>
@@ -213,33 +186,15 @@ router.get('/sparing', async (req: Request, res: Response, next: NextFunction) =
  */
 router.get('/gjeld', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // CI mock mode - return hardcoded data
-    if (config.ciMockMode) {
-      const mockData = getMockAggregatedData();
-      return res.json({
-        data: {
-          sumGjeld: mockData.gjeld.total,
-          dekning: mockData.gjeld.dekning,
-          remaining: Math.max(0, mockData.gjeld.total - mockData.sparing.total),
-          loans: mockData.gjeld.accounts.map(a => ({ name: a.name, value: a.value })),
-          history: mockData.gjeld.history,
-        },
-        success: true,
-      });
-    }
-
     const userId = req.user!.userId;
 
-    const snapshots = await portfolioService.getSnapshotsByUserId(userId, {
-      orderBy: 'date',
-      ascending: true,
-    });
+    const rawSnapshots = await portfolioService.getSnapshotsByUserId(userId);
 
-    if (snapshots.length === 0) {
+    if (rawSnapshots.length === 0) {
       return res.json({
         data: {
-          sumGjeld: 0,
-          dekning: 100,
+          totalDebt: 0,
+          coverage: 100,
           remaining: 0,
           loans: [],
           history: [],
@@ -248,18 +203,21 @@ router.get('/gjeld', async (req: Request, res: Response, next: NextFunction) => 
       });
     }
 
+    // Sort by date (oldest first)
+    const snapshots = sortSnapshotsAsc(rawSnapshots);
     const latest = snapshots[snapshots.length - 1];
-    const sumGjeld = calc.calculateSumByCategory(latest.accounts, 'gjeld');
-    const dekning = calc.calculateDekning(latest.accounts);
-    const sumSparing = calc.calculateSumByCategory(latest.accounts, 'sparing');
-    const remaining = Math.max(0, sumGjeld - sumSparing);
+
+    const totalDebt = calc.calculateSumByCategory(latest.accounts, 'gjeld');
+    const coverage = calc.calculateCoverage(latest.accounts);
+    const sumSavings = calc.calculateSumByCategory(latest.accounts, 'sparing');
+    const remaining = Math.max(0, totalDebt - sumSavings);
 
     // Get loan accounts (gjeld or lån assetClass)
     const loans = latest.accounts
       .filter((a) => ['gjeld', 'lån', 'loan', 'debt'].includes(a.assetClass.toLowerCase()))
       .map((a) => ({ name: a.name, value: a.value }));
 
-    // Build history for chart
+    // Build history for chart (already sorted oldest first)
     const history = snapshots.map((s) => ({
       date: s.date,
       value: calc.calculateSumByCategory(s.accounts, 'gjeld'),
@@ -267,8 +225,8 @@ router.get('/gjeld', async (req: Request, res: Response, next: NextFunction) => 
 
     return res.json({
       data: {
-        sumGjeld,
-        dekning,
+        totalDebt,
+        coverage,
         remaining,
         loans,
         history,
@@ -288,7 +246,7 @@ router.get('/gjeld', async (req: Request, res: Response, next: NextFunction) => 
  * Response:
  * {
  *   data: {
- *     sumPensjon: number
+ *     totalPension: number
  *     breakdown: Array<{ name: string, value: number }>
  *     history: Array<{ date: string, value: number }>
  *   }
@@ -296,30 +254,14 @@ router.get('/gjeld', async (req: Request, res: Response, next: NextFunction) => 
  */
 router.get('/pensjon', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // CI mock mode - return hardcoded data
-    if (config.ciMockMode) {
-      const mockData = getMockAggregatedData();
-      return res.json({
-        data: {
-          sumPensjon: mockData.pensjon.total,
-          breakdown: mockData.pensjon.accounts.map(a => ({ name: a.name, value: a.value })),
-          history: mockData.pensjon.history,
-        },
-        success: true,
-      });
-    }
-
     const userId = req.user!.userId;
 
-    const snapshots = await portfolioService.getSnapshotsByUserId(userId, {
-      orderBy: 'date',
-      ascending: true,
-    });
+    const rawSnapshots = await portfolioService.getSnapshotsByUserId(userId);
 
-    if (snapshots.length === 0) {
+    if (rawSnapshots.length === 0) {
       return res.json({
         data: {
-          sumPensjon: 0,
+          totalPension: 0,
           breakdown: [],
           history: [],
         },
@@ -327,15 +269,18 @@ router.get('/pensjon', async (req: Request, res: Response, next: NextFunction) =
       });
     }
 
+    // Sort by date (oldest first)
+    const snapshots = sortSnapshotsAsc(rawSnapshots);
     const latest = snapshots[snapshots.length - 1];
-    const sumPensjon = calc.calculateSumByCategory(latest.accounts, 'pensjon');
+
+    const totalPension = calc.calculateSumByCategory(latest.accounts, 'pensjon');
 
     // Get pension accounts breakdown
     const breakdown = latest.accounts
       .filter((a) => a.assetClass === 'pensjon')
       .map((a) => ({ name: a.name, value: a.value }));
 
-    // Build history for chart
+    // Build history for chart (already sorted oldest first)
     const history = snapshots.map((s) => ({
       date: s.date,
       value: calc.calculateSumByCategory(s.accounts, 'pensjon'),
@@ -343,7 +288,7 @@ router.get('/pensjon', async (req: Request, res: Response, next: NextFunction) =
 
     return res.json({
       data: {
-        sumPensjon,
+        totalPension,
         breakdown,
         history,
       },

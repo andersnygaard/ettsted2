@@ -1,5 +1,5 @@
 import { useAuth } from '../auth/useAuth';
-import { formatCurrency } from '../../shared/utils/numberFormat';
+import { formatCurrency } from '@finans/components';
 import { useNavigate } from 'react-router-dom';
 import { useDashboardData } from './useDashboardData';
 import { PageSkeleton, StatCard, SectionLink } from '@finans/components';
@@ -20,13 +20,13 @@ function DashboardPage() {
     : 0;
 
   // Use dashboard data if available, otherwise use empty state
-  const data = dashboardData || {
+  const data = dashboardData ?? {
     netWorth: 0,
     monthlyChange: 0,
-    sumSparing: 0,
-    sumGjeld: 0,
+    sumSavings: 0,
+    totalDebt: 0,
     pensjon: 0,
-    sparerate: 0,
+    savingsRate: 0,
     nextMilestone: MILESTONES[0],
     currentTowardsMilestone: 0,
     sparingMonthlyChange: 0
@@ -43,7 +43,7 @@ function DashboardPage() {
   const isNegativeNetWorth = data.netWorth < 0;
 
   // Hero metrics: use savings when net worth is negative
-  const heroValue = isNegativeNetWorth ? data.sumSparing : data.netWorth;
+  const heroValue = isNegativeNetWorth ? data.sumSavings : data.netWorth;
   const heroLabel = isNegativeNetWorth ? 'Sum sparing' : 'Netto formue';
   const heroChange = isNegativeNetWorth ? data.sparingMonthlyChange : data.monthlyChange;
 
@@ -64,7 +64,6 @@ function DashboardPage() {
         breadcrumb={[{ label: 'Oversikt' }]}
         title={`God morgen, ${firstName}`}
         subtitle={monthYear}
-        centered
         className="dashboard-page"
       >
         <DashboardSkeleton />
@@ -78,7 +77,6 @@ function DashboardPage() {
         breadcrumb={[{ label: 'Oversikt' }]}
         title={`God morgen, ${firstName}`}
         subtitle="Feil ved lasting av data"
-        centered
         className="dashboard-page"
       >
         <></>
@@ -91,7 +89,6 @@ function DashboardPage() {
       breadcrumb={[{ label: 'Oversikt' }]}
       title={`God morgen, ${firstName}`}
       subtitle={monthYear}
-      centered
       className="dashboard-page"
     >
 
@@ -107,24 +104,24 @@ function DashboardPage() {
         {/* Quick Stats Grid */}
         <div className="quick-stats">
           <StatCard
-            value={isNegativeNetWorth ? formatCurrency(data.netWorth) : formatCurrency(data.sumSparing)}
+            value={isNegativeNetWorth ? formatCurrency(data.netWorth) : formatCurrency(data.sumSavings)}
             label={isNegativeNetWorth ? 'Netto formue' : 'Sum sparing'}
-            onClick={() => navigate('/portfolio')}
+            onClick={() => navigate('/portefolje')}
           />
           <StatCard
-            value={formatCurrency(data.sumGjeld)}
+            value={formatCurrency(data.totalDebt)}
             label="Sum gjeld"
-            onClick={() => navigate('/portfolio')}
+            onClick={() => navigate('/portefolje')}
           />
           <StatCard
             value={formatCurrency(data.pensjon)}
             label="Pensjon"
-            onClick={() => navigate('/portfolio')}
+            onClick={() => navigate('/portefolje')}
           />
           <StatCard
             value={`${sparerate.toFixed(2).replace('.', ',')}%`}
             label="Sparerate"
-            onClick={() => navigate('/portfolio')}
+            onClick={() => navigate('/portefolje')}
           />
         </div>
 
@@ -149,7 +146,7 @@ function DashboardPage() {
           <SectionLink
             title="Portefølje"
             subtitle="Se alle kontoer og historikk"
-            href="/portfolio"
+            href="/portefolje"
           />
           <SectionLink
             title="Sparing & F.I.R.E."

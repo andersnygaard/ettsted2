@@ -1,5 +1,4 @@
-import { PageSkeleton, HeroNumber, StatsRow, AreaChart } from '@finans/components';
-import { formatCurrency } from '@/shared/utils/numberFormat';
+import { PageSkeleton, HeroNumber, StatsRow, AreaChart, formatCurrency } from '@finans/components';
 import { useSparingData } from './useSparingData';
 import { FireSection } from './FireSection';
 import { SparingSkeleton } from '@/shared/components/skeletons';
@@ -19,7 +18,7 @@ function SparingPage() {
   if (isLoading) {
     return (
       <PageSkeleton
-        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Sparing' }]}
+        breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Sparing' }]}
         title="Sparing"
         subtitle="Din vei mot økonomisk frihet"
         className="sparing-page"
@@ -32,7 +31,7 @@ function SparingPage() {
   if (error) {
     return (
       <PageSkeleton
-        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Sparing' }]}
+        breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Sparing' }]}
         title="Sparing"
         subtitle="Feil ved lasting av sparingsdata. Prøv igjen senere."
         className="sparing-page"
@@ -45,7 +44,7 @@ function SparingPage() {
   if (!sparingData) {
     return (
       <PageSkeleton
-        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Sparing' }]}
+        breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Sparing' }]}
         title="Sparing"
         subtitle="Ingen sparingsdata tilgjengelig. Legg til dine første portefølje-data."
         className="sparing-page"
@@ -61,7 +60,7 @@ function SparingPage() {
 
   const fireData = {
     fireNumber: sparingData.fireNumber,
-    current: sparingData.sumSparing,
+    current: sparingData.sumSavings,
     minRetireAge: sparingData.minRetireAge,
     yearsToSalary: sparingData.yearsToSalary,
     annualWithdrawal: sparingData.annualWithdrawal,
@@ -69,7 +68,7 @@ function SparingPage() {
 
   return (
     <PageSkeleton
-      breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Sparing' }]}
+      breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Sparing' }]}
       title="Sparing"
       subtitle="Din vei mot økonomisk frihet"
       className="sparing-page"
@@ -77,14 +76,14 @@ function SparingPage() {
 
         <HeroNumber
           label="Sum sparing"
-          value={formatCurrency(sparingData.sumSparing)}
+          value={formatCurrency(sparingData.sumSavings)}
           change={sparingData.yearlyChange}
           changeLabel={`i ${new Date().getFullYear()} · ${yearlyGrowthPrefix}${yearlyGrowthFormatted}`}
         />
 
         <StatsRow
           stats={[
-            { value: `${sparingData.sparerate.toFixed(2).replace('.', ',')}%`, label: 'Sparerate' },
+            { value: `${sparingData.savingsRate.toFixed(2).replace('.', ',')}%`, label: 'Sparerate' },
             { value: `${sparingData.monthlyChange >= 0 ? '+' : ''}${sparingData.monthlyChange.toFixed(2).replace('.', ',')}%`, label: 'Siste måned' },
             { value: String(sparingData.monthsFree), label: 'Måneder fri' },
           ]}

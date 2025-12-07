@@ -37,8 +37,8 @@ export { ProgressBar } from './forms/ProgressBar'
 export type { ProgressBarProps } from './forms/ProgressBar'
 
 // Form Utilities
-export { formatNumber, parseNumber } from './forms/utils/numberFormat'
-export { formatDate, parseNorwegianDate, getFirstDayOfMonth } from './forms/utils/dateFormat'
+export { formatCurrency, formatNumber, parseNumber, formatPercentage } from './forms/utils/numberFormat'
+export { formatDate, parseDate, parseNorwegianDate, toISOString, fromISOString, formatDateLong, getFirstDayOfMonth } from './forms/utils/dateFormat'
 
 // Cards
 export { BreakdownCard } from './cards/BreakdownCard'
@@ -104,9 +104,6 @@ export type { Toast, ToastType } from './system/Toast'
 
 export { ErrorBoundary } from './system/ErrorBoundary'
 
-// Base Utilities
-export { formatCurrency } from './utils/format'
-export { formatNumber as formatNumberUtil, parseNumber as parseNumberUtil, formatPercentage } from './utils/numberFormat'
 
 // Hooks
 export { useCountAnimation } from './hooks/useCountAnimation'

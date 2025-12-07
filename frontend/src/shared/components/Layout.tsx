@@ -9,7 +9,7 @@ function Layout() {
       <AppHeader />
 
       {/* Main Content */}
-      <main>
+      <main id="main-content">
         <Outlet />
       </main>
     </div>

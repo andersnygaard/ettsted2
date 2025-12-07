@@ -416,7 +416,7 @@ pnpm dev
 - Verify response format
 - Test error cases (400, 401, 404, 500)
 - Check Winston logs
-- Future: Jest unit tests
+- NOTE: No unit tests - E2E only per CLAUDE.md
 
 #### Playwright CLI Visual Verification - MANDATORY FOR FRONTEND
 

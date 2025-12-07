@@ -19,16 +19,40 @@ import routes from './routes';
 function createApp(): Application {
   const app = express();
 
+  // Build CSP connectSrc directive with allowed origins
+  const connectSrc = [
+    "'self'",
+    // Include all allowed CORS origins in CSP connectSrc
+    ...config.allowedOrigins
+  ];
+
   // Security middleware (Helmet - sets various HTTP headers)
-  app.use(helmet());
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:", "https:"],
+        connectSrc,
+      },
+    },
+  }));
 
   // CORS middleware - only in development (production uses Azure EasyAuth same-origin)
   if (config.nodeEnv === 'development') {
     app.use(cors({
       origin: (origin, callback) => {
-        // Allow requests with no origin (mobile apps, Postman, etc.)
-        if (!origin) {
+        // Allow no-origin requests in development (for Postman, curl, etc.)
+        if (config.nodeEnv === 'development' && !origin) {
           return callback(null, true);
+        }
+
+        // Reject no-origin requests in production
+        if (!origin) {
+          logger.warn('CORS blocked request without Origin header');
+          return callback(new Error('CORS: Origin header required'));
         }
 
         // Check if origin is in allowed list

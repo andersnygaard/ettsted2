@@ -16,7 +16,6 @@ export interface PageSkeletonProps {
   breadcrumb?: BreadcrumbItem[];
   title: string;
   subtitle?: string;
-  centered?: boolean;
   className?: string;
   width?: 'default' | 'narrow' | 'wide';
 }
@@ -26,7 +25,6 @@ export function PageSkeleton({
   breadcrumb,
   title,
   subtitle,
-  centered = false,
   className = '',
   width = 'narrow'
 }: PageSkeletonProps) {
@@ -42,7 +40,6 @@ export function PageSkeleton({
         <PageHeader
           title={title}
           subtitle={subtitle}
-          centered={centered}
         />
 
         <div className="page-skeleton__content">

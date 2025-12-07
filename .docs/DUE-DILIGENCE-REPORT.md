@@ -2,43 +2,26 @@
 
 **Generated**: 2025-12-07
 **Auditor**: Claude Code Due Diligence Skill
-**Codebase Version**: da7fe43 (main branch)
-**Total Codebase**: ~10,500 lines (frontend ~7,000, backend ~3,500)
+**Codebase Version**: fb5aded (main branch)
 
 ---
 
 ## Executive Summary
 
-The Finans application demonstrates **strong architectural foundations** with excellent TypeScript discipline, comprehensive input validation, and clean separation of concerns. The Nordic Minimal design system is well-implemented with consistent styling patterns. Since the previous audit (2025-12-06), many issues have been addressed.
+The Finans application demonstrates **senior-level architecture** with excellent TypeScript discipline, well-structured separation of concerns, and comprehensive input validation. The Nordic Minimal design system is well-implemented with 85% compliance, and the codebase shows mature patterns for authentication, error handling, and state management.
 
-**Overall Assessment**: Production-ready codebase with minor improvements recommended.
+However, the audit identified **critical security issues** requiring immediate attention: development mode authentication bypass, exposed API credentials in local .env files, and a NoSQL injection pattern in the portfolio service. While the .env file is properly gitignored, the exposed credentials (Facebook, Google, OpenAI, Langfuse) should be rotated as a precautionary measure.
+
+The frontend architecture is solid with feature-based vertical slicing and proper TanStack Query usage, though there are DRY violations in utility functions between the frontend and components packages that should be consolidated.
+
+**Overall Assessment**: Production-ready after addressing critical security issues and consolidating shared utilities.
 
 | Area | Score | Status |
 |------|-------|--------|
-| Design | 82/100 | ✅ Good - Minor token consistency needed |
-| Code Quality | 81/100 | ✅ Good - DRY violations in error classes |
-| Security | 78/100 | ✅ Good - Dev mode hardening recommended |
-| **Overall** | **80/100** | ✅ **Production-ready** |
-
----
-
-## Changes Since Last Audit (2025-12-06)
-
-### ✅ Issues Fixed
-
-| Issue | Status | Notes |
-|-------|--------|-------|
-| jws@3.2.2 vulnerability | ✅ Fixed | pnpm overrides to ^3.2.3 |
-| parseDate() duplication | ✅ Fixed | Now uses shared utility |
-| Magic numbers scattered | ✅ Fixed | Extracted to config/constants.ts |
-| Sparing/Gjeld fetch usage | ✅ Fixed | Uses axios service layer |
-| DEV_MODE_ENABLED safeguard | ✅ Fixed | Requires both NODE_ENV and flag |
-| Avatar aria-label | ✅ Fixed | Has proper aria-label |
-| Modal close button | ✅ Fixed | Has aria-label="Lukk" |
-| StatCard keyboard | ✅ Fixed | Has onKeyDown, role, tabIndex |
-| ErrorBoundary missing | ✅ Fixed | Exists and wraps App |
-| Security audit in CI | ✅ Fixed | pnpm audit in ci.yml |
-| E2E tests in CI | ✅ Fixed | Playwright with CI mock mode |
+| Design | 86/100 | ✅ Good |
+| Code Quality | 85/100 | ✅ Good |
+| Security | 75/100 | ⚠️ Needs Work |
+| **Overall** | **82/100** | ✅ Good |
 
 ---
 
@@ -46,60 +29,86 @@ The Finans application demonstrates **strong architectural foundations** with ex
 
 ### ✅ What's Done Well
 
-1. **TypeScript Excellence** - Strict mode enabled, comprehensive typing
-2. **Input Validation** - Zod schemas on all endpoints with custom Norwegian date validators
-3. **Error Handling** - Typed AppError classes, global handler, standardized responses
-4. **Architecture** - Clean vertical slicing (frontend), MVC pattern (backend)
-5. **API Design** - Consistent REST conventions, proper status codes, standard response format
-6. **Database Patterns** - Parameterized queries, partition-key optimization, safe CosmosDB usage
-7. **Logging** - Structured Winston logging with sensitive data sanitization
-8. **State Management** - TanStack Query for server state, React Context for auth only
-9. **Design System** - Comprehensive tokens (colors, typography, spacing), consistent application
-10. **CI/CD** - Security audit, E2E tests, type checking, build verification
+- **Monorepo Structure**: Clean pnpm workspace with frontend, backend, and components packages
+- **TypeScript Strictness**: `strict: true` across all workspaces with `noImplicitAny`, `noUnusedLocals`, enforced by ESLint
+- **Zero `any` Types**: No unsafe type usage found in entire codebase
+- **Vertical Slicing**: Feature-based organization in frontend (auth, dashboard, portfolio, calculators)
+- **API Design**: Consistent REST conventions with `{ data, success, error }` response format
+- **Input Validation**: Comprehensive Zod schemas for all endpoints with Norwegian-specific validators
+- **Error Handling**: Custom AppError hierarchy with centralized global handler
+- **State Management**: TanStack Query properly configured with centralized queryClient and QUERY_KEYS
+- **CosmosDB Integration**: Correct partition key strategy, parameterized queries, error mapping
+- **Logging**: Winston with automatic request context via AsyncLocalStorage, sensitive data redaction
+- **Rate Limiting**: Three-tier system (general, calculator, LLM) with configurable thresholds
+- **Security Headers**: Helmet.js configured for standard HTTP security headers
+- **Responsive Design**: Mobile-first approach with proper breakpoints and touch/hover differentiation
+- **Accessibility**: 85% compliance with semantic HTML, ARIA attributes, keyboard navigation
 
 ### ⚠️ Areas for Improvement
 
-1. **Frontend Error Typing** - 4 instances of `any` in error handlers (AuthContext, OnboardingWizard)
-2. **Duplicate Error Classes** - cosmosHelpers.ts defines classes that duplicate AppError.ts
-3. **Duplicate Token Verification** - verifyDemoToken() exists in both auth.ts and authRoutes.ts
-4. **RGBA Hardcoding** - Some components use inline rgba() instead of CSS tokens
-5. **ESLint Configuration** - no-explicit-any set to 'warn' instead of 'error'
+- **Query Key Consistency**: `useUser()` hook uses hardcoded `['user']` instead of QUERY_KEYS constant
+- **DRY Violations**: Number and date formatting duplicated between frontend and components
+- **Example Files in Source**: Test/example files mixed with production code
+- **Component Token Distribution**: CSS tokens not bundled with components package
+- **Documentation**: Component library lacks README
 
 ### Detailed Findings
 
 #### Architecture
+
 | Aspect | Status | Notes |
 |--------|--------|-------|
-| Monorepo Structure | ✅ Excellent | pnpm workspaces, clear separation |
-| Vertical Slicing | ✅ Excellent | Feature-based organization |
-| Separation of Concerns | ✅ Excellent | Routes → Controllers → Services → DB |
-| API Layer | ✅ Excellent | Centralized axios client, typed services |
+| Monorepo structure | ✅ | pnpm workspaces correctly configured |
+| Separation of concerns | ✅ | Routes → Controllers → Services → Data Layer |
+| Feature-based organization | ✅ | Vertical slicing in frontend, well-organized shared |
+| Middleware chain | ✅ | Correct order: helmet → cors → json → auth → routes → error |
+| Configuration management | ✅ | Environment validation on startup |
 
 #### TypeScript Usage
+
 | Aspect | Status | Notes |
 |--------|--------|-------|
-| Strict Mode | ✅ Enabled | All strict flags on |
-| No `any` Types (Backend) | ✅ Verified | 0 instances |
-| No `any` Types (Frontend) | ⚠️ 4 found | Error handlers need typing |
-| Type Augmentation | ✅ Excellent | Express.Request properly extended |
-| Runtime Validation | ✅ Excellent | Zod schemas + TypeScript |
+| Strict mode | ✅ | Enabled across all workspaces |
+| No implicit any | ✅ | ESLint enforces `@typescript-eslint/no-explicit-any: 'error'` |
+| Type coverage | ✅ | All functions have return types, interfaces exported |
+| Type guards | ⚠️ | Error handler uses `as AppError` casts instead of type guards |
+| Generic usage | ✅ | Proper generics in service layers |
+
+**Issues**:
+- [backend/src/middleware/errorHandler.ts:38-54](backend/src/middleware/errorHandler.ts#L38-L54) - Multiple `as AppError` casts; should use type guard function
 
 #### React Patterns
+
 | Aspect | Status | Notes |
 |--------|--------|-------|
-| Functional Components | ✅ 100% | No class components |
-| Custom Hooks | ✅ Excellent | `useAuth`, `useDashboardData`, etc. |
-| Query Management | ✅ Excellent | TanStack Query with centralized keys |
-| Error Boundaries | ✅ Implemented | Wraps entire app in App.tsx |
-| Lazy Loading | ✅ Implemented | All pages use React.lazy() |
+| Functional components | ✅ | No class components |
+| Hooks usage | ✅ | Proper useMemo, useCallback, custom hooks |
+| Props typing | ✅ | All components have Props interfaces |
+| State management | ✅ | TanStack Query for server state, Context for auth |
+
+**Issues**:
+- [frontend/src/features/auth/onboarding/OnboardingWizard.tsx:340](frontend/src/features/auth/onboarding/OnboardingWizard.tsx#L340) - Missing `handleSubmit` in useCallback dependencies
+- [frontend/src/features/auth/AuthContext.tsx](frontend/src/features/auth/AuthContext.tsx) - Context in same file as provider triggers fast refresh warning
 
 #### API Design
+
 | Aspect | Status | Notes |
 |--------|--------|-------|
-| REST Conventions | ✅ Followed | Standard HTTP methods, paths |
-| Response Format | ✅ Consistent | `{ data, success }` / `{ error, success }` |
-| Status Codes | ✅ Proper | 200/201/400/401/404/409/500 |
-| Validation | ✅ Excellent | Two-layer: input + business validation |
+| REST conventions | ✅ | Standard HTTP methods and status codes |
+| Response format | ✅ | Consistent `{ data, success }` / `{ error, success: false }` |
+| Status codes | ✅ | 200, 201, 204, 400, 401, 404, 409, 429, 500 properly used |
+| Error responses | ✅ | Semantic error codes (VALIDATION_ERROR, NOT_FOUND, etc.) |
+
+**Minor Issue**: DELETE /snapshots/:id returns 200 with message instead of 204 No Content
+
+#### Data Layer
+
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Partition strategy | ✅ | `/id` for users, `/userId` for portfolios |
+| Query security | ✅ | Parameterized queries via `buildParameterizedQuery()` |
+| Error mapping | ✅ | CosmosDB errors mapped to AppError classes |
+| CI mock mode | ⚠️ | Mock logic scattered across controllers and routes |
 
 ---
 
@@ -107,38 +116,89 @@ The Finans application demonstrates **strong architectural foundations** with ex
 
 ### ✅ Security Strengths
 
-1. **Parameterized Queries** - All CosmosDB queries use `buildParameterizedQuery()` helper
-2. **Input Validation** - Comprehensive Zod schemas on all endpoints
-3. **User Isolation** - Partition key strategy prevents cross-user data access
-4. **Rate Limiting** - Three tiers: General (100/min), Calculator (10/min), LLM (20/min)
-5. **Security Headers** - Helmet.js configured
-6. **Sensitive Data Logging** - Passwords, tokens, keys redacted in logs
-7. **Auth Implementation** - EasyAuth + JWT validation with signature checks
-8. **Dev Routes Protection** - Requires NODE_ENV=development AND DEV_MODE_ENABLED=true
-9. **Security Audit in CI** - pnpm audit runs on every push
-10. **JWS Vulnerability Fixed** - Overridden to ^3.2.3
+- **Input Validation**: Comprehensive Zod schemas prevent injection and malformed data
+- **Parameterized Queries**: NoSQL injection prevented in most database operations
+- **User Isolation**: Partition key strategy enforces data isolation per user
+- **Rate Limiting**: Three tiers implemented with express-rate-limit
+- **Security Headers**: Helmet.js configured with defaults
+- **Sensitive Data Redaction**: Passwords, tokens, secrets filtered from logs
+- **HMAC Token Signing**: Demo tokens validated with SHA256 signature
 
-### ⚠️ Security Concerns
+### 🚨 Security Concerns
 
-1. **MEDIUM: Demo JWT Secret Fallback** - Defaults to hardcoded string if env var not set
-2. **MEDIUM: Auth Middleware Dev Bypass** - Auto-creates mock user in dev mode without token
-3. **LOW: CSP Headers Not Explicit** - Uses Helmet defaults (may be insufficient)
-4. **LOW: Business Validators Incomplete** - validateSnapshotOwnership is placeholder
+- **Development Auth Bypass**: Unauthenticated requests get mock user in dev mode
+- **Local Secrets Exposure**: Production API keys visible in local .env file
+- **ORDER BY Injection Pattern**: String interpolation in SQL query
+- **CORS No-Origin Bypass**: Requests without Origin header bypass CORS check
+- **Weak Demo Secret Fallback**: Hardcoded fallback if env var not set
+- **Missing CSP Headers**: No Content-Security-Policy configured
+- **Dev Routes Unprotected**: Dev endpoints lack auth middleware
 
 ### OWASP Top 10 Assessment
 
 | Risk | Status | Notes |
 |------|--------|-------|
-| A01: Broken Access Control | ✅ Compliant | Auth middleware on all routes, user isolation |
-| A02: Cryptographic Failures | ✅ Compliant | .env gitignored, secrets via environment |
-| A03: Injection | ✅ Compliant | Parameterized queries throughout |
-| A04: Insecure Design | ✅ Compliant | Fail-secure defaults, rate limiting |
-| A05: Security Misconfiguration | ✅ Compliant | DEV_MODE_ENABLED safeguard added |
-| A06: Vulnerable Components | ✅ Compliant | jws fixed, npm audit in CI |
-| A07: Auth Failures | ✅ Compliant | OAuth + JWT properly implemented |
-| A08: Data Integrity | ✅ Compliant | Zod validation on all input |
-| A09: Logging Failures | ✅ Compliant | Structured logging, sensitive data redacted |
-| A10: SSRF | ✅ Compliant | No user-controlled URL fetching |
+| A01: Broken Access Control | ⚠️ | Dev routes unprotected; dev mode bypasses all auth |
+| A02: Cryptographic Failures | ⚠️ | Secrets in .env (gitignored but risky); weak demo secret fallback |
+| A03: Injection | ⚠️ | ORDER BY clause uses string interpolation (mitigated by schema) |
+| A04: Insecure Design | ⚠️ | Dev auto-login could expose production if misconfigured |
+| A05: Security Misconfiguration | ⚠️ | CORS allows no-origin; missing CSP; no HSTS |
+| A06: Vulnerable Components | ✅ | Dependencies appear current |
+| A07: Auth Failures | ⚠️ | Dev mode bypass; weak demo secret |
+| A08: Data Integrity | ✅ | Strong input validation; business validation |
+| A09: Logging Failures | ⚠️ | userId/email logged without PII redaction |
+| A10: SSRF | ✅ | Only external calls to OpenAI; no internal service access |
+
+### Security Details
+
+#### Authentication Implementation
+
+**File**: [backend/src/middleware/auth.ts](backend/src/middleware/auth.ts)
+
+**Strengths**:
+- Multi-layer auth: JWT → EasyAuth headers → Demo tokens
+- HMAC-SHA256 demo token validation
+- Proper Bearer token extraction
+
+**Critical Issue** (lines 136-145):
+```typescript
+if (process.env.NODE_ENV === 'development') {
+  req.user = { userId: 'dev-user-123', ... };
+  return next();
+}
+```
+Any request without auth in dev mode gets auto-injected with mock user.
+
+**Recommendation**: Remove dev bypass entirely; use explicit DEMO_MODE flag.
+
+#### ORDER BY Injection Pattern
+
+**File**: [backend/src/services/portfolioService.ts:95](backend/src/services/portfolioService.ts#L95)
+
+```typescript
+const query = `SELECT * FROM p WHERE p.userId = @userId ORDER BY p.${orderBy} ${direction}`;
+```
+
+While `orderBy` is validated by Zod schema ('date' | 'createdAt'), this pattern is dangerous. Schema bypass would allow injection.
+
+**Recommendation**: Use allowlist pattern:
+```typescript
+const orderByField = orderBy === 'date' ? 'p.date' : 'p.createdAt';
+```
+
+#### CORS Configuration
+
+**File**: [backend/src/index.ts:28-31](backend/src/index.ts#L28-L31)
+
+```typescript
+if (!origin) {
+  return callback(null, true); // Allows requests with no Origin
+}
+```
+
+**Impact**: CORS protection bypassed by omitting Origin header.
+
+**Recommendation**: Reject requests without Origin unless from specific trusted sources.
 
 ---
 
@@ -146,165 +206,263 @@ The Finans application demonstrates **strong architectural foundations** with ex
 
 ### ✅ Design Strengths
 
-1. **Design System Tokens** - Comprehensive CSS custom properties for colors, typography, spacing
-2. **Typography Implementation** - Correct fonts: Cormorant Garamond, DM Sans, JetBrains Mono
-3. **Component Consistency** - BEM naming, token-based styling, isolated CSS
-4. **Accessibility** - ARIA on forms, semantic HTML, keyboard support on interactive elements
-5. **Responsive Design** - Breakpoints properly implemented (768px, 640px)
-6. **Animation Polish** - Grain texture, fade-up animations, respects prefers-reduced-motion
-7. **Storybook Coverage** - 29/29 components have stories
+- **Design System**: Comprehensive CSS tokens covering colors, typography, spacing, shadows
+- **Nordic Minimal Aesthetic**: Warm, muted palette consistently applied
+- **Typography Hierarchy**: Three-tier font system correctly implemented
+- **Responsive Design**: 32 media queries with mobile-first approach
+- **Reduced Motion**: `prefers-reduced-motion` implemented globally
+- **Keyboard Navigation**: Focus trapping in modals, Tab/Escape support
+- **Loading States**: Skeleton loaders with proper aria-busy/aria-live
 
 ### ⚠️ Design Issues
 
-1. **Hardcoded RGBA Values** - 12+ instances in SpreadsheetTable, BreakdownCard, MilestoneCard
-2. **Limited Semantic HTML** - Many divs could be article, section, nav
-3. **Missing Breakpoints** - 1024px, 1400px, 480px documented but not consistently used
-4. **Color Contrast** - Secondary text (#6B6B6B) on bone (#F5F2ED) needs verification
+- **CSS Typo**: `--carcoal-hover` should be `--charcoal-hover` in tokens.css:66
+- **Token Distribution**: Components package doesn't export CSS tokens
+- **Missing Skip Link**: No skip-to-content for keyboard users
+- **Color Contrast**: No WCAG verification documented
+- **Breadcrumb**: Missing `aria-current="page"` on current item
+- **Duplicate Container CSS**: Two Container.css files exist
 
 ### Design System Compliance
 
-| Criteria | Score | Notes |
-|----------|-------|-------|
-| Visual Consistency | 17/20 | Some rgba hardcoding |
-| Typography | 20/20 | Perfect implementation of font stack |
-| Color Palette | 17/20 | Tokens complete, some direct rgba usage |
-| Responsive Design | 16/20 | Good breakpoints, some inconsistency |
-| Accessibility | 12/20 | Good basics, limited keyboard nav in lists |
+| Aspect | Compliance | Notes |
+|--------|------------|-------|
+| Color palette | 90% | All variables defined; minor hardcoded values |
+| Typography | 95% | Correct fonts, weights, sizes applied |
+| Spacing | 95% | Proper spacing scale used |
+| Layout | 90% | Container widths, responsive padding correct |
+| Components | 80% | Token dependency issues for standalone use |
+
+### Accessibility Status
+
+| Criteria | Status | Notes |
+|----------|--------|-------|
+| Semantic HTML | ✅ | `<nav>`, `<header>`, `<button>`, `<label>` used correctly |
+| ARIA attributes | ✅ | aria-label, aria-invalid, aria-describedby implemented |
+| Focus management | ✅ | focus-visible, focus trapping in modals |
+| Keyboard navigation | ✅ | Tab, Enter, Escape support |
+| Reduced motion | ✅ | Animation disabled for motion-sensitive users |
+| Skip link | ❌ | Missing skip-to-content navigation |
+| Color contrast | ⚠️ | Not documented/verified |
+
+**Estimated WCAG Level**: AA partial compliance (needs skip link and contrast verification)
 
 ---
 
 ## Top 5 Valuable Improvements
 
-### 1. Type Frontend Error Handlers
+Ranked by ROI (effort vs. impact):
+
+### 1. Consolidate Formatting Utilities
 **Impact**: High | **Effort**: Low
-**Description**: 4 instances of `any` type in error catch blocks defeat strict TypeScript benefits.
-**Location**: AuthContext.tsx:56, OnboardingWizard.tsx:258,267,292
-**Fix**: Create typed error interface and use proper type guards.
 
-### 2. Consolidate Duplicate Code
-**Impact**: High | **Effort**: Low
-**Description**: Error classes duplicated in cosmosHelpers.ts; verifyDemoToken() duplicated in two files.
-**Fix**:
-- Remove duplicate error classes from cosmosHelpers.ts
-- Extract verifyDemoToken() to shared utility
+**Description**: Number and date formatting are implemented differently in frontend (numeral.js, date-fns) and components (toLocaleString, native). This causes inconsistent behavior and violates DRY.
 
-### 3. Standardize CSS Token Usage
-**Impact**: Medium | **Effort**: Medium
-**Description**: 12+ hardcoded rgba() values instead of CSS custom properties.
-**Fix**: Define opacity variants as tokens and replace hardcoded values.
+**Recommendation**:
+- Move all formatting utilities to `@finans/components`
+- Export from components barrel
+- Frontend imports from components package
+- Delete duplicate implementations
 
-### 4. Strengthen ESLint Configuration
+**Files**:
+- [frontend/src/shared/utils/numberFormat.ts](frontend/src/shared/utils/numberFormat.ts)
+- [components/src/forms/utils/numberFormat.ts](components/src/forms/utils/numberFormat.ts)
+
+### 2. Move CSS Tokens to Components Package
+**Impact**: High | **Effort**: Medium
+
+**Description**: CSS design tokens live in `frontend/src/styles/tokens.css` but components reference these variables. External consumers of `@finans/components` won't have access.
+
+**Recommendation**:
+- Move tokens.css to components package
+- Create components/src/styles/tokens.css
+- Re-export from components barrel
+- Frontend imports from components
+
+### 3. Add Unit Tests for Services
+**Impact**: High | **Effort**: Medium
+
+**Description**: Currently zero unit test coverage. Only E2E sanity tests exist. Critical business logic in services untested.
+
+**Recommendation**:
+- Add vitest to backend workspace
+- Create tests for: userService, portfolioService, calculatorService
+- Mock CosmosDB operations
+- Target 80% coverage for services
+
+### 4. Fix Query Key Consistency
 **Impact**: Medium | **Effort**: Low
-**Description**: `@typescript-eslint/no-explicit-any` set to 'warn' instead of 'error'.
-**Fix**: Change to 'error' to enforce type safety.
 
-### 5. Add Semantic HTML
+**Description**: `useUser()` hook uses hardcoded `['user']` instead of QUERY_KEYS constant. `useImportChat` also hardcodes query keys.
+
+**Recommendation**:
+- Add QUERY_KEYS.USER constant
+- Update useUser, useUserSetup, useUpdateUser to use it
+- Update useImportChat to use QUERY_KEYS constants
+
+**File**: [frontend/src/shared/hooks/useUser.ts:17](frontend/src/shared/hooks/useUser.ts#L17)
+
+### 5. Add Skip Link for Accessibility
 **Impact**: Medium | **Effort**: Low
-**Description**: Limited use of semantic elements (article, section, aside).
-**Fix**: Audit components and replace generic divs where appropriate.
+
+**Description**: No skip-to-content link for keyboard users to bypass header navigation.
+
+**Recommendation**:
+- Add hidden skip link at top of AppHeader
+- Link to main content area with id="main-content"
+- Show on focus with CSS
+
+**File**: [frontend/src/shared/components/AppHeader.tsx](frontend/src/shared/components/AppHeader.tsx)
 
 ---
 
-## Top 5 Issues to Address
+## Top 5 Critical Errors
 
-### 🟠 1. Frontend `any` Types in Error Handling
-**Severity**: MEDIUM
-**Category**: Code Quality
-**Location**:
-- [AuthContext.tsx:56](frontend/src/features/auth/AuthContext.tsx#L56)
-- [OnboardingWizard.tsx:258,267,292](frontend/src/features/auth/onboarding/OnboardingWizard.tsx#L258)
-**Description**: Error handlers use `error: any`, defeating TypeScript strict mode benefits.
-**Impact**: Type errors can slip through; error.statusCode accessed without type checking.
-**Fix**: Create typed ApiError interface, use type guards in catch blocks.
+Ranked by severity:
 
-### 🟠 2. Duplicate Error Classes
-**Severity**: MEDIUM
-**Category**: Code Quality
-**Location**: [cosmosHelpers.ts](backend/src/utils/cosmosHelpers.ts)
-**Description**: Defines NotFoundError, ConflictError, ValidationError that duplicate errors/AppError.ts.
-**Impact**: Maintenance burden, potential inconsistent error handling.
-**Fix**: Remove duplicates, import from AppError.ts.
+### 🔴 1. Development Mode Authentication Bypass
+**Severity**: Critical | **Category**: Security
 
-### 🟠 3. Duplicate Token Verification
-**Severity**: MEDIUM
-**Category**: DRY Violation
-**Location**:
-- [auth.ts:47-78](backend/src/middleware/auth.ts#L47-L78)
-- [authRoutes.ts:56-94](backend/src/routes/authRoutes.ts#L56-L94)
-**Description**: verifyDemoToken() function duplicated with identical logic.
-**Impact**: Bug fixes need to be made in two places.
-**Fix**: Extract to shared/utils/auth.ts.
+**Location**: [backend/src/middleware/auth.ts:136-145](backend/src/middleware/auth.ts#L136-L145)
 
-### 🟡 4. Demo JWT Secret Fallback
-**Severity**: LOW-MEDIUM
-**Category**: Security
-**Location**: [auth.ts:25](backend/src/middleware/auth.ts#L25)
-**Description**: DEMO_JWT_SECRET defaults to hardcoded fallback if env var not set.
-**Impact**: In development without env var, tokens can be forged.
-**Fix**: Generate cryptographically random default or require env var.
+**Description**: When `NODE_ENV=development`, any request without valid authentication is automatically injected with a mock user, completely bypassing authentication.
 
-### 🟡 5. Hardcoded RGBA Values
-**Severity**: LOW
-**Category**: Design System
-**Location**: SpreadsheetTable.css, BreakdownCard.css, MilestoneCard.css
-**Description**: 12+ rgba() values hardcoded instead of using CSS tokens.
-**Impact**: Design inconsistency, harder to maintain theme changes.
-**Fix**: Define opacity variants as CSS custom properties.
+**Impact**: If production is accidentally deployed with `NODE_ENV=development`, ALL authentication is bypassed. Any user can access any endpoint.
+
+**Fix**: Remove the development auto-login bypass entirely. Require explicit DEMO_MODE flag that is never set in production.
+
+```typescript
+// REMOVE THIS BLOCK
+if (process.env.NODE_ENV === 'development') {
+  req.user = { ... };
+  return next();
+}
+```
+
+### 🔴 2. Production Secrets in Local Environment
+**Severity**: Critical | **Category**: Security
+
+**Location**: [backend/.env](backend/.env) (lines 6-17)
+
+**Description**: The local .env file contains live production API credentials:
+- Facebook App ID and Secret
+- Google Client ID and Secret
+- OpenAI API Key
+- Langfuse Secret Key
+
+**Impact**: While .env is gitignored, these credentials should be rotated as a precautionary measure. If the machine is compromised, attackers gain access to third-party services.
+
+**Fix**:
+1. Immediately rotate all exposed credentials
+2. Use Azure Key Vault or similar secrets manager in production
+3. Keep only dummy values in local .env
+4. Document required secrets in .env.example
+
+### 🟠 3. NoSQL Injection Pattern in ORDER BY
+**Severity**: High | **Category**: Security
+
+**Location**: [backend/src/services/portfolioService.ts:95](backend/src/services/portfolioService.ts#L95)
+
+**Description**: The `orderBy` parameter is interpolated directly into the SQL query string instead of using parameterized query.
+
+```typescript
+const query = `SELECT * FROM p WHERE p.userId = @userId ORDER BY p.${orderBy} ${direction}`;
+```
+
+**Impact**: Currently mitigated by Zod schema validation, but if validation is bypassed (bug, regression), allows query manipulation.
+
+**Fix**: Use allowlist pattern instead of interpolation:
+```typescript
+const orderByFields = { date: 'p.date', createdAt: 'p.createdAt' };
+const orderByField = orderByFields[orderBy] || 'p.date';
+```
+
+### 🟠 4. PageSkeleton/PageHeader Prop Mismatch
+**Severity**: High | **Category**: Bug
+
+**Location**: [components/src/layout/PageSkeleton/PageSkeleton.tsx:45](components/src/layout/PageSkeleton/PageSkeleton.tsx#L45)
+
+**Description**: PageSkeleton passes `centered` prop to PageHeader, but PageHeader interface doesn't define this property.
+
+**Impact**: TypeScript compilation error. May break builds in strict mode.
+
+**Fix**: Either:
+- Add `centered?: boolean` to PageHeader interface
+- Remove `centered` from PageSkeleton's PageHeader usage
+
+### 🟡 5. CSS Variable Typo Breaking Button Styles
+**Severity**: Medium | **Category**: Bug
+
+**Location**: [frontend/src/styles/tokens.css:66](frontend/src/styles/tokens.css#L66)
+
+**Description**: Variable `--carcoal-hover` is a typo. Should be `--charcoal-hover`. Referenced in button primary disabled state.
+
+**Impact**: Button primary disabled state won't render correctly.
+
+**Fix**: Change `--carcoal-hover` to `--charcoal-hover`
 
 ---
 
 ## Scores Breakdown
 
-### Design Score: 82/100
+### Design Score: 86/100
 
 | Factor | Score | Notes |
 |--------|-------|-------|
-| Visual Consistency | 17/20 | Some rgba hardcoding deviates from token system |
-| Information Hierarchy | 18/20 | Clear layouts, proper headings |
-| Responsive Design | 16/20 | Good breakpoints, some inconsistency |
-| Accessibility | 15/20 | Good basics, limited semantic HTML |
-| User Experience | 16/20 | Smooth animations, Norwegian formatting |
+| Visual Consistency | 17/20 | 85% design system compliance; typo in tokens |
+| Information Hierarchy | 18/20 | Clear structure; good use of typography |
+| Responsive Design | 18/20 | Mobile-first; proper breakpoints |
+| Accessibility | 16/20 | Good ARIA usage; missing skip link |
+| User Experience | 17/20 | Smooth flows; loading states |
 
-### Code Quality Score: 81/100
-
-| Factor | Score | Notes |
-|--------|-------|-------|
-| TypeScript Correctness | 17/20 | 4 `any` types in frontend error handlers |
-| Architecture | 18/20 | Excellent vertical slicing, clean separation |
-| Error Handling | 16/20 | Good but some duplicate classes |
-| Code Organization | 16/20 | Duplicate token verification function |
-| Documentation | 14/20 | JSDoc excellent, workspace READMEs missing |
-
-### Security Score: 78/100
+### Code Quality Score: 85/100
 
 | Factor | Score | Notes |
 |--------|-------|-------|
-| Authentication | 18/20 | EasyAuth + JWT properly implemented |
-| Authorization | 17/20 | User isolation, some validators placeholder |
-| Input Validation | 19/20 | Zod on all endpoints, comprehensive |
-| Dependency Security | 18/20 | jws fixed, npm audit in CI |
-| Security Config | 14/20 | Dev mode could be more hardened |
+| TypeScript Correctness | 19/20 | Strict mode; zero any types |
+| Architecture | 18/20 | Clean separation; minor mock mode scattering |
+| Error Handling | 17/20 | Centralized handler; summary routes inconsistent |
+| Code Organization | 15/20 | DRY violations; example files in source |
+| Documentation | 16/20 | Good JSDoc; component library lacks README |
+
+### Security Score: 75/100
+
+| Factor | Score | Notes |
+|--------|-------|-------|
+| Authentication | 12/20 | Good implementation but dev bypass is critical risk |
+| Authorization | 18/20 | Partition key isolation excellent |
+| Input Validation | 18/20 | Comprehensive Zod validation |
+| Dependency Security | 15/20 | Appears current; needs npm audit verification |
+| Security Config | 12/20 | CORS bypass; no CSP; dev routes unprotected |
 
 ---
 
 ## Recommendations Summary
 
 ### Immediate Actions (Do Now)
-1. ⚠️ **MEDIUM**: Fix 4 `any` types in frontend error handlers
-2. ⚠️ **MEDIUM**: Remove duplicate error classes from cosmosHelpers.ts
-3. ⚠️ **MEDIUM**: Extract verifyDemoToken() to shared utility
+- [ ] Remove development mode auth bypass from auth.ts
+- [ ] Rotate all credentials in .env file
+- [ ] Fix ORDER BY injection pattern with allowlist
+- [ ] Fix PageSkeleton/PageHeader prop mismatch
+- [ ] Fix `--carcoal-hover` typo in tokens.css
 
 ### Short-Term (Next Sprint)
-4. Change ESLint no-explicit-any from 'warn' to 'error'
-5. Standardize rgba values to CSS tokens
-6. Add semantic HTML where appropriate
-7. Add workspace-level READMEs (backend/, frontend/)
+- [ ] Consolidate number/date formatting utilities
+- [ ] Move CSS tokens to components package
+- [ ] Fix query key consistency in useUser hook
+- [ ] Add skip link for accessibility
+- [ ] Fix CORS to reject no-origin requests
+- [ ] Add CSP headers
+- [ ] Resolve React hook dependency warnings (6 total)
 
 ### Long-Term (Roadmap)
-8. Strengthen CSP headers in Helmet config
-9. Add color contrast verification for WCAG compliance
-10. Expand keyboard navigation in list/table components
-11. Implement explicit authorization checks for all resources
+- [ ] Add unit tests for services (80% coverage target)
+- [ ] Implement Azure Key Vault for production secrets
+- [ ] Add color contrast documentation (WCAG AA)
+- [ ] Centralize CI mock mode handling in service layer
+- [ ] Add aria-current="page" to breadcrumb
+- [ ] Remove example files from production source
+- [ ] Document component library with README
 
 ---
 
@@ -312,48 +470,44 @@ The Finans application demonstrates **strong architectural foundations** with ex
 
 ### Files Reviewed
 
-**Backend (Key Files)**:
-- backend/src/index.ts - Server setup, middleware chain
-- backend/src/routes/*.ts - All route definitions
-- backend/src/controllers/*.ts - Request handlers
-- backend/src/services/*.ts - Business logic
-- backend/src/middleware/*.ts - Auth, error, rate limiting
-- backend/src/validators/*.ts - Zod schemas + business validators
-- backend/src/config/*.ts - Environment, CosmosDB
-- backend/src/utils/cosmosHelpers.ts - Database utilities
+**Backend**:
+- backend/src/index.ts
+- backend/src/routes/*.ts
+- backend/src/controllers/*.ts
+- backend/src/services/*.ts
+- backend/src/middleware/*.ts
+- backend/src/validators/*.ts
+- backend/src/utils/*.ts
 
-**Frontend (Key Files)**:
-- frontend/src/App.tsx - Main app with ErrorBoundary
-- frontend/src/routes/index.tsx - Route configuration
-- frontend/src/features/*/use*Data.ts - Data hooks
-- frontend/src/features/auth/*.tsx - Auth components
-- frontend/src/shared/api/*.ts - API layer
-- frontend/src/config/constants.ts - Centralized constants
-- frontend/src/styles/*.css - Design tokens
+**Frontend**:
+- frontend/src/App.tsx
+- frontend/src/features/**/*.tsx
+- frontend/src/shared/**/*.ts
+- frontend/src/styles/*.css
 
-**Components (Key Files)**:
-- components/src/**/*.tsx - 29 components
-- components/src/**/*.css - Component styles
-- components/src/**/*.stories.tsx - Storybook stories
+**Components**:
+- components/src/**/*.tsx
+- components/src/**/*.css
+
+**Configuration**:
+- tsconfig.json (all workspaces)
+- eslint.config.js (all workspaces)
+- package.json (all workspaces)
 
 ### Tools Used
-- Static analysis: ESLint, TypeScript compiler (strict mode)
-- Security: npm audit, OWASP checklist, manual code review
-- Design: Visual inspection, accessibility review
-- Code quality: Pattern analysis, duplication detection
+- Static analysis: ESLint, TypeScript compiler
+- Security: Manual code review, pattern analysis
+- Design: Visual inspection, CSS analysis
+- Accessibility: Semantic HTML review, ARIA audit
 
 ### Methodology
-1. Launched 5 parallel exploration agents for comprehensive coverage
-2. Backend analysis: Architecture, patterns, security
-3. Frontend analysis: Components, state, hooks, types
-4. Security analysis: OWASP Top 10, secrets, auth
-5. Design review: CSS, accessibility, responsive
-6. Code quality: TypeScript, DRY, documentation
-7. Compiled findings with severity ratings
-8. Calculated scores based on weighted factors
+1. Launched 5 parallel exploration agents (haiku model)
+2. Each agent focused on specific domain: backend, frontend, security, design, code quality
+3. Compiled findings from all agents
+4. Calculated scores based on weighted criteria
+5. Prioritized recommendations by severity and ROI
+6. Generated comprehensive report
 
 ---
 
-**Report End**
-
-*This report was generated by Claude Code Due Diligence Skill. For questions or follow-up analysis, please reference specific sections and file locations.*
+*Report generated by Claude Code Due Diligence Skill*

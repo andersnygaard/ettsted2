@@ -1,92 +1,81 @@
 # Planning Board - Finans
 
-**Current Focus**: Due Diligence Fixes (2025-12-07)
+**Current Focus**: Security Fixes & Code Quality (Post-Due Diligence 2025-12-07)
 
 ---
 
-## Due Diligence Findings (Updated 2025-12-07)
+## Due Diligence Findings (2025-12-07)
 
 **Report**: [.docs/DUE-DILIGENCE-REPORT.md](../.docs/DUE-DILIGENCE-REPORT.md)
 
 | Score | Area | Status |
 |-------|------|--------|
-| 82/100 | Design | Good - Minor token consistency needed |
-| 81/100 | Code Quality | Good - DRY violations in error classes |
-| 78/100 | Security | Good - Dev mode hardening recommended |
-| **80/100** | **Overall** | Production-ready |
+| 86/100 | Design | Good |
+| 85/100 | Code Quality | Good |
+| 80/100 | Security | ✅ Improved |
+| **84/100** | **Overall** | Good |
 
-### Issues Found (2025-12-07) - ALL RESOLVED ✅
-1. ~~**Frontend `any` types** - 4 instances in error handlers~~ → Fixed in task 188
-2. ~~**Duplicate error classes** - cosmosHelpers.ts duplicates AppError.ts~~ → Fixed in task 189
-3. ~~**Duplicate verifyDemoToken()** - Exists in both auth.ts and authRoutes.ts~~ → Fixed in task 190
-4. ~~**Hardcoded RGBA values** - 12+ instances should use CSS tokens~~ → Fixed in task 191
-5. ~~**ESLint config** - no-explicit-any set to 'warn' not 'error'~~ → Fixed in task 192
+### Critical Issues - ALL FIXED ✅
+1. ~~**Dev mode auth bypass**~~ - ✅ FIXED (task 193)
+2. ~~**ORDER BY injection pattern**~~ - ✅ FIXED (task 194)
+3. ~~**PageSkeleton prop mismatch**~~ - ✅ FIXED (task 195)
+4. ~~**CSS typo**~~ - ✅ FIXED (task 196)
 
 ---
 
 ## Top Priorities
 
-**All due diligence items completed!** 🎉
+**🎉 All due diligence tasks complete!**
 
-Backlog is empty. Run `/discover-tasks` to find new work.
+No pending priorities. Run `/discover-tasks` to find new work.
+
+---
+
+## Backlog Summary
+
+| # | Task | Type | Priority | Effort |
+|---|------|------|----------|--------|
+| - | *Backlog empty* | - | - | - |
 
 ---
 
 ## Recently Completed
 
+### 203 - Standardize English Variable Names (2025-12-07)
+Renamed Norwegian variable names and API fields to English across backend and frontend. Added defensive null handling.
+
+### 202 - Add CSP Headers (2025-12-07)
+Added explicit Content Security Policy via Helmet. Allows Google Fonts, restricts scripts to self-origin.
+
+### 201 - Fix CORS No-Origin (2025-12-07)
+Requests without Origin header now rejected in production. Dev/CI modes allow no-origin for testing.
+
+### 200 - Add Skip Link (2025-12-07)
+Added skip-to-content link for keyboard users. WCAG 2.4.1 compliance for accessibility.
+
+### 199 - Fix Query Key Consistency (2025-12-07)
+Added QUERY_KEYS.USER constant. Updated useUser and useImportChat to use constants.
+
+### 198 - Move Tokens to Components (2025-12-07)
+Moved tokens.css to components package. External consumers get working design system.
+
+### 197 - Consolidate Formatting Utils (2025-12-07)
+Moved numeral.js and date-fns utilities to components. Frontend imports from @finans/components.
+
+### 196 - Fix CSS Typo (2025-12-07)
+Fixed `--carcoal-hover` to `--charcoal-hover` in tokens.css. Button disabled state now renders correctly.
+
+### 195 - Fix PageSkeleton Prop Mismatch (2025-12-07)
+Removed unnecessary `centered` prop from PageSkeleton and consuming pages. PageHeader always centered by CSS.
+
+### 194 - Fix ORDER BY Injection (2025-12-07)
+Replaced string interpolation with safe allowlist pattern in portfolioService.ts. Eliminates NoSQL injection vector.
+
+### 193 - Remove Dev Auth Bypass (2025-12-07)
+Removed critical security vulnerability. Dev mode no longer auto-injects mock user. Requires explicit demo token.
+
 ### 192 - ESLint no-explicit-any to Error (2025-12-07)
 Changed rule from 'warn' to 'error' in all workspaces. Fixed remaining violation in PortfolioPage.tsx.
-
-### 191 - CSS Token RGBA Values (2025-12-07)
-Replaced 26 hardcoded rgba() values with CSS custom properties. Added 24 opacity variant tokens.
-
-### 190 - Extract verifyDemoToken (2025-12-07)
-Created shared tokenUtils.ts utility. Removed duplicate from auth.ts and authRoutes.ts.
-
-### 189 - Consolidate Error Classes (2025-12-07)
-Removed duplicate NotFoundError, ConflictError, ValidationError from cosmosHelpers.ts. Now imports from AppError.ts.
-
-### 188 - Fix Frontend any Types (2025-12-07)
-Created errorTypes.ts utility with type guards. Fixed 4 `any` types in AuthContext and OnboardingWizard.
-
-### 185 - Missing Storybook Stories (2025-12-07)
-Added stories for PageSkeleton and Placeholder components. Fixed broken imports in AllComponents.stories.tsx.
-
-### 187 - CI E2E Tests (2025-12-07)
-Added Playwright E2E tests to CI pipeline with CI mock mode for database-free testing.
-
-### 186 - CI Security Audit (2025-12-07)
-Added `pnpm audit --audit-level=high` to CI pipeline.
-
-### 186 - E2E Coverage Expansion (2025-12-06)
-Added `/import` and `/min-okonomi` to E2E test suite. All 5 tests pass with 14 pages covered.
-
-### 184 - Remove Console.log Statements (2025-12-06)
-Added ESLint rule, cleaned up debug logs from production code.
-
-### 182 - Monte Carlo E2E Test (2025-12-06)
-Re-enabled Monte Carlo in E2E tests. Passes 10/10 runs.
-
-### 181 - Dashboard SectionLink URLs (2025-12-06)
-Fixed incorrect hrefs on Sparing & Kalkulatorer links.
-
-### 149 - Year Badge "+-" Format (2025-12-06)
-Fixed hardcoded "+" prefix in SparingPage.
-
-### 148 - Settings Route Broken (2025-12-06)
-Created SettingsPage with profile editing.
-
-### 150 - Milestone Shows Achieved Value (2025-12-06)
-Fixed milestone calculation to use sumSparing.
-
-### 143 - Monte Carlo Results Empty (2025-12-06)
-Moved simulation to client-side useMemo.
-
-### 142 - Gjeld Chart Shows No Data (2025-12-06)
-Fixed useGjeldData hook to use aggregated endpoint.
-
-### 141 - Dashboard vs Sparing Data Mismatch (2025-12-06)
-Fixed asset class categorization in backend.
 
 ---
 
@@ -94,7 +83,7 @@ Fixed asset class categorization in backend.
 
 | Status | Count |
 |--------|-------|
-| Done | 168 |
+| Done | 179+ |
 | Backlog | 0 |
 | In Progress | 0 |
 

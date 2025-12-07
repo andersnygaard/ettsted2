@@ -92,8 +92,7 @@ This skill provides autonomous task discovery and backlog generation for the fin
    - Rate limiting
 
 3. **Code Quality & Testing**
-   - Missing unit tests
-   - Missing E2E tests (Playwright)
+   - Missing E2E tests (Playwright) - NOTE: No unit tests, E2E only per CLAUDE.md
    - Error boundary components
    - Input validation consolidation
    - Type safety improvements

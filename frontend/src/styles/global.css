@@ -1,5 +1,5 @@
-/* Import design tokens */
-@import './tokens.css';
+/* Import design tokens from components package */
+@import '@finans/components/styles/tokens.css';
 
 /* Import animations */
 @import './animations.css';

@@ -6,9 +6,8 @@
  * Shows category total at the bottom.
  */
 
-import { NumberInput } from '@finans/components';
+import { NumberInput, formatNumber } from '@finans/components';
 import { OnboardingAccount, Category } from '../types';
-import { formatNumber } from '@/shared/utils/numberFormat';
 import './AccountsList.css';
 
 interface AccountsListProps {

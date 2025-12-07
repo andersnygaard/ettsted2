@@ -22,8 +22,8 @@ test.describe('Sanity Checks', () => {
   test('can login via dev mode', async ({ page }) => {
     await login(page);
 
-    // Should be on dashboard
-    await expect(page).toHaveURL(/\/dashboard/);
+    // Should be on oversikt
+    await expect(page).toHaveURL(/\/oversikt/);
 
     // Should see dashboard content (header visible on all viewports)
     await expect(page.locator('.app-header')).toBeVisible();
@@ -69,8 +69,8 @@ test.describe('Sanity Checks', () => {
     await login(page);
 
     const navItems = [
-      { link: 'Oversikt', expectedPath: '/dashboard' },
-      { link: 'Portefølje', expectedPath: '/portfolio' },
+      { link: 'Oversikt', expectedPath: '/oversikt' },
+      { link: 'Portefølje', expectedPath: '/portefolje' },
       { link: 'Sparing', expectedPath: '/sparing' },
       { link: 'Gjeld', expectedPath: '/gjeld' },
       { link: 'Pensjon', expectedPath: '/pensjon' },
@@ -101,7 +101,7 @@ test.describe('Sanity Checks', () => {
     await login(page);
 
     // Verify we're logged in
-    await expect(page).toHaveURL(/\/dashboard/);
+    await expect(page).toHaveURL(/\/oversikt/);
 
     await logout(page);
 

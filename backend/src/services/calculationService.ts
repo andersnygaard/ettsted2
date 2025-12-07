@@ -74,16 +74,16 @@ export function calculateSumByCategory(
  *
  * @example
  * const netWorth = calculateNetWorth(snapshot.accounts)
- * // Returns: 500000 (if sparing=700000 and gjeld=200000)
+ * // Returns: 500000 (if savings=700000 and debt=200000)
  */
 export function calculateNetWorth(accounts: Account[]): number {
-  const sparing = calculateSumByCategory(accounts, 'sparing');
-  const gjeld = calculateSumByCategory(accounts, 'gjeld');
-  return sparing - gjeld;
+  const savings = calculateSumByCategory(accounts, 'sparing');
+  const debt = calculateSumByCategory(accounts, 'gjeld');
+  return savings - debt;
 }
 
 /**
- * Calculate dekning (coverage) percentage
+ * Calculate coverage percentage
  *
  * Represents how much of total debt is covered by savings.
  * Formula: (Sum(sparing) / Sum(gjeld)) * 100
@@ -95,16 +95,16 @@ export function calculateNetWorth(accounts: Account[]): number {
  * @returns Coverage percentage (0 to 100+), or 100 if no debt
  *
  * @example
- * const dekning = calculateDekning(snapshot.accounts)
- * // Returns: 150 (if sparing=300000 and gjeld=200000)
- * // Returns: 100 (if gjeld=0)
+ * const coverage = calculateCoverage(snapshot.accounts)
+ * // Returns: 150 (if savings=300000 and debt=200000)
+ * // Returns: 100 (if debt=0)
  */
-export function calculateDekning(accounts: Account[]): number {
-  const sparing = calculateSumByCategory(accounts, 'sparing');
-  const gjeld = calculateSumByCategory(accounts, 'gjeld');
+export function calculateCoverage(accounts: Account[]): number {
+  const savings = calculateSumByCategory(accounts, 'sparing');
+  const debt = calculateSumByCategory(accounts, 'gjeld');
 
-  if (gjeld === 0) return 100;
-  return (sparing / gjeld) * 100;
+  if (debt === 0) return 100;
+  return (savings / debt) * 100;
 }
 
 /**
@@ -120,12 +120,12 @@ export function calculateDekning(accounts: Account[]): number {
  * @returns Savings rate as percentage (0-100+)
  *
  * @example
- * const sparerate = calculateSparerate(user.profile)
+ * const savingsRate = calculateSavingsRate(user.profile)
  * // If monthlySalary=50000, annualExpenses=480000:
  * // Annual income = 600000
  * // Savings rate = (600000 - 480000) / 600000 * 100 = 20%
  */
-export function calculateSparerate(profile: UserProfile): number {
+export function calculateSavingsRate(profile: UserProfile): number {
   const annualIncome = profile.monthlySalary * 12;
   if (annualIncome === 0) return 0;
   return ((annualIncome - profile.annualExpenses) / annualIncome) * 100;
@@ -166,7 +166,7 @@ export function calculateFireNumber(profile: UserProfile): number {
  * Uses Math.floor to return whole months. Returns Infinity if annual
  * expenses are 0 to avoid division by zero.
  *
- * @param sumSparing - Total savings and investments in NOK
+ * @param sumSavings - Total savings and investments in NOK
  * @param annualExpenses - Annual expenses in NOK
  * @returns Number of months of expenses covered (whole number)
  *
@@ -177,12 +177,12 @@ export function calculateFireNumber(profile: UserProfile): number {
  * // Returns: 15
  */
 export function calculateMonthsFree(
-  sumSparing: number,
+  sumSavings: number,
   annualExpenses: number
 ): number {
   if (annualExpenses === 0) return Infinity;
   const monthlyExpenses = annualExpenses / 12;
-  return Math.floor(sumSparing / monthlyExpenses);
+  return Math.floor(sumSavings / monthlyExpenses);
 }
 
 /**

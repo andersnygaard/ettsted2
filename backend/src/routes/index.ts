@@ -56,7 +56,7 @@ router.get('/test/me', validateAuth, (req: Request, res: Response) => {
 
 // Public route modules (no authentication required)
 router.use('/auth', authRoutes);
-router.use('/calculators', calculatorRoutes);
+router.use('/kalkulatorer', calculatorRoutes);
 
 // Protected route modules (require authentication)
 router.use('/users', validateAuth, userRoutes);

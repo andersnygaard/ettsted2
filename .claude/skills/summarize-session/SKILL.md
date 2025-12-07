@@ -164,7 +164,6 @@ The summary becomes the new context for continuing work, replacing the long conv
 - Profile updates require email verification
 
 ### Open Items
-- Unit tests for numberFormat utility
 - E2E test for rate limiting
 
 ### CLAUDE.md Updates

@@ -1,16 +1,35 @@
 /**
- * Norwegian number formatting utilities for components
+ * Norwegian number formatting utilities
  *
  * Provides functions to format and parse numbers according to Norwegian conventions:
  * - Space as thousands separator (123 456)
  * - Comma as decimal separator (123,45)
+ * - Currency suffix "kr" (123 456,78 kr)
  *
  * Usage:
- *   import { formatNumber, parseNumber } from '@/forms/utils/numberFormat';
+ *   import { formatCurrency, formatNumber, parseNumber } from '@finans/components';
  *
- *   formatNumber(123456.78)  // "123 456,78"
+ *   formatCurrency(123456.78)  // "123 456,78 kr"
+ *   formatNumber(123456.78)    // "123 456,78"
  *   parseNumber("123 456,78")  // 123456.78
  */
+
+import numeral from 'numeral';
+
+/**
+ * Format a number as Norwegian currency
+ *
+ * @param value - The number to format
+ * @returns Formatted string with thousands separator, decimal separator, and currency symbol
+ *
+ * @example
+ * formatCurrency(123456.78)  // "123 456,78 kr"
+ * formatCurrency(1234)       // "1 234,00 kr"
+ * formatCurrency(0.5)        // "0,50 kr"
+ */
+export function formatCurrency(value: number): string {
+  return numeral(value).format('0,0.00') + ' kr';
+}
 
 /**
  * Format a number with Norwegian separators
@@ -25,10 +44,8 @@
  * formatNumber(123456.78, 1)  // "123 456,8"
  */
 export function formatNumber(value: number, decimals = 2): string {
-  return value.toLocaleString('nb-NO', {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
-  });
+  const format = decimals > 0 ? `0,0.${'0'.repeat(decimals)}` : '0,0';
+  return numeral(value).format(format);
 }
 
 /**
@@ -57,4 +74,21 @@ export function parseNumber(value: string): number {
   const result = parseFloat(normalized);
 
   return result;
+}
+
+/**
+ * Format a percentage with Norwegian number formatting
+ *
+ * @param value - The decimal value (e.g., 0.075 for 7.5%)
+ * @param decimals - Number of decimal places (default: 2)
+ * @returns Formatted percentage string
+ *
+ * @example
+ * formatPercentage(0.075)     // "7,50 %"
+ * formatPercentage(0.075, 1)  // "7,5 %"
+ * formatPercentage(0.5, 0)    // "50 %"
+ */
+export function formatPercentage(value: number, decimals = 2): string {
+  const percentage = value * 100;
+  return formatNumber(percentage, decimals) + ' %';
 }

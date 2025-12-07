@@ -92,7 +92,16 @@ export async function getSnapshotsByUserId(
     // Build query with options
     const orderBy = options?.orderBy || 'date';
     const direction = options?.ascending === false ? 'DESC' : 'ASC';
-    const query = `SELECT * FROM portfolios p WHERE p.userId = @userId ORDER BY p.${orderBy} ${direction}`;
+
+    // Safe allowlist pattern - prevent NoSQL injection
+    const orderByFields: Record<string, string> = {
+      date: 'p.date',
+      createdAt: 'p.createdAt',
+    };
+    const orderByField = orderByFields[orderBy] || 'p.date';
+    const directionSafe = direction === 'DESC' ? 'DESC' : 'ASC';
+
+    const query = `SELECT * FROM portfolios p WHERE p.userId = @userId ORDER BY ${orderByField} ${directionSafe}`;
 
     const querySpec = buildParameterizedQuery(query, { userId });
 

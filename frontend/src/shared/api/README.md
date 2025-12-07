@@ -79,12 +79,13 @@ function MyComponent() {
 
 ```typescript
 import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/shared/api/queryHelpers';
 import { useApiError } from '@/shared/hooks';
 import client from '@/shared/api/client';
 
 function MyComponent() {
   const { data, error, isLoading } = useQuery({
-    queryKey: ['user'],
+    queryKey: QUERY_KEYS.USER,
     queryFn: async () => {
       const response = await client.get('/users/me');
       return response.data;

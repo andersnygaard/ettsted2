@@ -7,8 +7,8 @@ import type { ApiResponse } from '../../types';
  * Aggregated debt metrics calculated from snapshots
  */
 export interface GjeldResponse {
-  sumGjeld: number;
-  dekning: number;
+  totalDebt: number;
+  coverage: number;
   remaining: number;
   history: Array<{ date: string; value: number }>;
   loans: Array<{ name: string; value: number }>;

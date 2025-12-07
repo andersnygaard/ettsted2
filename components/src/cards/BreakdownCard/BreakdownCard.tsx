@@ -7,7 +7,7 @@
  * Based on Nordic Minimal design system.
  */
 
-import { formatCurrency } from '../../utils/format';
+import { formatCurrency } from '../../forms/utils/numberFormat';
 import './BreakdownCard.css';
 
 export interface BreakdownCardProps {

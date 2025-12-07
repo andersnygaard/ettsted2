@@ -3,7 +3,7 @@ import { snapshotApi } from '@/shared/api/services';
 import { QUERY_KEYS } from '@/shared/api/queryHelpers';
 import type { Account } from '@/shared/types';
 import { getAccountCategory } from '@/shared/types';
-import { parseDate } from '@/shared/utils/dateFormat';
+import { parseDate } from '@finans/components';
 import { GROWTH_RATES, RETIREMENT, QUERY_CONFIG } from '@/config/constants';
 
 /**
@@ -20,7 +20,7 @@ interface PensjonBreakdown {
  * Pensjon (pension) metrics and historical data
  */
 export interface PensjonData {
-  sumPensjon: number;
+  totalPension: number;
   breakdown: PensjonBreakdown[];
   otpPercent: number; // OTP (arbeidsgiver) as % of total
   estimatedAtRetirement: number;
@@ -45,7 +45,7 @@ function calculateSumPensjon(accounts: Account[]): number {
  */
 function getEmptyPensjonData(): PensjonData {
   return {
-    sumPensjon: 0,
+    totalPension: 0,
     breakdown: [],
     otpPercent: 0,
     estimatedAtRetirement: 0,
@@ -94,14 +94,14 @@ async function fetchPensjonData(): Promise<PensjonData> {
     const pensjonAccounts = latest.accounts.filter(
       (account) => getAccountCategory(account.assetClass) === 'pensjon'
     );
-    const sumPensjon = calculateSumPensjon(latest.accounts);
+    const totalPension = calculateSumPensjon(latest.accounts);
 
     // Build breakdown
     const breakdown: PensjonBreakdown[] = pensjonAccounts.map((acc) => ({
       id: acc.id,
       name: acc.name,
       amount: acc.value,
-      percent: sumPensjon > 0 ? (acc.value / sumPensjon) * 100 : 0
+      percent: totalPension > 0 ? (acc.value / totalPension) * 100 : 0
     }));
 
     // OTP = Arbeidsgiver as percent of total
@@ -111,7 +111,7 @@ async function fetchPensjonData(): Promise<PensjonData> {
     const otpPercent = arbeidsgiver?.percent || 0;
 
     // Estimated value at retirement
-    const estimatedAtRetirement = estimatePensjonAtRetirement(sumPensjon);
+    const estimatedAtRetirement = estimatePensjonAtRetirement(totalPension);
 
     // History for stacked chart
     const history = sorted
@@ -138,7 +138,7 @@ async function fetchPensjonData(): Promise<PensjonData> {
       .reverse();
 
     return {
-      sumPensjon,
+      totalPension,
       breakdown,
       otpPercent,
       estimatedAtRetirement,

@@ -1,7 +1,6 @@
-import { PageSkeleton, HeroNumber, StackedAreaChart, BreakdownCard } from '@finans/components';
+import { PageSkeleton, HeroNumber, StackedAreaChart, BreakdownCard, formatCurrency } from '@finans/components';
 import type { StackedDataPoint, Series } from '@finans/components';
 import { PensjonSkeleton } from '@/shared/components';
-import { formatCurrency } from '@/shared/utils/numberFormat';
 import { usePensjonData } from './usePensjonData';
 import { OtpSection } from './OtpSection';
 import './PensjonPage.css';
@@ -20,7 +19,7 @@ function PensjonPage() {
   if (isLoading) {
     return (
       <PageSkeleton
-        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Pensjon' }]}
+        breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Pensjon' }]}
         title="Pensjon"
         subtitle="Oppspart pensjon og fremtidig utbetaling"
         className="pensjon-page"
@@ -33,7 +32,7 @@ function PensjonPage() {
   if (error) {
     return (
       <PageSkeleton
-        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Pensjon' }]}
+        breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Pensjon' }]}
         title="Pensjon"
         subtitle="Feil ved lasting av pensjonsdata. Prøv igjen senere."
         className="pensjon-page"
@@ -43,10 +42,10 @@ function PensjonPage() {
     );
   }
 
-  if (!pensjonData || pensjonData.sumPensjon === 0) {
+  if (!pensjonData || pensjonData.totalPension === 0) {
     return (
       <PageSkeleton
-        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Pensjon' }]}
+        breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Pensjon' }]}
         title="Pensjon"
         subtitle="Ingen pensjonsdata tilgjengelig. Legg til pensjonskontoer i porteføljen."
         className="pensjon-page"
@@ -85,7 +84,7 @@ function PensjonPage() {
 
   return (
     <PageSkeleton
-      breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Pensjon' }]}
+      breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Pensjon' }]}
       title="Pensjon"
       subtitle="Oppspart pensjon og fremtidig utbetaling"
       className="pensjon-page"
@@ -93,7 +92,7 @@ function PensjonPage() {
 
         <HeroNumber
           label="Sum pensjon"
-          value={formatCurrency(pensjonData.sumPensjon)}
+          value={formatCurrency(pensjonData.totalPension)}
           changeLabel={`Estimert ved pensjonering: ${formatCurrency(pensjonData.estimatedAtRetirement)}`}
         />
 

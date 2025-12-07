@@ -165,7 +165,7 @@ export default function EconomyPage() {
         <OnboardingWizard
           mode="edit"
           initialState={initialState}
-          onComplete={() => navigate('/dashboard')}
+          onComplete={() => navigate('/oversikt')}
         />
       </main>
     </div>

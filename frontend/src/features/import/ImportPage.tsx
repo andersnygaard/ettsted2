@@ -67,7 +67,7 @@ export default function ImportPage() {
       <div className="import-page__header">
         <Breadcrumb
           items={[
-            { label: 'Portefølje', path: '/portfolio' },
+            { label: 'Portefølje', path: '/portefolje' },
             { label: 'Importer data' },
           ]}
         />
@@ -123,7 +123,7 @@ export default function ImportPage() {
 
       {/* Footer actions */}
       <div className="import-page__footer">
-        <Button variant="secondary" onClick={() => navigate('/portfolio')}>
+        <Button variant="secondary" onClick={() => navigate('/portefolje')}>
           Tilbake til portefølje
         </Button>
         {messages.length > 2 && (

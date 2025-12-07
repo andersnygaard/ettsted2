@@ -9,6 +9,7 @@ import { QueryClient } from '@tanstack/react-query';
  * - Single source of truth for invalidation logic
  */
 export const QUERY_KEYS = {
+  USER: ['user'],
   PORTFOLIO: ['portfolio'],
   DASHBOARD: ['dashboard'],
   SPARING: ['sparing'],

@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart } from '@finans/components';
+import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart, formatCurrency, formatNumber } from '@finans/components';
 import type { StackedDataPoint, Series } from '@finans/components';
-import { formatCurrency, formatNumber } from '@/shared/utils/numberFormat';
 import { useSparingData } from '@/features/sparing/useSparingData';
 import { useUser } from '@/shared/hooks/useUser';
 import './CompoundCalculatorPage.css';
@@ -96,7 +95,7 @@ function CompoundCalculatorPage() {
   // Set initial amount from portfolio data when loaded (never negative)
   useEffect(() => {
     if (sparingData && !defaultsInitialized.initialAmount) {
-      setInputs((prev) => ({ ...prev, initialAmount: Math.max(0, sparingData.sumSparing ?? 0) }));
+      setInputs((prev) => ({ ...prev, initialAmount: Math.max(0, sparingData.sumSavings ?? 0) }));
       setDefaultsInitialized((prev) => ({ ...prev, initialAmount: true }));
     }
   }, [sparingData, defaultsInitialized.initialAmount]);

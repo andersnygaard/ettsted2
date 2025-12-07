@@ -3,6 +3,28 @@
  * Based on Nordic Minimal design from draft-1-nordic-minimal.html
  */
 
+/* Skip Link - Accessibility */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 999;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--charcoal);
+  color: var(--warm-white);
+  text-decoration: none;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.skip-link:focus {
+  left: 0;
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
 .app-header {
   position: relative;
   z-index: 50;

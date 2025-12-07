@@ -15,7 +15,7 @@
   --warm-white: #faf6f4;        /* Cards, elevated surfaces - soft white */
 
   /* Text colors */
-  --charcoal: #2C2C2C;          /* Primary text - deep, readable gray */
+  --charcoal: #1c1c1c;          /* Primary text - deep, readable gray */
   --text-secondary: #6B6B6B;    /* Secondary text, labels - muted gray */
 
   /* Accent colors */
@@ -54,8 +54,8 @@
   --border: rgba(44, 44, 44, 0.08);       /* Subtle borders */
   --border-strong: rgba(44, 44, 44, 0.15); /* More visible borders */
   --border-subtle: 0.5px solid #E5E2DE;    /* Very subtle card borders */
-  --surface: #faf6f4;  
-  
+  --surface: #faf6f4;
+
   /* Cards*/
    --card-bg: #faf6f4;       /* Primary card background */
 
@@ -63,7 +63,7 @@
   --btn-primary-bg: var(--charcoal);
   --btn-primary-color: var(--warm-white);
   --btn-primary-hover-bg: #444433;
-  --btn-primary-disabled-bg: var(--carcoal-hover);
+  --btn-primary-disabled-bg: var(--charcoal-hover);
 
   --btn-secondary-bg: transparent;
   --btn-secondary-hover-bg: var(--bone);

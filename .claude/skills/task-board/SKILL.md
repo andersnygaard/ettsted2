@@ -294,10 +294,8 @@ Use this comprehensive template for all plan files. Fill in ALL sections based o
 - **Validation**: [Input validation, business validation logic]
 - **Database**: [CosmosDB containers/documents affected]
 
-### Testing (required)
-- **Unit Tests**: [Component tests, backend logic tests]
+### Testing (E2E only - no unit tests per CLAUDE.md)
 - **E2E Tests**: [Playwright test scenarios]
-- **Integration Tests**: [API integration tests]
 
 ## Technical Approach
 
@@ -384,8 +382,7 @@ Use this comprehensive template for all plan files. Fill in ALL sections based o
 
 [This section added during implementation - how to verify completion]
 - [ ] All acceptance criteria met
-- [ ] Unit tests passing
-- [ ] E2E tests passing
+- [ ] E2E tests passing (no unit tests per CLAUDE.md)
 - [ ] Code reviewed
 - [ ] Documentation updated
 - [ ] Deployed and tested

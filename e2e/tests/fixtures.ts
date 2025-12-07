@@ -2,8 +2,8 @@ import { test as base, expect, Page } from '@playwright/test';
 
 /** Pages that require authentication */
 export const PROTECTED_PAGES = [
-  { path: '/dashboard', name: 'Oversikt' },
-  { path: '/portfolio', name: 'Portefølje' },
+  { path: '/oversikt', name: 'Oversikt' },
+  { path: '/portefolje', name: 'Portefølje' },
   { path: '/sparing', name: 'Sparing' },
   { path: '/gjeld', name: 'Gjeld' },
   { path: '/pensjon', name: 'Pensjon' },
@@ -54,13 +54,13 @@ export async function login(page: Page): Promise<void> {
   await page.waitForLoadState('networkidle');
 
   // Check if already logged in (dev mode auto-login)
-  const dashboardLink = page.getByRole('link', { name: /gå til dashboard/i });
-  const alreadyLoggedIn = await dashboardLink.isVisible({ timeout: 3000 }).catch(() => false);
+  const oversiktLink = page.getByRole('link', { name: /gå til oversikt/i });
+  const alreadyLoggedIn = await oversiktLink.isVisible({ timeout: 3000 }).catch(() => false);
 
   if (alreadyLoggedIn) {
-    // Already logged in, navigate to dashboard
-    await dashboardLink.click();
-    await page.waitForURL(/\/dashboard/, { timeout: 10000 });
+    // Already logged in, navigate to oversikt
+    await oversiktLink.click();
+    await page.waitForURL(/\/oversikt/, { timeout: 10000 });
     await page.waitForLoadState('networkidle');
     return;
   }
@@ -73,9 +73,9 @@ export async function login(page: Page): Promise<void> {
   await demoBtn.click();
 
   // Wait for redirect with longer timeout
-  await page.waitForURL(/\/(dashboard|auth\/callback)/, { timeout: 15000 });
+  await page.waitForURL(/\/(oversikt|auth\/callback)/, { timeout: 15000 });
   if (page.url().includes('auth/callback')) {
-    await page.waitForURL('/dashboard', { timeout: 10000 });
+    await page.waitForURL('/oversikt', { timeout: 10000 });
   }
   await page.waitForLoadState('networkidle');
 }

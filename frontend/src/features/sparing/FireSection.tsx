@@ -1,5 +1,4 @@
-import { ProgressBar } from '@finans/components';
-import { formatCurrency, formatNumber } from '@/shared/utils/numberFormat';
+import { ProgressBar, formatCurrency, formatNumber } from '@finans/components';
 import './FireSection.css';
 
 export interface FireSectionProps {

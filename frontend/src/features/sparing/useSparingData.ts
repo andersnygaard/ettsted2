@@ -3,17 +3,17 @@ import { snapshotApi, sparingApi, userApi } from '@/shared/api/services';
 import { QUERY_KEYS } from '@/shared/api/queryHelpers';
 import type { MonthlySnapshot, Account } from '@/shared/types';
 import { getAccountCategory } from '@/shared/types';
-import { parseDate } from '@/shared/utils/dateFormat';
+import { parseDate } from '@finans/components';
 import { GROWTH_RATES, FIRE, QUERY_CONFIG } from '@/config/constants';
 
 /**
  * F.I.R.E. metrics and historical data for Sparing page
  */
 export interface SparingData {
-  sumSparing: number;
+  sumSavings: number;
   yearlyChange: number;
   monthlyChange: number;
-  sparerate: number;
+  savingsRate: number;
   monthsFree: number;
   fireNumber: number;
   fireProgress: number;
@@ -29,10 +29,10 @@ export interface SparingData {
  */
 function getEmptySparingData(): SparingData {
   return {
-    sumSparing: 0,
+    sumSavings: 0,
     yearlyChange: 0,
     monthlyChange: 0,
-    sparerate: 0,
+    savingsRate: 0,
     monthsFree: 0,
     fireNumber: 0,
     fireProgress: 0,
@@ -172,8 +172,8 @@ async function fetchSparingData(): Promise<SparingData> {
 
     // API response structure for /api/v1/sparing:
     // {
-    //   sumSparing: number
-    //   sparerate: number (percentage)
+    //   sumSavings: number
+    //   savingsRate: number (percentage)
     //   monthsFree: number
     //   fireNumber: number
     //   fireProgress: number (0-100+)
@@ -234,7 +234,7 @@ async function fetchSparingData(): Promise<SparingData> {
 
       // Calculate years until F.I.R.E. target is reached
       const yearsToFire = calculateYearsToValue(
-        sparingData.sumSparing,
+        sparingData.sumSavings,
         sparingData.fireNumber,
         annualSavings,
         annualGrowthRate
@@ -243,7 +243,7 @@ async function fetchSparingData(): Promise<SparingData> {
 
       // Calculate years until savings equals annual income
       yearsToSalary = calculateYearsToValue(
-        sparingData.sumSparing,
+        sparingData.sumSavings,
         annualIncome,
         annualSavings,
         annualGrowthRate
@@ -251,16 +251,16 @@ async function fetchSparingData(): Promise<SparingData> {
     }
 
     return {
-      sumSparing: sparingData.sumSparing,
+      sumSavings: sparingData.sumSavings ?? 0,
       yearlyChange,
       monthlyChange,
-      sparerate: sparingData.sparerate,
-      monthsFree: sparingData.monthsFree,
-      fireNumber: sparingData.fireNumber,
-      fireProgress: sparingData.fireProgress,
+      savingsRate: sparingData.savingsRate ?? 0,
+      monthsFree: sparingData.monthsFree ?? 0,
+      fireNumber: sparingData.fireNumber ?? 0,
+      fireProgress: sparingData.fireProgress ?? 0,
       minRetireAge,
       yearsToSalary,
-      annualWithdrawal: sparingData.sumSparing * FIRE.SAFE_WITHDRAWAL_RATE,
+      annualWithdrawal: (sparingData.sumSavings ?? 0) * FIRE.SAFE_WITHDRAWAL_RATE,
       totalGrowth,
       history: parsedHistory
     };

@@ -3,7 +3,7 @@ import { snapshotApi, gjeldApi } from '@/shared/api/services';
 import { QUERY_KEYS } from '@/shared/api/queryHelpers';
 import type { Account } from '@/shared/types';
 import { getAccountCategory } from '@/shared/types';
-import { parseDate } from '@/shared/utils/dateFormat';
+import { parseDate } from '@finans/components';
 import { QUERY_CONFIG } from '@/config/constants';
 
 /**
@@ -31,9 +31,9 @@ function calculateSumGjeld(accounts: Account[]): number {
  * Gjeld (debt) metrics and historical data
  */
 export interface GjeldData {
-  sumGjeld: number;
+  totalDebt: number;
   monthlyChange: number;
-  dekning: number; // Coverage: sparing / gjeld * 100
+  coverage: number; // Coverage: sparing / gjeld * 100
   remaining: number; // How much gjeld remains uncovered
   loans: LoanInfo[];
   history: { date: Date; value: number }[];
@@ -45,9 +45,9 @@ export interface GjeldData {
  */
 function getEmptyGjeldData(): GjeldData {
   return {
-    sumGjeld: 0,
+    totalDebt: 0,
     monthlyChange: 0,
-    dekning: 100,
+    coverage: 100,
     remaining: 0,
     loans: [],
     history: []
@@ -99,10 +99,10 @@ async function fetchGjeldData(): Promise<GjeldData> {
     }));
 
     return {
-      sumGjeld: gjeldData.sumGjeld,
+      totalDebt: gjeldData.totalDebt ?? 0,
       monthlyChange,
-      dekning: gjeldData.dekning,
-      remaining: gjeldData.remaining,
+      coverage: gjeldData.coverage ?? 0,
+      remaining: gjeldData.remaining ?? 0,
       loans,
       history: parsedHistory
     };

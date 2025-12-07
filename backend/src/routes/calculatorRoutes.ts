@@ -1,11 +1,11 @@
 /**
- * Calculator Routes
+ * Calculator Routes (Kalkulatorer)
  *
  * API endpoints for financial calculators:
- * - POST /api/v1/calculators/monte-carlo - Run Monte Carlo simulation
- * - POST /api/v1/calculators/compound - Calculate compound interest
- * - POST /api/v1/calculators/fire - Calculate F.I.R.E. metrics
- * - POST /api/v1/calculators/loan - Calculate loan amortization
+ * - POST /api/v1/kalkulatorer/monte-carlo - Run Monte Carlo simulation
+ * - POST /api/v1/kalkulatorer/rentes-rente - Calculate compound interest
+ * - POST /api/v1/kalkulatorer/fire - Calculate F.I.R.E. metrics
+ * - POST /api/v1/kalkulatorer/lan - Calculate loan amortization
  *
  * Calculator endpoints are rate-limited to 10 requests/minute (expensive operations).
  */
@@ -29,7 +29,7 @@ import {
 const router: IRouter = Router();
 
 /**
- * POST /api/v1/calculators/monte-carlo
+ * POST /api/v1/kalkulatorer/monte-carlo
  * Run Monte Carlo retirement simulation
  *
  * Body: {
@@ -57,7 +57,7 @@ router.post(
 );
 
 /**
- * POST /api/v1/calculators/compound
+ * POST /api/v1/kalkulatorer/rentes-rente
  * Calculate compound interest with optional monthly contributions
  *
  * Body: {
@@ -75,14 +75,14 @@ router.post(
  * - yearlyBreakdown: Year-by-year breakdown
  */
 router.post(
-  '/compound',
+  '/rentes-rente',
   calculatorRateLimiter,
   validateBody(compoundSchema),
   compoundCalculation
 );
 
 /**
- * POST /api/v1/calculators/fire
+ * POST /api/v1/kalkulatorer/fire
  * Calculate F.I.R.E. (Financial Independence, Retire Early) metrics
  *
  * Body: {
@@ -111,7 +111,7 @@ router.post(
 );
 
 /**
- * POST /api/v1/calculators/loan
+ * POST /api/v1/kalkulatorer/lan
  * Calculate loan amortization schedule
  *
  * Body: {
@@ -130,7 +130,7 @@ router.post(
  * - yearlySummary: Yearly summary
  */
 router.post(
-  '/loan',
+  '/lan',
   calculatorRateLimiter,
   validateBody(loanSchema),
   loanCalculation

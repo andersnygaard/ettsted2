@@ -22,9 +22,10 @@ import { logger } from '../utils/logger';
 let langfuseInstance: Langfuse | null = null;
 
 /**
- * Langfuse configuration status
+ * Tracks if we've attempted initialization
+ * null = not attempted, true = succeeded, false = failed
  */
-let isConfigured = false;
+let initializationStatus: boolean | null = null;
 
 /**
  * Context for a Langfuse trace
@@ -45,24 +46,22 @@ export type { LangfuseTraceClient, LangfuseSpanClient };
  * Returns null if not configured with required keys
  */
 export function getLangfuse(): Langfuse | null {
-  // Skip if already checked and not configured
-  if (isConfigured === false && langfuseInstance === null) {
+  // Return cached result if already attempted
+  if (initializationStatus === true) {
+    return langfuseInstance;
+  }
+  if (initializationStatus === false) {
     return null;
   }
 
-  // Return existing instance
-  if (langfuseInstance) {
-    return langfuseInstance;
-  }
-
-  // Initialize if required environment variables are present
+  // First attempt - check if required environment variables are present
   if (!config.langfusePublicKey || !config.langfuseSecretKey || !config.langfuseHost) {
     logger.warn('Langfuse not fully configured. Skipping initialization.', {
       hasPublicKey: !!config.langfusePublicKey,
       hasSecretKey: !!config.langfuseSecretKey,
       hasHost: !!config.langfuseHost,
     });
-    isConfigured = false;
+    initializationStatus = false;
     return null;
   }
 
@@ -74,7 +73,7 @@ export function getLangfuse(): Langfuse | null {
       baseUrl: config.langfuseHost,
     });
 
-    isConfigured = true;
+    initializationStatus = true;
     logger.info('Langfuse initialized successfully', {
       host: config.langfuseHost,
     });
@@ -84,7 +83,7 @@ export function getLangfuse(): Langfuse | null {
     logger.error('Failed to initialize Langfuse', {
       error: error instanceof Error ? error.message : String(error),
     });
-    isConfigured = false;
+    initializationStatus = false;
     return null;
   }
 }

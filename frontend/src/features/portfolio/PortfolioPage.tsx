@@ -44,6 +44,13 @@ const CATEGORY_LABELS: Record<string, string> = {
   pensjon: 'Pensjon',
 };
 
+// Map category to sum column ID (English naming)
+const CATEGORY_SUM_IDS: Record<string, string> = {
+  sparing: 'sumSavings',
+  gjeld: 'sumGjeld',
+  pensjon: 'sumPensjon',
+};
+
 const ITEMS_PER_PAGE = 12;
 
 export default function PortfolioPage() {
@@ -135,7 +142,7 @@ export default function PortfolioPage() {
 
       // Add sum column
       columns.push({
-        id: `sum${category.charAt(0).toUpperCase() + category.slice(1)}`,
+        id: CATEGORY_SUM_IDS[category],
         label: `Sum ${CATEGORY_LABELS[category].toLowerCase()}`,
         isTotal: true,
       });
@@ -174,7 +181,7 @@ export default function PortfolioPage() {
       });
 
       // Add category totals
-      rowData.sumSparing = row.totals.sparing;
+      rowData.sumSavings = row.totals.sparing;
       rowData.sumGjeld = row.totals.gjeld;
       rowData.sumPensjon = row.totals.pensjon;
 
@@ -395,7 +402,7 @@ export default function PortfolioPage() {
   if (isLoading) {
     return (
       <PageSkeleton
-        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Portefølje' }]}
+        breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Portefølje' }]}
         title="Portefølje"
         subtitle="Laster..."
         width="wide"
@@ -410,7 +417,7 @@ export default function PortfolioPage() {
   if (error) {
     return (
       <PageSkeleton
-        breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Portefølje' }]}
+        breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Portefølje' }]}
         title="Portefølje"
         subtitle="Kunne ikke laste data"
         width="wide"
@@ -425,7 +432,7 @@ export default function PortfolioPage() {
 
   return (
     <PageSkeleton
-      breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Portefølje' }]}
+      breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Portefølje' }]}
       title="Portefølje"
       subtitle="Alle data samlet — klikk på gruppeoverskrifter for å utvide/kollapse"
       width="wide"

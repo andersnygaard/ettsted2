@@ -7,8 +7,8 @@ import type { ApiResponse } from '../../types';
  * Aggregated sparing/F.I.R.E. metrics calculated from snapshots
  */
 export interface SparingResponse {
-  sumSparing: number;
-  sparerate: number;
+  sumSavings: number;
+  savingsRate: number;
   monthsFree: number;
   fireNumber: number;
   fireProgress: number;

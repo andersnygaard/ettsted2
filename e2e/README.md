@@ -25,8 +25,8 @@ pnpm test
 ## What Gets Tested
 
 ### Pages Visited
-- `/dashboard` - Oversikt
-- `/portfolio` - Portefølje
+- `/oversikt` - Oversikt
+- `/portefolje` - Portefølje
 - `/sparing` - Sparing
 - `/gjeld` - Gjeld
 - `/pensjon` - Pensjon
@@ -105,7 +105,7 @@ Edit `tests/fixtures.ts`:
 
 ```typescript
 export const PROTECTED_PAGES = [
-  { path: '/dashboard', name: 'Oversikt' },
+  { path: '/oversikt', name: 'Oversikt' },
   { path: '/new-page', name: 'New Page' },  // Add here
   // ...
 ] as const;

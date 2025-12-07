@@ -3,7 +3,7 @@
  *
  * Landing page after OAuth redirect. Routes user to:
  * - /onboarding if authenticated but not in our DB
- * - /dashboard if authenticated and in our DB
+ * - /oversikt if authenticated and in our DB
  * - / (homepage) if not authenticated
  */
 
@@ -24,7 +24,7 @@ export default function PostLoginPage() {
       navigate('/onboarding', { replace: true });
     } else if (isAuthenticated) {
       // User is fully authenticated
-      navigate('/dashboard', { replace: true });
+      navigate('/oversikt', { replace: true });
     } else {
       // No session at all - back to homepage
       navigate('/', { replace: true });

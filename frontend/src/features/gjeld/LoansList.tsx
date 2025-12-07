@@ -6,7 +6,7 @@
  * Based on Nordic Minimal design from draft-1-gjeld.html
  */
 
-import { formatCurrency } from '@/shared/utils/numberFormat';
+import { formatCurrency } from '@finans/components';
 
 export interface Loan {
   id: string;

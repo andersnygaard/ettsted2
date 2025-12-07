@@ -26,8 +26,8 @@ export default function AppHeader() {
 
   // Navigation items with paths (only shown when authenticated)
   const navItems = [
-    { label: 'Oversikt', path: '/dashboard' },
-    { label: 'Portefølje', path: '/portfolio' },
+    { label: 'Oversikt', path: '/oversikt' },
+    { label: 'Portefølje', path: '/portefolje' },
     { label: 'Sparing', path: '/sparing' },
     { label: 'Gjeld', path: '/gjeld' },
     { label: 'Pensjon', path: '/pensjon' },
@@ -36,8 +36,8 @@ export default function AppHeader() {
 
   // Check if a path is active
   const isActive = (path: string) => {
-    if (path === '/dashboard') {
-      return location.pathname === '/dashboard';
+    if (path === '/oversikt') {
+      return location.pathname === '/oversikt';
     }
     return location.pathname.startsWith(path);
   };
@@ -119,6 +119,9 @@ export default function AppHeader() {
 
   return (
     <>
+      <a href="#main-content" className="skip-link">
+        Hopp til hovedinnhold
+      </a>
       <header className="app-header">
         <div className="app-header__container">
           <Link to="/" className="app-header__logo">

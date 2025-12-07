@@ -253,7 +253,7 @@ export function OnboardingWizard({ mode = 'create', initialState, onComplete }: 
       if (onComplete) {
         onComplete();
       } else {
-        navigate('/dashboard');
+        navigate('/oversikt');
       }
     },
     onError: (error: unknown) => {
@@ -287,7 +287,7 @@ export function OnboardingWizard({ mode = 'create', initialState, onComplete }: 
       if (onComplete) {
         onComplete();
       } else {
-        navigate('/dashboard');
+        navigate('/oversikt');
       }
     },
     onError: (error: unknown) => {

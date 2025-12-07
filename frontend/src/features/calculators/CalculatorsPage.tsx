@@ -47,10 +47,9 @@ const calculators = [
 function CalculatorsPage() {
   return (
     <PageSkeleton
-      breadcrumb={[{ label: 'Hjem', path: '/dashboard' }, { label: 'Kalkulatorer' }]}
+      breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Kalkulatorer' }]}
       title="Kalkulatorer"
       subtitle="Verktøy for å planlegge din økonomi"
-      centered
       className="calculators-page"
     >
       <div className="calc-grid">

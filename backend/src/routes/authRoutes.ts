@@ -7,7 +7,6 @@
 import { Router, Request, Response, IRouter } from 'express';
 import crypto from 'crypto';
 import { logger } from '../utils/logger';
-import { config } from '../config/environment';
 import { getUserById, createUser } from '../services/userService';
 import { getSnapshotsByUserId, createSnapshot } from '../services/portfolioService';
 import { User } from '../models/User';
@@ -225,25 +224,7 @@ async function seedDemoSnapshots(): Promise<void> {
  */
 router.post('/demo-login', async (_req: Request, res: Response) => {
   try {
-    logger.info('Demo login requested', { ciMockMode: config.ciMockMode });
-
-    // In CI mock mode, skip database operations
-    if (config.ciMockMode) {
-      const token = createDemoToken();
-      logger.info('Demo login successful (CI mock mode)', { userId: DEMO_USER_ID });
-
-      return res.status(200).json({
-        data: {
-          token,
-          user: {
-            id: DEMO_USER_ID,
-            nickname: 'Demo Bruker',
-            email: 'demo@finans.no',
-          },
-        },
-        success: true,
-      });
-    }
+    logger.info('Demo login requested');
 
     // Get or create demo user and seed snapshots
     const user = await getOrCreateDemoUser();

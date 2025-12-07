@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/shared/api/queryHelpers';
 import client from '@/shared/api/client';
 
 /**
@@ -141,8 +142,9 @@ export function useImportChat() {
 
       // Invalidate queries if data was imported
       if (data.snapshotsCreated > 0 || data.snapshotsUpdated > 0) {
-        queryClient.invalidateQueries({ queryKey: ['portfolio'] });
-        queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+        queryClient.invalidateQueries({ queryKey: QUERY_KEYS.PORTFOLIO });
+        queryClient.invalidateQueries({ queryKey: QUERY_KEYS.DASHBOARD });
+        // Note: 'snapshots' is not in QUERY_KEYS, so we keep it as is for now
         queryClient.invalidateQueries({ queryKey: ['snapshots'] });
       }
     },

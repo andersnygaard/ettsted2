@@ -56,7 +56,7 @@ After exploration, compile findings into structured categories:
 | **API Design** | REST conventions, response format, status codes |
 | **Data Layer** | CosmosDB patterns, partition strategy, queries |
 | **Styling** | CSS organization, design system adherence |
-| **Testing** | Test coverage, E2E patterns |
+| **Testing** | E2E patterns only (no unit tests per CLAUDE.md) |
 | **Documentation** | README, inline comments, API docs |
 | **Dependencies** | Up-to-date, no vulnerabilities |
 

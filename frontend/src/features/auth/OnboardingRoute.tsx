@@ -6,7 +6,7 @@
  * - Need to complete onboarding (needsOnboarding = true)
  *
  * Redirects to:
- * - /dashboard if already authenticated
+ * - /oversikt if already authenticated
  * - / (homepage) if no EasyAuth session
  */
 
@@ -28,7 +28,7 @@ export default function OnboardingRoute({ children }: OnboardingRouteProps) {
 
   if (isAuthenticated) {
     // User already completed onboarding - go to dashboard
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/oversikt" replace />;
   }
 
   if (!needsOnboarding) {

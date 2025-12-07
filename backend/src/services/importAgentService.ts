@@ -430,21 +430,39 @@ async function executeTool(
  * @param userMessage - User's message with data to import
  * @param userId - User ID for database operations
  * @param conversationHistory - Previous messages for context
+ * @param sessionId - Session ID for grouping conversation in Langfuse
  * @returns ImportAgentResult with actions and summary
  */
 export async function runImportAgent(
   userMessage: string,
   userId: string,
-  conversationHistory: OpenAI.ChatCompletionMessageParam[] = []
+  conversationHistory: OpenAI.ChatCompletionMessageParam[] = [],
+  sessionId?: string
 ): Promise<ImportAgentResult> {
   // Create Langfuse trace for this agent run
+  // sessionId groups all messages in the same conversation together
   const trace = createTrace('import-agent', {
     userId,
+    sessionId,
     metadata: {
       messageLength: userMessage.length,
       historyLength: conversationHistory.length,
     },
   });
+
+  // Log user message explicitly for full visibility
+  logEventToParent(trace, 'user-message', { content: userMessage });
+
+  // Log conversation history if present
+  if (conversationHistory.length > 0) {
+    logEventToParent(trace, 'conversation-history', {
+      messageCount: conversationHistory.length,
+      messages: conversationHistory.map((m) => ({
+        role: m.role,
+        content: typeof m.content === 'string' ? m.content : '[complex content]',
+      })),
+    });
+  }
 
   const actions: AgentAction[] = [];
   let snapshotsCreated = 0;
@@ -609,6 +627,9 @@ export async function runImportAgent(
           message: finalMessage,
           timestamp: new Date(),
         });
+
+        // Log assistant response for full visibility in Langfuse
+        logEventToParent(trace, 'assistant-message', { content: finalMessage });
 
         endSpan(iterationSpan, {
           finishReason: choice.finish_reason,

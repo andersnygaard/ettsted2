@@ -56,7 +56,8 @@ function getProviderFromIssuer(iss?: string): 'google' | 'facebook' | 'demo' | '
  * Priority:
  * 1. JWT from Authorization header (Bearer token)
  * 2. Azure EasyAuth headers (x-ms-client-principal-*)
- * 3. Development mock user (NODE_ENV=development only)
+ *
+ * For local development, use demo token via /auth/demo-login endpoint
  */
 export async function validateAuth(
   req: Request,
@@ -129,18 +130,6 @@ export async function validateAuth(
       path: req.path
     });
 
-    return next();
-  }
-
-  // Development bypass - inject mock user if no auth
-  if (process.env.NODE_ENV === 'development') {
-    logger.debug('Development mode: Using mock user');
-    req.user = {
-      userId: 'dev-user-123',
-      email: 'dev@finans.no',
-      name: 'Dev User',
-      provider: 'google'
-    };
     return next();
   }
 

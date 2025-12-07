@@ -51,6 +51,7 @@
 - **Database**: Azure CosmosDB (NoSQL)
 - **Local Development**: CosmosDB Emulator (run via `emulator.bat` using npx)
 - **Data Access**: CosmosDB SDK for Node.js (@azure/cosmos)
+- **Date Sorting**: CosmosDB string sort on "dd.MM.yyyy" is alphabetical, not chronological. Always sort dates in JS using `compareDatesAsc` from `backend/src/utils/dateUtils.ts`.
 
 ### Container Strategy
 
@@ -117,6 +118,12 @@
 - **Co-location**: All user data in same partition (userId) for fast queries
 - **Optimistic updates**: No immutable history - users can edit any snapshot
 - **Inactive accounts**: Can hide old accounts without deleting historical data
+- **Date sorting**: Dates in "dd.MM.yyyy" format don't sort correctly as strings. Backend uses `dateUtils.ts` to parse and sort in JS after fetching.
+
+### Demo Login
+- **Endpoint**: `POST /api/v1/auth/demo-login`
+- **Flow**: Seeds demo user and snapshots INTO database on login. All pages fetch from database - no mock mode bypass.
+- **Data**: 12 months of realistic portfolio data generated in `authRoutes.ts`
 
 ---
 
@@ -141,6 +148,10 @@ pnpm-workspace.yaml - pnpm workspace config
 ### Design Drafts
 - **Location**: [.docs/design-drafts/](.docs/design-drafts/)
 - **Approved Design**: Nordic Minimal (draft-1-*)
+
+### CSS Tokens
+**Location**: `@finans/components/styles/tokens.css`
+**Import**: `@import '@finans/components/styles/tokens.css'`
 
 ### Color Palette
 ```css
@@ -208,6 +219,7 @@ pnpm-workspace.yaml - pnpm workspace config
 
 ### REST Conventions
 - **Base path**: `/api/v1`
+- **Route naming**: Norwegian names with æøå replaced by aoa (e.g., `/portefolje` not `/portefølje`, `/okonomi` not `/økonomi`)
 - **HTTP methods**: Standard REST (GET, POST, PATCH, DELETE)
 - **Status codes**: 200 (Success), 201 (Created), 400 (Validation), 401 (Unauthorized), 404 (Not found), 500 (Server error)
 
@@ -225,8 +237,8 @@ pnpm-workspace.yaml - pnpm workspace config
 **Users**: `GET/PATCH /users/me`, `POST /users/me/setup`
 **Accounts**: `GET/POST/PATCH/DELETE /accounts`
 **Snapshots**: `GET/POST/PATCH/DELETE /snapshots`
-**Aggregated**: `GET /dashboard`, `GET /sparing`, `GET /gjeld`, `GET /pensjon`
-**Calculators**: `POST /calculators/{compound|fire|loan|monte-carlo}`
+**Aggregated**: `GET /oversikt`, `GET /sparing`, `GET /gjeld`, `GET /pensjon`
+**Calculators**: `POST /kalkulatorer/{rentes-rente|fire|lan|monte-carlo}`
 **Import**: `POST /import/chat`
 
 ---
@@ -245,8 +257,8 @@ pnpm-workspace.yaml - pnpm workspace config
 
 ### Security Features
 - Input validation (backend middleware)
-- HTTP security headers (Helmet.js)
-- CORS configured for frontend origin
+- HTTP security headers (Helmet.js with explicit CSP)
+- CORS configured for frontend origin (rejects no-origin in production)
 - HTTPS only
 
 ---
@@ -303,6 +315,7 @@ All code, comments, and documentation MUST be in English.
 - **Numbers**: `123 456,78 kr` (space thousands, comma decimal)
 - **Dates**: `dd.MM.yyyy` (01.01.2024)
 - **Library**: numeral.js (Norwegian locale), date-fns (nb locale)
+- **Import**: `import { formatCurrency, formatDate } from '@finans/components'`
 
 ---
 

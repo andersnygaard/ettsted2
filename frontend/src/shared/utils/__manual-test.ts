@@ -6,8 +6,7 @@
  * To use: Import this file in a component and check the console output.
  */
 
-import { formatCurrency, formatNumber, formatPercentage, parseNumber } from './numberFormat';
-import { formatDate, parseDate, formatDateLong, getFirstDayOfMonth } from './dateFormat';
+import { formatCurrency, formatNumber, formatPercentage, parseNumber, formatDate, parseDate, formatDateLong, getFirstDayOfMonth } from '@finans/components';
 
 // Number formatting tests
 console.group('Number Formatting Tests');

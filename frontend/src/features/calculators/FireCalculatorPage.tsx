@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
-import { Breadcrumb, PageHeader, Card, NumberInput, AreaChart, ProgressBar, Modal, Button } from '@finans/components';
+import { Breadcrumb, PageHeader, Card, NumberInput, AreaChart, ProgressBar, Modal, Button, formatCurrency, formatNumber } from '@finans/components';
 import type { DataPoint } from '@finans/components';
-import { formatCurrency, formatNumber } from '@/shared/utils/numberFormat';
 import { userApi } from '@/shared/api/services';
 import './CompoundCalculatorPage.css'; // Reuse shared calculator styles
 

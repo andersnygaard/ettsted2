@@ -24,7 +24,7 @@ export function PortfolioTableExample() {
         { id: 'firi', label: 'Firi' },
         { id: 'kron', label: 'Kron' },
         { id: 'skattKjop', label: 'Skatt/Kjøp' },
-        { id: 'sumSparing', label: 'Sum sparing', isTotal: true },
+        { id: 'sumSavings', label: 'Sum sparing', isTotal: true },
       ],
     },
     {
@@ -57,7 +57,7 @@ export function PortfolioTableExample() {
       firi: 2634,
       kron: 344371,
       skattKjop: null,
-      sumSparing: 796498,
+      sumSavings: 796498,
       sbanken: 798450,
       sumGjeld: 798450,
       arbeidsgiver: 2850000,
@@ -71,7 +71,7 @@ export function PortfolioTableExample() {
       firi: 2077,
       kron: 351156,
       skattKjop: null,
-      sumSparing: 812999,
+      sumSavings: 812999,
       sbanken: 805200,
       sumGjeld: 805200,
       arbeidsgiver: 2820000,
@@ -85,7 +85,7 @@ export function PortfolioTableExample() {
       firi: 981,
       kron: 330720,
       skattKjop: null,
-      sumSparing: 772883,
+      sumSavings: 772883,
       sbanken: 811900,
       sumGjeld: 811900,
       arbeidsgiver: 2790000,
@@ -99,7 +99,7 @@ export function PortfolioTableExample() {
       firi: null,
       kron: 326450,
       skattKjop: null,
-      sumSparing: 751911,
+      sumSavings: 751911,
       sbanken: 818600,
       sumGjeld: 818600,
       arbeidsgiver: 2760000,
@@ -113,7 +113,7 @@ export function PortfolioTableExample() {
       firi: null,
       kron: 310177,
       skattKjop: null,
-      sumSparing: 733047,
+      sumSavings: 733047,
       sbanken: 823751,
       sumGjeld: 823751,
       arbeidsgiver: 2730000,
@@ -124,7 +124,7 @@ export function PortfolioTableExample() {
   // Milestone detection: Values that crossed thresholds
   const milestones = {
     yolo: [80000], // Crossed 80k in Feb 2025
-    sumSparing: [750000, 800000], // Crossed 750k and 800k
+    sumSavings: [750000, 800000], // Crossed 750k and 800k
     bouvetAsk: [100000], // Crossed 100k in Feb 2025
   };
 

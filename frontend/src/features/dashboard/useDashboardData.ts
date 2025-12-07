@@ -3,7 +3,7 @@ import { snapshotApi } from '@/shared/api/services';
 import { QUERY_KEYS } from '@/shared/api/queryHelpers';
 import type { Account, AssetCategory } from '@/shared/types';
 import { getAccountCategory } from '@/shared/types';
-import { parseDate } from '@/shared/utils/dateFormat';
+import { parseDate } from '@finans/components';
 import { MILESTONES, QUERY_CONFIG } from '@/config/constants';
 
 /**
@@ -12,10 +12,10 @@ import { MILESTONES, QUERY_CONFIG } from '@/config/constants';
 export interface DashboardData {
   netWorth: number;
   monthlyChange: number;
-  sumSparing: number;
-  sumGjeld: number;
+  sumSavings: number;
+  totalDebt: number;
   pensjon: number;
-  sparerate: number;
+  savingsRate: number;
   nextMilestone: number;
   currentTowardsMilestone: number;
   sparingMonthlyChange: number;
@@ -28,10 +28,10 @@ function getEmptyDashboardData(): DashboardData {
   return {
     netWorth: 0,
     monthlyChange: 0,
-    sumSparing: 0,
-    sumGjeld: 0,
+    sumSavings: 0,
+    totalDebt: 0,
     pensjon: 0,
-    sparerate: 0,
+    savingsRate: 0,
     nextMilestone: MILESTONES[0],
     currentTowardsMilestone: 0,
     sparingMonthlyChange: 0
@@ -57,9 +57,9 @@ function calculateCategorySum(accounts: Account[], category: AssetCategory): num
  * Note: Gjeld values are stored as negative numbers, so we ADD them
  */
 function calculateNetWorth(accounts: Account[]): number {
-  const sumSparing = calculateCategorySum(accounts, 'sparing');
+  const sumSavings = calculateCategorySum(accounts, 'sparing');
   const sumGjeld = calculateCategorySum(accounts, 'gjeld');
-  return sumSparing + sumGjeld; // gjeld is already negative
+  return sumSavings + sumGjeld; // gjeld is already negative
 }
 
 /**
@@ -96,10 +96,10 @@ async function fetchDashboardData(): Promise<DashboardData> {
     const latest = sorted[0];
     const previous = sorted[1];
 
-    const sumSparing = calculateCategorySum(latest.accounts, 'sparing');
-    const sumGjeld = calculateCategorySum(latest.accounts, 'gjeld');
+    const sumSavings = calculateCategorySum(latest.accounts, 'sparing');
+    const totalDebt = calculateCategorySum(latest.accounts, 'gjeld');
     const pensjon = calculateCategorySum(latest.accounts, 'pensjon');
-    const netWorth = sumSparing + sumGjeld; // gjeld is already negative
+    const netWorth = sumSavings + totalDebt; // gjeld is already negative
 
     // Calculate monthly change percentage (based on net worth)
     let monthlyChange = 0;
@@ -113,21 +113,21 @@ async function fetchDashboardData(): Promise<DashboardData> {
       }
 
       if (previousSumSparing !== 0) {
-        sparingMonthlyChange = ((sumSparing - previousSumSparing) / previousSumSparing) * 100;
+        sparingMonthlyChange = ((sumSavings - previousSumSparing) / previousSumSparing) * 100;
       }
     }
 
-    const nextMilestone = findNextMilestone(sumSparing);
+    const nextMilestone = findNextMilestone(sumSavings);
 
     return {
       netWorth,
       monthlyChange,
-      sumSparing,
-      sumGjeld,
+      sumSavings,
+      totalDebt,
       pensjon,
-      sparerate: 0, // Calculated in DashboardPage from user profile
+      savingsRate: 0, // Calculated in DashboardPage from user profile
       nextMilestone,
-      currentTowardsMilestone: sumSparing,
+      currentTowardsMilestone: sumSavings,
       sparingMonthlyChange
     };
   } catch (error) {

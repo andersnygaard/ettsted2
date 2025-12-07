@@ -39,7 +39,7 @@ function AppRoutes() {
             }
           />
           <Route
-            path="dashboard"
+            path="oversikt"
             element={
               <ProtectedRoute>
                 <DashboardPage />
@@ -47,7 +47,7 @@ function AppRoutes() {
             }
           />
           <Route
-            path="portfolio"
+            path="portefolje"
             element={
               <ProtectedRoute>
                 <PortfolioPage />
@@ -147,7 +147,9 @@ function AppRoutes() {
           />
           {/* Legacy route redirects */}
           <Route path="calculators" element={<Navigate to="/kalkulatorer" replace />} />
-          <Route path="login" element={<Navigate to="/dashboard" replace />} />
+          <Route path="dashboard" element={<Navigate to="/oversikt" replace />} />
+          <Route path="portfolio" element={<Navigate to="/portefolje" replace />} />
+          <Route path="login" element={<Navigate to="/oversikt" replace />} />
           {/* 404 - Not Found */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
