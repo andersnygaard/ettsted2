@@ -29,8 +29,8 @@ export function FireSection({
   yearsToSalary,
   annualWithdrawal,
 }: FireSectionProps) {
-  const percentage = (current / fireNumber) * 100;
-  const fireNumberInMillions = fireNumber / 1000000;
+  const percentage = fireNumber > 0 ? (current / fireNumber) * 100 : 0;
+  const fireNumberInMillions = fireNumber > 0 ? fireNumber / 1000000 : 0;
 
   return (
     <section className="fire-section">

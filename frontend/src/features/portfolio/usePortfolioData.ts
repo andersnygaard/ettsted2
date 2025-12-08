@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import { snapshotApi } from '@/shared/api/services';
 import { QUERY_KEYS, invalidateAllPortfolioQueries } from '@/shared/api/queryHelpers';
 import type { MonthlySnapshot, Account } from '@/shared/types';
@@ -96,37 +97,13 @@ function detectMilestones(snapshots: MonthlySnapshot[]): Record<string, number[]
 }
 
 /**
- * Fetch and transform portfolio data for table display
+ * Fetch snapshots from API
  */
-async function fetchPortfolioData(): Promise<PortfolioData> {
+async function fetchSnapshots(): Promise<MonthlySnapshot[]> {
   try {
-    const snapshots = await snapshotApi.getAll();
-
-    if (!snapshots || snapshots.length === 0) {
-      return {
-        rows: [],
-        milestones: {}
-      };
-    }
-
-    // Detect milestones across snapshots
-    const milestones = detectMilestones(snapshots);
-
-    // Transform snapshots to portfolio rows and sort by date descending
-    const rows = snapshots
-      .map((snapshot) => ({
-        id: snapshot.id,
-        date: snapshot.date,
-        dateObj: parseDate(snapshot.date),
-        accounts: snapshot.accounts,
-        totalNetWorth: snapshot.totalNetWorth,
-        totals: calculateTotals(snapshot.accounts)
-      }))
-      .sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
-
-    return { rows, milestones };
+    return await snapshotApi.getAll();
   } catch (error) {
-    console.error('Error fetching portfolio data:', error);
+    console.error('Error fetching snapshots:', error);
     throw error;
   }
 }
@@ -137,15 +114,48 @@ async function fetchPortfolioData(): Promise<PortfolioData> {
  * Fetches all monthly snapshots and transforms them for table display.
  * Returns data sorted by date (most recent first).
  *
- * @returns TanStack Query result with portfolio rows
+ * Calculations (detectMilestones, calculateTotals) are memoized to avoid
+ * recalculation on re-renders when data hasn't changed.
+ *
+ * @returns TanStack Query result with portfolio rows and milestones
  */
 export function usePortfolioData() {
-  return useQuery({
+  const queryResult = useQuery({
     queryKey: QUERY_KEYS.PORTFOLIO,
-    queryFn: fetchPortfolioData,
+    queryFn: fetchSnapshots,
     staleTime: QUERY_CONFIG.STALE_TIME,
     retry: QUERY_CONFIG.RETRY_COUNT
   });
+
+  // Memoize milestone detection across snapshots
+  const milestones = useMemo(() => {
+    if (!queryResult.data) return {};
+    return detectMilestones(queryResult.data);
+  }, [queryResult.data]);
+
+  // Memoize portfolio rows transformation
+  const rows = useMemo(() => {
+    if (!queryResult.data || queryResult.data.length === 0) {
+      return [];
+    }
+
+    return queryResult.data
+      .map((snapshot) => ({
+        id: snapshot.id,
+        date: snapshot.date,
+        dateObj: parseDate(snapshot.date),
+        accounts: snapshot.accounts,
+        totalNetWorth: snapshot.totalNetWorth,
+        totals: calculateTotals(snapshot.accounts)
+      }))
+      .sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
+  }, [queryResult.data]);
+
+  // Return combined result with memoized data
+  return {
+    ...queryResult,
+    data: queryResult.data ? { rows, milestones } : undefined
+  };
 }
 
 /**

@@ -130,7 +130,7 @@ function AppRoutes() {
           <Route path="kalkulatorer/compound" element={<Navigate to="/kalkulatorer/rentes-rente" replace />} />
           <Route path="kalkulatorer/loan" element={<Navigate to="/kalkulatorer/lan" replace />} />
           <Route
-            path="economy"
+            path="okonomi"
             element={
               <ProtectedRoute>
                 <EconomyPage />
@@ -145,6 +145,8 @@ function AppRoutes() {
               </ProtectedRoute>
             }
           />
+          {/* Redirect from old English route to Norwegian */}
+          <Route path="economy" element={<Navigate to="/okonomi" replace />} />
           {/* Legacy route redirects */}
           <Route path="calculators" element={<Navigate to="/kalkulatorer" replace />} />
           <Route path="dashboard" element={<Navigate to="/oversikt" replace />} />

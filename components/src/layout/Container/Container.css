@@ -1,11 +1,17 @@
 /**
  * Container Component Styles
  * Based on Nordic Minimal design system
+ *
+ * Mobile-first approach: Base styles optimized for mobile, enhanced for larger screens
  */
+
+/* ============================================
+   BASE STYLES (Mobile)
+   ============================================ */
 
 .container {
   margin: 0 auto;
-  padding: 0 var(--space-4xl);
+  padding: 0 var(--space-lg);  /* Reduced padding on mobile */
 }
 
 /* Default variant: 1200px (dashboard, overview pages) */
@@ -21,12 +27,19 @@
 /* Wide variant: 1800px (portfolio table) */
 .container--wide {
   max-width: 1800px;
-  padding: 0 var(--space-3xl);
+  padding: 0 var(--space-lg);  /* Reduced padding on mobile */
 }
 
-/* Responsive padding for smaller screens */
-@media (max-width: 768px) {
+/* ============================================
+   TABLET AND UP
+   ============================================ */
+
+@media (min-width: var(--bp-md)) {
   .container {
-    padding: 0 var(--space-lg);
+    padding: 0 var(--space-4xl);  /* Desktop padding */
+  }
+
+  .container--wide {
+    padding: 0 var(--space-3xl);  /* Wider variant padding */
   }
 }

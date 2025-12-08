@@ -2,6 +2,7 @@ import { PageSkeleton, HeroNumber, AreaChart, formatCurrency } from '@finans/com
 import type { DataPoint } from '@finans/components';
 import { useGjeldData } from './useGjeldData';
 import { useAuth } from '../auth/useAuth';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { DekningSection } from './DekningSection';
 import { LoansList, Loan } from './LoansList';
 import { GjeldSkeleton } from '@/shared/components/skeletons';
@@ -18,6 +19,7 @@ import './GjeldPage.css';
 function GjeldPage() {
   const { data: gjeldData, isLoading, error } = useGjeldData();
   const { user } = useAuth();
+  usePageTitle('Gjeld');
 
   // Handle loading state
   if (isLoading) {
@@ -27,7 +29,11 @@ function GjeldPage() {
         title="Gjeld"
         subtitle="Oversikt over lån og nedbetaling"
         className="gjeld-page"
+        aria-busy={true}
       >
+        <div role="status" aria-live="polite" className="sr-only">
+          Laster gjelddata...
+        </div>
         <GjeldSkeleton />
       </PageSkeleton>
     );

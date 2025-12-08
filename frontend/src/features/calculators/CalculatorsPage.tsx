@@ -1,4 +1,5 @@
-import { PageSkeleton, CalculatorCard } from '@finans/components';
+import { PageSkeleton, CalculatorCard, Icon } from '@finans/components';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import './CalculatorsPage.css';
 
 /**
@@ -7,28 +8,28 @@ import './CalculatorsPage.css';
  */
 const calculators = [
   {
-    icon: '📈',
+    icon: <Icon name="trending-up-chart" size={24} />,
     title: 'Renters rente',
     description: 'Se hvordan sparingen din vokser over tid med compound interest.',
     href: '/kalkulatorer/rentes-rente',
     iconBg: 'rgba(139, 154, 125, 0.15)', // Muted sage
   },
   {
-    icon: '🎯',
+    icon: <Icon name="target" size={24} />,
     title: 'F.I.R.E. kalkulator',
     description: 'Beregn hvor lang tid det tar å nå økonomisk uavhengighet.',
     href: '/kalkulatorer/fire',
     iconBg: 'rgba(184, 197, 208, 0.3)', // Pale blue
   },
   {
-    icon: '🏠',
+    icon: <Icon name="home" size={24} />,
     title: 'Lånekalkulator',
     description: 'Beregn månedlige avdrag og total rentekostnad på lån.',
     href: '/kalkulatorer/lan',
     iconBg: 'rgba(196, 164, 132, 0.2)', // Soft terracotta
   },
   {
-    icon: '🎲',
+    icon: <Icon name="dice" size={24} />,
     title: 'Monte Carlo',
     description: 'Simuler tusenvis av scenarioer for å teste pensjonsplanen din.',
     href: '/kalkulatorer/monte-carlo',
@@ -45,6 +46,7 @@ const calculators = [
  * Based on Nordic Minimal design from draft-1-kalkulatorer.html
  */
 function CalculatorsPage() {
+  usePageTitle('Kalkulatorer');
   return (
     <PageSkeleton
       breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Kalkulatorer' }]}

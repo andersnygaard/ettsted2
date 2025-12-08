@@ -73,6 +73,7 @@ export function TableHeader({
               className="table-header__select"
               value={selectedYear ?? ''}
               onChange={e => onYearChange?.(e.target.value ? Number(e.target.value) : null)}
+              aria-label="Velg år"
             >
               <option value="">Alle år</option>
               {years.map(year => (

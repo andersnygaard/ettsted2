@@ -18,6 +18,7 @@ export interface PageSkeletonProps {
   subtitle?: string;
   className?: string;
   width?: 'default' | 'narrow' | 'wide';
+  'aria-busy'?: boolean;
 }
 
 export function PageSkeleton({
@@ -26,26 +27,32 @@ export function PageSkeleton({
   title,
   subtitle,
   className = '',
-  width = 'narrow'
+  width = 'narrow',
+  'aria-busy': ariaBusy
 }: PageSkeletonProps) {
   const containerClass = `container container--${width}`;
 
   return (
-    <main className={`page-skeleton ${className}`}>
-      <div className={containerClass}>
-        {breadcrumb && breadcrumb.length > 0 && (
-          <Breadcrumb items={breadcrumb} />
-        )}
+    <>
+      <a href="#main-content" className="skip-link">
+        Hopp til hovedinnhold
+      </a>
+      <main id="main-content" className={`page-skeleton ${className}`} aria-busy={ariaBusy}>
+        <div className={containerClass}>
+          {breadcrumb && breadcrumb.length > 0 && (
+            <Breadcrumb items={breadcrumb} />
+          )}
 
-        <PageHeader
-          title={title}
-          subtitle={subtitle}
-        />
+          <PageHeader
+            title={title}
+            subtitle={subtitle}
+          />
 
-        <div className="page-skeleton__content">
-          {children}
+          <div className="page-skeleton__content">
+            {children}
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }

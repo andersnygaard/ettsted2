@@ -26,6 +26,9 @@ interface EnvironmentConfig {
   googleClientId?: string;
   googleClientSecret?: string;
 
+  // Demo JWT Secret
+  demoJwtSecret: string;
+
   // OpenAI
   openaiApiKey?: string;
 
@@ -84,6 +87,9 @@ export const config: EnvironmentConfig = {
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
 
+  // Demo JWT Secret (required in production, optional in development)
+  demoJwtSecret: process.env.DEMO_JWT_SECRET || 'demo-secret-key-for-development',
+
   // OpenAI (optional - will be needed for LLM features)
   openaiApiKey: process.env.OPENAI_API_KEY,
 
@@ -106,6 +112,10 @@ export const config: EnvironmentConfig = {
 // Validate configuration
 if (isNaN(config.port) || config.port < 1 || config.port > 65535) {
   throw new Error(`Invalid PORT: ${process.env.PORT}. Must be a number between 1 and 65535.`);
+}
+
+if (config.nodeEnv === 'production' && !process.env.DEMO_JWT_SECRET) {
+  throw new Error('DEMO_JWT_SECRET must be set in production');
 }
 
 // Log configuration (without sensitive values)

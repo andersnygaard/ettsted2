@@ -12,6 +12,7 @@ import {
 import type { Column, ColumnGroup, ColumnToggle, CellChangeEvent } from '@finans/components';
 import { PortfolioSkeleton } from '@/shared/components';
 import { useAuth } from '@/features/auth/useAuth';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { usePortfolioData, useUpdateSnapshot, useDeleteSnapshot } from './usePortfolioData';
 import { NewMonthModal } from './NewMonthModal';
 import './PortfolioPage.css';
@@ -60,6 +61,7 @@ export default function PortfolioPage() {
   const updateSnapshot = useUpdateSnapshot();
   const deleteSnapshot = useDeleteSnapshot();
   const { showSuccess, showError } = useToast();
+  usePageTitle('Portefølje');
 
   // Extract rows and milestones from the fetched data
   const portfolioData = portfolioDataWithMilestones?.rows ?? [];
@@ -407,7 +409,11 @@ export default function PortfolioPage() {
         subtitle="Laster..."
         width="wide"
         className="portfolio-page"
+        aria-busy={true}
       >
+        <div role="status" aria-live="polite" className="sr-only">
+          Laster porteføljdata...
+        </div>
         <PortfolioSkeleton />
       </PageSkeleton>
     );

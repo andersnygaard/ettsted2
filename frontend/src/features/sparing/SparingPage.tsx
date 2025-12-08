@@ -2,6 +2,7 @@ import { PageSkeleton, HeroNumber, StatsRow, AreaChart, formatCurrency } from '@
 import { useSparingData } from './useSparingData';
 import { FireSection } from './FireSection';
 import { SparingSkeleton } from '@/shared/components/skeletons';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import './SparingPage.css';
 
 /**
@@ -14,6 +15,7 @@ import './SparingPage.css';
  */
 function SparingPage() {
   const { data: sparingData, isLoading, error } = useSparingData();
+  usePageTitle('Sparing');
 
   if (isLoading) {
     return (
@@ -22,7 +24,11 @@ function SparingPage() {
         title="Sparing"
         subtitle="Din vei mot økonomisk frihet"
         className="sparing-page"
+        aria-busy={true}
       >
+        <div role="status" aria-live="polite" className="sr-only">
+          Laster sparingsdata...
+        </div>
         <SparingSkeleton />
       </PageSkeleton>
     );

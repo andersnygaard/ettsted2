@@ -48,7 +48,7 @@
 }
 
 .data-preview__snapshots::-webkit-scrollbar-thumb {
-  background: rgba(44, 44, 44, 0.1);
+  background: var(--charcoal-light-1);
   border-radius: 2px;
 }
 
@@ -129,7 +129,7 @@
 }
 
 /* Responsive */
-@media (max-width: 640px) {
+@media (max-width: var(--bp-sm)) {
   .data-preview {
     padding: var(--space-md);
   }

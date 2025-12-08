@@ -86,7 +86,7 @@
 
 .wizard-progress__step--clickable:hover {
   transform: scale(1.1);
-  box-shadow: 0 2px 8px rgba(139, 154, 125, 0.3);
+  box-shadow: 0 2px 8px var(--muted-sage-light-3);
 }
 
 .wizard-progress__step--clickable:focus-visible {
@@ -122,7 +122,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 480px) {
+@media (max-width: var(--bp-sm)) {
   .wizard-progress__step {
     width: 32px;
     height: 32px;

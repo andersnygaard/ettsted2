@@ -15,6 +15,8 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { getUserByNickname } from '../services/userService';
+import { getSnapshotById, getSnapshotsByUserId } from '../services/portfolioService';
+import { ForbiddenError, ConflictError } from '../errors';
 import { logger } from '../utils/logger';
 
 /**
@@ -71,13 +73,45 @@ export async function validateNicknameAvailable(
  * @throws {NotFoundError} if snapshot doesn't exist
  */
 export async function validateSnapshotOwnership(
-  _req: Request,
+  req: Request,
   _res: Response,
   next: NextFunction
 ): Promise<void> {
-  // This would require snapshot service integration
-  // Placeholder for future implementation
-  next();
+  const userId = req.user!.userId;
+  const snapshotId = req.params.id;
+
+  try {
+    const snapshot = await getSnapshotById(userId, snapshotId);
+
+    // If snapshot doesn't exist for this user, check if it belongs to someone else
+    if (!snapshot) {
+      // Try to fetch with a null userId partition key won't work, so this is secure
+      // The snapshot either doesn't exist or belongs to another user
+      logger.warn('Snapshot not found or does not belong to user', { userId, snapshotId });
+      throw new ForbiddenError('Access denied to this snapshot');
+    }
+
+    // Verify ownership (paranoid check - should always be true since we queried by userId)
+    if (snapshot.userId !== userId) {
+      logger.warn('Snapshot ownership check failed', {
+        userId,
+        snapshotId,
+        snapshotUserId: snapshot.userId
+      });
+      throw new ForbiddenError('Access denied to this snapshot');
+    }
+
+    logger.debug('Snapshot ownership validated', { userId, snapshotId });
+    next();
+  } catch (error) {
+    // Re-throw our errors (ForbiddenError)
+    if (error instanceof ForbiddenError) {
+      throw error;
+    }
+
+    logger.error('Error validating snapshot ownership', { userId, snapshotId, error });
+    throw new ForbiddenError('Failed to validate snapshot ownership');
+  }
 }
 
 /**
@@ -88,11 +122,45 @@ export async function validateSnapshotOwnership(
  * @throws {ConflictError} if snapshot already exists for that date
  */
 export async function validateUniqueDateForUser(
-  _req: Request,
+  req: Request,
   _res: Response,
   next: NextFunction
 ): Promise<void> {
-  // This would require snapshot service integration
-  // Placeholder for future implementation
-  next();
+  const userId = req.user!.userId;
+  const { date } = req.body;
+  const snapshotId = req.params.id; // For PATCH requests (optional)
+
+  try {
+    // Get all snapshots for user
+    const snapshots = await getSnapshotsByUserId(userId);
+
+    // Check if date already exists for another snapshot
+    const duplicateSnapshot = snapshots.find(
+      snapshot => snapshot.date === date && snapshot.id !== snapshotId
+    );
+
+    if (duplicateSnapshot) {
+      logger.warn('Snapshot date already exists for user', {
+        userId,
+        date,
+        existingSnapshotId: duplicateSnapshot.id
+      });
+      throw new ConflictError('Snapshot already exists for this date', {
+        field: 'date',
+        value: date,
+        existingSnapshotId: duplicateSnapshot.id
+      });
+    }
+
+    logger.debug('Snapshot date is unique for user', { userId, date });
+    next();
+  } catch (error) {
+    // Re-throw our errors (ConflictError)
+    if (error instanceof ConflictError) {
+      throw error;
+    }
+
+    logger.error('Error validating snapshot date uniqueness', { userId, date, error });
+    throw new ConflictError('Failed to validate snapshot date uniqueness');
+  }
 }

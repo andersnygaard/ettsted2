@@ -106,7 +106,7 @@
 }
 
 /* Responsive design */
-@media (max-width: 768px) {
+@media (max-width: var(--bp-md)) {
   .table-header {
     flex-direction: column;
     align-items: flex-start;
@@ -124,7 +124,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: var(--bp-sm)) {
   .table-header {
     margin-bottom: var(--space-lg);
   }

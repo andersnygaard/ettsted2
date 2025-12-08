@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart, formatCurrency, formatNumber } from '@finans/components';
 import type { StackedDataPoint } from '@finans/components';
 import { useGjeldData } from '@/features/gjeld/useGjeldData';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import './CompoundCalculatorPage.css'; // Reuse shared calculator styles
 import './LoanCalculatorPage.css';
 
@@ -90,11 +91,13 @@ function calculateAnnuityLoan(
 ): LoanResult {
   // Calculate monthly payment using annuity formula
   let monthlyPayment = 0;
-  if (monthlyRate === 0) {
-    monthlyPayment = loanAmount / numPayments;
+  if (monthlyRate === 0 || numPayments === 0) {
+    monthlyPayment = numPayments > 0 ? loanAmount / numPayments : 0;
   } else {
     const factor = Math.pow(1 + monthlyRate, numPayments);
-    monthlyPayment = (loanAmount * (monthlyRate * factor)) / (factor - 1);
+    monthlyPayment = (factor - 1) !== 0
+      ? (loanAmount * (monthlyRate * factor)) / (factor - 1)
+      : 0;
   }
 
   const totalPaid = monthlyPayment * numPayments;
@@ -146,7 +149,7 @@ function calculateSerialLoan(
   loanType: LoanType
 ): LoanResult {
   // Fixed principal payment each month
-  const principalPayment = loanAmount / numPayments;
+  const principalPayment = numPayments > 0 ? loanAmount / numPayments : 0;
 
   // First payment: principal + interest on full loan amount
   const firstPayment = principalPayment + loanAmount * monthlyRate;
@@ -160,7 +163,7 @@ function calculateSerialLoan(
   const totalPaid = loanAmount + totalInterest;
 
   // Average monthly payment
-  const monthlyPayment = totalPaid / numPayments;
+  const monthlyPayment = numPayments > 0 ? totalPaid / numPayments : 0;
 
   // Generate amortization schedule for chart (yearly data points)
   const amortization: StackedDataPoint[] = [];
@@ -200,6 +203,7 @@ function calculateSerialLoan(
 }
 
 function LoanCalculatorPage() {
+  usePageTitle('Lånekalkulator');
   const { data: gjeldData } = useGjeldData();
 
   const [inputs, setInputs] = useState<LoanInputs>({

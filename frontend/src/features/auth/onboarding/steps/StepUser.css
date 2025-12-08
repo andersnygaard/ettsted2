@@ -68,7 +68,7 @@
 .step-user__input:focus {
   outline: none;
   border-color: var(--muted-sage);
-  box-shadow: 0 0 0 3px rgba(139, 154, 125, 0.15);
+  box-shadow: 0 0 0 3px var(--muted-sage-light-15);
 }
 
 .step-user__input::placeholder {
@@ -97,7 +97,7 @@
 }
 
 .step-user__input--error:focus {
-  box-shadow: 0 0 0 3px rgba(157, 107, 90, 0.15);
+  box-shadow: 0 0 0 3px var(--negative-light-15);
 }
 
 .step-user__input--number.step-user__input--error {
@@ -133,7 +133,7 @@
 }
 
 /* Responsive */
-@media (max-width: 480px) {
+@media (max-width: var(--bp-sm)) {
   .step-user__row {
     flex-direction: column;
   }

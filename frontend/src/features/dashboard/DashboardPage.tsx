@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDashboardData } from './useDashboardData';
 import { PageSkeleton, StatCard, SectionLink } from '@finans/components';
 import { DashboardSkeleton } from '@/shared/components/skeletons';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { MILESTONES } from '@/config/constants';
 import './DashboardPage.css';
 
@@ -11,6 +12,7 @@ function DashboardPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { data: dashboardData, isLoading, error } = useDashboardData();
+  usePageTitle('Oversikt');
   const firstName = user?.nickname?.split(' ')[0] || 'bruker';
 
   // Calculate sparerate from user profile
@@ -65,7 +67,11 @@ function DashboardPage() {
         title={`God morgen, ${firstName}`}
         subtitle={monthYear}
         className="dashboard-page"
+        aria-busy={true}
       >
+        <div role="status" aria-live="polite" className="sr-only">
+          Laster dashboarddata...
+        </div>
         <DashboardSkeleton />
       </PageSkeleton>
     );

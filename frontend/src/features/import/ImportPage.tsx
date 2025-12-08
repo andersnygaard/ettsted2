@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Breadcrumb, PageHeader, Button } from '@finans/components';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { useImportChat } from './useImportChat';
 import { ChatMessage } from './ChatMessage';
 import './ImportPage.css';
@@ -24,6 +25,7 @@ export default function ImportPage() {
     sendMessage,
     reset,
   } = useImportChat();
+  usePageTitle('Importer');
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -107,6 +109,7 @@ export default function ImportPage() {
             rows={1}
             disabled={isLoading}
             className="chatbot__input"
+            aria-label="Skriv eller lim inn porteføljedata"
           />
           <button
             type="submit"

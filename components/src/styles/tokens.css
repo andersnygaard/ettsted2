@@ -120,6 +120,9 @@
   --space-5xl: 64px;             /* Page sections */
   --space-6xl: 80px;             /* Large sections */
 
+  /* Touch target size */
+  --touch-target-min: 44px;      /* WCAG minimum touch target size */
+
 
   /* ============================================
      LAYOUT
@@ -134,6 +137,16 @@
   --radius-sm: 2px;                   /* Minimal, consistent radius */
   --radius-md: 4px;                   /* Progress bars */
   --radius-full: 50%;                 /* Circular elements */
+
+
+  /* ============================================
+     BREAKPOINTS (use in media queries)
+     ============================================ */
+
+  --bp-sm: 640px;           /* Small: mobile landscape */
+  --bp-md: 768px;           /* Medium: tablet */
+  --bp-lg: 1024px;          /* Large: desktop */
+  --bp-xl: 1400px;          /* Extra large: wide desktop */
 
 
   /* ============================================
@@ -173,26 +186,51 @@
   --terracotta-light: rgba(212, 149, 106, 0.2);       /* Terracotta 20% opacity */
 
   --soft-terracotta-light-15: rgba(196, 164, 132, 0.15); /* Soft terracotta 15% opacity */
+  --soft-terracotta-light-10: rgba(196, 164, 132, 0.1);  /* Soft terracotta 10% opacity */
   --soft-terracotta-light: rgba(196, 164, 132, 0.08);    /* Soft terracotta 8% opacity */
 
+  --muted-sage-light-3: rgba(139, 154, 125, 0.3);     /* Muted sage 30% opacity */
   --muted-sage-light-2: rgba(139, 154, 125, 0.2);     /* Muted sage 20% opacity */
   --muted-sage-light-15: rgba(139, 154, 125, 0.15);   /* Muted sage 15% opacity */
+  --muted-sage-light-12: rgba(139, 154, 125, 0.12);   /* Muted sage 12% opacity */
+  --muted-sage-light-10: rgba(139, 154, 125, 0.1);    /* Muted sage 10% opacity */
+  --muted-sage-light-5: rgba(139, 154, 125, 0.05);    /* Muted sage 5% opacity */
   --muted-sage-light: rgba(139, 154, 125, 0.08);      /* Muted sage 8% opacity */
   --muted-sage-light-4: rgba(139, 154, 125, 0.04);    /* Muted sage 4% opacity */
 
   --bone-light: rgba(245, 242, 237, 0.1);             /* Bone 10% opacity */
   --bone-dark: rgba(245, 242, 237, 0.6);              /* Bone 60% opacity */
 
+  --positive-light-2: rgba(90, 125, 90, 0.2);         /* Positive 20% opacity */
   --positive-light: rgba(90, 125, 90, 0.08);          /* Positive 8% opacity */
 
   --negative-light-2: rgba(157, 107, 90, 0.2);        /* Negative 20% opacity */
+  --negative-light-15: rgba(157, 107, 90, 0.15);      /* Negative 15% opacity */
+  --negative-light-12: rgba(157, 107, 90, 0.12);      /* Negative 12% opacity */
   --negative-light: rgba(157, 107, 90, 0.1);          /* Negative 10% opacity */
   --negative-light-8: rgba(157, 107, 90, 0.08);       /* Negative 8% opacity */
 
+  --white-light-6: rgba(255, 255, 255, 0.6);          /* White 60% opacity */
+  --white-light-15: rgba(255, 255, 255, 0.15);        /* White 15% opacity */
+  --white-light-8: rgba(255, 255, 255, 0.08);         /* White 8% opacity */
   --white-light: rgba(255, 255, 255, 0.1);            /* White 10% opacity */
 
   --charcoal-dark-overlay: rgba(44, 44, 44, 0.5);     /* Charcoal 50% opacity (overlay) */
+  --charcoal-light-5: rgba(44, 44, 44, 0.05);         /* Charcoal 5% opacity */
+  --charcoal-light-4: rgba(44, 44, 44, 0.04);         /* Charcoal 4% opacity */
+  --charcoal-light-3: rgba(44, 44, 44, 0.03);         /* Charcoal 3% opacity */
+  --charcoal-light-2: rgba(44, 44, 44, 0.02);         /* Charcoal 2% opacity */
+  --charcoal-light-15: rgba(44, 44, 44, 0.015);       /* Charcoal 1.5% opacity */
+  --charcoal-light-15-percent: rgba(44, 44, 44, 0.15); /* Charcoal 15% opacity */
+  --charcoal-light-1: rgba(44, 44, 44, 0.1);          /* Charcoal 10% opacity */
+  --charcoal-light-2-percent: rgba(44, 44, 44, 0.2);  /* Charcoal 20% opacity */
+  --charcoal-light-3-percent: rgba(44, 44, 44, 0.3);  /* Charcoal 30% opacity */
   --charcoal-light-dark: rgba(0, 0, 0, 0.03);         /* Black 3% opacity */
+
+  --black-40: rgba(0, 0, 0, 0.4);                      /* Black 40% opacity */
+  --black-15: rgba(0, 0, 0, 0.15);                     /* Black 15% opacity */
+  --black-8: rgba(0, 0, 0, 0.08);                      /* Black 8% opacity */
+  --black-6: rgba(0, 0, 0, 0.06);                      /* Black 6% opacity */
 
 
   /* ============================================

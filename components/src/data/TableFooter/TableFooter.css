@@ -38,6 +38,8 @@
   color: var(--text-secondary);
   transition: color var(--transition-fast);
   user-select: none;
+  min-height: 44px;
+  padding: 0 var(--space-xs);
 }
 
 .table-footer__toggle:hover {
@@ -45,10 +47,38 @@
 }
 
 .table-footer__checkbox {
-  width: 14px;
-  height: 14px;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xs);
+  background: var(--warm-white);
   cursor: pointer;
-  accent-color: var(--muted-sage);
+  position: relative;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.table-footer__checkbox:checked {
+  background: var(--muted-sage);
+  border-color: var(--muted-sage);
+}
+
+.table-footer__checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid var(--warm-white);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.table-footer__checkbox:hover {
+  border-color: var(--muted-sage);
 }
 
 .table-footer__toggle-label {
@@ -107,7 +137,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: var(--bp-md)) {
   .table-footer {
     flex-direction: column;
     align-items: stretch;

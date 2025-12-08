@@ -305,9 +305,19 @@ export function SpreadsheetTable({
                   className={`group-${group.id} ${isCollapsed ? 'group-collapsed' : ''}`}
                   onClick={() => toggleGroup(group.id)}
                   style={{ background: group.color }}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={!isCollapsed}
+                  aria-label={`${group.label} - Toggle to ${isCollapsed ? 'expand' : 'collapse'}`}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      toggleGroup(group.id);
+                    }
+                  }}
                 >
                   {group.label}
-                  <span className="group-toggle">▼</span>
+                  <span className="group-toggle" aria-hidden="true">▼</span>
                 </th>
               );
             })}

@@ -19,8 +19,8 @@ import {
   updateAccount,
   deleteAccount
 } from '../controllers/accountController';
-import { validateBody } from '../middleware/validate';
-import { createAccountConfigSchema, updateAccountConfigSchema } from '../validators/schemas';
+import { validateBody, validateParams } from '../middleware/validate';
+import { createAccountConfigSchema, updateAccountConfigSchema, accountConfigIdSchema } from '../validators/schemas';
 
 const router: IRouter = Router();
 
@@ -60,7 +60,12 @@ router.post('/', validateBody(createAccountConfigSchema), createAccount);
  * Body: { name?, isActive?, loanDetails? }
  * Returns: 200 with updated account
  */
-router.patch('/:id', validateBody(updateAccountConfigSchema), updateAccount);
+router.patch(
+  '/:id',
+  validateParams(accountConfigIdSchema),
+  validateBody(updateAccountConfigSchema),
+  updateAccount
+);
 
 /**
  * DELETE /api/v1/accounts/:id
@@ -69,6 +74,6 @@ router.patch('/:id', validateBody(updateAccountConfigSchema), updateAccount);
  * Requires: Authentication
  * Returns: 204 No Content
  */
-router.delete('/:id', deleteAccount);
+router.delete('/:id', validateParams(accountConfigIdSchema), deleteAccount);
 
 export default router;

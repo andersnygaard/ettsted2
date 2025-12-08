@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
+import { ReactNode } from 'react';
 import './CalculatorCard.css';
 
 export interface CalculatorCardProps {
-  /** Emoji or icon to display */
-  icon: string;
+  /** Icon component or string to display */
+  icon: ReactNode;
   /** Calculator title */
   title: string;
   /** Description of what the calculator does */

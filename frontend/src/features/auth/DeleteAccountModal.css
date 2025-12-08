@@ -10,18 +10,18 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(44, 44, 44, 0.5);
+  background-color: var(--charcoal-dark-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: var(--z-modal);
   animation: fadeIn 0.2s ease-in-out;
 }
 
 .delete-account-modal {
   background-color: var(--warm-white);
   border-radius: 8px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 40px var(--black-15);
   max-width: 400px;
   width: 90%;
   max-height: 80vh;
@@ -39,7 +39,7 @@
   font-size: 28px;
   color: var(--charcoal);
   cursor: pointer;
-  padding: 0;
+  padding: 8px;
   width: 32px;
   height: 32px;
   display: flex;
@@ -47,6 +47,9 @@
   justify-content: center;
   border-radius: 4px;
   transition: background-color 0.2s ease;
+  min-width: 44px;
+  min-height: 44px;
+  margin: -8px;
 }
 
 .delete-account-modal__close:hover:not(:disabled) {
@@ -132,7 +135,7 @@
 .delete-account-modal__input:focus {
   outline: none;
   border-color: var(--soft-terracotta);
-  box-shadow: 0 0 0 3px rgba(196, 164, 132, 0.1);
+  box-shadow: 0 0 0 3px var(--soft-terracotta-light-10);
 }
 
 .delete-account-modal__input:disabled {
@@ -143,7 +146,7 @@
 
 .delete-account-modal__error {
   padding: var(--space-sm);
-  background-color: rgba(157, 107, 90, 0.1);
+  background-color: var(--negative-light);
   border-left: 4px solid var(--negative);
   border-radius: 4px;
   font-size: 13px;
@@ -191,7 +194,7 @@
 
 .delete-account-modal__btn--delete:hover:not(:disabled) {
   background-color: var(--negative-dark);
-  box-shadow: 0 4px 12px rgba(157, 107, 90, 0.2);
+  box-shadow: 0 4px 12px var(--negative-light-2);
 }
 
 .delete-account-modal__btn--delete:disabled {

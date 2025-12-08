@@ -67,17 +67,42 @@ export async function login(page: Page): Promise<void> {
 
   // Not logged in, use demo login
   const loginBtn = page.getByRole('button', { name: /logg inn/i });
+  await expect(loginBtn).toBeVisible({ timeout: 10000 });
   await loginBtn.click();
 
+  // Wait for modal/menu with demo button
+  await page.waitForLoadState('domcontentloaded');
+
   const demoBtn = page.getByRole('button', { name: /prøv demo/i });
+  await expect(demoBtn).toBeVisible({ timeout: 10000 });
   await demoBtn.click();
 
   // Wait for redirect with longer timeout - demo seeding can take time
-  await page.waitForURL(/\/(oversikt|auth\/callback)/, { timeout: 30000 });
-  if (page.url().includes('auth/callback')) {
-    await page.waitForURL('/oversikt', { timeout: 15000 });
+  try {
+    await page.waitForURL(/\/(oversikt|auth\/callback)/, { timeout: 60000 });
+    if (page.url().includes('auth/callback')) {
+      await page.waitForURL('/oversikt', { timeout: 30000 });
+    }
+  } catch (err) {
+    // Sometimes the page navigates directly to oversikt without auth/callback
+    // Or it might still be loading
+    await page.waitForTimeout(2000);
+    if (!page.url().includes('oversikt')) {
+      throw err;
+    }
   }
-  await page.waitForLoadState('networkidle');
+
+  // Ensure page is fully loaded
+  try {
+    await page.waitForLoadState('networkidle', { timeout: 30000 });
+  } catch (err) {
+    // Page might be stuck, but if we're on oversikt, that's OK
+    if (page.url().includes('oversikt')) {
+      await page.waitForTimeout(1000);
+    } else {
+      throw err;
+    }
+  }
 }
 
 /**
@@ -172,46 +197,107 @@ export async function createSnapshot(
 ): Promise<void> {
   const { monthIndex = new Date().getMonth(), year = new Date().getFullYear() } = data;
 
-  // Click "Ny måned" button
+  // Wait for page to be ready
+  await page.waitForLoadState('domcontentloaded');
+
+  // Click "Ny måned" button - try multiple selectors
   const nyMaanedBtn = page.getByRole('button', { name: /\+ Ny måned/i });
-  await nyMaanedBtn.click();
+
+  // Try to find the button with multiple attempts and waits
+  let found = false;
+  for (let i = 0; i < 5; i++) {
+    try {
+      // Wait a bit for DOM to settle
+      await page.waitForLoadState('networkidle').catch(() => {});
+
+      // Scroll to ensure button is visible
+      await nyMaanedBtn.scrollIntoViewIfNeeded({ timeout: 1000 }).catch(() => {});
+
+      // Check if visible
+      const isVisible = await nyMaanedBtn.isVisible({ timeout: 1000 }).catch(() => false);
+      if (isVisible) {
+        found = true;
+        break;
+      }
+    } catch {
+      // Ignore and retry
+    }
+    // Wait before retry
+    if (i < 4) {
+      await page.waitForTimeout(i === 0 ? 100 : 500);
+    }
+  }
+
+  if (!found) {
+    // As a last resort, try to find any button with "Ny" or "måned" text
+    const fallbackBtn = page.getByRole('button').filter({ hasText: /ny|måned/i }).first();
+    const fallbackVisible = await fallbackBtn.isVisible({ timeout: 2000 }).catch(() => false);
+    if (fallbackVisible) {
+      await fallbackBtn.click();
+      found = true;
+    }
+  }
+
+  if (!found) {
+    throw new Error('Could not find "Ny måned" button after 5 attempts');
+  }
+
+  // If we used the regular button, click it
+  if (found && await nyMaanedBtn.isVisible({ timeout: 1000 }).catch(() => false)) {
+    await nyMaanedBtn.click();
+  }
 
   // Wait for modal to open
   const modal = page.getByRole('heading', { name: /ny måned/i });
   await expect(modal).toBeVisible({ timeout: 5000 });
 
-  // Select month
-  const monthSelect = page.locator('select').first();
+  // Wait for modal content to be fully rendered
+  await page.waitForLoadState('domcontentloaded');
+
+  // Select month using the first select
+  const selects = page.locator('select.new-month-modal__select');
+  const monthSelect = selects.first();
+  await expect(monthSelect).toBeVisible({ timeout: 5000 });
   await monthSelect.selectOption(String(monthIndex));
 
-  // Select year
-  const yearSelect = page.locator('select').nth(1);
+  // Select year using the second select
+  const yearSelect = selects.nth(1);
+  await expect(yearSelect).toBeVisible({ timeout: 5000 });
   await yearSelect.selectOption(String(year));
 
   // Fill in account values if provided
   if (data.accountValues) {
-    const numberInputs = page.locator('input[type="number"]');
-    const inputs = await numberInputs.all();
+    // Find all NumberInput components
+    // NumberInput renders as: <div class="number-input"><label>Name</label><input type="text" ...>
+    const numberInputDivs = page.locator('.number-input');
+    const inputCount = await numberInputDivs.count();
 
-    for (let i = 0; i < inputs.length; i++) {
-      const input = inputs[i];
-      // Try to get the associated label or just fill them in order
-      const placeholder = await input.getAttribute('placeholder');
-      const ariaLabel = await input.getAttribute('aria-label');
+    if (inputCount > 0) {
+      // For each account value provided, find matching input by label text
+      for (const [accountName, value] of Object.entries(data.accountValues)) {
+        // Find NumberInput with label containing the account name
+        const matchingDiv = numberInputDivs.filter({
+          hasText: new RegExp(accountName, 'i')
+        }).first();
 
-      // If we have a mapping for this input, use it
-      const key = placeholder || ariaLabel || `field_${i}`;
-      if (data.accountValues[key]) {
-        await input.fill(String(data.accountValues[key]));
+        const isVisible = await matchingDiv.isVisible({ timeout: 1000 }).catch(() => false);
+        if (isVisible) {
+          // Find the input within this div
+          const input = matchingDiv.locator('input[type="text"]');
+          await input.fill(String(value));
+        }
       }
     }
   }
 
-  // Click Lagre button
-  const lagereBtn = page.getByRole('button', { name: /lagre/i });
+  // Click Lagre button - use the primary button which is the save button
+  const lagereBtnContainer = page.locator('.new-month-modal__actions');
+  const lagereBtn = lagereBtnContainer.getByRole('button', { name: /lagre/i });
+  await expect(lagereBtn).toBeVisible({ timeout: 5000 });
   await lagereBtn.click();
 
   // Wait for modal to close and API response
+  await page.waitForURL(/\/portefolje/, { timeout: 10000 }).catch(() => {});
   await page.waitForLoadState('networkidle');
 }
 

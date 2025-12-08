@@ -1,5 +1,5 @@
 /**
- * HeroNumber Component Styles
+ * HeroNumber Component Styles - Mobile-First
  * Based on Nordic Minimal design system
  *
  * Large, centered metric display with optional change indicator.
@@ -10,7 +10,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: var(--space-md);
   text-align: center;
   margin-bottom: var(--space-5xl);
 }
@@ -25,14 +25,17 @@
   font-weight: var(--font-weight-medium);
 }
 
-/* Value - Large hero number using serif font */
+/* Value - Large hero number using serif font with responsive sizing */
 .hero-value {
   font-family: var(--font-heading);
-  font-size: var(--font-size-hero);
+  font-size: clamp(36px, 10vw, 84px);
   font-weight: var(--font-weight-light);
   color: var(--charcoal);
   line-height: 1;
   letter-spacing: var(--letter-spacing-tight);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 /* Change badge - shows percentage change with color indicator */
@@ -40,13 +43,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 16px;
+  padding: var(--space-sm) var(--space-lg);
   font-family: var(--font-body);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--text-secondary);
   background-color: var(--charcoal-light-dark);
   border-radius: var(--radius-sm);
+  min-height: var(--touch-target-min);
 }
 
 /* Positive change - sage green */
@@ -59,11 +63,4 @@
 .hero-change--negative {
   color: var(--negative);
   background-color: var(--negative-light-8);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .hero-value {
-    font-size: var(--font-size-3xl);
-  }
 }

@@ -48,7 +48,7 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: var(--bp-md)) {
   .monte-carlo-chart {
     padding: 16px;
   }

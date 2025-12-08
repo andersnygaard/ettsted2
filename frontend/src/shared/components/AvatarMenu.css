@@ -28,7 +28,7 @@
   right: 0;
   background: var(--warm-white);
   border: 1px solid var(--border);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 16px var(--black-8);
   z-index: var(--z-overlay);
   padding: var(--space-xs) 0;
 }
@@ -55,12 +55,12 @@
 }
 
 .avatar-menu__item:hover {
-  background-color: rgba(44, 44, 44, 0.04);
+  background-color: var(--charcoal-light-4);
 }
 
 .avatar-menu__item:focus-visible {
   outline: none;
-  background-color: rgba(44, 44, 44, 0.06);
+  background-color: var(--charcoal-light-4);
 }
 
 .avatar-menu__item--danger {
@@ -68,7 +68,7 @@
 }
 
 .avatar-menu__item--danger:hover {
-  background-color: rgba(157, 107, 90, 0.08);
+  background-color: var(--negative-light-8);
 }
 
 .avatar-menu__icon {

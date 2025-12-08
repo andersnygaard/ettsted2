@@ -11,7 +11,7 @@
     var(--bone) 100%
   );
   background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+  animation: shimmer 1.5s ease-in-out infinite;
   border-radius: 2px;
 }
 
@@ -34,5 +34,13 @@
   }
   100% {
     background-position: -200% 0;
+  }
+}
+
+/* Accessibility: Respect user's reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background: var(--bone);
   }
 }

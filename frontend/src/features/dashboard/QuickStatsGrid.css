@@ -1,11 +1,11 @@
 /**
- * QuickStatsGrid Component Styles
+ * QuickStatsGrid Component Styles - Mobile-First
  * Based on Nordic Minimal design system
  */
 
 .quick-stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr;
   gap: var(--space-lg);
   margin-bottom: var(--space-6xl);
 }
@@ -31,18 +31,16 @@
   animation-delay: 0.25s;
 }
 
-/* Responsive Design */
-
 /* Tablet: 2 columns */
-@media (max-width: 1024px) {
+@media (min-width: var(--bp-md)) {
   .quick-stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Mobile: 1 column */
-@media (max-width: 600px) {
+/* Desktop: 4 columns */
+@media (min-width: var(--bp-lg)) {
   .quick-stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(4, 1fr);
   }
 }

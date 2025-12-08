@@ -92,3 +92,12 @@ export const RETIREMENT = {
   DEFAULT_RETIREMENT_AGE: 67,
   DEFAULT_CURRENT_AGE: 35,
 } as const;
+
+/**
+ * HTTP client configuration
+ * Timeout values for Axios requests
+ */
+export const HTTP = {
+  TIMEOUT: 30000,        // 30 seconds for standard API calls
+  LLM_TIMEOUT: 120000,   // 2 minutes for LLM-based operations (import agent)
+} as const;

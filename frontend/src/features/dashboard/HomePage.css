@@ -97,14 +97,14 @@
 @media (hover: hover) {
   .landing-btn--primary:hover {
     background: var(--charcoal-hover);
-    transform: translateY(-4px);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+    transform: translateY(1px);
+    box-shadow: var(--shadow-sm);
   }
 
   .landing-btn--secondary:hover {
     background: var(--warm-white);
-    transform: translateY(-4px);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+    transform: translateY(1px);
+    box-shadow: var(--shadow-sm);
   }
 }
 
@@ -171,7 +171,7 @@
 @media (hover: hover) {
   .landing-feature-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--shadow-lg);
   }
 }
 
@@ -246,13 +246,13 @@
    RESPONSIVE
    ============================================ */
 
-@media (max-width: 1024px) {
+@media (max-width: var(--bp-lg)) {
   .landing-features__grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--bp-md)) {
   .landing-hero {
     padding: var(--space-4xl) var(--space-lg);
     min-height: 60vh;

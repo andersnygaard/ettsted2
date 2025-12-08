@@ -133,10 +133,17 @@ function calculateYearsToValue(
 
   if (annualSavings === 0) {
     // No contributions, only growth
-    if (growthRate === 0) {
+    if (growthRate === 0 || currentValue <= 0) {
       return Infinity;
     }
-    return Math.log(targetValue / currentValue) / Math.log(1 + growthRate);
+    if (1 + growthRate <= 0) {
+      return Infinity;
+    }
+    const logResult = Math.log(1 + growthRate);
+    if (logResult === 0) {
+      return Infinity;
+    }
+    return Math.log(targetValue / currentValue) / logResult;
   }
 
   // Iterative approach for compound growth with contributions

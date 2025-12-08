@@ -3,6 +3,7 @@ import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart, formatCurr
 import type { StackedDataPoint, Series } from '@finans/components';
 import { useSparingData } from '@/features/sparing/useSparingData';
 import { useUser } from '@/shared/hooks/useUser';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import './CompoundCalculatorPage.css';
 
 /**
@@ -76,6 +77,7 @@ function calculateCompoundInterest(inputs: CompoundInputs): CompoundResult {
 }
 
 function CompoundCalculatorPage() {
+  usePageTitle('Renters Rente');
   const { data: sparingData } = useSparingData();
   const { data: user } = useUser();
 

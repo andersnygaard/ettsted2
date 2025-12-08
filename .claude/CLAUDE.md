@@ -178,6 +178,60 @@ pnpm-workspace.yaml - pnpm workspace config
 ### Layout Rules
 - **PageHeader**: Always centered (`text-align: center`). Never left-aligned.
 
+### Mobile-First Strategy
+
+**Principle**: Write mobile styles first, then add complexity for larger screens via `min-width` queries.
+
+**Breakpoints** (defined in `tokens.css`):
+```css
+--breakpoint-sm: 640px;   /* Small tablets */
+--breakpoint-md: 768px;   /* Tablets */
+--breakpoint-lg: 1024px;  /* Desktop */
+--breakpoint-xl: 1280px;  /* Large desktop */
+```
+
+**CSS Pattern**:
+```css
+/* Base: mobile styles (no media query) */
+.component {
+  flex-direction: column;
+  padding: var(--space-md);
+  gap: var(--space-sm);
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .component {
+    flex-direction: row;
+    padding: var(--space-lg);
+    gap: var(--space-md);
+  }
+}
+
+/* Desktop and up */
+@media (min-width: 1024px) {
+  .component {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+```
+
+**Rules**:
+1. **NEVER use `max-width` media queries** - always `min-width` (mobile-first)
+2. **Base styles = mobile** - no media query wrapping for mobile
+3. **Progressive enhancement** - add features/complexity as screen grows
+4. **Touch targets**: min 44x44px on mobile (use `--touch-target-min`)
+5. **Stack on mobile, row on desktop** - default pattern for layouts
+6. **Hide non-essential on mobile** - use `display: none` at base, show at breakpoint
+
+**Component Checklist**:
+- [ ] Works on 320px width (small phones)
+- [ ] Touch targets are 44px minimum
+- [ ] Text is readable without zoom
+- [ ] No horizontal scroll
+- [ ] Forms are single-column on mobile
+
 ---
 
 ## Pages
@@ -309,6 +363,17 @@ Organize by feature (vertical slicing):
 - **TanStack Query**: Server state (API data)
 - **React Context**: Auth state
 - **useState**: Component-local state
+
+### Shared Hooks & Utilities
+```typescript
+// Page titles (required for all pages)
+import { usePageTitle } from '@/shared/hooks';
+usePageTitle('Oversikt'); // → "Oversikt | Finans"
+
+// Environment detection (use for debug logs)
+import { isDevelopment } from '@/shared/utils/environment';
+if (isDevelopment) console.log('Debug:', data);
+```
 
 ### Language
 All code, comments, and documentation MUST be in English.

@@ -10,11 +10,13 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './useAuth';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { LoadingSpinner } from '../../shared/components';
 
 export default function PostLoginPage() {
   const { isLoading, isAuthenticated, needsOnboarding } = useAuth();
   const navigate = useNavigate();
+  usePageTitle('Logger inn...');
 
   useEffect(() => {
     if (isLoading) return;

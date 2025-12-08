@@ -4,6 +4,7 @@ import type { DataPoint } from '@finans/components';
 import { userApi } from '@/shared/api/services';
 import { useSparingData } from '@/features/sparing/useSparingData';
 import { useUser } from '@/shared/hooks/useUser';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import './CompoundCalculatorPage.css'; // Reuse shared calculator styles
 
 /**
@@ -78,7 +79,8 @@ function calculateFire(inputs: FireInputs): FireResult {
       balance = balance * (1 + rate) + annualSavings;
       if (balance >= fireNumber) {
         // Interpolate for partial year
-        const prevBalance = (balance - annualSavings) / (1 + rate);
+        // Guard against division by zero when rate = -1 (would cause division by 0)
+        const prevBalance = (1 + rate) !== 0 ? (balance - annualSavings) / (1 + rate) : 0;
         const needed = fireNumber - prevBalance;
         const gained = balance - prevBalance;
         const fraction = gained > 0 ? needed / gained : 1;
@@ -118,6 +120,7 @@ function calculateFire(inputs: FireInputs): FireResult {
 }
 
 function FireCalculatorPage() {
+  usePageTitle('F.I.R.E. Kalkulator');
   const { data: sparingData } = useSparingData();
   const { data: user } = useUser();
 

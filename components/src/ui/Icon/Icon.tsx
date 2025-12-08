@@ -18,7 +18,11 @@ export type IconName =
   | 'add'
   | 'delete'
   | 'close'
-  | 'refresh';
+  | 'refresh'
+  | 'trending-up-chart'
+  | 'target'
+  | 'home'
+  | 'dice';
 
 export interface IconProps {
   name: IconName;
@@ -160,6 +164,35 @@ const iconPaths: Record<IconName, React.ReactNode> = {
     <>
       <polyline points="23 4 23 10 17 10" />
       <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+    </>
+  ),
+  'trending-up-chart': (
+    <>
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+      <polyline points="17 6 23 6 23 12" />
+    </>
+  ),
+  'target': (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="6" />
+      <circle cx="12" cy="12" r="2" />
+    </>
+  ),
+  'home': (
+    <>
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z" />
+      <path d="M9 22v-10h6v10" />
+    </>
+  ),
+  'dice': (
+    <>
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <circle cx="8" cy="8" r="1" fill="currentColor" />
+      <circle cx="16" cy="8" r="1" fill="currentColor" />
+      <circle cx="12" cy="12" r="1" fill="currentColor" />
+      <circle cx="8" cy="16" r="1" fill="currentColor" />
+      <circle cx="16" cy="16" r="1" fill="currentColor" />
     </>
   ),
 };

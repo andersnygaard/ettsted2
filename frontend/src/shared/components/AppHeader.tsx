@@ -92,7 +92,7 @@ export default function AppHeader() {
 
   const handleMobileEconomyClick = () => {
     setMobileMenuOpen(false);
-    navigate('/economy');
+    navigate('/okonomi');
   };
 
   const handleMobileLogout = () => {
@@ -145,7 +145,7 @@ export default function AppHeader() {
               <div className="app-header__avatar">
                 <AvatarMenu
                   name={user?.nickname || 'Bruker'}
-                  onEconomyClick={() => navigate('/economy')}
+                  onEconomyClick={() => navigate('/okonomi')}
                   onLogout={logout}
                   onDeleteAccount={handleDeleteAccountClick}
                 />

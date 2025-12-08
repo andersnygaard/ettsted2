@@ -54,7 +54,7 @@
 .portfolio-page__error {
   padding: var(--space-4xl) var(--space-xl);
   text-align: center;
-  background: rgba(157, 107, 90, 0.1);
+  background: var(--negative-light);
   border: 1px solid var(--negative);
   border-radius: 4px;
   font-family: var(--font-body);
@@ -63,13 +63,13 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 1400px) {
+@media (max-width: var(--bp-xl)) {
   .portfolio-page .container--wide {
     max-width: 1200px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--bp-md)) {
   .portfolio-page {
     padding: var(--space-xl) 0;
   }

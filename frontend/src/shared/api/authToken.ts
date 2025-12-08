@@ -306,8 +306,3 @@ export function clearDevLogout(): void {
   localStorage.removeItem(DEV_LOGOUT_KEY);
 }
 
-/**
- * @deprecated Use getAccessToken() instead
- * Kept for backward compatibility - returns the access_token
- */
-export const getAuthToken = getAccessToken;

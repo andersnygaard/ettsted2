@@ -71,8 +71,8 @@
 .login-btn--google:hover {
   background-color: var(--bone);
   border-color: var(--charcoal);
-  transform: translateY(-4px);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+  transform: translateY(1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .login-btn--facebook {
@@ -83,8 +83,8 @@
 
 .login-btn--facebook:hover {
   background-color: var(--facebook-blue-hover);
-  transform: translateY(-4px);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+  transform: translateY(1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .login-terms {
@@ -94,7 +94,7 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: var(--bp-md)) {
   .login-page {
     padding: var(--space-xl);
   }

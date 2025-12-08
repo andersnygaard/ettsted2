@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@finans/components';
 import { useAuth } from '../auth/useAuth';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { LoginModal } from '../auth/LoginModal';
 import './HomePage.css';
 
 function HomePage() {
   const { isAuthenticated } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  usePageTitle('Finans');
 
   return (
     <div className="landing-page">

@@ -1,5 +1,5 @@
 /**
- * StatCard Component Styles
+ * StatCard Component Styles - Mobile-First
  * Based on Nordic Minimal design system
  */
 
@@ -9,19 +9,20 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 24px 20px;
+  padding: var(--space-lg) var(--space-md);
   background: var(--card-bg);
   border: var(--border-subtle);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   text-decoration: none;
   color: inherit;
+  min-height: var(--touch-target-min);
 }
 
 /* Value - Large number using serif font */
 .stat-card__value {
   font-family: var(--font-heading);
-  font-size: 32px;
-  font-weight: 400;
+  font-size: clamp(28px, 6vw, 32px);
+  font-weight: var(--font-weight-regular);
   color: var(--charcoal);
   line-height: 1.2;
 }
@@ -29,11 +30,11 @@
 /* Label - Small caps, muted color */
 .stat-card__label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--letter-spacing-wider);
   color: var(--text-secondary);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
 /* Clickable variant - lift on hover */
@@ -46,7 +47,7 @@
 @media (hover: hover) {
   .stat-card--clickable:hover {
     transform: translateY(-4px);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--shadow-lg);
   }
 }
 
@@ -58,11 +59,4 @@
 .stat-card--clickable:focus {
   outline: 2px solid var(--muted-sage);
   outline-offset: 2px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .stat-card {
-    width: 100%;
-  }
 }

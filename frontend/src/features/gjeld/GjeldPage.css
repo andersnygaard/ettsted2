@@ -23,7 +23,7 @@
   animation-delay: 0.15s;
 }
 
-@media (max-width: 640px) {
+@media (max-width: var(--bp-sm)) {
   .dekning-section {
     flex-direction: column;
     text-align: center;

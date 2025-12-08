@@ -17,7 +17,7 @@
   margin-bottom: var(--space-lg);
 }
 
-@media (max-width: 640px) {
+@media (max-width: var(--bp-sm)) {
   .breakdown-section {
     grid-template-columns: 1fr;
   }

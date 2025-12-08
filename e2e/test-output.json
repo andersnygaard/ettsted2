@@ -1,0 +1,822 @@
+
+> @finans/e2e@1.0.0 test
+> playwright test tests/portfolio-data-entry.spec.ts --reporter=json
+
+{
+  "config": {
+    "configFile": "C:\\code\\ettsted2\\e2e\\playwright.config.ts",
+    "rootDir": "C:/code/ettsted2/e2e/tests",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/code/ettsted2/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "desktop",
+        "name": "desktop",
+        "testDir": "C:/code/ettsted2/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.57.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "portfolio-data-entry.spec.ts",
+      "file": "portfolio-data-entry.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Portfolio Data Entry",
+          "file": "portfolio-data-entry.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "can create new monthly snapshot via modal",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 60279,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8",
+                        "location": {
+                          "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                          "column": 8,
+                          "line": 4
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 2 |\u001b[39m\n \u001b[90m 3 |\u001b[39m test\u001b[33m.\u001b[39mdescribe(\u001b[32m'Portfolio Data Entry'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m   |\u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 5 |\u001b[39m     \u001b[36mawait\u001b[39m login(page)\u001b[33m;\u001b[39m\n \u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/portefolje'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                            "column": 8,
+                            "line": 4
+                          },
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n\n  2 |\n  3 | test.describe('Portfolio Data Entry', () => {\n> 4 |   test.beforeEach(async ({ page }) => {\n    |        ^\n  5 |     await login(page);\n  6 |     await page.goto('/portefolje');\n  7 |     await page.waitForLoadState('networkidle');\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts",
+                            "column": 21,
+                            "line": 185
+                          },
+                          "message": "Error: locator.selectOption: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('select').first()\u001b[22m\n\u001b[2m    - locator resolved to <select aria-label=\"Velg år\" class=\"table-header__select\">…</select>\u001b[22m\n\u001b[2m  - attempting select option action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    109 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m        - did not find some options\u001b[22m\n\u001b[2m      - retrying select option action\u001b[22m\n\u001b[2m        - waiting 500ms\u001b[22m\n\n\n   at fixtures.ts:185\n\n  183 |   // Select month\n  184 |   const monthSelect = page.locator('select').first();\n> 185 |   await monthSelect.selectOption(String(monthIndex));\n      |                     ^\n  186 |\n  187 |   // Select year\n  188 |   const yearSelect = page.locator('select').nth(1);\n    at createSnapshot (C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts:185:21)\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:14:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-08T20:51:27.614Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-2f3cd--monthly-snapshot-via-modal-desktop\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-2f3cd--monthly-snapshot-via-modal-desktop\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                        "column": 8,
+                        "line": 4
+                      }
+                    },
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 60258,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8",
+                        "location": {
+                          "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                          "column": 8,
+                          "line": 4
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 2 |\u001b[39m\n \u001b[90m 3 |\u001b[39m test\u001b[33m.\u001b[39mdescribe(\u001b[32m'Portfolio Data Entry'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m   |\u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 5 |\u001b[39m     \u001b[36mawait\u001b[39m login(page)\u001b[33m;\u001b[39m\n \u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/portefolje'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                            "column": 8,
+                            "line": 4
+                          },
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n\n  2 |\n  3 | test.describe('Portfolio Data Entry', () => {\n> 4 |   test.beforeEach(async ({ page }) => {\n    |        ^\n  5 |     await login(page);\n  6 |     await page.goto('/portefolje');\n  7 |     await page.waitForLoadState('networkidle');\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8"
+                        },
+                        {
+                          "message": "Error: apiRequestContext._wrapApiCall: ENOENT: no such file or directory, open 'C:\\code\\ettsted2\\e2e\\test-results\\.playwright-artifacts-1\\traces\\b91e5b32efd54aff2170-b523c8bde7a1b8e4db9f-retry1.trace'"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts",
+                            "column": 21,
+                            "line": 185
+                          },
+                          "message": "Error: locator.selectOption: Test ended.\nCall log:\n\u001b[2m  - waiting for locator('select').first()\u001b[22m\n\u001b[2m    - locator resolved to <select aria-label=\"Velg år\" class=\"table-header__select\">…</select>\u001b[22m\n\u001b[2m  - attempting select option action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    108 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m        - did not find some options\u001b[22m\n\u001b[2m      - retrying select option action\u001b[22m\n\u001b[2m        - waiting 500ms\u001b[22m\n\n\n   at fixtures.ts:185\n\n  183 |   // Select month\n  184 |   const monthSelect = page.locator('select').first();\n> 185 |   await monthSelect.selectOption(String(monthIndex));\n      |                     ^\n  186 |\n  187 |   // Select year\n  188 |   const yearSelect = page.locator('select').nth(1);\n    at createSnapshot (C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts:185:21)\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:14:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-12-08T20:52:30.770Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-2f3cd--monthly-snapshot-via-modal-desktop-retry1\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-2f3cd--monthly-snapshot-via-modal-desktop-retry1\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-2f3cd--monthly-snapshot-via-modal-desktop-retry1\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                        "column": 8,
+                        "line": 4
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b91e5b32efd54aff2170-b523c8bde7a1b8e4db9f",
+              "file": "portfolio-data-entry.spec.ts",
+              "line": 25,
+              "column": 7
+            },
+            {
+              "title": "can edit existing snapshot values in spreadsheet",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 60280,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8",
+                        "location": {
+                          "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                          "column": 8,
+                          "line": 4
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 2 |\u001b[39m\n \u001b[90m 3 |\u001b[39m test\u001b[33m.\u001b[39mdescribe(\u001b[32m'Portfolio Data Entry'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m   |\u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 5 |\u001b[39m     \u001b[36mawait\u001b[39m login(page)\u001b[33m;\u001b[39m\n \u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/portefolje'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                            "column": 8,
+                            "line": 4
+                          },
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n\n  2 |\n  3 | test.describe('Portfolio Data Entry', () => {\n> 4 |   test.beforeEach(async ({ page }) => {\n    |        ^\n  5 |     await login(page);\n  6 |     await page.goto('/portefolje');\n  7 |     await page.waitForLoadState('networkidle');\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts",
+                            "column": 21,
+                            "line": 185
+                          },
+                          "message": "Error: locator.selectOption: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('select').first()\u001b[22m\n\u001b[2m    - locator resolved to <select aria-label=\"Velg år\" class=\"table-header__select\">…</select>\u001b[22m\n\u001b[2m  - attempting select option action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    109 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m        - did not find some options\u001b[22m\n\u001b[2m      - retrying select option action\u001b[22m\n\u001b[2m        - waiting 500ms\u001b[22m\n\n\n   at fixtures.ts:185\n\n  183 |   // Select month\n  184 |   const monthSelect = page.locator('select').first();\n> 185 |   await monthSelect.selectOption(String(monthIndex));\n      |                     ^\n  186 |\n  187 |   // Select year\n  188 |   const yearSelect = page.locator('select').nth(1);\n    at createSnapshot (C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts:185:21)\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:14:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-08T20:53:35.008Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-ca9ae-pshot-values-in-spreadsheet-desktop\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-ca9ae-pshot-values-in-spreadsheet-desktop\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                        "column": 8,
+                        "line": 4
+                      }
+                    },
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 60225,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8",
+                        "location": {
+                          "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                          "column": 8,
+                          "line": 4
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 2 |\u001b[39m\n \u001b[90m 3 |\u001b[39m test\u001b[33m.\u001b[39mdescribe(\u001b[32m'Portfolio Data Entry'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m   |\u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 5 |\u001b[39m     \u001b[36mawait\u001b[39m login(page)\u001b[33m;\u001b[39m\n \u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/portefolje'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                            "column": 8,
+                            "line": 4
+                          },
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n\n  2 |\n  3 | test.describe('Portfolio Data Entry', () => {\n> 4 |   test.beforeEach(async ({ page }) => {\n    |        ^\n  5 |     await login(page);\n  6 |     await page.goto('/portefolje');\n  7 |     await page.waitForLoadState('networkidle');\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8"
+                        },
+                        {
+                          "message": "Error: apiRequestContext._wrapApiCall: ENOENT: no such file or directory, open 'C:\\code\\ettsted2\\e2e\\test-results\\.playwright-artifacts-3\\traces\\b91e5b32efd54aff2170-bd0abd0783a73389b3d7-retry1.trace'"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts",
+                            "column": 21,
+                            "line": 185
+                          },
+                          "message": "Error: locator.selectOption: Test ended.\nCall log:\n\u001b[2m  - waiting for locator('select').first()\u001b[22m\n\u001b[2m    - locator resolved to <select aria-label=\"Velg år\" class=\"table-header__select\">…</select>\u001b[22m\n\u001b[2m  - attempting select option action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    108 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m        - did not find some options\u001b[22m\n\u001b[2m      - retrying select option action\u001b[22m\n\u001b[2m        - waiting 500ms\u001b[22m\n\n\n   at fixtures.ts:185\n\n  183 |   // Select month\n  184 |   const monthSelect = page.locator('select').first();\n> 185 |   await monthSelect.selectOption(String(monthIndex));\n      |                     ^\n  186 |\n  187 |   // Select year\n  188 |   const yearSelect = page.locator('select').nth(1);\n    at createSnapshot (C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts:185:21)\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:14:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-12-08T20:54:38.433Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-ca9ae-pshot-values-in-spreadsheet-desktop-retry1\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-ca9ae-pshot-values-in-spreadsheet-desktop-retry1\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-ca9ae-pshot-values-in-spreadsheet-desktop-retry1\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                        "column": 8,
+                        "line": 4
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b91e5b32efd54aff2170-bd0abd0783a73389b3d7",
+              "file": "portfolio-data-entry.spec.ts",
+              "line": 70,
+              "column": 7
+            },
+            {
+              "title": "can delete snapshot with confirmation",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 60259,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8",
+                        "location": {
+                          "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                          "column": 8,
+                          "line": 4
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 2 |\u001b[39m\n \u001b[90m 3 |\u001b[39m test\u001b[33m.\u001b[39mdescribe(\u001b[32m'Portfolio Data Entry'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m   |\u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 5 |\u001b[39m     \u001b[36mawait\u001b[39m login(page)\u001b[33m;\u001b[39m\n \u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/portefolje'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                            "column": 8,
+                            "line": 4
+                          },
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n\n  2 |\n  3 | test.describe('Portfolio Data Entry', () => {\n> 4 |   test.beforeEach(async ({ page }) => {\n    |        ^\n  5 |     await login(page);\n  6 |     await page.goto('/portefolje');\n  7 |     await page.waitForLoadState('networkidle');\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts",
+                            "column": 21,
+                            "line": 185
+                          },
+                          "message": "Error: locator.selectOption: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('select').first()\u001b[22m\n\u001b[2m    - locator resolved to <select aria-label=\"Velg år\" class=\"table-header__select\">…</select>\u001b[22m\n\u001b[2m  - attempting select option action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    107 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m        - did not find some options\u001b[22m\n\u001b[2m      - retrying select option action\u001b[22m\n\u001b[2m        - waiting 500ms\u001b[22m\n\n\n   at fixtures.ts:185\n\n  183 |   // Select month\n  184 |   const monthSelect = page.locator('select').first();\n> 185 |   await monthSelect.selectOption(String(monthIndex));\n      |                     ^\n  186 |\n  187 |   // Select year\n  188 |   const yearSelect = page.locator('select').nth(1);\n    at createSnapshot (C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts:185:21)\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:14:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-08T20:55:42.240Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-7e2bc--snapshot-with-confirmation-desktop\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-7e2bc--snapshot-with-confirmation-desktop\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                        "column": 8,
+                        "line": 4
+                      }
+                    },
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 63320,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8",
+                        "location": {
+                          "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                          "column": 8,
+                          "line": 4
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 2 |\u001b[39m\n \u001b[90m 3 |\u001b[39m test\u001b[33m.\u001b[39mdescribe(\u001b[32m'Portfolio Data Entry'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m   |\u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 5 |\u001b[39m     \u001b[36mawait\u001b[39m login(page)\u001b[33m;\u001b[39m\n \u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/portefolje'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                            "column": 8,
+                            "line": 4
+                          },
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n\n  2 |\n  3 | test.describe('Portfolio Data Entry', () => {\n> 4 |   test.beforeEach(async ({ page }) => {\n    |        ^\n  5 |     await login(page);\n  6 |     await page.goto('/portefolje');\n  7 |     await page.waitForLoadState('networkidle');\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts",
+                            "column": 21,
+                            "line": 185
+                          },
+                          "message": "Error: locator.selectOption: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('select').first()\u001b[22m\n\u001b[2m    - locator resolved to <select aria-label=\"Velg år\" class=\"table-header__select\">…</select>\u001b[22m\n\u001b[2m  - attempting select option action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    109 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m        - did not find some options\u001b[22m\n\u001b[2m      - retrying select option action\u001b[22m\n\u001b[2m        - waiting 500ms\u001b[22m\n\n\n   at fixtures.ts:185\n\n  183 |   // Select month\n  184 |   const monthSelect = page.locator('select').first();\n> 185 |   await monthSelect.selectOption(String(monthIndex));\n      |                     ^\n  186 |\n  187 |   // Select year\n  188 |   const yearSelect = page.locator('select').nth(1);\n    at createSnapshot (C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts:185:21)\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:14:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-12-08T20:56:45.669Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-7e2bc--snapshot-with-confirmation-desktop-retry1\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-7e2bc--snapshot-with-confirmation-desktop-retry1\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-7e2bc--snapshot-with-confirmation-desktop-retry1\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-7e2bc--snapshot-with-confirmation-desktop-retry1\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                        "column": 8,
+                        "line": 4
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b91e5b32efd54aff2170-bb5203d83b12f3db9620",
+              "file": "portfolio-data-entry.spec.ts",
+              "line": 115,
+              "column": 7
+            },
+            {
+              "title": "can export data to CSV",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 60273,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8",
+                        "location": {
+                          "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                          "column": 8,
+                          "line": 4
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 2 |\u001b[39m\n \u001b[90m 3 |\u001b[39m test\u001b[33m.\u001b[39mdescribe(\u001b[32m'Portfolio Data Entry'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m   |\u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 5 |\u001b[39m     \u001b[36mawait\u001b[39m login(page)\u001b[33m;\u001b[39m\n \u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/portefolje'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                            "column": 8,
+                            "line": 4
+                          },
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n\n  2 |\n  3 | test.describe('Portfolio Data Entry', () => {\n> 4 |   test.beforeEach(async ({ page }) => {\n    |        ^\n  5 |     await login(page);\n  6 |     await page.goto('/portefolje');\n  7 |     await page.waitForLoadState('networkidle');\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts",
+                            "column": 21,
+                            "line": 185
+                          },
+                          "message": "Error: locator.selectOption: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('select').first()\u001b[22m\n\u001b[2m    - locator resolved to <select aria-label=\"Velg år\" class=\"table-header__select\">…</select>\u001b[22m\n\u001b[2m  - attempting select option action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    22 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m       - did not find some options\u001b[22m\n\u001b[2m     - retrying select option action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m    - element was detached from the DOM, retrying\u001b[22m\n\u001b[2m      - locator resolved to <select aria-label=\"Velg år\" class=\"table-header__select\">…</select>\u001b[22m\n\u001b[2m    - attempting select option action\u001b[22m\n\u001b[2m      - waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 20ms\u001b[22m\n\u001b[2m      - waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m      - waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m      - waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\u001b[2m      - waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\u001b[2m      - waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\u001b[2m      - waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\u001b[2m      - waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\u001b[2m      - waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\u001b[2m      - waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\u001b[2m      - waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\u001b[2m      - waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\u001b[2m      - waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\u001b[2m      - waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\u001b[2m    62 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m       - did not find some options\u001b[22m\n\u001b[2m     - retrying select option action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n\n   at fixtures.ts:185\n\n  183 |\n  184 |   // Wait for modal content to be fully rendered\n> 185 |   await page.waitForLoadState('domcontentloaded');\n      |                     ^\n  186 |\n  187 |   // Select month using the first select\n  188 |   const selects = page.locator('select.new-month-modal__select');\n    at createSnapshot (C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts:185:21)\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:14:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-08T20:57:52.189Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-77d83-ntry-can-export-data-to-CSV-desktop\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-77d83-ntry-can-export-data-to-CSV-desktop\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                        "column": 8,
+                        "line": 4
+                      }
+                    },
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 63149,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8",
+                        "location": {
+                          "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                          "column": 8,
+                          "line": 4
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 2 |\u001b[39m\n \u001b[90m 3 |\u001b[39m test\u001b[33m.\u001b[39mdescribe(\u001b[32m'Portfolio Data Entry'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m   |\u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 5 |\u001b[39m     \u001b[36mawait\u001b[39m login(page)\u001b[33m;\u001b[39m\n \u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/portefolje'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                            "column": 8,
+                            "line": 4
+                          },
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n\n  2 |\n  3 | test.describe('Portfolio Data Entry', () => {\n> 4 |   test.beforeEach(async ({ page }) => {\n    |        ^\n  5 |     await login(page);\n  6 |     await page.goto('/portefolje');\n  7 |     await page.waitForLoadState('networkidle');\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts",
+                            "column": 21,
+                            "line": 185
+                          },
+                          "message": "Error: locator.selectOption: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('select').first()\u001b[22m\n\u001b[2m    - locator resolved to <select aria-label=\"Velg år\" class=\"table-header__select\">…</select>\u001b[22m\n\u001b[2m  - attempting select option action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    108 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m        - did not find some options\u001b[22m\n\u001b[2m      - retrying select option action\u001b[22m\n\u001b[2m        - waiting 500ms\u001b[22m\n\n\n   at fixtures.ts:185\n\n  183 |\n  184 |   // Wait for modal content to be fully rendered\n> 185 |   await page.waitForLoadState('domcontentloaded');\n      |                     ^\n  186 |\n  187 |   // Select month using the first select\n  188 |   const selects = page.locator('select.new-month-modal__select');\n    at createSnapshot (C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts:185:21)\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:14:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-12-08T20:58:55.470Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-77d83-ntry-can-export-data-to-CSV-desktop-retry1\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-77d83-ntry-can-export-data-to-CSV-desktop-retry1\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-77d83-ntry-can-export-data-to-CSV-desktop-retry1\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-77d83-ntry-can-export-data-to-CSV-desktop-retry1\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                        "column": 8,
+                        "line": 4
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b91e5b32efd54aff2170-46b9f96866dce48902bf",
+              "file": "portfolio-data-entry.spec.ts",
+              "line": 153,
+              "column": 7
+            },
+            {
+              "title": "column groups can be collapsed and expanded",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 60310,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8",
+                        "location": {
+                          "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                          "column": 8,
+                          "line": 4
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 2 |\u001b[39m\n \u001b[90m 3 |\u001b[39m test\u001b[33m.\u001b[39mdescribe(\u001b[32m'Portfolio Data Entry'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m   |\u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 5 |\u001b[39m     \u001b[36mawait\u001b[39m login(page)\u001b[33m;\u001b[39m\n \u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/portefolje'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                            "column": 8,
+                            "line": 4
+                          },
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n\n  2 |\n  3 | test.describe('Portfolio Data Entry', () => {\n> 4 |   test.beforeEach(async ({ page }) => {\n    |        ^\n  5 |     await login(page);\n  6 |     await page.goto('/portefolje');\n  7 |     await page.waitForLoadState('networkidle');\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:4:8"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts",
+                            "column": 21,
+                            "line": 185
+                          },
+                          "message": "Error: locator.selectOption: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('select').first()\u001b[22m\n\u001b[2m    - locator resolved to <select aria-label=\"Velg år\" class=\"table-header__select\">…</select>\u001b[22m\n\u001b[2m  - attempting select option action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    108 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m        - did not find some options\u001b[22m\n\u001b[2m      - retrying select option action\u001b[22m\n\u001b[2m        - waiting 500ms\u001b[22m\n\n\n   at fixtures.ts:185\n\n  183 |\n  184 |   // Wait for modal content to be fully rendered\n> 185 |   await page.waitForLoadState('domcontentloaded');\n      |                     ^\n  186 |\n  187 |   // Select month using the first select\n  188 |   const selects = page.locator('select.new-month-modal__select');\n    at createSnapshot (C:\\code\\ettsted2\\e2e\\tests\\fixtures.ts:185:21)\n    at C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts:14:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-08T21:00:02.005Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-a524a-n-be-collapsed-and-expanded-desktop\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-a524a-n-be-collapsed-and-expanded-desktop\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\code\\ettsted2\\e2e\\tests\\portfolio-data-entry.spec.ts",
+                        "column": 8,
+                        "line": 4
+                      }
+                    },
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7119,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-12-08T21:01:04.745Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-a524a-n-be-collapsed-and-expanded-desktop-retry1\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\code\\ettsted2\\e2e\\test-results\\portfolio-data-entry-Portf-a524a-n-be-collapsed-and-expanded-desktop-retry1\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "flaky"
+                }
+              ],
+              "id": "b91e5b32efd54aff2170-ffc557250f7479acc7cf",
+              "file": "portfolio-data-entry.spec.ts",
+              "line": 174,
+              "column": 7
+            },
+            {
+              "title": "pagination works correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5855,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-08T21:01:12.455Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b91e5b32efd54aff2170-70cd161d8b5f9a303484",
+              "file": "portfolio-data-entry.spec.ts",
+              "line": 206,
+              "column": 7
+            },
+            {
+              "title": "year filter filters data correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5855,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-08T21:01:18.322Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b91e5b32efd54aff2170-c0e374f59ec1f00a3253",
+              "file": "portfolio-data-entry.spec.ts",
+              "line": 241,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-12-08T20:51:26.432Z",
+    "duration": 599422.889,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 1
+  }
+}

@@ -35,7 +35,7 @@
 .loan-type-tab.active {
   background: var(--bone);
   color: var(--charcoal);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px var(--black-8);
 }
 
 /* Serial loan result hero (two values side by side) */
@@ -57,7 +57,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 480px) {
+@media (max-width: var(--bp-sm)) {
   .loan-type-selector {
     width: 100%;
   }

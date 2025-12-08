@@ -26,7 +26,7 @@
 }
 
 .accounts-list__item:hover {
-  box-shadow: 0 2px 8px rgba(44, 44, 44, 0.05);
+  box-shadow: 0 2px 8px var(--charcoal-light-5);
 }
 
 .accounts-list__item--inactive {
@@ -131,10 +131,14 @@
   color: var(--text-secondary);
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 6px;
+  margin: -6px;
 }
 
 .accounts-list__delete:hover:not(:disabled) {
-  background-color: rgba(157, 107, 90, 0.1);
+  background-color: var(--negative-light);
   color: var(--negative);
 }
 
@@ -242,7 +246,7 @@
 .accounts-list__add-btn:hover {
   border-color: var(--muted-sage);
   color: var(--muted-sage);
-  background-color: rgba(139, 154, 125, 0.05);
+  background-color: var(--muted-sage-light-5);
 }
 
 /* Category Total */
@@ -273,7 +277,7 @@
 }
 
 /* Responsive */
-@media (max-width: 480px) {
+@media (max-width: var(--bp-sm)) {
   .accounts-list__item-header {
     flex-wrap: wrap;
   }

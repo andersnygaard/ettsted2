@@ -23,6 +23,9 @@ import routes from './routes';
 export function createApp(): Application {
   const app = express();
 
+  // Trust proxy - required for rate limiting to work correctly behind Azure proxy
+  app.set('trust proxy', true);
+
   // Build CSP connectSrc directive with allowed origins
   const connectSrc = ["'self'", ...config.allowedOrigins];
 

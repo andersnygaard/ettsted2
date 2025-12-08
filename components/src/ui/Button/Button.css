@@ -36,12 +36,14 @@
 @media (hover: hover) {
   .btn--primary:hover:not(:disabled) {
     background: var(--btn-primary-hover-bg);
-    transform: translateY(-1px);
+    transform: translateY(1px);
+    box-shadow: var(--shadow-sm);
   }
 }
 
 .btn--primary:active:not(:disabled) {
-  transform: translateY(0);
+  transform: translateY(2px);
+  box-shadow: none;
 }
 
 /* Secondary Variant */
@@ -51,13 +53,19 @@
   color: var(--charcoal);
 }
 
-.btn--secondary:hover:not(:disabled) {
-  background: var(--btn-secondary-hover-bg);
-  border-color: var(--charcoal);
+@media (hover: hover) {
+  .btn--secondary:hover:not(:disabled) {
+    background: var(--btn-secondary-hover-bg);
+    border-color: var(--charcoal);
+    transform: translateY(1px);
+    box-shadow: var(--shadow-sm);
+  }
 }
 
 .btn--secondary:active:not(:disabled) {
   background: var(--btn-secondary-disabled-bg);
+  transform: translateY(2px);
+  box-shadow: none;
 }
 
 /* Focus State - Keyboard Navigation */

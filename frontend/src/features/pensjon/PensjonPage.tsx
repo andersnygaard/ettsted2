@@ -2,6 +2,7 @@ import { PageSkeleton, HeroNumber, StackedAreaChart, BreakdownCard, formatCurren
 import type { StackedDataPoint, Series } from '@finans/components';
 import { PensjonSkeleton } from '@/shared/components';
 import { usePensjonData } from './usePensjonData';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { OtpSection } from './OtpSection';
 import './PensjonPage.css';
 
@@ -15,6 +16,7 @@ import './PensjonPage.css';
  */
 function PensjonPage() {
   const { data: pensjonData, isLoading, error } = usePensjonData();
+  usePageTitle('Pensjon');
 
   if (isLoading) {
     return (
@@ -23,7 +25,11 @@ function PensjonPage() {
         title="Pensjon"
         subtitle="Oppspart pensjon og fremtidig utbetaling"
         className="pensjon-page"
+        aria-busy={true}
       >
+        <div role="status" aria-live="polite" className="sr-only">
+          Laster pensjonsdata...
+        </div>
         <PensjonSkeleton />
       </PageSkeleton>
     );

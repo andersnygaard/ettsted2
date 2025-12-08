@@ -8,6 +8,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from './useAuth';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { OnboardingWizard } from './onboarding/OnboardingWizard';
 import { OnboardingState } from './onboarding/types';
 import { generateTempId } from './onboarding/defaultAccounts';
@@ -127,6 +128,7 @@ function convertUserToInitialState(
 export default function EconomyPage() {
   const navigate = useNavigate();
   const { user, isLoading: userLoading } = useAuth();
+  usePageTitle('Min Økonomi');
 
   // Fetch latest snapshot to populate account values
   const { data: snapshots = [], isLoading: snapshotsLoading } = useQuery({

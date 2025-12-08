@@ -61,7 +61,7 @@
 @media (hover: hover) {
   .section-link:hover {
     transform: translateY(-4px);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--shadow-lg);
   }
 
   .section-link:hover .section-link__arrow {

@@ -1,5 +1,7 @@
 /* animations.css - Nordic Minimal animations
  * Single source of truth for all animation definitions and utilities
+ *
+ * Mobile-first approach: Optimized for mobile devices first, enhanced for larger screens
  */
 
 /* ============================================
@@ -9,7 +11,7 @@
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(6px);  /* Reduced distance for mobile */
   }
   to {
     opacity: 1;
@@ -66,26 +68,26 @@
 }
 
 /* ============================================
-   UTILITY CLASSES - Animation presets
+   BASE STYLES (Mobile) - Animation presets
    ============================================ */
 
-/* Page entrance animation on route mount */
+/* Page entrance animation on route mount - optimized for mobile */
 .page-enter {
-  animation: fadeUp 0.35s ease-out both;
+  animation: fadeUp 0.25s ease-out both;  /* Reduced from 350ms */
 }
 
-/* Fade animations */
+/* Fade animations - optimized for mobile */
 .animate-fade-up {
-  animation: fadeUp 0.5s ease both;
+  animation: fadeUp 0.35s ease both;  /* Reduced from 0.5s */
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.5s ease both;
+  animation: fadeIn 0.35s ease both;  /* Reduced from 0.5s */
 }
 
-/* Scale animation */
+/* Scale animation - optimized for mobile */
 .animate-scale-in {
-  animation: scaleIn 0.3s ease-out both;
+  animation: scaleIn 0.25s ease-out both;  /* Reduced from 0.3s */
 }
 
 /* ============================================
@@ -105,47 +107,47 @@
 }
 
 /* ============================================
-   DELAY UTILITIES - 50ms increments
+   DELAY UTILITIES - Optimized for mobile (30ms increments)
    ============================================ */
 
 .animate-delay-1 {
-  animation-delay: 0.05s;
+  animation-delay: 0.03s;
 }
 
 .animate-delay-2 {
-  animation-delay: 0.1s;
+  animation-delay: 0.06s;
 }
 
 .animate-delay-3 {
-  animation-delay: 0.15s;
+  animation-delay: 0.09s;
 }
 
 .animate-delay-4 {
-  animation-delay: 0.2s;
+  animation-delay: 0.12s;
 }
 
 .animate-delay-5 {
-  animation-delay: 0.25s;
+  animation-delay: 0.15s;
 }
 
 .animate-delay-6 {
-  animation-delay: 0.3s;
+  animation-delay: 0.18s;
 }
 
 .animate-delay-7 {
-  animation-delay: 0.35s;
+  animation-delay: 0.21s;
 }
 
 .animate-delay-8 {
-  animation-delay: 0.4s;
+  animation-delay: 0.24s;
 }
 
 .animate-delay-9 {
-  animation-delay: 0.45s;
+  animation-delay: 0.27s;
 }
 
 .animate-delay-10 {
-  animation-delay: 0.5s;
+  animation-delay: 0.3s;
 }
 
 /* Legacy page section delays (deprecated - use animate-delay-* instead) */
@@ -154,35 +156,35 @@
 }
 
 .page-section-delay-1 {
-  animation-delay: 0.05s;
+  animation-delay: 0.03s;
 }
 
 .page-section-delay-2 {
-  animation-delay: 0.1s;
+  animation-delay: 0.06s;
 }
 
 .page-section-delay-3 {
-  animation-delay: 0.15s;
+  animation-delay: 0.09s;
 }
 
 .page-section-delay-4 {
-  animation-delay: 0.2s;
+  animation-delay: 0.12s;
 }
 
 .page-section-delay-5 {
-  animation-delay: 0.25s;
+  animation-delay: 0.15s;
 }
 
 /* ============================================
-   MOBILE/TABLET OPTIMIZATIONS
+   TABLET AND UP - Enhanced animations
    ============================================ */
 
-@media (max-width: 768px) {
-  /* Reduce fadeUp distance on mobile */
+@media (min-width: var(--bp-md)) {
+  /* Increase fadeUp distance on tablet+ */
   @keyframes fadeUp {
     from {
       opacity: 0;
-      transform: translateY(6px); /* Reduced from 10px */
+      transform: translateY(10px);  /* Desktop distance */
     }
     to {
       opacity: 1;
@@ -190,83 +192,83 @@
     }
   }
 
-  /* Reduce animation durations on mobile */
+  /* Increase animation durations on tablet+ */
   .page-enter {
-    animation-duration: 0.25s; /* Reduced from 350ms */
+    animation-duration: 0.35s;  /* Full duration */
   }
 
   .animate-fade-up {
-    animation-duration: 0.35s; /* Reduced from 0.5s */
+    animation-duration: 0.5s;  /* Full duration */
   }
 
   .animate-fade-in {
-    animation-duration: 0.35s; /* Reduced from 0.5s */
+    animation-duration: 0.5s;  /* Full duration */
   }
 
   .animate-scale-in {
-    animation-duration: 0.25s; /* Reduced from 0.3s */
+    animation-duration: 0.3s;  /* Full duration */
   }
 
-  /* Reduce delay increments for faster staggered animations */
+  /* Expand delay increments for staggered animations (50ms increments) */
   .animate-delay-1 {
-    animation-delay: 0.03s;
+    animation-delay: 0.05s;
   }
 
   .animate-delay-2 {
-    animation-delay: 0.06s;
+    animation-delay: 0.1s;
   }
 
   .animate-delay-3 {
-    animation-delay: 0.09s;
+    animation-delay: 0.15s;
   }
 
   .animate-delay-4 {
-    animation-delay: 0.12s;
+    animation-delay: 0.2s;
   }
 
   .animate-delay-5 {
-    animation-delay: 0.15s;
+    animation-delay: 0.25s;
   }
 
   .animate-delay-6 {
-    animation-delay: 0.18s;
-  }
-
-  .animate-delay-7 {
-    animation-delay: 0.21s;
-  }
-
-  .animate-delay-8 {
-    animation-delay: 0.24s;
-  }
-
-  .animate-delay-9 {
-    animation-delay: 0.27s;
-  }
-
-  .animate-delay-10 {
     animation-delay: 0.3s;
   }
 
-  /* Reduce legacy page section delays */
+  .animate-delay-7 {
+    animation-delay: 0.35s;
+  }
+
+  .animate-delay-8 {
+    animation-delay: 0.4s;
+  }
+
+  .animate-delay-9 {
+    animation-delay: 0.45s;
+  }
+
+  .animate-delay-10 {
+    animation-delay: 0.5s;
+  }
+
+  /* Expand legacy page section delays */
   .page-section-delay-1 {
-    animation-delay: 0.03s;
+    animation-delay: 0.05s;
   }
 
   .page-section-delay-2 {
-    animation-delay: 0.06s;
+    animation-delay: 0.1s;
   }
 
   .page-section-delay-3 {
-    animation-delay: 0.09s;
+    animation-delay: 0.15s;
   }
 
   .page-section-delay-4 {
-    animation-delay: 0.12s;
+    animation-delay: 0.2s;
   }
 
   .page-section-delay-5 {
-    animation-delay: 0.15s;
+    animation-delay: 0.25s;
   }
 }
 

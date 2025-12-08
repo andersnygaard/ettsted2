@@ -6,10 +6,12 @@
  */
 
 import { OnboardingWizard } from './onboarding/OnboardingWizard';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { PageHeader } from '@finans/components';
 import './OnboardingPage.css';
 
 export default function OnboardingPage() {
+  usePageTitle('Velkommen');
   return (
     <div className="onboarding-page">
       <main className="onboarding-page__main">

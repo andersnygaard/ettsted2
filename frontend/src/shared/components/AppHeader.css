@@ -143,19 +143,19 @@
 @media (hover: hover) {
   .app-header__login-btn:hover {
     opacity: 0.85;
-    transform: translateY(-1px);
+    transform: translateY(1px);
   }
 }
 
 /* Responsive design */
-@media (max-width: 1024px) {
+@media (max-width: var(--bp-lg)) {
   .app-header__nav {
     gap: 32px;
     margin: 12px 24px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--bp-md)) {
   .app-header__container {
     padding: 0 var(--space-lg);
   }
@@ -190,7 +190,7 @@
 }
 
 .app-header__hamburger:hover {
-  background-color: rgba(44, 44, 44, 0.06);
+  background-color: var(--charcoal-light-4);
 }
 
 .app-header__hamburger:focus-visible {
@@ -207,7 +207,7 @@
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-@media (max-width: 640px) {
+@media (max-width: var(--bp-sm)) {
   .app-header {
     padding: var(--space-lg) 0;
     width: 100%;
@@ -234,11 +234,11 @@
 .app-header__mobile-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--black-40);
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
-  z-index: 998;
+  z-index: var(--z-overlay);
 }
 
 .app-header__mobile-overlay.open {
@@ -253,7 +253,7 @@
   background: var(--warm-white);
   transform: translateX(100%);
   transition: transform 0.3s ease;
-  z-index: 999;
+  z-index: var(--z-modal);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -296,7 +296,7 @@
 }
 
 .app-header__mobile-close:hover {
-  background-color: rgba(44, 44, 44, 0.06);
+  background-color: var(--charcoal-light-4);
   color: var(--charcoal);
 }
 
@@ -326,14 +326,14 @@
 }
 
 .app-header__mobile-nav-item:hover {
-  background-color: rgba(44, 44, 44, 0.04);
+  background-color: var(--charcoal-light-4);
   color: var(--charcoal);
 }
 
 .app-header__mobile-nav-item.active {
   color: var(--charcoal);
   font-weight: var(--font-weight-medium);
-  background-color: rgba(44, 44, 44, 0.04);
+  background-color: var(--charcoal-light-4);
 }
 
 /* Animated left border indicator for mobile nav active item */
@@ -389,7 +389,7 @@
 }
 
 .app-header__mobile-logout:hover {
-  background-color: rgba(157, 107, 90, 0.08);
+  background-color: var(--negative-light-8);
 }
 
 .app-header__mobile-logout svg {

@@ -18,6 +18,9 @@
   width: 28px;
   height: 28px;
   font-size: 11px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px;
 }
 
 .avatar--medium {

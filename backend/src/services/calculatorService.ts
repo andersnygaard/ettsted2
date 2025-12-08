@@ -105,7 +105,7 @@ export function runMonteCarloSimulation(params: MonteCarloParams): MonteCarloRes
 
   // Calculate success rate (% of simulations that maintained positive balance)
   const successfulSimulations = results.filter(balance => balance > 0).length;
-  const successRate = (successfulSimulations / simulations) * 100;
+  const successRate = simulations > 0 ? (successfulSimulations / simulations) * 100 : 0;
 
   // Sort results for percentile calculation
   const sorted = [...results].sort((a, b) => a - b);
@@ -171,8 +171,8 @@ export function calculateCompoundInterest(params: CompoundParams): CompoundResul
   let totalContributions = principal;
   let totalInterest = 0;
 
-  const periodicRate = annualRate / compoundingFrequency;
-  const contributionPerPeriod = monthlyContribution * (12 / compoundingFrequency);
+  const periodicRate = compoundingFrequency > 0 ? annualRate / compoundingFrequency : 0;
+  const contributionPerPeriod = compoundingFrequency > 0 ? monthlyContribution * (12 / compoundingFrequency) : 0;
 
   for (let year = 1; year <= years; year++) {
     const startBalance = balance;
@@ -354,12 +354,13 @@ export function calculateLoan(params: LoanParams): LoanResult {
 
   // Calculate standard monthly payment
   let monthlyPayment: number;
-  if (monthlyRate === 0) {
-    monthlyPayment = principal / totalMonths;
+  if (monthlyRate === 0 || totalMonths === 0) {
+    monthlyPayment = totalMonths > 0 ? principal / totalMonths : 0;
   } else {
-    monthlyPayment =
-      (principal * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) /
-      (Math.pow(1 + monthlyRate, totalMonths) - 1);
+    const factor = Math.pow(1 + monthlyRate, totalMonths);
+    monthlyPayment = (factor - 1) !== 0
+      ? (principal * monthlyRate * factor) / (factor - 1)
+      : 0;
   }
 
   // Round to 2 decimal places

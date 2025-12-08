@@ -4,6 +4,10 @@
 /* Import animations */
 @import './animations.css';
 
+/* ============================================
+   BASE STYLES (Mobile)
+   ============================================ */
+
 body {
   margin: 0;
   padding: 0;
@@ -34,7 +38,10 @@ body::before {
   background-color: var(--bone);
 }
 
-/* Typography */
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: var(--font-weight-light);
@@ -70,14 +77,14 @@ code, pre, kbd, samp,
 }
 
 code {
-  background-color: rgba(44, 44, 44, 0.05);
+  background-color: var(--charcoal-light-5);
   padding: 2px 6px;
   border-radius: var(--radius-sm);
   font-size: 0.9em;
 }
 
 pre {
-  background-color: rgba(44, 44, 44, 0.05);
+  background-color: var(--charcoal-light-5);
   padding: var(--space-md);
   border-radius: var(--radius-sm);
   overflow-x: auto;
@@ -88,7 +95,10 @@ pre code {
   padding: 0;
 }
 
-/* Utility classes */
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
 .container {
   max-width: var(--container-max-width);
   margin: 0 auto;
@@ -107,6 +117,10 @@ pre code {
   color: var(--positive);
 }
 
+/* ============================================
+   FORM ELEMENTS - Base styles
+   ============================================ */
+
 /* Checkbox Styling - Nordic Minimal */
 input[type="checkbox"] {
   appearance: none;
@@ -114,17 +128,17 @@ input[type="checkbox"] {
   -moz-appearance: none;
   width: 16px;
   height: 16px;
-  border: 1.5px solid var(--border, rgba(44, 44, 44, 0.25));
+  border: 1.5px solid var(--border-strong);
   border-radius: 3px;
-  background-color: rgba(139, 154, 125, 0.08);
+  background-color: var(--warm-white);
   cursor: pointer;
   transition: all 0.2s ease;
   flex-shrink: 0;
+  position: relative;
 }
 
 input[type="checkbox"]:hover {
   border-color: var(--muted-sage);
-  background-color: rgba(139, 154, 125, 0.12);
 }
 
 input[type="checkbox"]:checked {
@@ -133,20 +147,20 @@ input[type="checkbox"]:checked {
 }
 
 input[type="checkbox"]:checked::after {
-  content: '✓';
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  color: white;
-  font-size: 11px;
-  font-weight: bold;
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 input[type="checkbox"]:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(139, 154, 125, 0.1);
+  box-shadow: 0 0 0 3px var(--muted-sage-light-10);
 }
 
 input[type="checkbox"]:disabled {
@@ -179,5 +193,5 @@ input[type="date"]:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(44, 44, 44, 0.1);
+  box-shadow: 0 0 0 2px var(--charcoal-light-1);
 }

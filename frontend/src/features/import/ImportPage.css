@@ -60,12 +60,12 @@
 }
 
 .chatbot__messages::-webkit-scrollbar-thumb {
-  background: rgba(44, 44, 44, 0.1);
+  background: var(--charcoal-light-1);
   border-radius: 2px;
 }
 
 .chatbot__messages::-webkit-scrollbar-thumb:hover {
-  background: rgba(44, 44, 44, 0.2);
+  background: var(--charcoal-light-2-percent);
 }
 
 /* ============================================
@@ -202,11 +202,11 @@
 .chatbot__input:focus {
   outline: none;
   border-color: var(--soft-terracotta);
-  box-shadow: 0 0 0 3px rgba(196, 164, 132, 0.12);
+  box-shadow: 0 0 0 3px var(--soft-terracotta-light-10);
 }
 
 .chatbot__input:disabled {
-  background: rgba(44, 44, 44, 0.03);
+  background: var(--charcoal-light-3);
   color: var(--text-secondary);
   cursor: not-allowed;
 }
@@ -242,7 +242,7 @@
 }
 
 .chatbot__send:disabled {
-  background: rgba(44, 44, 44, 0.15);
+  background: var(--charcoal-light-15-percent);
   cursor: not-allowed;
 }
 
@@ -272,7 +272,7 @@
 /* ============================================
    RESPONSIVE
    ============================================ */
-@media (max-width: 640px) {
+@media (max-width: var(--bp-sm)) {
   .import-page__header {
     padding: var(--space-2xl) var(--space-md) var(--space-lg);
   }

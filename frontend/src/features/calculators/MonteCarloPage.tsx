@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Breadcrumb, PageHeader, Card, NumberInput, formatCurrency, formatNumber } from '@finans/components';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import MonteCarloChart from './MonteCarloChart';
 import './CompoundCalculatorPage.css'; // Reuse shared calculator styles
 
@@ -132,6 +133,7 @@ function runMonteCarloSimulation(inputs: MonteCarloInputs): MonteCarloResult {
 }
 
 function MonteCarloPage() {
+  usePageTitle('Monte Carlo');
   const [inputs, setInputs] = useState<MonteCarloInputs>({
     portfolioValue: 5000000,
     annualWithdrawal: 200000,

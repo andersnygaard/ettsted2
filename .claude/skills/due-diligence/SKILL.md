@@ -436,3 +436,7 @@ When user says "run due diligence" or invokes this skill:
 **Report saved to**: `.docs/DUE-DILIGENCE-REPORT.md`
 
 Always save the full report. Present a summary in the conversation.
+
+
+NOTES FROM THE USER:
+- NO .env FILES ARE CHECKED IN. ALL .env FILES ARE IGNORED BY GIT.

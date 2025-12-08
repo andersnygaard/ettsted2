@@ -108,7 +108,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: var(--bp-md)) {
   .number-input__field {
     font-size: var(--font-size-lg);
     width: 100%;

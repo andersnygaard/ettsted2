@@ -11,6 +11,7 @@
   inset: 0;
   background: rgba(44, 44, 44, 0.5);
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -114,6 +115,13 @@
   gap: var(--space-sm);
   padding: var(--space-md) var(--space-xl);
   border-top: 1px solid var(--border);
+}
+
+/* Fallback for browsers without backdrop-filter support */
+@supports not (backdrop-filter: blur(4px)) {
+  .modal-overlay {
+    background: rgba(44, 44, 44, 0.6);
+  }
 }
 
 /* Reduced motion support */

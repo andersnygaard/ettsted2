@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios';
+import { HTTP } from '@/config/constants';
 import { getAccessToken, getClientPrincipal, isDemoSession } from './authToken';
 
 /**
@@ -13,7 +14,7 @@ const isDevelopment = import.meta.env.VITE_APP_ENV === 'development';
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1',
   withCredentials: true,
-  timeout: 120000, // 2 minute timeout (LLM calls can be slow)
+  timeout: HTTP.LLM_TIMEOUT, // 2 minute timeout (LLM calls can be slow)
   headers: {
     'Content-Type': 'application/json',
   },

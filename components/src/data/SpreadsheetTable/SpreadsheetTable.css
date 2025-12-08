@@ -52,9 +52,21 @@
   background: var(--charcoal-light);
 }
 
-/* Group-specific colors */
+/* Group-specific colors with enhanced styling */
 .spreadsheet .group-header-row th.group-sparing {
   background: var(--category-sparing);
+  position: relative;
+}
+
+.spreadsheet .group-header-row th.group-sparing::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--muted-sage-light-5);
+  opacity: 0.6;
 }
 
 .spreadsheet .group-header-row th.group-sparing:hover {
@@ -63,6 +75,18 @@
 
 .spreadsheet .group-header-row th.group-gjeld {
   background: var(--category-gjeld);
+  position: relative;
+}
+
+.spreadsheet .group-header-row th.group-gjeld::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--soft-terracotta-light);
+  opacity: 0.6;
 }
 
 .spreadsheet .group-header-row th.group-gjeld:hover {
@@ -71,6 +95,18 @@
 
 .spreadsheet .group-header-row th.group-pensjon {
   background: var(--category-pensjon);
+  position: relative;
+}
+
+.spreadsheet .group-header-row th.group-pensjon::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--pale-blue-light-3);
+  opacity: 0.6;
 }
 
 .spreadsheet .group-header-row th.group-pensjon:hover {
@@ -173,13 +209,30 @@
   border-right: 2px solid var(--border-strong);
 }
 
-/* Row hover effects */
-.spreadsheet tr:hover td {
-  background: var(--muted-sage-light-4);
+/* Row hover effects - enhanced with shadow and depth */
+.spreadsheet tbody tr {
+  transition: background-color 150ms ease, box-shadow 150ms ease;
 }
 
-.spreadsheet tr:hover td:first-child {
-  background: var(--muted-sage-light);
+.spreadsheet tbody tr:hover {
+  box-shadow: inset 0 0 0 1px var(--border), 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.spreadsheet tbody tr:hover td {
+  background: var(--warm-white);
+}
+
+.spreadsheet tbody tr:hover td:first-child {
+  background: var(--muted-sage-light-5);
+}
+
+/* Optional zebra striping for visual rhythm */
+.spreadsheet tbody tr:nth-child(even) td {
+  background: rgba(245, 242, 237, 0.5);
+}
+
+.spreadsheet tbody tr:nth-child(even) td:first-child {
+  background: var(--bone);
 }
 
 /* Column group backgrounds */
@@ -214,19 +267,21 @@
    Milestone Highlighting
    ======================================== */
 
-/* Milestone value with gold star */
+/* Milestone value with gold star - enhanced styling */
 .value-milestone {
   color: var(--gold);
-  font-weight: 500;
+  font-weight: 600;
   position: relative;
+  letter-spacing: 0.02em;
 }
 
 .value-milestone::before {
   content: '★';
   position: absolute;
-  left: -14px;
-  font-size: 8px;
-  opacity: 0.7;
+  left: -16px;
+  font-size: 10px;
+  color: var(--gold);
+  opacity: 0.9;
 }
 
 /* ========================================
@@ -336,27 +391,35 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: unset;
+  padding: 14px;
   font-size: 16px;
   line-height: 1;
   border-radius: 2px;
-  transition: background 0.15s ease, opacity 0.15s ease;
-  opacity: 0;
+  transition: background 150ms ease, opacity 150ms ease, color 150ms ease;
+  opacity: 0.3;
   visibility: hidden;
   color: var(--negative);
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: -14px;
 }
 
 .delete-button:hover {
   opacity: 1;
   background: var(--negative-light);
+  color: var(--negative-dark);
 }
 
 .delete-button:active {
   background: var(--negative-light-2);
+  color: var(--negative);
 }
 
-.spreadsheet tr:hover .delete-button {
-  opacity: 0.6;
+.spreadsheet tbody tr:hover .delete-button {
+  opacity: 0.7;
   visibility: visible;
 }
 
@@ -380,14 +443,14 @@
    ======================================== */
 
 /* Ensure horizontal scrolling on small screens */
-@media (max-width: 1200px) {
+@media (max-width: var(--bp-xl)) {
   .spreadsheet-wrapper {
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
   }
 }
 
 /* Adjust font sizes for very small screens */
-@media (max-width: 768px) {
+@media (max-width: var(--bp-md)) {
   .spreadsheet {
     font-size: 11px;
   }

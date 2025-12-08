@@ -22,7 +22,7 @@
   gap: 0.75rem;
   padding: 1rem;
   margin-bottom: 1.5rem;
-  background-color: rgba(157, 107, 90, 0.1);
+  background-color: var(--negative-light);
   border: 1px solid var(--negative);
   border-radius: 4px;
   color: var(--negative);
@@ -100,7 +100,7 @@
 }
 
 /* Responsive */
-@media (max-width: 480px) {
+@media (max-width: var(--bp-sm)) {
   .onboarding-wizard {
     padding: 1rem 0.5rem;
   }

@@ -170,7 +170,7 @@ Thoroughly understand the task plan:
 - **Context & Motivation**: Why is this work needed?
 - **Current State**: What exists today?
 - **Desired Outcome**: What success looks like
-- **Acceptance Criteria**: Specific, testable requirements (checkboxes)
+- **Acceptance Criteria**: Specific, testable requirements (checkboxes) - **🚨 MUST be checked off as completed**
 - **Technical Approach**: Implementation steps and architecture decisions
 - **Dependencies**: What must be completed first
 - **Risks**: Potential issues and mitigations
@@ -499,20 +499,27 @@ pnpm --filter backend type-check
 
 ### Step 10: Complete and Move to Done
 
+**🚨 CRITICAL: Update Acceptance Criteria Checkboxes**
+
+Before marking complete, **you MUST check off all acceptance criteria** in the task file:
+- Change `- [ ]` to `- [x]` for each completed item
+- If an item cannot be completed, document why in the Resolution section
+- **A task with unchecked acceptance criteria is NOT DONE**
+
 Before marking complete, verify the **Verification Checklist** (in task file):
 
 ```markdown
 ## Verification
-- [ ] All acceptance criteria met
-- [ ] Frontend builds successfully (`pnpm --filter frontend build`)
-- [ ] Backend builds successfully (`pnpm --filter backend build`)
-- [ ] TypeScript compilation clean (no errors)
-- [ ] ESLint passes
-- [ ] Manual testing complete
-- [ ] Norwegian formatting verified
-- [ ] Error handling tested
-- [ ] Code reviewed (self-review)
-- [ ] **🚨 Playwright CLI verification** (MANDATORY for frontend tasks)
+- [x] All acceptance criteria met AND CHECKED OFF IN TASK FILE
+- [x] Frontend builds successfully (`pnpm --filter frontend build`)
+- [x] Backend builds successfully (`pnpm --filter backend build`)
+- [x] TypeScript compilation clean (no errors)
+- [x] ESLint passes
+- [x] Manual testing complete
+- [x] Norwegian formatting verified
+- [x] Error handling tested
+- [x] Code reviewed (self-review)
+- [x] **🚨 Playwright CLI verification** (MANDATORY for frontend tasks)
 ```
 
 **🚨 Playwright CLI verification is MANDATORY for ALL frontend tasks**:
@@ -702,13 +709,18 @@ Task tool:
     5. Use Edit tool (NOT sed/awk)
     6. Use Glob tool (NOT find/ls for search)
     7. Use Grep tool (NOT grep/rg bash commands)
+    8. 🚨 CHECK OFF acceptance criteria as you complete them (change [ ] to [x])
 
     NEVER use bash for file operations when a built-in tool exists.
     NEVER run ANY git commands - user handles version control manually.
 
+    🚨 ACCEPTANCE CRITERIA: As you complete each acceptance criterion,
+    UPDATE THE TASK FILE to check it off: change "- [ ]" to "- [x]".
+    A task with unchecked acceptance criteria is NOT DONE.
+
     When done, provide a summary of:
     - Files created/modified
-    - All acceptance criteria status (update in task file)
+    - All acceptance criteria status (MUST be checked off in task file)
     - Any issues encountered
 ```
 
@@ -736,9 +748,14 @@ Task tool:
     5. Use Edit tool (NOT sed/awk)
     6. Use Glob tool (NOT find/ls for search)
     7. Use Grep tool (NOT grep/rg bash commands)
+    8. 🚨 CHECK OFF acceptance criteria as you complete them (change [ ] to [x])
 
     NEVER use bash for file operations when a built-in tool exists.
     NEVER run ANY git commands - user handles version control manually.
+
+    🚨 ACCEPTANCE CRITERIA: As you complete each acceptance criterion,
+    UPDATE THE TASK FILE to check it off: change "- [ ]" to "- [x]".
+    A task with unchecked acceptance criteria is NOT DONE.
 
     After implementation, VERIFY using Playwright CLI:
     node scripts/playwright-verify.js http://localhost:5173/[page] area-chart
