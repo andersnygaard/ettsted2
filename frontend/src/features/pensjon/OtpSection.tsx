@@ -1,7 +1,7 @@
 /**
- * OtpSection Component
+ * PensionSplitSection Component
  *
- * Progress bar section showing OTP (Obligatorisk tjenestepensjon) as percentage of total.
+ * Progress bar section showing private pension as percentage of total.
  *
  * Based on Nordic Minimal design from draft-1-pensjon.html
  */
@@ -23,14 +23,14 @@ export function OtpSection({ percentage, trend = 'up' }: OtpSectionProps) {
   return (
     <section className="otp-section">
       <div className="otp-header">
-        <span className="otp-title">OTP som prosent av total</span>
+        <span className="otp-title">Privat pensjon av total</span>
         <span className="otp-value">{percentage}%</span>
       </div>
       <ProgressBar
         value={percentage}
         variant="default"
         height={12}
-        leftLabel="Obligatorisk tjenestepensjon"
+        leftLabel="Arbeidsgiver, IPS, egen sparing"
         rightLabel={trendText[trend]}
       />
     </section>

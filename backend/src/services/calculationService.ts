@@ -16,6 +16,18 @@ import { Account } from '../models/Portfolio';
 import { UserProfile } from '../models/User';
 
 /**
+ * Derive annual expenses from profile
+ *
+ * Formula: (monthlySalary - monthlySavings) * 12
+ *
+ * @param profile - User profile with monthlySalary and monthlySavings
+ * @returns Annual expenses in NOK
+ */
+export function deriveAnnualExpenses(profile: UserProfile): number {
+  return (profile.monthlySalary - profile.monthlySavings) * 12;
+}
+
+/**
  * Determine category from asset class
  *
  * Maps assetClass string to category type.
@@ -86,22 +98,26 @@ export function calculateNetWorth(accounts: Account[]): number {
  * Calculate coverage percentage
  *
  * Represents how much of total debt is covered by savings.
- * Formula: (Sum(sparing) / Sum(gjeld)) * 100
+ * Formula: (Sum(sparing) / |Sum(gjeld)|) * 100
  *
  * At 100%, user has zero net debt. Above 100% means assets exceed debt.
  * Returns 100 if no debt exists (undefined coverage rate).
+ *
+ * Note: Debt values are stored as negative numbers in the database,
+ * so we use Math.abs() to get the absolute debt amount.
  *
  * @param accounts - Accounts array from a monthly snapshot
  * @returns Coverage percentage (0 to 100+), or 100 if no debt
  *
  * @example
  * const coverage = calculateCoverage(snapshot.accounts)
- * // Returns: 150 (if savings=300000 and debt=200000)
+ * // Returns: 150 (if savings=300000 and debt=-200000)
  * // Returns: 100 (if debt=0)
  */
 export function calculateCoverage(accounts: Account[]): number {
   const savings = calculateSumByCategory(accounts, 'sparing');
-  const debt = calculateSumByCategory(accounts, 'gjeld');
+  const debtSum = calculateSumByCategory(accounts, 'gjeld');
+  const debt = Math.abs(debtSum);
 
   if (debt === 0) return 100;
   return (savings / debt) * 100;
@@ -111,24 +127,21 @@ export function calculateCoverage(accounts: Account[]): number {
  * Calculate savings rate percentage
  *
  * Represents the percentage of income that is saved/invested.
- * Formula: ((Annual Income - Annual Expenses) / Annual Income) * 100
+ * Formula: (monthlySavings / monthlySalary) * 100
  *
- * Annual income is derived from monthly salary (monthlySalary * 12).
- * Returns 0 if annual income is 0 to avoid division by zero.
+ * Returns 0 if monthly salary is 0 to avoid division by zero.
  *
- * @param profile - User profile containing salary and expense information
+ * @param profile - User profile containing salary and savings information
  * @returns Savings rate as percentage (0-100+)
  *
  * @example
  * const savingsRate = calculateSavingsRate(user.profile)
- * // If monthlySalary=50000, annualExpenses=480000:
- * // Annual income = 600000
- * // Savings rate = (600000 - 480000) / 600000 * 100 = 20%
+ * // If monthlySalary=50000, monthlySavings=10000:
+ * // Savings rate = 10000 / 50000 * 100 = 20%
  */
 export function calculateSavingsRate(profile: UserProfile): number {
-  const annualIncome = profile.monthlySalary * 12;
-  if (annualIncome === 0) return 0;
-  return ((annualIncome - profile.annualExpenses) / annualIncome) * 100;
+  if (profile.monthlySalary === 0) return 0;
+  return (profile.monthlySavings / profile.monthlySalary) * 100;
 }
 
 /**
@@ -137,7 +150,7 @@ export function calculateSavingsRate(profile: UserProfile): number {
  * Represents the total wealth needed to retire and live off investment returns.
  * Uses the 4% rule: annual expenses * 25 = portfolio needed for 4% withdrawal.
  *
- * Formula: profile.fireNumber ?? (annualExpenses * 25)
+ * Formula: profile.fireNumber ?? (deriveAnnualExpenses(profile) * 25)
  *
  * If user has set a custom fireNumber, that takes precedence. Otherwise,
  * defaults to 25x annual expenses (equivalent to 4% safe withdrawal rate).
@@ -147,14 +160,15 @@ export function calculateSavingsRate(profile: UserProfile): number {
  *
  * @example
  * const fireTarget = calculateFireNumber(user.profile)
- * // If annualExpenses=480000 and no custom fireNumber:
+ * // If monthlySalary=50000, monthlySavings=10000, no custom fireNumber:
+ * // Annual expenses = (50000 - 10000) * 12 = 480000
  * // Returns: 12000000 (25 * 480000)
  *
  * // If custom fireNumber is set:
  * // Returns: 10000000 (uses custom value)
  */
 export function calculateFireNumber(profile: UserProfile): number {
-  return profile.fireNumber ?? profile.annualExpenses * 25;
+  return profile.fireNumber ?? deriveAnnualExpenses(profile) * 25;
 }
 
 /**

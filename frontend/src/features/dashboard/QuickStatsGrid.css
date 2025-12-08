@@ -11,8 +11,7 @@
 }
 
 .quick-stats-grid__item {
-  opacity: 0;
-  animation: fadeUp 0.5s ease forwards;
+  animation: fadeUp 0.5s ease both;
 }
 
 /* Staggered animation delays for each child */

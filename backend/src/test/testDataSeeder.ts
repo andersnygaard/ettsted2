@@ -34,7 +34,7 @@ export class TestDataSeeder {
       updatedAt: new Date(),
       profile: {
         monthlySalary: 50000,
-        annualExpenses: 400000,
+        monthlySavings: 16667,  // ~33% savings rate, gives ~400k annual expenses
         birthYear: 1990,
         plannedRetirementAge: 60,
       },

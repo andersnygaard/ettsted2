@@ -21,8 +21,8 @@
 
 .page-skeleton {
   /* Page entrance animation - applied on mount */
-  opacity: 0;
-  animation: fadeUp 0.35s ease-out forwards;
+  /* Using 'both' fill-mode to avoid race condition with lazy-loaded chunks */
+  animation: fadeUp 0.35s ease-out both;
 }
 
 .page-skeleton__content {
@@ -32,22 +32,19 @@
 
 /* Breadcrumb staggered entry */
 .page-skeleton :is(.breadcrumb) {
-  opacity: 0;
-  animation: fadeUp 0.35s ease-out forwards;
+  animation: fadeUp 0.35s ease-out both;
   animation-delay: 0.05s;
 }
 
 /* PageHeader staggered entry */
 .page-skeleton :is(.page-header) {
-  opacity: 0;
-  animation: fadeUp 0.35s ease-out forwards;
+  animation: fadeUp 0.35s ease-out both;
   animation-delay: 0.1s;
 }
 
 /* Content staggered entry */
 .page-skeleton__content {
-  opacity: 0;
-  animation: fadeUp 0.35s ease-out forwards;
+  animation: fadeUp 0.35s ease-out both;
   animation-delay: 0.15s;
 }
 

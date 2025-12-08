@@ -1,7 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Breadcrumb, PageHeader, Card, NumberInput, AreaChart, ProgressBar, Modal, Button, formatCurrency, formatNumber } from '@finans/components';
 import type { DataPoint } from '@finans/components';
 import { userApi } from '@/shared/api/services';
+import { useSparingData } from '@/features/sparing/useSparingData';
+import { useUser } from '@/shared/hooks/useUser';
 import './CompoundCalculatorPage.css'; // Reuse shared calculator styles
 
 /**
@@ -116,16 +118,59 @@ function calculateFire(inputs: FireInputs): FireResult {
 }
 
 function FireCalculatorPage() {
+  const { data: sparingData } = useSparingData();
+  const { data: user } = useUser();
+
+  const [defaultsInitialized, setDefaultsInitialized] = useState({
+    currentSavings: false,
+    annualIncome: false,
+    annualExpenses: false,
+    currentAge: false,
+  });
+
   const [inputs, setInputs] = useState<FireInputs>({
-    currentSavings: 500000,
-    annualIncome: 800000,
-    annualExpenses: 500000,
+    currentSavings: 0,
+    annualIncome: 0,
+    annualExpenses: 0,
     currentAge: 35,
     expectedReturn: 7,
   });
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+
+  // Set current savings from portfolio data
+  useEffect(() => {
+    if (sparingData && !defaultsInitialized.currentSavings) {
+      setInputs((prev) => ({ ...prev, currentSavings: Math.max(0, sparingData.sumSavings ?? 0) }));
+      setDefaultsInitialized((prev) => ({ ...prev, currentSavings: true }));
+    }
+  }, [sparingData, defaultsInitialized.currentSavings]);
+
+  // Set income, expenses, and age from user profile
+  useEffect(() => {
+    if (user?.profile && !defaultsInitialized.annualIncome) {
+      const profile = user.profile;
+      const monthlySalary = profile.monthlySalary ?? 0;
+      const monthlySavings = profile.monthlySavings ?? 0;
+      const monthlyExpenses = monthlySalary - monthlySavings;
+
+      setInputs((prev) => ({
+        ...prev,
+        annualIncome: Math.round(monthlySalary * 12),
+        annualExpenses: Math.round(Math.max(0, monthlyExpenses * 12)),
+        currentAge: profile.birthYear
+          ? new Date().getFullYear() - profile.birthYear
+          : prev.currentAge,
+      }));
+      setDefaultsInitialized((prev) => ({
+        ...prev,
+        annualIncome: true,
+        annualExpenses: true,
+        currentAge: true,
+      }));
+    }
+  }, [user, defaultsInitialized.annualIncome]);
 
   const result = useMemo(() => calculateFire(inputs), [inputs]);
 

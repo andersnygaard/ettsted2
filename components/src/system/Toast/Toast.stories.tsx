@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ToastProvider, useToast } from './Toast';
+import { Button } from '../../ui/Button';
 
 const meta = {
   title: 'System/Toast',
@@ -47,41 +48,36 @@ const ToastDemo: React.FC<{ autoShow?: boolean; toastType?: 'success' | 'error' 
     <div style={{ padding: '2rem' }}>
       <h2>Toast Notifications</h2>
       <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-        <button
-          className="green"
+        <Button
+          variant="primary"
           onClick={() => showSuccess('Operasjonen var vellykket!')}
         >
-          <i>check</i>
-          <span>VisSuccess</span>
-        </button>
-        <button
-          className="red"
+          Vis Success
+        </Button>
+        <Button
+          variant="secondary"
           onClick={() => showError('En feil oppstod. Vennligst prøv igjen.')}
         >
-          <i>error</i>
-          <span>Vis Error</span>
-        </button>
-        <button
-          className="amber"
+          Vis Error
+        </Button>
+        <Button
+          variant="secondary"
           onClick={() => showWarning('Advarsel: Dette kan ikke angres.')}
         >
-          <i>warning</i>
-          <span>Vis Warning</span>
-        </button>
-        <button
-          className="blue"
+          Vis Warning
+        </Button>
+        <Button
+          variant="secondary"
           onClick={() => showInfo('Informasjon: Systemet er oppdatert.')}
         >
-          <i>info</i>
-          <span>Vis Info</span>
-        </button>
-        <button
-          className="outline"
+          Vis Info
+        </Button>
+        <Button
+          variant="secondary"
           onClick={() => showToast('Egendefinert melding', 'success', 3000)}
         >
-          <i>timer</i>
-          <span>Tilpasset (3s)</span>
-        </button>
+          Tilpasset (3s)
+        </Button>
       </div>
     </div>
   );
@@ -178,12 +174,12 @@ const ManualDismissDemo: React.FC = () => {
   return (
     <div style={{ padding: '2rem' }}>
       <h2>Manuell Avvisning</h2>
-      <button
+      <Button
+        variant="secondary"
         onClick={() => showToast('Denne notifikasjonen autovises ikke', 'info', 0)}
       >
-        <i>close</i>
-        <span>Vis Toast uten Auto-Dismiss</span>
-      </button>
+        Vis Toast uten Auto-Dismiss
+      </Button>
       <p style={{ marginTop: '1rem', color: '#666' }}>
         Klikk lukk-knappen (X) for å avvise notifikasjonen.
       </p>

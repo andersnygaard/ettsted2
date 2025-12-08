@@ -86,6 +86,11 @@ export interface NumberInputProps {
    * If provided and returns true, the field will be enabled
    */
   onActivate?: () => void;
+
+  /**
+   * Callback when input loses focus
+   */
+  onBlur?: () => void;
 }
 
 export function NumberInput({
@@ -101,6 +106,7 @@ export function NumberInput({
   id,
   dataInputGroup,
   onActivate,
+  onBlur: onBlurProp,
 }: NumberInputProps) {
   // Track display value separately to allow partial input
   const [displayValue, setDisplayValue] = useState<string>('');
@@ -170,6 +176,7 @@ export function NumberInput({
     } else {
       setDisplayValue('');
     }
+    onBlurProp?.();
   };
 
   /**

@@ -6,7 +6,7 @@
   "updatedAt": "2024-01-01T00:00:00.000Z",
   "profile": {
     "monthlySalary": 85000,
-    "annualExpenses": 360000,
+    "monthlySavings": 55000,
     "birthYear": 1975,
     "plannedRetirementAge": 50,
     "fireNumber": 9000000
@@ -58,7 +58,8 @@
       "category": "pensjon",
       "isActive": true,
       "sortOrder": 2,
-      "createdAt": "2024-01-01T00:00:00.000Z"
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "isPublicPension": true
     }
   ]
 }

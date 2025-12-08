@@ -12,6 +12,7 @@ import {
   getUserById,
   createUser,
   updateUser as updateUserService,
+  updateUserWithValues,
   deleteUser
 } from '../services/userService';
 import { deleteAllSnapshotsForUser } from '../services/portfolioService';
@@ -97,7 +98,7 @@ export const setupUser = asyncHandler(async (req: Request, res: Response) => {
     updatedAt: new Date(),
     profile: {
       monthlySalary: 0,
-      annualExpenses: 0,
+      monthlySavings: 0,
       birthYear: new Date().getFullYear() - 30,
       plannedRetirementAge: 67
     },
@@ -143,8 +144,22 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
     throw new NotFoundError('User not found. Please complete setup first.');
   }
 
-  // Update user
-  const updatedUser = await updateUserService(userId, updates);
+  // Check if accounts have values (from edit mode) - use updateUserWithValues to also update snapshot
+  const hasAccountValues = updates.accounts?.some(
+    (acc: { value?: number }) => acc.value !== undefined
+  );
+
+  logger.info('Update user check', {
+    userId,
+    hasAccounts: !!updates.accounts,
+    accountCount: updates.accounts?.length,
+    hasAccountValues,
+    sampleAccount: updates.accounts?.[0],
+  });
+
+  const updatedUser = hasAccountValues
+    ? await updateUserWithValues(userId, updates)
+    : await updateUserService(userId, updates);
 
   logger.info('User profile updated', { userId, fields: Object.keys(updates) });
   res.json({

@@ -166,9 +166,9 @@ function validateStep1(state: OnboardingState): Record<string, string> {
     errors['profile.monthlySalary'] = 'Månedlig inntekt kan ikke være negativ';
   }
 
-  // Annual expenses
-  if (state.profile.annualExpenses < 0) {
-    errors['profile.annualExpenses'] = 'Årlige utgifter kan ikke være negative';
+  // Monthly savings
+  if (state.profile.monthlySavings < 0) {
+    errors['profile.monthlySavings'] = 'Månedlig sparing kan ikke være negativ';
   }
 
   // Birth year
@@ -267,7 +267,7 @@ export function OnboardingWizard({ mode = 'create', initialState, onComplete }: 
   // API mutation for updating existing user (edit mode)
   const updateMutation = useMutation<OnboardingResponse, Error, OnboardingRequestBody>({
     mutationFn: async (data: OnboardingRequestBody) => {
-      // Update user profile and accounts
+      // Update user profile and accounts (including values for snapshot update)
       const response = await apiClient.patch('/users/me', {
         nickname: data.nickname,
         profile: data.profile,
@@ -275,6 +275,7 @@ export function OnboardingWizard({ mode = 'create', initialState, onComplete }: 
           id: acc.id || `acc-${Date.now()}-${index}`,
           name: acc.name,
           category: acc.category,
+          value: acc.value,
           isActive: acc.isActive,
           sortOrder: index,
           createdAt: new Date().toISOString(),
@@ -382,7 +383,7 @@ export function OnboardingWizard({ mode = 'create', initialState, onComplete }: 
       nickname: state.userInfo.nickname,
       profile: {
         monthlySalary: state.profile.monthlySalary,
-        annualExpenses: state.profile.annualExpenses,
+        monthlySavings: state.profile.monthlySavings,
         birthYear: state.profile.birthYear,
         plannedRetirementAge: state.profile.plannedRetirementAge,
         ...(state.profile.fireNumber ? { fireNumber: state.profile.fireNumber } : {}),
@@ -390,7 +391,10 @@ export function OnboardingWizard({ mode = 'create', initialState, onComplete }: 
       accounts: allAccounts,
     };
 
+    console.log('handleSubmit called', { mode, requestBody });
+
     if (mode === 'edit') {
+      console.log('Calling updateMutation with accounts:', requestBody.accounts);
       updateMutation.mutate(requestBody);
     } else {
       createMutation.mutate(requestBody);

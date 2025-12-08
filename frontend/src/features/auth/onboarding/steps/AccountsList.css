@@ -98,6 +98,26 @@
   white-space: nowrap;
 }
 
+/* Public Pension Radio */
+.accounts-list__radio {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-secondary);
+  user-select: none;
+}
+
+.accounts-list__radio input[type="radio"] {
+  accent-color: var(--muted-sage);
+}
+
+.accounts-list__radio-label {
+  white-space: nowrap;
+}
+
 /* Delete Button */
 .accounts-list__delete {
   display: flex;
@@ -121,11 +141,6 @@
 .accounts-list__delete:disabled {
   opacity: 0.3;
   cursor: not-allowed;
-}
-
-.accounts-list__delete i {
-  font-family: 'Material Symbols Outlined';
-  font-size: 20px;
 }
 
 /* Value Row */
@@ -170,11 +185,13 @@
 .accounts-list__loan-input {
   width: 100%;
   font-family: var(--font-mono);
-  font-size: 14px;
-  padding: var(--space-xs) var(--space-sm);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background-color: var(--warm-white);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-light);
+  padding: var(--space-sm);
+  border: none;
+  border-bottom: 2px solid var(--border);
+  border-radius: 0;
+  background-color: transparent;
   color: var(--charcoal);
   transition: border-color 0.2s ease;
 }
@@ -228,11 +245,6 @@
   background-color: rgba(139, 154, 125, 0.05);
 }
 
-.accounts-list__add-btn i {
-  font-family: 'Material Symbols Outlined';
-  font-size: 20px;
-}
-
 /* Category Total */
 .accounts-list__total {
   display: flex;
@@ -254,9 +266,9 @@
 }
 
 .accounts-list__total-value {
-  font-family: var(--font-heading);
-  font-size: 24px;
-  font-weight: 400;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-light);
   color: var(--charcoal);
 }
 

@@ -32,8 +32,9 @@ export function StepUser({
 }: StepUserProps) {
   const currentYear = new Date().getFullYear();
 
-  // Calculate default fireNumber (25x annual expenses) for placeholder
-  const defaultFireNumber = profile.annualExpenses > 0 ? profile.annualExpenses * 25 : undefined;
+  // Calculate annual expenses from monthly values for FIRE calculation
+  const annualExpenses = (profile.monthlySalary - profile.monthlySavings) * 12;
+  const defaultFireNumber = annualExpenses > 0 ? annualExpenses * 25 : undefined;
 
   return (
     <div className="step-user">
@@ -87,16 +88,16 @@ export function StepUser({
           />
         </div>
 
-        {/* Annual Expenses */}
+        {/* Monthly Savings */}
         <div className="step-user__field">
           <NumberInput
-            label="Årlige utgifter"
-            value={profile.annualExpenses}
-            onChange={(value) => onProfileChange({ annualExpenses: value ?? 0 })}
+            label="Månedlig sparing"
+            value={profile.monthlySavings}
+            onChange={(value) => onProfileChange({ monthlySavings: value ?? 0 })}
             suffix="kr"
             required
-            error={errors['profile.annualExpenses']}
-            name="annualExpenses"
+            error={errors['profile.monthlySavings']}
+            name="monthlySavings"
           />
         </div>
 

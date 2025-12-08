@@ -1,7 +1,6 @@
 export interface UserProfile {
   monthlySalary: number;
-  monthlySavings?: number;
-  annualExpenses: number;
+  monthlySavings: number;
   birthYear: number;
   plannedRetirementAge: number;
   fireNumber?: number;
@@ -21,6 +20,8 @@ export interface AccountConfig {
   sortOrder: number;
   createdAt: string;
   loanDetails?: LoanDetails;
+  /** Whether this is a public pension account (Folketrygden) - only for pensjon category */
+  isPublicPension?: boolean;
 }
 
 export interface User {

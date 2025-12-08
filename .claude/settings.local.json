@@ -94,7 +94,9 @@
       "Skill(due-diligence)",
       "Bash(do echo \"=== Run $i ===\")",
       "Bash(CI_MOCK_MODE=true NODE_ENV=development timeout 10 pnpm dev:*)",
-      "Skill(push-code)"
+      "Skill(push-code)",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZW1vLXVzZXItMDAxIiwiZW1haWwiOiJkZW1vQGZpbmFucy5ubyIsIm5hbWUiOiJEZW1vIEJydWtlciIsImlzcyI6ImZpbmFucy1kZW1vIiwiaWF0IjoxNzY1MTk1Mzc3LCJleHAiOjE3NjUyODE3Nzd9.TM-jQkQtwmnuPaSAa-latgUXZSOeC0xuKatS5l_IWMU\")",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZW1vLXVzZXItMDAxIiwiZW1haWwiOiJkZW1vQGZpbmFucy5ubyIsIm5hbWUiOiJEZW1vIEJydWtlciIsImlzcyI6ImZpbmFucy1kZW1vIiwiaWF0IjoxNzY1MjAzODMzLCJleHAiOjE3NjUyOTAyMzN9.lLSQR-Nn0IIuozSZjR7XPL6gQKds_jLMhKxs_sYiEr8\")"
     ],
     "deny": [],
     "ask": [

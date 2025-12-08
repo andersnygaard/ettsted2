@@ -9,7 +9,7 @@ import './PensjonPage.css';
  * PensjonPage Component
  *
  * Pension overview page showing total pension savings,
- * breakdown by source, OTP progress, and development chart.
+ * breakdown by source, private vs public pension progress, and development chart.
  *
  * Based on Nordic Minimal design from draft-1-pensjon.html
  */
@@ -55,31 +55,23 @@ function PensjonPage() {
     );
   }
 
-  // Calculate arbeidsgiver vs NAV from breakdown
-  const arbeidsgiverItem = pensjonData.breakdown.find(b =>
-    b.name.toLowerCase().includes('arbeidsgiver')
-  );
-  const navItem = pensjonData.breakdown.find(b =>
-    b.name.toLowerCase().includes('folketrygd') ||
-    b.name.toLowerCase().includes('nav')
-  );
+  // Calculate private vs public pension from breakdown
+  const publicItem = pensjonData.breakdown.find(b => b.isPublicPension === true);
+  const privateItems = pensjonData.breakdown.filter(b => !b.isPublicPension);
 
-  const arbeidsgiver = arbeidsgiverItem?.amount || 0;
-  const nav = navItem?.amount || 0;
-  const arbeidsgiverPercent = arbeidsgiverItem?.percent || 0;
-  const navPercent = navItem?.percent || 0;
-
+  const publicPension = publicItem?.amount || 0;
+  const privatePension = privateItems.reduce((sum, item) => sum + item.amount, 0);
 
   // Chart data from history
   const chartData: StackedDataPoint[] = pensjonData.history.map(h => ({
     date: h.date,
-    arbeidsgiver: h.arbeidsgiver,
-    nav: h.folketrygden,
+    privatePension: h.privatePension,
+    publicPension: h.publicPension,
   }));
 
   const chartSeries: Series[] = [
-    { key: 'arbeidsgiver', color: 'var(--pale-blue)', label: 'Arbeidsgiver' },
-    { key: 'nav', color: 'var(--orange, #D4956A)', label: 'NAV' },
+    { key: 'privatePension', color: 'var(--pale-blue)', label: 'Privat pensjon' },
+    { key: 'publicPension', color: 'var(--orange, #D4956A)', label: 'Offentlig pensjon' },
   ];
 
   return (
@@ -99,23 +91,23 @@ function PensjonPage() {
         <section className="breakdown-section">
           <BreakdownCard
             icon="🏢"
-            iconLabel="Arbeidsgiver"
-            value={arbeidsgiver}
-            label="Pensjon arbeidsgiver"
-            percentage={Math.round(arbeidsgiverPercent)}
+            iconLabel="Privat"
+            value={privatePension}
+            label="Privat pensjon"
+            percentage={Math.round(pensjonData.privatePercent)}
             variant="primary"
           />
           <BreakdownCard
             icon="🏛️"
-            iconLabel="NAV"
-            value={nav}
-            label="Pensjon NAV"
-            percentage={Math.round(navPercent)}
+            iconLabel="Offentlig"
+            value={publicPension}
+            label="Offentlig pensjon"
+            percentage={Math.round(pensjonData.publicPercent)}
             variant="secondary"
           />
         </section>
 
-        <OtpSection percentage={Math.round(pensjonData.otpPercent)} trend="up" />
+        <OtpSection percentage={Math.round(pensjonData.privatePercent)} trend="up" />
 
       <StackedAreaChart
         data={chartData}

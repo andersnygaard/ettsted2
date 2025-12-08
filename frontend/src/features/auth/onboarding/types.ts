@@ -27,6 +27,8 @@ export interface OnboardingAccount {
   isActive: boolean;
   /** Loan details (required for gjeld accounts) */
   loanDetails?: LoanDetails;
+  /** Whether this is a public pension account (Folketrygden) - only for pensjon category */
+  isPublicPension?: boolean;
 }
 
 /**
@@ -35,8 +37,8 @@ export interface OnboardingAccount {
 export interface OnboardingProfile {
   /** Monthly income */
   monthlySalary: number;
-  /** Annual expenses */
-  annualExpenses: number;
+  /** Monthly savings amount */
+  monthlySavings: number;
   /** Birth year */
   birthYear: number;
   /** Planned retirement age */
@@ -112,7 +114,7 @@ export interface OnboardingRequestBody {
   nickname: string;
   profile: {
     monthlySalary: number;
-    annualExpenses: number;
+    monthlySavings: number;
     birthYear: number;
     plannedRetirementAge: number;
     fireNumber?: number;
@@ -124,6 +126,7 @@ export interface OnboardingRequestBody {
     value: number;
     isActive: boolean;
     loanDetails?: LoanDetails;
+    isPublicPension?: boolean;
   }>;
 }
 
@@ -146,6 +149,7 @@ export interface OnboardingResponse {
         sortOrder: number;
         createdAt: string;
         loanDetails?: LoanDetails;
+        isPublicPension?: boolean;
       }>;
     };
     snapshot: {

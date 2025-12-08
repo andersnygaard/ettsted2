@@ -111,6 +111,6 @@
 @media (max-width: 768px) {
   .number-input__field {
     font-size: var(--font-size-lg);
-    width:100%;
+    width: 100%;
   }
 }

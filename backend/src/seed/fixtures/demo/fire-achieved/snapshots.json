@@ -9,7 +9,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 450000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 380000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 1800000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 950000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 950000 }
     ],
     "totalNetWorth": 9580000,
     "createdAt": "2024-01-01T00:00:00.000Z",
@@ -25,7 +25,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 465000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 410000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 1820000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 960000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 960000 }
     ],
     "totalNetWorth": 9745000,
     "createdAt": "2024-02-01T00:00:00.000Z",
@@ -41,7 +41,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 480000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 450000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 1840000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 970000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 970000 }
     ],
     "totalNetWorth": 9935000,
     "createdAt": "2024-03-01T00:00:00.000Z",
@@ -57,7 +57,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 495000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 485000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 1860000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 980000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 980000 }
     ],
     "totalNetWorth": 10100000,
     "createdAt": "2024-04-01T00:00:00.000Z",
@@ -73,7 +73,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 510000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 520000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 1880000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 990000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 990000 }
     ],
     "totalNetWorth": 10285000,
     "createdAt": "2024-05-01T00:00:00.000Z",
@@ -89,7 +89,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 525000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 560000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 1900000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1000000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1000000 }
     ],
     "totalNetWorth": 10475000,
     "createdAt": "2024-06-01T00:00:00.000Z",
@@ -105,7 +105,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 540000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 595000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 1920000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1010000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1010000 }
     ],
     "totalNetWorth": 10660000,
     "createdAt": "2024-07-01T00:00:00.000Z",
@@ -121,7 +121,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 555000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 630000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 1940000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1020000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1020000 }
     ],
     "totalNetWorth": 10845000,
     "createdAt": "2024-08-01T00:00:00.000Z",
@@ -137,7 +137,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 570000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 670000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 1960000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1030000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1030000 }
     ],
     "totalNetWorth": 11040000,
     "createdAt": "2024-09-01T00:00:00.000Z",
@@ -153,7 +153,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 585000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 710000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 1980000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1040000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1040000 }
     ],
     "totalNetWorth": 11235000,
     "createdAt": "2024-10-01T00:00:00.000Z",
@@ -169,7 +169,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 600000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 750000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 2000000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1050000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1050000 }
     ],
     "totalNetWorth": 11430000,
     "createdAt": "2024-11-01T00:00:00.000Z",
@@ -185,7 +185,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 615000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 790000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 2020000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1060000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1060000 }
     ],
     "totalNetWorth": 11635000,
     "createdAt": "2024-12-01T00:00:00.000Z",
@@ -201,7 +201,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 630000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 835000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 2040000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1070000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1070000 }
     ],
     "totalNetWorth": 11845000,
     "createdAt": "2025-01-01T00:00:00.000Z",
@@ -217,7 +217,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 645000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 880000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 2060000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1080000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1080000 }
     ],
     "totalNetWorth": 12055000,
     "createdAt": "2025-02-01T00:00:00.000Z",
@@ -233,7 +233,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 660000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 925000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 2080000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1090000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1090000 }
     ],
     "totalNetWorth": 12270000,
     "createdAt": "2025-03-01T00:00:00.000Z",
@@ -249,7 +249,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 675000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 970000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 2100000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1100000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1100000 }
     ],
     "totalNetWorth": 12485000,
     "createdAt": "2025-04-01T00:00:00.000Z",
@@ -265,7 +265,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 690000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 1020000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 2120000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1110000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1110000 }
     ],
     "totalNetWorth": 12705000,
     "createdAt": "2025-05-01T00:00:00.000Z",
@@ -281,7 +281,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 705000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 1070000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 2140000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1120000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1120000 }
     ],
     "totalNetWorth": 12930000,
     "createdAt": "2025-06-01T00:00:00.000Z",
@@ -297,7 +297,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 720000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 1120000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 2160000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1130000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1130000 }
     ],
     "totalNetWorth": 13160000,
     "createdAt": "2025-07-01T00:00:00.000Z",
@@ -313,7 +313,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 735000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 1175000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 2180000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1140000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1140000 }
     ],
     "totalNetWorth": 13395000,
     "createdAt": "2025-08-01T00:00:00.000Z",
@@ -329,7 +329,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 750000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 1230000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 2200000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1150000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1150000 }
     ],
     "totalNetWorth": 13630000,
     "createdAt": "2025-09-01T00:00:00.000Z",
@@ -345,7 +345,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 765000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 1290000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 2220000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1160000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1160000 }
     ],
     "totalNetWorth": 13875000,
     "createdAt": "2025-10-01T00:00:00.000Z",
@@ -361,7 +361,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 780000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 1350000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 2240000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1170000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1170000 }
     ],
     "totalNetWorth": 14120000,
     "createdAt": "2025-11-01T00:00:00.000Z",
@@ -377,7 +377,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 795000 },
       { "id": "demo-acc-krypto", "name": "Krypto", "assetClass": "krypto", "value": 1415000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 2260000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 1180000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 1180000 }
     ],
     "totalNetWorth": 14370000,
     "createdAt": "2025-12-01T00:00:00.000Z",

@@ -19,9 +19,10 @@
 /* Page actions */
 .portfolio-page__actions {
   display: flex;
-  justify-content: right;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-2xl);
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-3xl);
 }
 
 /* Table container */
@@ -30,8 +31,7 @@
   border-radius: 2px;
   border: var(--border-subtle);
   overflow: hidden;
-  opacity: 0;
-  animation: fadeUp 0.5s ease forwards;
+  animation: fadeUp 0.5s ease both;
   animation-delay: 0.1s;
 }
 

@@ -1,4 +1,4 @@
-import { test as base, expect, Page } from '@playwright/test';
+import { test as base, expect, Page, Locator } from '@playwright/test';
 
 /** Pages that require authentication */
 export const PROTECTED_PAGES = [
@@ -60,7 +60,7 @@ export async function login(page: Page): Promise<void> {
   if (alreadyLoggedIn) {
     // Already logged in, navigate to oversikt
     await oversiktLink.click();
-    await page.waitForURL(/\/oversikt/, { timeout: 10000 });
+    await page.waitForURL(/\/oversikt/, { timeout: 15000 });
     await page.waitForLoadState('networkidle');
     return;
   }
@@ -72,10 +72,10 @@ export async function login(page: Page): Promise<void> {
   const demoBtn = page.getByRole('button', { name: /prøv demo/i });
   await demoBtn.click();
 
-  // Wait for redirect with longer timeout
-  await page.waitForURL(/\/(oversikt|auth\/callback)/, { timeout: 15000 });
+  // Wait for redirect with longer timeout - demo seeding can take time
+  await page.waitForURL(/\/(oversikt|auth\/callback)/, { timeout: 30000 });
   if (page.url().includes('auth/callback')) {
-    await page.waitForURL('/oversikt', { timeout: 10000 });
+    await page.waitForURL('/oversikt', { timeout: 15000 });
   }
   await page.waitForLoadState('networkidle');
 }
@@ -280,4 +280,294 @@ export async function exportPortfolioData(page: Page): Promise<void> {
 
   // Wait for download to start
   await page.waitForTimeout(500);
+}
+
+/**
+ * Account Management Helpers
+ */
+
+/**
+ * Navigate to Min Økonomi (EconomyPage)
+ */
+export async function navigateToEconomy(page: Page): Promise<void> {
+  await page.goto('/min-okonomi');
+  await page.waitForLoadState('networkidle');
+}
+
+/**
+ * Navigate to a specific wizard step (1-4)
+ * Step 1: Bruker, Step 2: Sparing, Step 3: Gjeld, Step 4: Pensjon
+ */
+export async function navigateToWizardStep(page: Page, step: 1 | 2 | 3 | 4): Promise<void> {
+  const stepNames = ['Bruker', 'Sparing', 'Gjeld', 'Pensjon'];
+
+  // Check current step
+  const getCurrentStep = async (): Promise<number> => {
+    const steps = page.locator('.wizard-progress__step');
+    const count = await steps.count();
+    for (let i = 0; i < count; i++) {
+      const stepEl = steps.nth(i);
+      const isCurrent = await stepEl.evaluate(el =>
+        el.classList.contains('wizard-progress__step--current')
+      );
+      if (isCurrent) return i + 1;
+    }
+    return 1;
+  };
+
+  let currentStep = await getCurrentStep();
+
+  // Navigate forward or backward to reach target step
+  while (currentStep !== step) {
+    if (currentStep < step) {
+      // Go forward
+      const nextBtn = page.getByRole('button', { name: /neste/i });
+      await nextBtn.click();
+      await page.waitForLoadState('networkidle');
+    } else {
+      // Go backward - click on the step in progress bar
+      const targetStepEl = page.locator('.wizard-progress__step').nth(step - 1);
+      await targetStepEl.click();
+      await page.waitForLoadState('networkidle');
+    }
+    currentStep = await getCurrentStep();
+  }
+}
+
+/**
+ * Get an account item by its name (searches input values)
+ * NOTE: This returns a locator that may match nothing if name not found.
+ * For reliable lookup, use getAccountItemByName() instead.
+ */
+export function getAccountItem(page: Page, name: string): Locator {
+  // Use XPath contains to match the name input value
+  return page.locator(`.accounts-list__item:has(.accounts-list__name-input[value="${name}"])`);
+}
+
+/**
+ * Get an account item by name using evaluation (more reliable)
+ */
+export async function getAccountItemByName(page: Page, name: string): Promise<Locator> {
+  const items = page.locator('.accounts-list__item');
+  const count = await items.count();
+
+  for (let i = 0; i < count; i++) {
+    const item = items.nth(i);
+    const nameInput = item.locator('.accounts-list__name-input');
+    const inputValue = await nameInput.inputValue().catch(() => '');
+    if (inputValue === name) {
+      return item;
+    }
+  }
+
+  // Return a locator that won't match (for proper error messages)
+  return page.locator(`.accounts-list__item:has(.accounts-list__name-input[value="${name}"])`);
+}
+
+/**
+ * Get an account item by partial name match (case-insensitive)
+ */
+export function getAccountItemByPartialName(page: Page, partialName: string): Locator {
+  return page.locator('.accounts-list__item').filter({
+    has: page.locator('.accounts-list__name-input')
+  }).filter({
+    hasText: new RegExp(partialName, 'i')
+  });
+}
+
+/**
+ * Add a new account in the current wizard step
+ */
+export async function addAccount(
+  page: Page,
+  data: {
+    name: string;
+    value: number;
+    interestRate?: number;
+    remainingYears?: number;
+  }
+): Promise<void> {
+  // Click add button
+  const addBtn = page.locator('.accounts-list__add-btn');
+  await addBtn.click();
+
+  // Wait for new account to appear
+  await page.waitForTimeout(300);
+
+  // Find the last account item (the newly added one)
+  const items = page.locator('.accounts-list__item');
+  const lastItem = items.last();
+
+  // Fill in name
+  const nameInput = lastItem.locator('.accounts-list__name-input');
+  await nameInput.fill(data.name);
+
+  // Fill in value - NumberInput uses type="text" with aria-label="Verdi"
+  const valueInput = lastItem.locator('.accounts-list__value-row input');
+  await valueInput.fill(String(data.value));
+
+  // Fill loan details if provided (for gjeld)
+  if (data.interestRate !== undefined) {
+    const loanInputs = lastItem.locator('.accounts-list__loan-input');
+    await loanInputs.first().fill(String(data.interestRate));
+  }
+
+  if (data.remainingYears !== undefined) {
+    const loanInputs = lastItem.locator('.accounts-list__loan-input');
+    await loanInputs.nth(1).fill(String(data.remainingYears));
+  }
+}
+
+/**
+ * Edit an existing account by name
+ */
+export async function editAccount(
+  page: Page,
+  currentName: string,
+  updates: {
+    name?: string;
+    value?: number;
+    isActive?: boolean;
+    interestRate?: number;
+    remainingYears?: number;
+  }
+): Promise<void> {
+  const item = await getAccountItemByName(page, currentName);
+
+  if (updates.name !== undefined) {
+    const nameInput = item.locator('.accounts-list__name-input');
+    await nameInput.fill(updates.name);
+  }
+
+  if (updates.value !== undefined) {
+    const valueInput = item.locator('.accounts-list__value-row input[type="text"], .accounts-list__value-row input[type="number"]');
+    await valueInput.fill(String(updates.value));
+  }
+
+  if (updates.isActive !== undefined) {
+    const checkbox = item.locator('.accounts-list__toggle input[type="checkbox"]');
+    const isChecked = await checkbox.isChecked();
+    if (isChecked !== updates.isActive) {
+      await checkbox.click();
+    }
+  }
+
+  if (updates.interestRate !== undefined) {
+    const loanInputs = item.locator('.accounts-list__loan-input');
+    await loanInputs.first().fill(String(updates.interestRate));
+  }
+
+  if (updates.remainingYears !== undefined) {
+    const loanInputs = item.locator('.accounts-list__loan-input');
+    await loanInputs.nth(1).fill(String(updates.remainingYears));
+  }
+}
+
+/**
+ * Delete an account by name
+ */
+export async function deleteAccount(page: Page, accountName: string): Promise<void> {
+  const item = await getAccountItemByName(page, accountName);
+  const deleteBtn = item.locator('button[aria-label^="Slett"]');
+  await deleteBtn.click();
+  // Wait for UI to update
+  await page.waitForTimeout(200);
+}
+
+/**
+ * Get the category total value displayed
+ */
+export async function getCategoryTotal(page: Page): Promise<number> {
+  const totalEl = page.locator('.accounts-list__total-value');
+  const text = await totalEl.textContent();
+  if (!text) return 0;
+
+  // Parse Norwegian number format: "123 456 kr" or "123 456,78 kr"
+  const cleaned = text.replace(/[^\d,-]/g, '').replace(',', '.');
+  return parseFloat(cleaned) || 0;
+}
+
+/**
+ * Check if an error message is displayed
+ */
+export async function hasError(page: Page, pattern: string | RegExp): Promise<boolean> {
+  const errorEls = page.locator('.accounts-list__error');
+  const count = await errorEls.count();
+
+  for (let i = 0; i < count; i++) {
+    const text = await errorEls.nth(i).textContent();
+    if (text) {
+      if (typeof pattern === 'string') {
+        if (text.includes(pattern)) return true;
+      } else {
+        if (pattern.test(text)) return true;
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * Complete the wizard by clicking through remaining steps
+ * Button names: "Neste" (steps 1-3), "Fullfør" (step 4)
+ */
+export async function completeWizard(page: Page): Promise<void> {
+  // Keep clicking Next/Fullfør until we navigate to /oversikt
+  const maxAttempts = 10;
+  for (let i = 0; i < maxAttempts; i++) {
+    // Check if we've left the wizard (navigated away)
+    if (page.url().includes('/oversikt')) {
+      break;
+    }
+
+    // Check if we're still in the wizard
+    const wizard = page.locator('.onboarding-wizard');
+    const isVisible = await wizard.isVisible().catch(() => false);
+    if (!isVisible) break;
+
+    // Find the primary action button in the wizard footer
+    const primaryBtn = page.locator('.onboarding-wizard__btn--primary');
+    const btnText = await primaryBtn.textContent().catch(() => '');
+
+    if (btnText?.includes('Fullfør')) {
+      await primaryBtn.click();
+      // Wait for submission and redirect to /oversikt with longer timeout
+      await page.waitForURL('**/oversikt', { timeout: 20000 }).catch(() => {});
+    } else if (btnText?.includes('Neste')) {
+      await primaryBtn.click();
+      // Wait for step transition
+      await page.waitForLoadState('networkidle');
+      // Small delay to ensure step has changed
+      await page.waitForTimeout(200);
+    } else {
+      break;
+    }
+  }
+
+  // Final verification - ensure we're on oversikt page
+  await page.waitForLoadState('networkidle');
+}
+
+/**
+ * Get all account names in the current step
+ */
+export async function getAccountNames(page: Page): Promise<string[]> {
+  const nameInputs = page.locator('.accounts-list__name-input');
+  const count = await nameInputs.count();
+  const names: string[] = [];
+
+  for (let i = 0; i < count; i++) {
+    const value = await nameInputs.nth(i).inputValue();
+    names.push(value);
+  }
+
+  return names;
+}
+
+/**
+ * Get the number of accounts in the current step
+ */
+export async function getAccountCount(page: Page): Promise<number> {
+  const items = page.locator('.accounts-list__item');
+  return await items.count();
 }

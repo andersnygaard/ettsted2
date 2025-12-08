@@ -22,14 +22,10 @@ export interface UserProfile {
   monthlySalary: number;
 
   /**
-   * Monthly savings amount for calculator defaults (optional)
+   * Monthly savings amount
+   * Annual expenses derived as: (monthlySalary - monthlySavings) * 12
    */
-  monthlySavings?: number;
-
-  /**
-   * Annual expenses used for F.I.R.E. calculations
-   */
-  annualExpenses: number;
+  monthlySavings: number;
 
   /**
    * Birth year for pension projections
@@ -110,6 +106,13 @@ export interface AccountConfig {
    * Optional loan details (only for gjeld accounts)
    */
   loanDetails?: LoanDetails;
+
+  /**
+   * Whether this is a public pension account (Folketrygden)
+   * Only one pension account can be marked as public
+   * Only relevant for category 'pensjon'
+   */
+  isPublicPension?: boolean;
 }
 
 /**

@@ -28,11 +28,6 @@
   color: var(--negative);
 }
 
-.onboarding-wizard__error-banner i {
-  font-family: 'Material Symbols Outlined';
-  font-size: 1.25rem;
-}
-
 /* Navigation */
 .onboarding-wizard__nav {
   display: flex;
@@ -55,11 +50,6 @@
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-
-.onboarding-wizard__btn i {
-  font-family: 'Material Symbols Outlined';
-  font-size: 1.25rem;
 }
 
 .onboarding-wizard__btn:disabled {

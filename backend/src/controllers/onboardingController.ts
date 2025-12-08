@@ -29,7 +29,7 @@ import { logger } from '../utils/logger';
  *   nickname: string,
  *   profile: {
  *     monthlySalary: number,
- *     annualExpenses: number,
+ *     monthlySavings: number,
  *     birthYear: number,
  *     plannedRetirementAge: number,
  *     fireNumber?: number

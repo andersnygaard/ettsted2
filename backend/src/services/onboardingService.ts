@@ -26,6 +26,7 @@ interface OnboardingAccount {
     remainingYears: number;
     originalAmount?: number;
   };
+  isPublicPension?: boolean;
 }
 
 /**
@@ -33,7 +34,7 @@ interface OnboardingAccount {
  */
 interface OnboardingProfile {
   monthlySalary: number;
-  annualExpenses: number;
+  monthlySavings: number;
   birthYear: number;
   plannedRetirementAge: number;
   fireNumber?: number;
@@ -121,20 +122,25 @@ export async function createUserWithSnapshot(
     createdAt: now,
     ...(account.category === 'gjeld' && account.loanDetails
       ? { loanDetails: account.loanDetails }
+      : {}),
+    ...(account.category === 'pensjon' && account.isPublicPension !== undefined
+      ? { isPublicPension: account.isPublicPension }
       : {})
   }));
 
   // Build user profile (calculate fireNumber if not provided)
+  // Annual expenses derived as: (monthlySalary - monthlySavings) * 12
+  const annualExpenses = (profile.monthlySalary - profile.monthlySavings) * 12;
   const userProfile: UserProfile = {
     monthlySalary: profile.monthlySalary,
-    annualExpenses: profile.annualExpenses,
+    monthlySavings: profile.monthlySavings,
     birthYear: profile.birthYear,
     plannedRetirementAge: profile.plannedRetirementAge,
     // If fireNumber not provided, calculate as 25x annual expenses
     ...(profile.fireNumber !== undefined
       ? { fireNumber: profile.fireNumber }
-      : profile.annualExpenses > 0
-        ? { fireNumber: profile.annualExpenses * 25 }
+      : annualExpenses > 0
+        ? { fireNumber: annualExpenses * 25 }
         : {})
   };
 
@@ -157,7 +163,10 @@ export async function createUserWithSnapshot(
     name: account.name,
     assetClass: categoryToAssetClass(account.category),
     // Negate gjeld values so they subtract from net worth
-    value: account.category === 'gjeld' ? -Math.abs(account.value) : account.value
+    value: account.category === 'gjeld' ? -Math.abs(account.value) : account.value,
+    ...(account.category === 'pensjon' && account.isPublicPension !== undefined
+      ? { isPublicPension: account.isPublicPension }
+      : {})
   }));
 
   // Calculate total net worth (sum of all values, gjeld already negative)

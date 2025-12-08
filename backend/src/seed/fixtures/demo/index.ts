@@ -32,8 +32,7 @@ interface RawUser {
   updatedAt: string;
   profile: {
     monthlySalary: number;
-    monthlySavings?: number;
-    annualExpenses: number;
+    monthlySavings: number;
     birthYear: number;
     plannedRetirementAge: number;
     fireNumber?: number;
@@ -50,6 +49,7 @@ interface RawUser {
       remainingYears: number;
       originalAmount?: number;
     };
+    isPublicPension?: boolean;
   }>;
 }
 
@@ -63,6 +63,7 @@ interface RawSnapshot {
     assetClass: string;
     value: number;
     notes?: string;
+    isPublicPension?: boolean;
   }>;
   totalNetWorth: number;
   createdAt: string;

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import ErrorBoundary from './ErrorBoundary';
+import { Button } from '../../ui/Button';
+import { Card } from '../../ui/Card';
 
 const meta: Meta<typeof ErrorBoundary> = {
   title: 'System/ErrorBoundary',
@@ -43,10 +45,9 @@ const ErrorDemoDefault: React.FC = () => {
     <div style={{ padding: '2rem' }}>
       <h2>Standard ErrorBoundary</h2>
       <p>Klikk knappen for å utløse en feil og se standardfeilvisningen.</p>
-      <button className="red" onClick={() => setHasError(true)}>
-        <i>error</i>
-        <span>Utløs feil</span>
-      </button>
+      <Button variant="secondary" onClick={() => setHasError(true)}>
+        Utløs feil
+      </Button>
     </div>
   );
 };
@@ -76,10 +77,9 @@ const CustomFallbackDemo: React.FC = () => {
     <div style={{ padding: '2rem' }}>
       <h2>Egendefinert ErrorBoundary</h2>
       <p>Klikk knappen for å utløse en feil og se egendefinert feilvisning.</p>
-      <button className="red" onClick={() => setHasError(true)}>
-        <i>error</i>
-        <span>Utløs feil</span>
-      </button>
+      <Button variant="secondary" onClick={() => setHasError(true)}>
+        Utløs feil
+      </Button>
     </div>
   );
 };
@@ -92,7 +92,7 @@ export const CustomFallback: Story = {
           style={{
             padding: '2rem',
             textAlign: 'center',
-            background: '#fff3cd',
+            background: 'var(--bone)',
             minHeight: '100vh',
             display: 'flex',
             flexDirection: 'column',
@@ -100,50 +100,46 @@ export const CustomFallback: Story = {
             alignItems: 'center',
           }}
         >
-          <article
-            className="border round"
+          <Card
             style={{
-              background: 'white',
               padding: '2rem',
               maxWidth: '500px',
+              textAlign: 'center',
             }}
           >
-            <i className="extra-large" style={{ color: '#ff9800' }}>
-              warning
-            </i>
             <h3>Oppps! Noe gikk galt</h3>
-            <p style={{ color: '#666' }}>
+            <p style={{ color: 'var(--text-secondary)' }}>
               Vi beklager, men en uventet feil oppstod. Her er noen ting du kan prøve:
             </p>
-            <ul style={{ textAlign: 'left', color: '#666' }}>
+            <ul style={{ textAlign: 'left', color: 'var(--text-secondary)' }}>
               <li>Oppfrisk siden</li>
               <li>Prøv igjen senere</li>
               <li>Kontakt oss hvis problemet vedvarer</li>
             </ul>
             <div style={{ marginTop: '1rem' }}>
-              <button className="orange" onClick={() => window.location.reload()}>
-                <i>refresh</i>
-                <span>Oppfrisk siden</span>
-              </button>
+              <Button variant="primary" onClick={() => window.location.reload()}>
+                Oppfrisk siden
+              </Button>
             </div>
             <details style={{ marginTop: '1rem', textAlign: 'left' }}>
-              <summary style={{ cursor: 'pointer', color: '#666' }}>
+              <summary style={{ cursor: 'pointer', color: 'var(--text-secondary)' }}>
                 Tekniske detaljer
               </summary>
               <pre
                 style={{
                   fontSize: '0.75rem',
                   overflow: 'auto',
-                  background: '#f5f5f5',
+                  background: 'var(--bone)',
                   padding: '1rem',
                   marginTop: '0.5rem',
                   borderRadius: '4px',
+                  fontFamily: 'var(--font-mono)',
                 }}
               >
                 {error.toString()}
               </pre>
             </details>
-          </article>
+          </Card>
         </div>
       )}
     >
@@ -160,10 +156,10 @@ const SuccessContent: React.FC = () => {
     <div style={{ padding: '2rem' }}>
       <h2>Vellykket visning</h2>
       <p>ErrorBoundary fungerer normalt når det ikke er noen feil.</p>
-      <article className="border round" style={{ marginTop: '1rem' }}>
+      <Card style={{ marginTop: '1rem', padding: '1.5rem' }}>
         <h4>Innhold innenfor ErrorBoundary</h4>
         <p>Dette innholdet vises normalt fordi ingen feil har oppstått.</p>
-      </article>
+      </Card>
     </div>
   );
 };

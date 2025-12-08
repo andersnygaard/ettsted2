@@ -103,9 +103,7 @@
 
 /* Checkmark icon for completed steps */
 .wizard-progress__check {
-  font-family: 'Material Symbols Outlined';
-  font-size: 18px;
-  font-weight: normal;
+  stroke-width: 2.5;
 }
 
 /* Step label */

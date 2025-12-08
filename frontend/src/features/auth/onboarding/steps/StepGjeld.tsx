@@ -37,7 +37,7 @@ export function StepGjeld({
         reduced={true}
       />
       <p className="step-accounts__note">
-        Du kan legge inn negative verdier (f.eks. -500 000), som vil bli lagret som positive tall
+        Skriv lånebeløp som positivt tall (f.eks. 500 000) - det konverteres automatisk til gjeld
       </p>
 
       <AccountsList

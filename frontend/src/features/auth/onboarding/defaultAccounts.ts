@@ -21,7 +21,10 @@ function createDefaultAccount(
   name: string,
   category: Category,
   isActive: boolean = true,
-  loanDetails?: { interestRate: number; remainingYears: number }
+  options?: {
+    loanDetails?: { interestRate: number; remainingYears: number };
+    isPublicPension?: boolean;
+  }
 ): OnboardingAccount {
   return {
     tempId: generateTempId(),
@@ -29,7 +32,8 @@ function createDefaultAccount(
     category,
     value: 0,
     isActive,
-    ...(loanDetails ? { loanDetails } : {})
+    ...(options?.loanDetails ? { loanDetails: options.loanDetails } : {}),
+    ...(options?.isPublicPension !== undefined ? { isPublicPension: options.isPublicPension } : {})
   };
 }
 
@@ -47,8 +51,8 @@ export const DEFAULT_SPARING_ACCOUNTS: OnboardingAccount[] = [
  * Default gjeld (debt) accounts
  */
 export const DEFAULT_GJELD_ACCOUNTS: OnboardingAccount[] = [
-  createDefaultAccount('Boliglån', 'gjeld', true, { interestRate: 5.5, remainingYears: 25 }),
-  createDefaultAccount('Studielån', 'gjeld', true, { interestRate: 5.5, remainingYears: 15 }),
+  createDefaultAccount('Boliglån', 'gjeld', true, { loanDetails: { interestRate: 5.5, remainingYears: 25 } }),
+  createDefaultAccount('Studielån', 'gjeld', true, { loanDetails: { interestRate: 5.5, remainingYears: 15 } }),
 ];
 
 /**
@@ -56,7 +60,7 @@ export const DEFAULT_GJELD_ACCOUNTS: OnboardingAccount[] = [
  */
 export const DEFAULT_PENSJON_ACCOUNTS: OnboardingAccount[] = [
   createDefaultAccount('Arbeidsgiver (OTP)', 'pensjon', true),
-  createDefaultAccount('Folketrygden (NAV)', 'pensjon', true),
+  createDefaultAccount('Folketrygden', 'pensjon', true, { isPublicPension: true }),
   createDefaultAccount('IPS', 'pensjon', false),
 ];
 
@@ -77,12 +81,12 @@ export function getDefaultAccounts(): {
       createDefaultAccount('Krypto', 'sparing', false),
     ],
     gjeld: [
-      createDefaultAccount('Boliglån', 'gjeld', true, { interestRate: 5.5, remainingYears: 25 }),
-      createDefaultAccount('Studielån', 'gjeld', true, { interestRate: 5.5, remainingYears: 15 }),
+      createDefaultAccount('Boliglån', 'gjeld', true, { loanDetails: { interestRate: 5.5, remainingYears: 25 } }),
+      createDefaultAccount('Studielån', 'gjeld', true, { loanDetails: { interestRate: 5.5, remainingYears: 15 } }),
     ],
     pensjon: [
       createDefaultAccount('Arbeidsgiver (OTP)', 'pensjon', true),
-      createDefaultAccount('Folketrygden (NAV)', 'pensjon', true),
+      createDefaultAccount('Folketrygden', 'pensjon', true, { isPublicPension: true }),
       createDefaultAccount('IPS', 'pensjon', false),
     ],
   };
@@ -97,7 +101,7 @@ export function createNewAccount(category: Category): OnboardingAccount {
     baseName,
     category,
     true,
-    category === 'gjeld' ? { interestRate: 5.5, remainingYears: 20 } : undefined
+    category === 'gjeld' ? { loanDetails: { interestRate: 5.5, remainingYears: 20 } } : undefined
   );
 }
 
@@ -108,7 +112,7 @@ export function getDefaultProfile() {
   const currentYear = new Date().getFullYear();
   return {
     monthlySalary: 0,
-    annualExpenses: 0,
+    monthlySavings: 0,
     birthYear: currentYear - 30,
     plannedRetirementAge: 67,
     fireNumber: undefined,
@@ -134,6 +138,7 @@ export function convertExistingAccount(
     category: 'sparing' | 'gjeld' | 'pensjon';
     isActive: boolean;
     loanDetails?: { interestRate: number; remainingYears: number; originalAmount?: number };
+    isPublicPension?: boolean;
   },
   value: number = 0
 ): OnboardingAccount {
@@ -144,5 +149,6 @@ export function convertExistingAccount(
     value: Math.abs(value), // Always positive for display (gjeld negated in backend)
     isActive: account.isActive,
     ...(account.loanDetails ? { loanDetails: account.loanDetails } : {}),
+    ...(account.isPublicPension !== undefined ? { isPublicPension: account.isPublicPension } : {}),
   };
 }

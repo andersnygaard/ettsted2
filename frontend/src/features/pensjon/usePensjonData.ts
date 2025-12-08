@@ -14,6 +14,7 @@ interface PensjonBreakdown {
   name: string;
   amount: number;
   percent: number;
+  isPublicPension?: boolean;
 }
 
 /**
@@ -22,9 +23,10 @@ interface PensjonBreakdown {
 export interface PensjonData {
   totalPension: number;
   breakdown: PensjonBreakdown[];
-  otpPercent: number; // OTP (arbeidsgiver) as % of total
+  privatePercent: number; // Private pension as % of total
+  publicPercent: number; // Public pension (Folketrygden) as % of total
   estimatedAtRetirement: number;
-  history: { date: Date; value: number; arbeidsgiver: number; folketrygden: number }[];
+  history: { date: Date; value: number; privatePension: number; publicPension: number }[];
 }
 
 /**
@@ -47,7 +49,8 @@ function getEmptyPensjonData(): PensjonData {
   return {
     totalPension: 0,
     breakdown: [],
-    otpPercent: 0,
+    privatePercent: 0,
+    publicPercent: 0,
     estimatedAtRetirement: 0,
     history: []
   };
@@ -101,14 +104,18 @@ async function fetchPensjonData(): Promise<PensjonData> {
       id: acc.id,
       name: acc.name,
       amount: acc.value,
-      percent: totalPension > 0 ? (acc.value / totalPension) * 100 : 0
+      percent: totalPension > 0 ? (acc.value / totalPension) * 100 : 0,
+      isPublicPension: acc.isPublicPension
     }));
 
-    // OTP = Arbeidsgiver as percent of total
-    const arbeidsgiver = breakdown.find((b) =>
-      b.name.toLowerCase().includes('arbeidsgiver')
-    );
-    const otpPercent = arbeidsgiver?.percent || 0;
+    // Calculate private vs public pension percentages
+    const publicPensionTotal = pensjonAccounts
+      .filter(acc => acc.isPublicPension === true)
+      .reduce((sum, acc) => sum + acc.value, 0);
+    const privatePensionTotal = totalPension - publicPensionTotal;
+
+    const publicPercent = totalPension > 0 ? (publicPensionTotal / totalPension) * 100 : 0;
+    const privatePercent = totalPension > 0 ? (privatePensionTotal / totalPension) * 100 : 0;
 
     // Estimated value at retirement
     const estimatedAtRetirement = estimatePensjonAtRetirement(totalPension);
@@ -119,20 +126,18 @@ async function fetchPensjonData(): Promise<PensjonData> {
         const accounts = s.accounts.filter(
           (account) => getAccountCategory(account.assetClass) === 'pensjon'
         );
-        const arbValue =
-          accounts.find((a) =>
-            a.name.toLowerCase().includes('arbeidsgiver')
-          )?.value || 0;
-        const folkValue =
-          accounts.find((a) =>
-            a.name.toLowerCase().includes('folketrygd')
-          )?.value || 0;
+        const publicValue = accounts
+          .filter(a => a.isPublicPension === true)
+          .reduce((sum, a) => sum + a.value, 0);
+        const privateValue = accounts
+          .filter(a => !a.isPublicPension)
+          .reduce((sum, a) => sum + a.value, 0);
 
         return {
           date: parseDate(s.date),
           value: calculateSumPensjon(s.accounts),
-          arbeidsgiver: arbValue,
-          folketrygden: folkValue
+          privatePension: privateValue,
+          publicPension: publicValue
         };
       })
       .reverse();
@@ -140,7 +145,8 @@ async function fetchPensjonData(): Promise<PensjonData> {
     return {
       totalPension,
       breakdown,
-      otpPercent,
+      privatePercent,
+      publicPercent,
       estimatedAtRetirement,
       history
     };
@@ -155,8 +161,8 @@ async function fetchPensjonData(): Promise<PensjonData> {
  *
  * Fetches all snapshots from the portfolio API and calculates:
  * - Total pension value (sum of pensjon accounts)
- * - Breakdown of pension sources (arbeidsgiver vs folketrygden)
- * - OTP percentage (employer pension as % of total)
+ * - Breakdown of pension sources (private vs public/Folketrygden)
+ * - Private and public pension percentages
  * - Estimated value at retirement (compound growth projection)
  * - Historical data for stacked area charting
  *

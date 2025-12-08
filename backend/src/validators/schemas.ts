@@ -79,10 +79,6 @@ export const userProfileSchema = z.object({
     .number()
     .nonnegative('Månedlig sparing kan ikke være negativ')
     .optional(),
-  annualExpenses: z
-    .number()
-    .nonnegative('Årlige utgifter kan ikke være negative')
-    .optional(),
   birthYear: z
     .number()
     .int('Fødselsår må være et heltall')
@@ -120,7 +116,11 @@ export const accountConfigSchema = z.object({
   isActive: z.boolean(),
   sortOrder: z.number().int().nonnegative('Sorteringsrekkefølge kan ikke være negativ'),
   createdAt: z.string().optional(),
-  loanDetails: loanDetailsSchema.optional()
+  loanDetails: loanDetailsSchema.optional(),
+  // Value is optional - only used when updating from edit mode to sync snapshot
+  value: z.number().finite('Verdi må være et gyldig tall').optional(),
+  // Whether this is a public pension account (Folketrygden) - only for pensjon category
+  isPublicPension: z.boolean().optional()
 });
 
 /**
@@ -332,6 +332,9 @@ export const createAccountConfigSchema = z.object({
         .positive('Opprinnelig beløp må være positivt')
         .optional()
     })
+    .optional(),
+  isPublicPension: z
+    .boolean()
     .optional()
 });
 
@@ -368,6 +371,9 @@ export const updateAccountConfigSchema = z
           .positive('Opprinnelig beløp må være positivt')
           .optional()
       })
+      .optional(),
+    isPublicPension: z
+      .boolean()
       .optional()
   })
   .refine(data => Object.keys(data).length > 0, {

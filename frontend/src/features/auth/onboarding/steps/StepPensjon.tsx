@@ -45,6 +45,7 @@ export function StepPensjon({
         onRemoveAccount={onRemoveAccount}
         onAddAccount={onAddAccount}
         showLoanDetails={false}
+        showPublicPensionRadio={true}
       />
     </div>
   );

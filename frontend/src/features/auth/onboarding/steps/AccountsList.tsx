@@ -25,6 +25,8 @@ interface AccountsListProps {
   onAddAccount: () => void;
   /** Whether this is the gjeld category (shows loan details) */
   showLoanDetails?: boolean;
+  /** Whether this is the pensjon category (shows public pension radio) */
+  showPublicPensionRadio?: boolean;
 }
 
 export function AccountsList({
@@ -35,6 +37,7 @@ export function AccountsList({
   onRemoveAccount,
   onAddAccount,
   showLoanDetails = false,
+  showPublicPensionRadio = false,
 }: AccountsListProps) {
   // Calculate category total
   const total = accounts.reduce((sum, acc) => sum + (acc.value || 0), 0);
@@ -91,6 +94,27 @@ export function AccountsList({
                   </span>
                 </label>
 
+                {/* Public Pension Radio (for pensjon only) */}
+                {showPublicPensionRadio && (
+                  <label className="accounts-list__radio">
+                    <input
+                      type="radio"
+                      name="publicPension"
+                      checked={account.isPublicPension === true}
+                      onChange={() => {
+                        // Clear isPublicPension from all accounts, then set on this one
+                        accounts.forEach(acc => {
+                          if (acc.isPublicPension) {
+                            onUpdateAccount(acc.tempId, { isPublicPension: false });
+                          }
+                        });
+                        onUpdateAccount(account.tempId, { isPublicPension: true });
+                      }}
+                    />
+                    <span className="accounts-list__radio-label">Folketrygden</span>
+                  </label>
+                )}
+
                 {/* Delete Button */}
                 <button
                   type="button"
@@ -110,6 +134,12 @@ export function AccountsList({
                   label="Verdi"
                   value={account.value}
                   onChange={(value) => onUpdateAccount(account.tempId, { value: value ?? 0 })}
+                  onBlur={() => {
+                    // For gjeld: convert positive values to negative on blur
+                    if (category === 'gjeld' && account.value > 0) {
+                      onUpdateAccount(account.tempId, { value: -account.value });
+                    }
+                  }}
                   suffix="kr"
                   error={valueError}
                   name={`value-${account.tempId}`}

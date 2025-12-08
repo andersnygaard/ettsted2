@@ -6,7 +6,7 @@
   "updatedAt": "2024-01-01T00:00:00.000Z",
   "profile": {
     "monthlySalary": 50000,
-    "annualExpenses": 360000,
+    "monthlySavings": 20000,
     "birthYear": 1995,
     "plannedRetirementAge": 65
   },

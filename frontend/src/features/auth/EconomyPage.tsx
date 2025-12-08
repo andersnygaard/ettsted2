@@ -111,7 +111,7 @@ function convertUserToInitialState(
     },
     profile: {
       monthlySalary: user.profile.monthlySalary,
-      annualExpenses: user.profile.annualExpenses,
+      monthlySavings: user.profile.monthlySavings,
       birthYear: user.profile.birthYear,
       plannedRetirementAge: user.profile.plannedRetirementAge,
       fireNumber: user.profile.fireNumber,

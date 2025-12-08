@@ -7,6 +7,7 @@
  * Design: Nordic Minimal with Cormorant Garamond typography
  */
 
+import { Icon } from '@finans/components';
 import { WizardStep } from './types';
 import './WizardProgressBar.css';
 
@@ -70,7 +71,7 @@ export function WizardProgressBar({ currentStep, onStepClick }: WizardProgressBa
                 aria-current={isCurrent ? 'step' : undefined}
               >
                 {isCompleted ? (
-                  <i className="wizard-progress__check">check</i>
+                  <Icon name="check" size={16} className="wizard-progress__check" />
                 ) : (
                   <span className="wizard-progress__number">{step.number}</span>
                 )}

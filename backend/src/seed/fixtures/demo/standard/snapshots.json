@@ -9,7 +9,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 95000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2400000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 450000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 380000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 380000 }
     ],
     "totalNetWorth": -675000,
     "createdAt": "2024-01-01T00:00:00.000Z",
@@ -25,7 +25,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 97000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2396000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 455000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 382000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 382000 }
     ],
     "totalNetWorth": -649000,
     "createdAt": "2024-02-01T00:00:00.000Z",
@@ -41,7 +41,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 99000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2392000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 460000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 384000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 384000 }
     ],
     "totalNetWorth": -622000,
     "createdAt": "2024-03-01T00:00:00.000Z",
@@ -57,7 +57,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 101000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2388000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 466000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 386000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 386000 }
     ],
     "totalNetWorth": -595000,
     "createdAt": "2024-04-01T00:00:00.000Z",
@@ -73,7 +73,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 103000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2384000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 472000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 388000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 388000 }
     ],
     "totalNetWorth": -566000,
     "createdAt": "2024-05-01T00:00:00.000Z",
@@ -89,7 +89,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 106000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2380000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 478000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 390000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 390000 }
     ],
     "totalNetWorth": -538000,
     "createdAt": "2024-06-01T00:00:00.000Z",
@@ -105,7 +105,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 108000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2376000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 484000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 392000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 392000 }
     ],
     "totalNetWorth": -509000,
     "createdAt": "2024-07-01T00:00:00.000Z",
@@ -121,7 +121,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 110000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2372000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 490000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 394000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 394000 }
     ],
     "totalNetWorth": -480000,
     "createdAt": "2024-08-01T00:00:00.000Z",
@@ -137,7 +137,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 112000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2368000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 496000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 396000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 396000 }
     ],
     "totalNetWorth": -450000,
     "createdAt": "2024-09-01T00:00:00.000Z",
@@ -153,7 +153,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 115000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2364000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 502000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 398000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 398000 }
     ],
     "totalNetWorth": -419000,
     "createdAt": "2024-10-01T00:00:00.000Z",
@@ -169,7 +169,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 117000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2360000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 508000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 400000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 400000 }
     ],
     "totalNetWorth": -389000,
     "createdAt": "2024-11-01T00:00:00.000Z",
@@ -185,7 +185,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 120000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2356000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 515000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 402000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 402000 }
     ],
     "totalNetWorth": -356000,
     "createdAt": "2024-12-01T00:00:00.000Z",
@@ -201,7 +201,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 122000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2352000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 522000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 404000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 404000 }
     ],
     "totalNetWorth": -324000,
     "createdAt": "2025-01-01T00:00:00.000Z",
@@ -217,7 +217,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 125000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2348000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 529000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 406000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 406000 }
     ],
     "totalNetWorth": -290000,
     "createdAt": "2025-02-01T00:00:00.000Z",
@@ -233,7 +233,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 127000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2344000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 536000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 408000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 408000 }
     ],
     "totalNetWorth": -257000,
     "createdAt": "2025-03-01T00:00:00.000Z",
@@ -249,7 +249,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 130000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2340000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 543000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 410000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 410000 }
     ],
     "totalNetWorth": -223000,
     "createdAt": "2025-04-01T00:00:00.000Z",
@@ -265,7 +265,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 132000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2336000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 550000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 412000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 412000 }
     ],
     "totalNetWorth": -189000,
     "createdAt": "2025-05-01T00:00:00.000Z",
@@ -281,7 +281,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 135000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2332000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 558000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 414000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 414000 }
     ],
     "totalNetWorth": -151000,
     "createdAt": "2025-06-01T00:00:00.000Z",
@@ -297,7 +297,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 138000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2328000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 566000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 416000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 416000 }
     ],
     "totalNetWorth": -114000,
     "createdAt": "2025-07-01T00:00:00.000Z",
@@ -313,7 +313,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 140000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2324000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 574000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 418000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 418000 }
     ],
     "totalNetWorth": -76000,
     "createdAt": "2025-08-01T00:00:00.000Z",
@@ -329,7 +329,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 143000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2320000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 582000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 420000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 420000 }
     ],
     "totalNetWorth": -37000,
     "createdAt": "2025-09-01T00:00:00.000Z",
@@ -345,7 +345,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 146000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2316000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 590000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 422000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 422000 }
     ],
     "totalNetWorth": 2000,
     "createdAt": "2025-10-01T00:00:00.000Z",
@@ -361,7 +361,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 148000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2312000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 598000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 424000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 424000 }
     ],
     "totalNetWorth": 40000,
     "createdAt": "2025-11-01T00:00:00.000Z",
@@ -377,7 +377,7 @@
       { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 150000 },
       { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2308000 },
       { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 606000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "value": 426000 }
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 426000 }
     ],
     "totalNetWorth": 78000,
     "createdAt": "2025-12-01T00:00:00.000Z",

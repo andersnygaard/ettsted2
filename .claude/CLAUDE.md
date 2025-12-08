@@ -67,7 +67,7 @@
   updatedAt: Date
   profile: {
     monthlySalary: number       // Monthly income for savings rate
-    annualExpenses: number      // Yearly expenses for F.I.R.E. calc
+    monthlySavings: number      // Monthly savings (annualExpenses derived as (salary - savings) * 12)
     birthYear: number           // For pension projections
     plannedRetirementAge: number
     fireNumber?: number         // Optional custom F.I.R.E. target
@@ -209,7 +209,8 @@ pnpm-workspace.yaml - pnpm workspace config
 |-------|---------|---------|
 | Netto formue | Sum sparing - Sum gjeld | Oversikt |
 | Dekning | Sum sparing / Sum gjeld × 100 | Gjeld |
-| Sparerate | (Inntekt - Utgifter) / Inntekt × 100 | Oversikt, Sparing |
+| Sparerate | Månedlig sparing / Månedlig inntekt × 100 | Oversikt, Sparing |
+| Årlige utgifter | (Månedlig inntekt - Månedlig sparing) × 12 | Derived |
 | Firetall | Årlige utgifter × 25 | Sparing |
 | Måneder fri | Sum sparing / Månedlige utgifter | Sparing |
 
@@ -260,6 +261,10 @@ pnpm-workspace.yaml - pnpm workspace config
 - HTTP security headers (Helmet.js with explicit CSP)
 - CORS configured for frontend origin (rejects no-origin in production)
 - HTTPS only
+
+### Zod Validation
+- **Stripping**: Zod schemas strip unknown fields by default. If frontend sends extra fields, add them to the schema or they'll be dropped.
+- **Location**: `backend/src/validators/schemas.ts`
 
 ---
 

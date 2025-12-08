@@ -79,8 +79,7 @@
   justify-content: center;
   text-align: center;
   padding: var(--space-5xl) var(--space-xl);
-  opacity: 0;
-  animation: fadeUp 0.6s ease forwards;
+  animation: fadeUp 0.6s ease both;
 }
 
 .chatbot__empty-icon {
@@ -140,8 +139,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   width: fit-content;
-  opacity: 0;
-  animation: fadeUp 0.3s ease forwards;
+  animation: fadeUp 0.3s ease both;
 }
 
 .chatbot__typing-dot {

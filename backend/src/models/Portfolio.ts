@@ -36,6 +36,12 @@ export interface Account {
    * Optional notes about the account
    */
   notes?: string;
+
+  /**
+   * Whether this is a public pension account (Folketrygden)
+   * Only relevant for pensjon accounts
+   */
+  isPublicPension?: boolean;
 }
 
 /**

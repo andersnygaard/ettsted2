@@ -73,7 +73,8 @@ router.get('/oversikt', async (req: Request, res: Response, next: NextFunction) 
 
     const netWorth = calc.calculateNetWorth(current.accounts);
     const sumSavings = calc.calculateSumByCategory(current.accounts, 'sparing');
-    const totalDebt = calc.calculateSumByCategory(current.accounts, 'gjeld');
+    // Debt values are stored as negative, use abs for display
+    const totalDebt = Math.abs(calc.calculateSumByCategory(current.accounts, 'gjeld'));
     const totalPension = calc.calculateSumByCategory(current.accounts, 'pensjon');
 
     const previousNetWorth = previous ? calc.calculateNetWorth(previous.accounts) : netWorth;
@@ -143,7 +144,8 @@ router.get('/sparing', async (req: Request, res: Response, next: NextFunction) =
     const sumSavings = calc.calculateSumByCategory(latest.accounts, 'sparing');
     const savingsRate = calc.calculateSavingsRate(user.profile);
     const fireNumber = calc.calculateFireNumber(user.profile);
-    const monthsFree = calc.calculateMonthsFree(sumSavings, user.profile.annualExpenses);
+    const annualExpenses = calc.deriveAnnualExpenses(user.profile);
+    const monthsFree = calc.calculateMonthsFree(sumSavings, annualExpenses);
     const fireProgress = fireNumber > 0 ? (sumSavings / fireNumber) * 100 : 0;
 
     // Build history for chart (already sorted oldest first)
@@ -207,20 +209,21 @@ router.get('/gjeld', async (req: Request, res: Response, next: NextFunction) => 
     const snapshots = sortSnapshotsAsc(rawSnapshots);
     const latest = snapshots[snapshots.length - 1];
 
-    const totalDebt = calc.calculateSumByCategory(latest.accounts, 'gjeld');
+    // Debt values are stored as negative, use abs for display
+    const totalDebt = Math.abs(calc.calculateSumByCategory(latest.accounts, 'gjeld'));
     const coverage = calc.calculateCoverage(latest.accounts);
     const sumSavings = calc.calculateSumByCategory(latest.accounts, 'sparing');
     const remaining = Math.max(0, totalDebt - sumSavings);
 
-    // Get loan accounts (gjeld or lån assetClass)
+    // Get loan accounts (gjeld or lån assetClass) - values as absolute
     const loans = latest.accounts
       .filter((a) => ['gjeld', 'lån', 'loan', 'debt'].includes(a.assetClass.toLowerCase()))
-      .map((a) => ({ name: a.name, value: a.value }));
+      .map((a) => ({ name: a.name, value: Math.abs(a.value) }));
 
-    // Build history for chart (already sorted oldest first)
+    // Build history for chart (already sorted oldest first) - values as absolute
     const history = snapshots.map((s) => ({
       date: s.date,
-      value: calc.calculateSumByCategory(s.accounts, 'gjeld'),
+      value: Math.abs(calc.calculateSumByCategory(s.accounts, 'gjeld')),
     }));
 
     return res.json({

@@ -41,6 +41,7 @@ interface OnboardingAccount {
     remainingYears: number;
     originalAmount?: number;
   };
+  isPublicPension?: boolean;
 }
 
 /**
@@ -48,7 +49,7 @@ interface OnboardingAccount {
  */
 interface OnboardingProfile {
   monthlySalary: number;
-  annualExpenses: number;
+  monthlySavings: number;
   birthYear: number;
   plannedRetirementAge: number;
   fireNumber?: number;
@@ -107,11 +108,11 @@ export function validateOnboardingRequest(
       errors.push({ field: 'profile.monthlySalary', message: 'Månedlig inntekt må være et tall >= 0' });
     }
 
-    // Annual expenses
-    if (profile.annualExpenses === undefined || profile.annualExpenses === null) {
-      errors.push({ field: 'profile.annualExpenses', message: 'Årlige utgifter er påkrevd' });
-    } else if (typeof profile.annualExpenses !== 'number' || profile.annualExpenses < 0) {
-      errors.push({ field: 'profile.annualExpenses', message: 'Årlige utgifter må være et tall >= 0' });
+    // Monthly savings
+    if (profile.monthlySavings === undefined || profile.monthlySavings === null) {
+      errors.push({ field: 'profile.monthlySavings', message: 'Månedlig sparing er påkrevd' });
+    } else if (typeof profile.monthlySavings !== 'number' || profile.monthlySavings < 0) {
+      errors.push({ field: 'profile.monthlySavings', message: 'Månedlig sparing må være et tall >= 0' });
     }
 
     // Birth year
