@@ -93,7 +93,8 @@
       "Bash(done)",
       "Skill(due-diligence)",
       "Bash(do echo \"=== Run $i ===\")",
-      "Bash(CI_MOCK_MODE=true NODE_ENV=development timeout 10 pnpm dev:*)"
+      "Bash(CI_MOCK_MODE=true NODE_ENV=development timeout 10 pnpm dev:*)",
+      "Skill(push-code)"
     ],
     "deny": [],
     "ask": [

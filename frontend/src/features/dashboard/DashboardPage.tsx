@@ -93,16 +93,16 @@ function DashboardPage() {
     >
 
         {/* Hero Section - Net Worth or Sum Sparing */}
-        <div className="hero-section">
-          <div className="hero-label">{heroLabel}</div>
-          <div className="hero-value">{formatCurrency(heroValue)}</div>
-          <div className={`hero-change ${heroChange >= 0 ? 'positive' : 'negative'}`}>
+        <div className="dashboard-hero">
+          <div className="dashboard-hero__label">{heroLabel}</div>
+          <div className="dashboard-hero__value">{formatCurrency(heroValue)}</div>
+          <div className={`dashboard-hero__change ${heroChange >= 0 ? 'dashboard-hero__change--positive' : 'dashboard-hero__change--negative'}`}>
             {heroChange >= 0 ? '+' : ''}{heroChange.toFixed(2).replace('.', ',')}% denne måneden
           </div>
         </div>
 
         {/* Quick Stats Grid */}
-        <div className="quick-stats">
+        <div className="dashboard-stats">
           <StatCard
             value={isNegativeNetWorth ? formatCurrency(data.netWorth) : formatCurrency(data.sumSavings)}
             label={isNegativeNetWorth ? 'Netto formue' : 'Sum sparing'}
@@ -126,23 +126,23 @@ function DashboardPage() {
         </div>
 
         {/* Milestone Section */}
-        <div className="milestone-section">
-          <div className="milestone-label">Neste milepæl</div>
-          <div className="milestone-value">{formatCurrency(data.nextMilestone)}</div>
-          <div className="milestone-bar">
+        <div className="dashboard-milestone">
+          <div className="dashboard-milestone__label">Neste milepæl</div>
+          <div className="dashboard-milestone__value">{formatCurrency(data.nextMilestone)}</div>
+          <div className="dashboard-milestone__bar">
             <div
-              className="milestone-bar-fill"
+              className="dashboard-milestone__fill"
               style={{ width: `${milestoneProgress}%` }}
             />
           </div>
-          <div className="milestone-text">
+          <div className="dashboard-milestone__text">
             <span>Gjenstår: {formatCurrency(milestoneRemaining)}</span>
             <span>{Math.round(milestoneProgress)}%</span>
           </div>
         </div>
 
         {/* Section Links */}
-        <div className="section-links">
+        <div className="dashboard-links">
           <SectionLink
             title="Portefølje"
             subtitle="Se alle kontoer og historikk"

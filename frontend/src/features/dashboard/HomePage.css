@@ -84,8 +84,8 @@
   border: 1px solid transparent;
 }
 
-.landing-btn i {
-  font-size: 18px;
+.landing-btn .icon {
+  flex-shrink: 0;
 }
 
 .landing-btn--primary {
@@ -186,8 +186,7 @@
   margin-bottom: var(--space-lg);
 }
 
-.landing-feature-card__icon i {
-  font-size: 24px;
+.landing-feature-card__icon .icon {
   color: var(--muted-sage);
 }
 

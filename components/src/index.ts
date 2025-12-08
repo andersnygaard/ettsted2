@@ -5,6 +5,9 @@
 export { Button } from './ui/Button'
 export type { ButtonProps } from './ui/Button'
 
+export { Icon } from './ui/Icon'
+export type { IconProps, IconName } from './ui/Icon'
+
 export { Card } from './ui/Card'
 export type { CardProps } from './ui/Card'
 

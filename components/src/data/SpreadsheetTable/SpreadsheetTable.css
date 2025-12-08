@@ -150,13 +150,16 @@
    ======================================== */
 
 .spreadsheet td {
-  padding: 0px var(--space-xs);
+  padding: var(--space-xs);
   text-align: right;
   border-bottom: 1px solid var(--border);
   font-family: var(--font-mono);
   font-size: 11px;
   white-space: nowrap;
   transition: background 0.15s ease;
+  height: 32px;
+  vertical-align: middle;
+  box-sizing: border-box;
 }
 
 .spreadsheet td:first-child {
@@ -253,14 +256,21 @@
 
 /* Cell in editing mode */
 .cell-editing {
-  padding: var(--space-xs) !important;
+  padding: 2px !important;
   background: var(--warm-white) !important;
+  position: relative;
 }
 
 /* Cell input field */
 .cell-input {
-  width: 100%;
-  padding: var(--space-xs);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  padding: 0 var(--space-xs);
   font-family: var(--font-mono);
   font-size: 11px;
   text-align: right;
@@ -269,6 +279,7 @@
   background: var(--warm-white);
   color: var(--charcoal);
   outline: none;
+  box-sizing: border-box;
 }
 
 .cell-input:focus {
@@ -308,12 +319,13 @@
 .action-cell {
   text-align: center;
   width: 50px;
-  padding: var(--space-xs) var(--space-sm);
+  padding: var(--space-xs);
   background: var(--warm-white);
   position: sticky;
   right: 0;
   z-index: 4;
   border-left: 2px solid var(--border-strong);
+  height: 32px;
 }
 
 .spreadsheet tr:hover .action-cell {

@@ -167,10 +167,6 @@
   .app-header__nav-item {
     font-size: 10px;
   }
-
-  .landing-btn {
-    width: calc(100% - 76px);
-  }
 }
 
 /* Hamburger button - hidden on desktop, shown on mobile */

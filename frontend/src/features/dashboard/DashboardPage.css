@@ -19,13 +19,13 @@
 }
 
 /* Hero Section */
-.hero-section {
+.dashboard-hero {
   text-align: center;
   margin-bottom: var(--space-6xl);
   animation: fadeUp 0.6s ease forwards;
 }
 
-.hero-label {
+.dashboard-hero__label {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -33,7 +33,7 @@
   margin-bottom: var(--space-md);
 }
 
-.hero-value {
+.dashboard-hero__value {
   font-family: var(--font-heading);
   font-size: 84px;
   font-weight: 300;
@@ -46,7 +46,7 @@
   white-space: nowrap;
 }
 
-.hero-change {
+.dashboard-hero__change {
   display: inline-flex;
   align-items: center;
   gap: var(--space-xs);
@@ -55,18 +55,18 @@
   border-radius: 2px;
 }
 
-.hero-change.positive {
+.dashboard-hero__change--positive {
   background: rgba(139, 154, 125, 0.12);
   color: var(--muted-sage);
 }
 
-.hero-change.negative {
+.dashboard-hero__change--negative {
   background: rgba(157, 107, 90, 0.12);
   color: var(--negative);
 }
 
 /* Quick Stats Grid */
-.quick-stats {
+.dashboard-stats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1em;
@@ -77,7 +77,7 @@
 }
 
 /* Milestone Section */
-.milestone-section {
+.dashboard-milestone {
   max-width: 600px;
   margin: 0 auto var(--space-6xl);
   background: linear-gradient(135deg, var(--charcoal) 0%, var(--charcoal-light) 100%);
@@ -90,7 +90,7 @@
   animation-delay: 0.3s;
 }
 
-.milestone-label {
+.dashboard-milestone__label {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -98,7 +98,7 @@
   margin-bottom: var(--space-sm);
 }
 
-.milestone-value {
+.dashboard-milestone__value {
   font-family: var(--font-heading);
   font-size: 48px;
   font-weight: 300;
@@ -110,7 +110,7 @@
   height: 56px;
 }
 
-.milestone-bar {
+.dashboard-milestone__bar {
   height: 8px;
   background: rgba(255, 255, 255, 0.15);
   border-radius: 4px;
@@ -118,15 +118,14 @@
   margin-bottom: var(--space-sm);
 }
 
-.milestone-bar-fill {
+.dashboard-milestone__fill {
   height: 100%;
   background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%);
   border-radius: 4px;
-  /* Animation: fill width with ease-out for smooth visual effect */
   transition: width 0.6s ease-out;
 }
 
-.milestone-text {
+.dashboard-milestone__text {
   display: flex;
   justify-content: space-between;
   font-size: 12px;
@@ -134,7 +133,7 @@
 }
 
 /* Section Links */
-.section-links {
+.dashboard-links {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-lg);
@@ -142,23 +141,23 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .hero-value {
+  .dashboard-hero__value {
     font-size: 48px;
   }
 
-  .quick-stats {
+  .dashboard-stats {
     grid-template-columns: 1fr;
   }
 
-  .section-links {
+  .dashboard-links {
     grid-template-columns: 1fr;
   }
 
-  .milestone-section {
+  .dashboard-milestone {
     padding: var(--space-sm);
   }
 
-  .milestone-value {
+  .dashboard-milestone__value {
     font-size: 36px;
   }
 }

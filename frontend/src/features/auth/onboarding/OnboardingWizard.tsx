@@ -12,6 +12,7 @@
 import { useReducer, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
+import { Icon } from '@finans/components';
 import { useAuth } from '../useAuth';
 import apiClient from '@/shared/api/client';
 import { getErrorMessage } from '@/shared/utils/errorTypes';
@@ -465,7 +466,7 @@ export function OnboardingWizard({ mode = 'create', initialState, onComplete }: 
       {/* Error Banner */}
       {state.submitError && (
         <div className="onboarding-wizard__error-banner" role="alert">
-          <i>error</i>
+          <Icon name="error" size={20} />
           <span>{state.submitError}</span>
         </div>
       )}
@@ -479,7 +480,7 @@ export function OnboardingWizard({ mode = 'create', initialState, onComplete }: 
             onClick={handleBack}
             disabled={state.isSubmitting}
           >
-            <i>arrow_back</i>
+            <Icon name="arrow-back" size={18} />
             <span>Tilbake</span>
           </button>
         )}
@@ -497,13 +498,13 @@ export function OnboardingWizard({ mode = 'create', initialState, onComplete }: 
             </>
           ) : state.currentStep === 4 ? (
             <>
-              <i>check</i>
+              <Icon name="check" size={18} />
               <span>Fullfør</span>
             </>
           ) : (
             <>
               <span>Neste</span>
-              <i>arrow_forward</i>
+              <Icon name="arrow-forward" size={18} />
             </>
           )}
         </button>

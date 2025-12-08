@@ -10,7 +10,8 @@ The user provides a component to document in Storybook. They may specify particu
 ## Project Context
 
 - **Component Library**: `/components` workspace
-- **Styling**: BeerCSS + Material UI
+- **Styling**: Custom CSS with Nordic Minimal design system (see tokens.css)
+- **Icons**: Custom SVG icons via `Icon` component from @finans/components
 - **Stories Location**: Co-located with components (`*.stories.tsx`)
 - **Storybook Deployment**: `finans-components` Azure App Service
 
@@ -74,13 +75,13 @@ Configure in `.storybook/preview.tsx` for project-wide providers:
 
 ```typescript
 import type { Preview } from '@storybook/react';
-import 'beercss';
+import '../src/styles/tokens.css';
 import '../src/styles/globals.css';
 
 const preview: Preview = {
   decorators: [
     (Story) => (
-      <div className="light">
+      <div>
         <Story />
       </div>
     ),
@@ -374,21 +375,15 @@ export const Disabled: Story = { args: { disabled: true } };
 
 ## Project-Specific Patterns
 
-### Using BeerCSS Components
+### Using Custom CSS Components
 
 ```typescript
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from './Button';
+import { Button, Icon } from '@finans/components';
 
 const meta: Meta<typeof Button> = {
   component: Button,
-  decorators: [
-    (Story) => (
-      <div className="light">
-        <Story />
-      </div>
-    ),
-  ],
+  tags: ['autodocs'],
 };
 
 export default meta;
@@ -397,7 +392,15 @@ type Story = StoryObj<typeof Button>;
 export const Primary: Story = {
   args: {
     children: 'Primary Button',
-    className: 'primary',
+    variant: 'primary',
+  },
+};
+
+export const WithIcon: Story = {
+  args: {
+    children: 'Save',
+    variant: 'primary',
+    icon: <Icon name="check" size={18} />,
   },
 };
 ```

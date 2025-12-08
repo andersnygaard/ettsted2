@@ -14,9 +14,6 @@
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
-    "@mui/icons-material": "^5.15.0",
-    "@mui/material": "^5.15.0",
-    "beercss": "^3.12.0",
     "d3": "^7.8.5",
     "date-fns": "^2.30.0",
     "numeral": "^2.0.6",

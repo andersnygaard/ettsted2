@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Icon } from '@finans/components';
 import { useAuth } from '../auth/useAuth';
 import { LoginModal } from '../auth/LoginModal';
 import './HomePage.css';
@@ -24,11 +25,11 @@ function HomePage() {
           {isAuthenticated ? (
             <div className="landing-hero__actions">
               <Link to="/oversikt" className="landing-btn landing-btn--primary">
-                <i>dashboard</i>
+                <Icon name="dashboard" size={18} />
                 <span>Gå til Oversikt</span>
               </Link>
               <Link to="/portefolje" className="landing-btn landing-btn--secondary">
-                <i>account_balance</i>
+                <Icon name="account-balance" size={18} />
                 <span>Se Portefølje</span>
               </Link>
             </div>
@@ -38,7 +39,7 @@ function HomePage() {
                 className="landing-btn landing-btn--primary"
                 onClick={() => setIsLoginModalOpen(true)}
               >
-                <i>login</i>
+                <Icon name="login" size={18} />
                 <span>Logg inn</span>
               </button>
             </div>
@@ -54,7 +55,7 @@ function HomePage() {
         <div className="landing-features__grid">
           <article className="landing-feature-card">
             <div className="landing-feature-card__icon">
-              <i>trending_up</i>
+              <Icon name="trending-up" size={24} />
             </div>
             <h3>Portefølje</h3>
             <p>Følg med på investeringer på tvers av aksjer, fond, krypto og mer. Se total netto formue over tid.</p>
@@ -62,7 +63,7 @@ function HomePage() {
 
           <article className="landing-feature-card">
             <div className="landing-feature-card__icon">
-              <i>savings</i>
+              <Icon name="savings" size={24} />
             </div>
             <h3>Sparing & F.I.R.E.</h3>
             <p>Track sparerate og følg din vei mot økonomisk uavhengighet med F.I.R.E. beregninger.</p>
@@ -70,7 +71,7 @@ function HomePage() {
 
           <article className="landing-feature-card">
             <div className="landing-feature-card__icon">
-              <i>account_balance</i>
+              <Icon name="account-balance" size={24} />
             </div>
             <h3>Gjeld</h3>
             <p>Hold oversikt over lån og se hvor mye av gjelden din som er dekket av sparingen.</p>
@@ -78,7 +79,7 @@ function HomePage() {
 
           <article className="landing-feature-card">
             <div className="landing-feature-card__icon">
-              <i>calculate</i>
+              <Icon name="calculate" size={24} />
             </div>
             <h3>Kalkulatorer</h3>
             <p>Kraftige verktøy for renters rente, låneberegning og Monte Carlo simuleringer.</p>
@@ -86,7 +87,7 @@ function HomePage() {
 
           <article className="landing-feature-card">
             <div className="landing-feature-card__icon">
-              <i>elderly</i>
+              <Icon name="elderly" size={24} />
             </div>
             <h3>Pensjon</h3>
             <p>Se oppspart pensjon og fremtidige projeksjoner basert på arbeidsgiver og folketrygden.</p>
@@ -94,7 +95,7 @@ function HomePage() {
 
           <article className="landing-feature-card">
             <div className="landing-feature-card__icon">
-              <i>insights</i>
+              <Icon name="insights" size={24} />
             </div>
             <h3>Visualiseringer</h3>
             <p>Interaktive grafer og prognoser som viser formuens utvikling og fremtidige mål.</p>
@@ -112,7 +113,7 @@ function HomePage() {
               className="landing-btn landing-btn--primary landing-btn--large"
               onClick={() => setIsLoginModalOpen(true)}
             >
-              <i>rocket_launch</i>
+              <Icon name="rocket-launch" size={18} />
               <span>Kom i gang</span>
             </button>
           </div>

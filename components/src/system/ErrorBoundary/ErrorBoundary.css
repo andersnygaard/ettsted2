@@ -1,0 +1,116 @@
+/**
+ * ErrorBoundary Component Styles
+ * Custom styling based on Nordic Minimal design system
+ */
+
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  padding: var(--space-xl);
+}
+
+.error-boundary__card {
+  max-width: 480px;
+  width: 100%;
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3xl);
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.error-boundary__icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--space-lg);
+  color: var(--negative);
+}
+
+.error-boundary__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.error-boundary__title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-regular);
+  color: var(--charcoal);
+  margin: 0 0 var(--space-sm);
+}
+
+.error-boundary__message {
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-xl);
+  line-height: 1.5;
+}
+
+.error-boundary__details {
+  margin-top: var(--space-lg);
+  text-align: left;
+}
+
+.error-boundary__details summary {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: var(--space-sm) 0;
+}
+
+.error-boundary__details summary:hover {
+  color: var(--charcoal);
+}
+
+.error-boundary__details pre {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  background: var(--bone);
+  padding: var(--space-md);
+  border-radius: var(--radius-sm);
+  overflow: auto;
+  max-height: 200px;
+  margin-top: var(--space-sm);
+  color: var(--charcoal);
+}
+
+.error-boundary__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-xl);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--warm-white);
+  background: var(--charcoal);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.error-boundary__btn:hover {
+  background: var(--charcoal-hover);
+  transform: translateY(-2px);
+}
+
+.error-boundary__btn:focus-visible {
+  outline: 2px solid var(--pale-blue);
+  outline-offset: 2px;
+}
+
+.error-boundary__btn-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.error-boundary__btn-icon svg {
+  width: 100%;
+  height: 100%;
+}

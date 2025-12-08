@@ -6,7 +6,7 @@
  * Shows category total at the bottom.
  */
 
-import { NumberInput, formatNumber } from '@finans/components';
+import { NumberInput, formatNumber, Icon } from '@finans/components';
 import { OnboardingAccount, Category } from '../types';
 import './AccountsList.css';
 
@@ -100,7 +100,7 @@ export function AccountsList({
                   aria-label={`Slett ${account.name}`}
                   title={canDelete ? 'Slett konto' : 'Må ha minst én konto'}
                 >
-                  <i>delete</i>
+                  <Icon name="delete" size={18} />
                 </button>
               </div>
 
@@ -191,7 +191,7 @@ export function AccountsList({
         className="accounts-list__add-btn"
         onClick={onAddAccount}
       >
-        <i>add</i>
+        <Icon name="add" size={18} />
         <span>Legg til {category === 'gjeld' ? 'lån' : 'konto'}</span>
       </button>
 
