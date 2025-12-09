@@ -62,7 +62,7 @@
 }
 
 .table-header__select:focus-visible {
-  outline: 2px solid var(--charcoal);
+  outline: 2px solid var(--focus-color);
   outline-offset: 2px;
 }
 

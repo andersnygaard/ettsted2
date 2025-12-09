@@ -34,6 +34,9 @@ interface ApiErrorResponse {
 
 /**
  * Custom error class for API errors
+ *
+ * This is the single source of truth for API error type.
+ * Re-exported from errorTypes.ts for convenience.
  */
 export class ApiError extends Error {
   constructor(

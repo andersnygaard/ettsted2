@@ -21,12 +21,12 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "^7.6.0",
-    "@storybook/addon-interactions": "^7.6.0",
-    "@storybook/addon-links": "^7.6.0",
-    "@storybook/blocks": "^7.6.0",
-    "@storybook/react": "^7.6.0",
-    "@storybook/react-vite": "^7.6.0",
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/addon-interactions": "^8.6.14",
+    "@storybook/addon-links": "^8.6.14",
+    "@storybook/blocks": "^8.6.14",
+    "@storybook/react": "^8.6.14",
+    "@storybook/react-vite": "^8.6.14",
     "@storybook/testing-library": "^0.2.2",
     "@types/d3": "^7.4.3",
     "@types/numeral": "^2.0.5",
@@ -36,7 +36,7 @@
     "@typescript-eslint/parser": "^6.13.0",
     "eslint": "^8.55.0",
     "react-router-dom": "^6.20.0",
-    "storybook": "^7.6.0",
+    "storybook": "^8.6.14",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {

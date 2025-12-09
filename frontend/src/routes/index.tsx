@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from '../shared/components/Layout';
-import { LoadingSpinner } from '../shared/components';
+import { LoadingSpinner, FeatureErrorFallback, ErrorBoundary } from '../shared/components';
 import ProtectedRoute from '../features/auth/ProtectedRoute';
 import OnboardingRoute from '../features/auth/OnboardingRoute';
 
@@ -42,7 +42,9 @@ function AppRoutes() {
             path="oversikt"
             element={
               <ProtectedRoute>
-                <DashboardPage />
+                <ErrorBoundary fallback={(error, reset) => <FeatureErrorFallback error={error} reset={reset} featureName="Dashboard" />}>
+                  <DashboardPage />
+                </ErrorBoundary>
               </ProtectedRoute>
             }
           />
@@ -50,7 +52,9 @@ function AppRoutes() {
             path="portefolje"
             element={
               <ProtectedRoute>
-                <PortfolioPage />
+                <ErrorBoundary fallback={(error, reset) => <FeatureErrorFallback error={error} reset={reset} featureName="Portefølje" />}>
+                  <PortfolioPage />
+                </ErrorBoundary>
               </ProtectedRoute>
             }
           />
@@ -58,7 +62,9 @@ function AppRoutes() {
             path="import"
             element={
               <ProtectedRoute>
-                <ImportPage />
+                <ErrorBoundary fallback={(error, reset) => <FeatureErrorFallback error={error} reset={reset} featureName="Import" />}>
+                  <ImportPage />
+                </ErrorBoundary>
               </ProtectedRoute>
             }
           />
@@ -66,7 +72,9 @@ function AppRoutes() {
             path="sparing"
             element={
               <ProtectedRoute>
-                <SparingPage />
+                <ErrorBoundary fallback={(error, reset) => <FeatureErrorFallback error={error} reset={reset} featureName="Sparing" />}>
+                  <SparingPage />
+                </ErrorBoundary>
               </ProtectedRoute>
             }
           />
@@ -74,7 +82,9 @@ function AppRoutes() {
             path="gjeld"
             element={
               <ProtectedRoute>
-                <GjeldPage />
+                <ErrorBoundary fallback={(error, reset) => <FeatureErrorFallback error={error} reset={reset} featureName="Gjeld" />}>
+                  <GjeldPage />
+                </ErrorBoundary>
               </ProtectedRoute>
             }
           />
@@ -82,7 +92,9 @@ function AppRoutes() {
             path="pensjon"
             element={
               <ProtectedRoute>
-                <PensjonPage />
+                <ErrorBoundary fallback={(error, reset) => <FeatureErrorFallback error={error} reset={reset} featureName="Pensjon" />}>
+                  <PensjonPage />
+                </ErrorBoundary>
               </ProtectedRoute>
             }
           />
@@ -90,7 +102,9 @@ function AppRoutes() {
             path="kalkulatorer"
             element={
               <ProtectedRoute>
-                <CalculatorsPage />
+                <ErrorBoundary fallback={(error, reset) => <FeatureErrorFallback error={error} reset={reset} featureName="Kalkulatorer" />}>
+                  <CalculatorsPage />
+                </ErrorBoundary>
               </ProtectedRoute>
             }
           />
@@ -98,7 +112,9 @@ function AppRoutes() {
             path="kalkulatorer/rentes-rente"
             element={
               <ProtectedRoute>
-                <CompoundCalculatorPage />
+                <ErrorBoundary fallback={(error, reset) => <FeatureErrorFallback error={error} reset={reset} featureName="Rentes Rente" />}>
+                  <CompoundCalculatorPage />
+                </ErrorBoundary>
               </ProtectedRoute>
             }
           />
@@ -106,7 +122,9 @@ function AppRoutes() {
             path="kalkulatorer/fire"
             element={
               <ProtectedRoute>
-                <FireCalculatorPage />
+                <ErrorBoundary fallback={(error, reset) => <FeatureErrorFallback error={error} reset={reset} featureName="F.I.R.E." />}>
+                  <FireCalculatorPage />
+                </ErrorBoundary>
               </ProtectedRoute>
             }
           />
@@ -114,7 +132,9 @@ function AppRoutes() {
             path="kalkulatorer/lan"
             element={
               <ProtectedRoute>
-                <LoanCalculatorPage />
+                <ErrorBoundary fallback={(error, reset) => <FeatureErrorFallback error={error} reset={reset} featureName="Lånekalkulator" />}>
+                  <LoanCalculatorPage />
+                </ErrorBoundary>
               </ProtectedRoute>
             }
           />
@@ -122,7 +142,9 @@ function AppRoutes() {
             path="kalkulatorer/monte-carlo"
             element={
               <ProtectedRoute>
-                <MonteCarloPage />
+                <ErrorBoundary fallback={(error, reset) => <FeatureErrorFallback error={error} reset={reset} featureName="Monte Carlo" />}>
+                  <MonteCarloPage />
+                </ErrorBoundary>
               </ProtectedRoute>
             }
           />
@@ -133,7 +155,9 @@ function AppRoutes() {
             path="okonomi"
             element={
               <ProtectedRoute>
-                <EconomyPage />
+                <ErrorBoundary fallback={(error, reset) => <FeatureErrorFallback error={error} reset={reset} featureName="Min Økonomi" />}>
+                  <EconomyPage />
+                </ErrorBoundary>
               </ProtectedRoute>
             }
           />
@@ -141,7 +165,9 @@ function AppRoutes() {
             path="min-okonomi"
             element={
               <ProtectedRoute>
-                <EconomyPage />
+                <ErrorBoundary fallback={(error, reset) => <FeatureErrorFallback error={error} reset={reset} featureName="Min Økonomi" />}>
+                  <EconomyPage />
+                </ErrorBoundary>
               </ProtectedRoute>
             }
           />

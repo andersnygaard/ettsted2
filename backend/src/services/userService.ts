@@ -175,6 +175,9 @@ export async function updateUser(
 /**
  * Remove accounts from all snapshots for a user
  *
+ * Parallelizes snapshot updates using Promise.all() instead of sequential awaits
+ * to improve performance for users with many snapshots (36+ months).
+ *
  * @param userId - User ID
  * @param accountIds - Account IDs to remove
  */
@@ -192,23 +195,44 @@ async function removeAccountsFromSnapshots(
     })
     .fetchAll();
 
-  let snapshotsUpdated = 0;
-  for (const snapshot of snapshots) {
-    const hadRemovedAccount = snapshot.accounts.some((a) => accountIdSet.has(a.id));
-    if (hadRemovedAccount) {
-      snapshot.accounts = snapshot.accounts.filter((a) => !accountIdSet.has(a.id));
-      snapshot.totalNetWorth = calculateNetWorth(snapshot.accounts);
-      snapshot.updatedAt = new Date();
-      await portfoliosContainer.item(snapshot.id, userId).replace(snapshot);
-      snapshotsUpdated++;
-    }
-  }
+  // Filter snapshots that contain at least one removed account
+  const snapshotsToUpdate = snapshots.filter((snapshot) =>
+    snapshot.accounts.some((a) => accountIdSet.has(a.id))
+  );
 
-  logger.info('Accounts removed from snapshots', {
-    userId,
-    accountIds,
-    snapshotsUpdated,
+  // Prepare all update promises
+  const updatePromises = snapshotsToUpdate.map((snapshot) => {
+    snapshot.accounts = snapshot.accounts.filter((a) => !accountIdSet.has(a.id));
+    snapshot.totalNetWorth = calculateNetWorth(snapshot.accounts);
+    snapshot.updatedAt = new Date();
+    return portfoliosContainer.item(snapshot.id, userId).replace(snapshot);
   });
+
+  // Execute all updates in parallel
+  if (updatePromises.length > 0) {
+    try {
+      await Promise.all(updatePromises);
+      logger.info('Accounts removed from snapshots', {
+        userId,
+        accountIds,
+        snapshotsUpdated: snapshotsToUpdate.length,
+      });
+    } catch (error) {
+      logger.error('Failed to remove accounts from snapshots', {
+        userId,
+        accountIds,
+        snapshotsAttempted: snapshotsToUpdate.length,
+        error,
+      });
+      throw error;
+    }
+  } else {
+    logger.info('Accounts removed from snapshots', {
+      userId,
+      accountIds,
+      snapshotsUpdated: 0,
+    });
+  }
 }
 
 /**

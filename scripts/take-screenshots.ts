@@ -15,6 +15,10 @@ const PAGES = [
   { name: 'gjeld', path: '/gjeld', requiresAuth: true },
   { name: 'pensjon', path: '/pensjon', requiresAuth: true },
   { name: 'kalkulatorer', path: '/kalkulatorer', requiresAuth: true },
+  { name: 'kalkulator-rentes-rente', path: '/kalkulatorer/rentes-rente', requiresAuth: true },
+  { name: 'kalkulator-fire', path: '/kalkulatorer/fire', requiresAuth: true },
+  { name: 'kalkulator-lan', path: '/kalkulatorer/lan', requiresAuth: true },
+  { name: 'kalkulator-monte-carlo', path: '/kalkulatorer/monte-carlo', requiresAuth: true },
   { name: 'import', path: '/import', requiresAuth: true },
   { name: 'min-okonomi', path: '/min-okonomi', requiresAuth: true },
 ];
@@ -63,6 +67,27 @@ async function main() {
     await takeScreenshot(page, 'landing', width);
   }
 
+  // Screenshot login modal
+  console.log('\n--- Login Modal ---');
+  for (const width of WIDTHS) {
+    const widthDir = path.join(OUTPUT_DIR, `${width}px`);
+    ensureDir(widthDir);
+
+    await page.setViewportSize({ width, height: 900 });
+    await page.waitForTimeout(300);
+
+    // Click login button to open modal
+    const loginButton = page.locator('button:has-text("Logg inn"), button:has-text("Kom i gang")').first();
+    if (await loginButton.isVisible()) {
+      await loginButton.click();
+      await page.waitForTimeout(500);
+      await page.screenshot({ path: path.join(widthDir, 'dialog-login.png') });
+      console.log(`✓ ${width}px/dialog-login.png`);
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(200);
+    }
+  }
+
   // Demo login - get token and set in localStorage
   console.log('\n--- Logging in with demo account ---');
   const token = await demoLogin(context);
@@ -70,7 +95,7 @@ async function main() {
   // Navigate to app and set token in localStorage
   await page.goto(BASE_URL);
   await page.evaluate((t: string) => {
-    localStorage.setItem('auth_token', t);
+    localStorage.setItem('finans_demo_token', t);
   }, token);
 
   // Reload to apply auth
@@ -129,6 +154,38 @@ async function main() {
         console.log(`✓ ${width}px/dialog-mobile-menu.png`);
         await page.keyboard.press('Escape');
       }
+    }
+  }
+
+  // Onboarding wizard steps - navigate through /min-okonomi wizard
+  console.log('\n--- Wizard Steps ---');
+
+  await page.goto(`${BASE_URL}/min-okonomi`);
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(1000);
+
+  // Screenshot each step of the wizard (step 1 already captured as min-okonomi)
+  const wizardSteps = ['step-2-sparing', 'step-3-gjeld', 'step-4-pensjon'];
+
+  for (let stepIndex = 0; stepIndex < wizardSteps.length; stepIndex++) {
+    // Click "Neste" to go to next step
+    const nextButton = page.locator('button:has-text("Neste")').first();
+    if (await nextButton.isVisible()) {
+      await nextButton.click();
+      await page.waitForTimeout(500);
+    }
+
+    const stepName = wizardSteps[stepIndex];
+    console.log(`--- wizard-${stepName} ---`);
+
+    for (const width of WIDTHS) {
+      const widthDir = path.join(OUTPUT_DIR, `${width}px`);
+      ensureDir(widthDir);
+
+      await page.setViewportSize({ width, height: 900 });
+      await page.waitForTimeout(300);
+      await page.screenshot({ path: path.join(widthDir, `wizard-${stepName}.png`), fullPage: true });
+      console.log(`✓ ${width}px/wizard-${stepName}.png`);
     }
   }
 

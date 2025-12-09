@@ -225,3 +225,20 @@ export const AccessibilityDemo: Story = {
     },
   },
 };
+
+export const KeyboardFocus: Story = {
+  args: {
+    columnGroups,
+    data: mockData,
+    dateKey: 'date',
+    rowIdKey: 'id',
+    caption: 'Portfolio snapshots with group header keyboard focus demonstration',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstrates focus indicators on group headers for keyboard navigation. Tab to focus group headers and see the focus ring (outline) appear. Press Enter or Space to toggle group expansion while focused.',
+      },
+    },
+  },
+};

@@ -49,7 +49,7 @@
 
 /* Focus state */
 .date-input__field:focus-visible {
-  border-bottom-color: var(--charcoal);
+  border-bottom-color: var(--focus-color);
   box-shadow: 0 0 0 2px var(--charcoal-light-dark);
 }
 

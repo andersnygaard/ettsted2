@@ -140,6 +140,12 @@
   transform: rotate(-90deg);
 }
 
+/* Focus visible state for group headers - keyboard navigation */
+.spreadsheet .group-header-row th:focus-visible {
+  outline: 2px solid var(--focus-color);
+  outline-offset: -2px; /* Inside border for table cells */
+}
+
 /* ========================================
    Column Headers
    ======================================== */
@@ -338,8 +344,8 @@
 }
 
 .cell-input:focus {
-  border-color: var(--muted-sage);
-  box-shadow: 0 0 0 2px var(--muted-sage-light-2);
+  border-color: var(--focus-color);
+  box-shadow: 0 0 0 2px var(--charcoal-light-dark);
 }
 
 /* Remove number input spinners */

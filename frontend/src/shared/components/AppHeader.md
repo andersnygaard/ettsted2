@@ -72,3 +72,28 @@ Active state includes:
 - Desktop: Full navigation visible
 - Tablet (< 1024px): Reduced nav gap
 - Mobile (< 640px): Navigation hidden (would need hamburger menu implementation)
+
+## Accessibility
+
+### Keyboard Navigation & Focus Indicators
+
+All interactive elements in AppHeader have focus-visible styles for keyboard accessibility (WCAG 2.4.7):
+
+**Focus-visible elements:**
+- `.app-header__logo` - Logo link
+- `.app-header__nav-item` - Navigation links (Oversikt, Portefølje, Sparing, etc.)
+- `.app-header__login-btn` - Login button (when unauthenticated)
+- `.app-header__hamburger` - Mobile hamburger menu button
+- `.app-header__mobile-close` - Mobile menu close button
+
+**Focus indicator style:**
+```css
+outline: 2px solid var(--charcoal);
+outline-offset: 2px;
+```
+
+**Testing focus states:**
+1. Use Tab key to navigate through header elements
+2. All interactive elements should show a 2px charcoal outline when focused via keyboard
+3. Focus indicators should not appear on mouse click (browser default)
+4. Mobile menu items also have keyboard support via Tab navigation

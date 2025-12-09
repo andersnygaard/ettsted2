@@ -57,6 +57,6 @@
 
 /* Focus state for accessibility */
 .stat-card--clickable:focus {
-  outline: 2px solid var(--muted-sage);
+  outline: 2px solid var(--focus-color);
   outline-offset: 2px;
 }

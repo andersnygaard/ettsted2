@@ -36,7 +36,7 @@
   left: 16px;
   top: 16px;
   z-index: 9999;
-  outline: 2px solid var(--charcoal);
+  outline: 2px solid var(--focus-color);
   outline-offset: 2px;
 }
 

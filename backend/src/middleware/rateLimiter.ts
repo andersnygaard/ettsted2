@@ -44,11 +44,16 @@ export const generalRateLimiter = rateLimit({
 
 /**
  * Calculator rate limiter for expensive computational endpoints
- * Default: 10 requests per minute per IP
+ * Default: 10 requests per minute per user
+ *
+ * Uses user-based key (from authenticated request) to rate limit per-user.
+ * Falls back to IP-based limiting if user not authenticated (should not happen
+ * since calculator routes now require authentication).
  */
 export const calculatorRateLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
   max: config.rateLimitCalculator,
+  keyGenerator: (req) => req.user?.userId || req.ip || 'unknown',
   message: {
     error: {
       message: 'Calculator endpoint rate limit exceeded, please try again later',
@@ -60,6 +65,7 @@ export const calculatorRateLimiter = rateLimit({
   legacyHeaders: false,
   handler: (req, res) => {
     logger.warn('Calculator rate limit exceeded', {
+      userId: req.user?.userId,
       ip: req.ip,
       path: req.path,
       limit: config.rateLimitCalculator

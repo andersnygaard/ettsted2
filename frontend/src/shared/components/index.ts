@@ -59,12 +59,14 @@ export {
   type StackedDataPoint,
   Skeleton,
   type SkeletonProps,
+  ErrorBoundary,
 } from '@finans/components';
 
 // Frontend-specific components (not in @finans/components)
 export { default as AppHeader } from './AppHeader';
 export { default as Layout } from './Layout';
 export { default as LoadingSpinner } from './LoadingSpinner';
+export { default as FeatureErrorFallback } from './FeatureErrorFallback';
 export { AvatarMenu } from './AvatarMenu';
 export type { AvatarMenuProps } from './AvatarMenu';
 export { DashboardSkeleton, PortfolioSkeleton, SparingSkeleton, GjeldSkeleton, PensjonSkeleton } from './skeletons';

@@ -36,6 +36,9 @@ jobs:
       - name: Type-check backend
         run: pnpm --filter backend type-check
 
+      - name: Run unit tests
+        run: pnpm --filter frontend test
+
       - name: Build all workspaces
         run: pnpm build
 

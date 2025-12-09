@@ -70,6 +70,9 @@
   --btn-secondary-disabled-bg: transparent;
   --btn-secondary-color: var(--charcoal);
 
+  /* Focus indicator color - standardized for WCAG 2.4.7 */
+  --focus-color: var(--charcoal);
+
   /* ============================================
      TYPOGRAPHY
      ============================================ */
