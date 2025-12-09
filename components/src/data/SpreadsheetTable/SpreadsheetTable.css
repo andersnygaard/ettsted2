@@ -449,7 +449,7 @@
   }
 }
 
-/* Adjust font sizes for very small screens */
+/* Adjust font sizes and hide actions on mobile */
 @media (max-width: var(--bp-md)) {
   .spreadsheet {
     font-size: 11px;
@@ -470,8 +470,9 @@
     padding: var(--space-xs) var(--space-sm);
   }
 
+  /* Hide action column on mobile - use swipe gestures or long-press instead */
+  .action-header,
   .action-cell {
-    position: static;
-    border-left: none;
+    display: none;
   }
 }
