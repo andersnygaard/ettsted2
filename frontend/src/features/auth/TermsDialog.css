@@ -173,7 +173,7 @@
 }
 
 /* Responsive */
-@media (max-width: var(--bp-sm)) {
+@media (max-width: 640px) {
   .terms-dialog {
     max-height: 90vh;
     max-width: calc(100% - 2rem);

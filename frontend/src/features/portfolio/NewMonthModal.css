@@ -171,7 +171,7 @@
 /**
  * Responsive: Single column on smaller screens
  */
-@media (max-width: var(--bp-md)) {
+@media (max-width: 768px) {
   .new-month-modal__fields {
     grid-template-columns: 1fr;
   }

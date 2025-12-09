@@ -102,7 +102,7 @@
   outline-offset: 2px;
 }
 
-@media (max-width: var(--bp-sm)) {
+@media (max-width: 640px) {
   .toast-container {
     left: var(--space-md);
     right: var(--space-md);

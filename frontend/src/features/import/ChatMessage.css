@@ -238,7 +238,7 @@
 /* ============================================
    RESPONSIVE
    ============================================ */
-@media (max-width: var(--bp-sm)) {
+@media (max-width: 640px) {
   .chat-message--user {
     max-width: 92%;
   }

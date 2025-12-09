@@ -272,7 +272,7 @@
 /* ============================================
    RESPONSIVE
    ============================================ */
-@media (max-width: var(--bp-sm)) {
+@media (max-width: 640px) {
   .import-page__header {
     padding: var(--space-2xl) var(--space-md) var(--space-lg);
   }

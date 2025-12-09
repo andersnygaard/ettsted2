@@ -100,7 +100,7 @@
 }
 
 /* Responsive */
-@media (max-width: var(--bp-sm)) {
+@media (max-width: 640px) {
   .onboarding-wizard {
     padding: 1rem 0.5rem;
   }

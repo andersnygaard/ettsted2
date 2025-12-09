@@ -133,7 +133,7 @@
 }
 
 /* Responsive */
-@media (max-width: var(--bp-sm)) {
+@media (max-width: 640px) {
   .step-user__row {
     flex-direction: column;
   }

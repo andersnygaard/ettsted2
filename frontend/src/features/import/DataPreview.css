@@ -129,7 +129,7 @@
 }
 
 /* Responsive */
-@media (max-width: var(--bp-sm)) {
+@media (max-width: 640px) {
   .data-preview {
     padding: var(--space-md);
   }

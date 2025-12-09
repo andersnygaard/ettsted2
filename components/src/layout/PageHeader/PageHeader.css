@@ -27,7 +27,7 @@
   line-height: 1.4;
 }
 
-@media (max-width: var(--bp-sm)) {
+@media (max-width: 640px) {
   .page-header__title {
     font-size: 28px;
   }

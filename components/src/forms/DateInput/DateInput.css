@@ -79,7 +79,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: var(--bp-md)) {
+@media (max-width: 768px) {
   .date-input__field {
     font-size: var(--font-size-lg);
   }

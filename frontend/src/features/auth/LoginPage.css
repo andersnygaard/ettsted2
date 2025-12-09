@@ -94,7 +94,7 @@
 }
 
 /* Responsive */
-@media (max-width: var(--bp-md)) {
+@media (max-width: 768px) {
   .login-page {
     padding: var(--space-xl);
   }

@@ -22,7 +22,7 @@
   min-width: 0;
 }
 
-@media (max-width: var(--bp-md)) {
+@media (max-width: 768px) {
   .calculator-layout {
     grid-template-columns: 1fr;
   }
@@ -74,7 +74,7 @@
   white-space: nowrap;
 }
 
-@media (max-width: var(--bp-md)) {
+@media (max-width: 768px) {
   .result-value {
     font-size: 32px;
     white-space: normal;
@@ -329,7 +329,7 @@
   color: var(--text-secondary);
 }
 
-@media (max-width: var(--bp-sm)) {
+@media (max-width: 640px) {
   .fire-results {
     grid-template-columns: 1fr;
     gap: 16px;
