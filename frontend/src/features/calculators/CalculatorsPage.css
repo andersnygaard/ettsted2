@@ -16,7 +16,7 @@
 }
 
 /* Responsive - Stack on mobile */
-@media (max-width: var(--bp-sm)) {
+@media (max-width: 640px) {
   .calc-grid {
     grid-template-columns: 1fr;
   }

@@ -277,7 +277,7 @@
 }
 
 /* Responsive */
-@media (max-width: var(--bp-sm)) {
+@media (max-width: 640px) {
   .accounts-list__item-header {
     flex-wrap: wrap;
   }

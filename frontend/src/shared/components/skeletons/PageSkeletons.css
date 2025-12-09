@@ -190,7 +190,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: var(--bp-md)) {
+@media (max-width: 768px) {
   .skeleton-quick-stats {
     grid-template-columns: repeat(2, 1fr);
   }

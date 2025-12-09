@@ -147,25 +147,10 @@
   }
 }
 
-/* Responsive design */
-@media (max-width: var(--bp-lg)) {
+/* Responsive design - Desktop nav adjustments */
+@media (max-width: 1024px) {
   .app-header__nav {
     gap: 32px;
-    margin: 12px 24px;
-  }
-}
-
-@media (max-width: var(--bp-md)) {
-  .app-header__container {
-    padding: 0 var(--space-lg);
-  }
-
-  .app-header__nav {
-    gap: 16px;
-  }
-
-  .app-header__nav-item {
-    font-size: 10px;
   }
 }
 
@@ -207,14 +192,20 @@
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-@media (max-width: var(--bp-sm)) {
+/* Mobile: Show hamburger menu at tablet breakpoint and below */
+@media (max-width: 768px) {
   .app-header {
     padding: var(--space-lg) 0;
     width: 100%;
   }
 
+  .app-header__container {
+    padding: 0 var(--space-md);
+  }
+
   .app-header__logo {
-    font-size: 18px;
+    font-size: 20px;
+    padding-left: 0;
   }
 
   .app-header__nav {
@@ -227,6 +218,13 @@
 
   .app-header__hamburger {
     display: flex;
+  }
+}
+
+/* Small mobile: Tighter spacing */
+@media (max-width: 640px) {
+  .app-header__logo {
+    font-size: 18px;
   }
 }
 

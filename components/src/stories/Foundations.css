@@ -420,7 +420,7 @@
 }
 
 /* Responsive */
-@media (max-width: var(--bp-md)) {
+@media (max-width: 768px) {
   .foundations {
     padding: 24px;
   }

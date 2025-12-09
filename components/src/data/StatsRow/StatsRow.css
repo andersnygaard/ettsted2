@@ -10,7 +10,7 @@
   margin-bottom: var(--space-xl);
 }
 
-@media (max-width: var(--bp-md)) {
+@media (max-width: 768px) {
   .stats-row {
     grid-template-columns: 1fr;
     gap: var(--space-sm);

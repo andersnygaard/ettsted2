@@ -34,7 +34,7 @@
    TABLET AND UP
    ============================================ */
 
-@media (min-width: var(--bp-md)) {
+@media (min-width: 768px) {
   .container {
     padding: 0 var(--space-4xl);  /* Desktop padding */
   }

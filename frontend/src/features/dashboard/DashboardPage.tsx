@@ -135,15 +135,17 @@ function DashboardPage() {
         <div className="dashboard-milestone">
           <div className="dashboard-milestone__label">Neste milepæl</div>
           <div className="dashboard-milestone__value">{formatCurrency(data.nextMilestone)}</div>
-          <div className="dashboard-milestone__bar">
-            <div
-              className="dashboard-milestone__fill"
-              style={{ width: `${milestoneProgress}%` }}
-            />
-          </div>
-          <div className="dashboard-milestone__text">
-            <span>Gjenstår: {formatCurrency(milestoneRemaining)}</span>
-            <span>{Math.round(milestoneProgress)}%</span>
+          <div className="dashboard-milestone__progress">
+            <div className="dashboard-milestone__bar">
+              <div
+                className="dashboard-milestone__fill"
+                style={{ width: `${milestoneProgress}%` }}
+              />
+            </div>
+            <div className="dashboard-milestone__text">
+              <span>Gjenstår: {formatCurrency(milestoneRemaining)}</span>
+              <span>{Math.round(milestoneProgress)}%</span>
+            </div>
           </div>
         </div>
 

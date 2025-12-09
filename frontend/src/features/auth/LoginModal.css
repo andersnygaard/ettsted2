@@ -249,7 +249,7 @@
 }
 
 /* Responsive */
-@media (max-width: var(--bp-sm)) {
+@media (max-width: 640px) {
   .login-modal__content {
     padding: 2rem 1.5rem 1.5rem;
   }

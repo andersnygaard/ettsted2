@@ -443,14 +443,14 @@
    ======================================== */
 
 /* Ensure horizontal scrolling on small screens */
-@media (max-width: var(--bp-xl)) {
+@media (max-width: 1280px) {
   .spreadsheet-wrapper {
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
   }
 }
 
-/* Adjust font sizes for very small screens */
-@media (max-width: var(--bp-md)) {
+/* Adjust font sizes and hide actions on mobile */
+@media (max-width: 768px) {
   .spreadsheet {
     font-size: 11px;
   }
@@ -470,8 +470,9 @@
     padding: var(--space-xs) var(--space-sm);
   }
 
+  /* Hide action column on mobile - use swipe gestures or long-press instead */
+  .action-header,
   .action-cell {
-    position: static;
-    border-left: none;
+    display: none;
   }
 }

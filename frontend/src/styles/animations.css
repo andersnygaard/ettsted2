@@ -179,7 +179,7 @@
    TABLET AND UP - Enhanced animations
    ============================================ */
 
-@media (min-width: var(--bp-md)) {
+@media (min-width: 768px) {
   /* Increase fadeUp distance on tablet+ */
   @keyframes fadeUp {
     from {

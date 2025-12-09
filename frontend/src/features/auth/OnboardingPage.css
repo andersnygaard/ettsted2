@@ -39,7 +39,7 @@
 }
 
 /* Responsive */
-@media (max-width: var(--bp-sm)) {
+@media (max-width: 640px) {
   .onboarding-page__header {
     padding: 1rem;
   }

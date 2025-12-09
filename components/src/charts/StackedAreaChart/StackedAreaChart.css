@@ -75,7 +75,7 @@
 }
 
 /* Mobile: reduce padding */
-@media (max-width: var(--bp-md)) {
+@media (max-width: 768px) {
   .stacked-area-chart {
     padding: var(--space-md);
   }

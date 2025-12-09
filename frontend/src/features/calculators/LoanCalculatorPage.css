@@ -57,7 +57,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: var(--bp-sm)) {
+@media (max-width: 640px) {
   .loan-type-selector {
     width: 100%;
   }
