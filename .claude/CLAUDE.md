@@ -38,10 +38,11 @@
 
 ### Testing (`/e2e`)
 - **Framework**: Playwright
+- **Strategy**: Integration + E2E tests only. No unit tests.
 - **Pattern**: Sanity check suite with fixtures
 - **Focus**: Page health, navigation, auth flows
 - **Docs**: See [e2e/README.md](../e2e/README.md)
-- **Note**: No unit tests - E2E only for now
+- **Rationale**: Test larger components through integration tests; verify user flows via E2E. Avoids brittle unit tests on implementation details.
 
 ---
 
@@ -122,6 +123,7 @@
 
 ### Demo Login
 - **Endpoint**: `POST /api/v1/auth/demo-login`
+- **Availability**: All environments including production
 - **Flow**: Seeds demo user and snapshots INTO database on login. All pages fetch from database - no mock mode bypass.
 - **Data**: 12 months of realistic portfolio data generated in `authRoutes.ts`
 
@@ -459,7 +461,7 @@ Created during user signup (user can customize):
 - ALWAYS USE TOOLS OVER BASH!! USE READ, EDIT, WRITE, GLOB, GREP TOOLS INSTEAD OF CAT, SED, AWK, FIND, GREP BASH COMMANDS!
 - DO NOT ADD BACKWARDS COMPATIBILITY UNLESS EXPLICITLY REQUESTED.
 - THINK HARD. WRITE ELEGANT CODE. NO SLOPPY SOLUTIONS. DON'T BE LAZY.
-- AFTER EVERY CODE BLOCK: LINT, COMPILE, WRITE TESTS, RUN TESTS. DO THIS BEFORE WRITING THE NEXT CODE BLOCK. NO EXCEPTIONS.
+- AFTER EVERY CODE BLOCK: LINT, COMPILE. DO THIS BEFORE WRITING THE NEXT CODE BLOCK. NO EXCEPTIONS.
 - CLEAN, READABLE, DRY CODE. ALWAYS. NO DUPLICATION. NO CLEVER TRICKS THAT HURT READABILITY.
 - EDIT EXISTING CODE OVER ADDING NEW CODE. LOOK FOR OPPORTUNITIES TO REFACTOR. DO NOT BLOAT THE CODEBASE.
 - REVIEW YOUR OWN WORK AFTER EACH STEP. ASK YOURSELF: IS THIS CLEAN? IS THIS DRY? COULD I HAVE EDITED INSTEAD OF ADDED? FIX IT BEFORE MOVING ON.

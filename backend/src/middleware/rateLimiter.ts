@@ -107,3 +107,37 @@ export const llmRateLimiter = rateLimit({
     });
   }
 });
+
+/**
+ * Demo login rate limiter for public demo endpoint
+ * Aggressive: 5 requests per 15 minutes per IP
+ * Prevents abuse of demo account seeding which seeds to database
+ */
+export const demoLoginRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,
+  message: {
+    error: {
+      message: 'For mange demo-forespørsler. Prøv igjen senere.',
+      code: 'DEMO_LOGIN_RATE_LIMIT_EXCEEDED'
+    },
+    success: false
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => {
+    logger.warn('Demo login rate limit exceeded', {
+      ip: req.ip,
+      path: req.path,
+      limit: 5
+    });
+
+    res.status(429).json({
+      error: {
+        message: 'For mange demo-forespørsler. Prøv igjen senere.',
+        code: 'DEMO_LOGIN_RATE_LIMIT_EXCEEDED'
+      },
+      success: false
+    });
+  }
+});

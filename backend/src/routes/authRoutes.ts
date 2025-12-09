@@ -15,6 +15,7 @@ import {
   DEMO_PROFILE_NAMES,
   DemoProfileName,
 } from '../seed/fixtures/demo';
+import { demoLoginRateLimiter } from '../middleware/rateLimiter';
 
 const router: IRouter = Router();
 
@@ -100,7 +101,7 @@ async function seedDemoData(profileName: DemoProfileName): Promise<void> {
  * Query params (dev only):
  *   - profile: Demo profile to use (standard, empty, debt-heavy, fire-achieved)
  */
-router.post('/demo-login', async (req: Request, res: Response) => {
+router.post('/demo-login', demoLoginRateLimiter, async (req: Request, res: Response) => {
   try {
     // Get profile from query param (dev only) or default to 'standard'
     let profileName: DemoProfileName = 'standard';
