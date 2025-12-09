@@ -63,13 +63,13 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: var(--bp-xl)) {
+@media (max-width: 1280px) {
   .portfolio-page .container--wide {
     max-width: 1200px;
   }
 }
 
-@media (max-width: var(--bp-md)) {
+@media (max-width: 768px) {
   .portfolio-page {
     padding: var(--space-xl) 0;
   }

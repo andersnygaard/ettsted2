@@ -443,14 +443,14 @@
    ======================================== */
 
 /* Ensure horizontal scrolling on small screens */
-@media (max-width: var(--bp-xl)) {
+@media (max-width: 1280px) {
   .spreadsheet-wrapper {
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
   }
 }
 
 /* Adjust font sizes and hide actions on mobile */
-@media (max-width: var(--bp-md)) {
+@media (max-width: 768px) {
   .spreadsheet {
     font-size: 11px;
   }

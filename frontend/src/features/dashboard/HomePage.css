@@ -246,13 +246,13 @@
    RESPONSIVE
    ============================================ */
 
-@media (max-width: var(--bp-lg)) {
+@media (max-width: 1024px) {
   .landing-features__grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: var(--bp-md)) {
+@media (max-width: 768px) {
   .landing-hero {
     padding: var(--space-4xl) var(--space-lg);
     min-height: 60vh;

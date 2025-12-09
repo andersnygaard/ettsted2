@@ -148,7 +148,7 @@
 }
 
 /* Responsive design - Desktop nav adjustments */
-@media (max-width: var(--bp-lg)) {
+@media (max-width: 1024px) {
   .app-header__nav {
     gap: 32px;
   }
@@ -193,7 +193,7 @@
 }
 
 /* Mobile: Show hamburger menu at tablet breakpoint and below */
-@media (max-width: var(--bp-md)) {
+@media (max-width: 768px) {
   .app-header {
     padding: var(--space-lg) 0;
     width: 100%;
@@ -222,7 +222,7 @@
 }
 
 /* Small mobile: Tighter spacing */
-@media (max-width: var(--bp-sm)) {
+@media (max-width: 640px) {
   .app-header__logo {
     font-size: 18px;
   }

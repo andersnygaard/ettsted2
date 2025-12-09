@@ -32,14 +32,14 @@
 }
 
 /* Tablet: 2 columns */
-@media (min-width: var(--bp-md)) {
+@media (min-width: 768px) {
   .quick-stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 /* Desktop: 4 columns */
-@media (min-width: var(--bp-lg)) {
+@media (min-width: 1024px) {
   .quick-stats-grid {
     grid-template-columns: repeat(4, 1fr);
   }
