@@ -13,10 +13,10 @@ Import page chatbot layout breaks on mobile. The chatbot input has `min-height:1
 CSS syntax error - missing space between property value and unit in mobile media query.
 
 ## Acceptance Criteria
-- [ ] Fix CSS spacing in ImportPage.css line 312
-- [ ] Verify chatbot textarea displays correctly on mobile (320px-768px)
-- [ ] Test that textarea auto-resize still works
-- [ ] No horizontal scroll on mobile
+- [x] Fix CSS spacing in ImportPage.css line 312
+- [x] Verify chatbot textarea displays correctly on mobile (320px-768px)
+- [x] Test that textarea auto-resize still works
+- [x] No horizontal scroll on mobile
 
 ## Files to Change
 - `frontend/src/features/import/ImportPage.css`

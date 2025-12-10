@@ -320,7 +320,7 @@
 
 /* Mobile navigation */
 .app-header__mobile-nav {
-  flex: 1;
+  flex: 0 1 auto;
   display: flex;
   flex-direction: column;
   padding: 12px 0;

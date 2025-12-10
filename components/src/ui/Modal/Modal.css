@@ -88,13 +88,8 @@
   color: var(--charcoal);
 }
 
-.modal__close:focus {
-  outline: none;
-  color: var(--charcoal);
-}
-
 .modal__close:focus-visible {
-  outline: 2px solid var(--focus-color);
+  outline: 2px solid var(--charcoal);
   outline-offset: 2px;
 }
 

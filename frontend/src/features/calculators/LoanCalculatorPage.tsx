@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart, formatCurrency, formatNumber } from '@finans/components';
+import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart, formatCurrency, formatNumber, formatPercentage } from '@finans/components';
 import type { StackedDataPoint } from '@finans/components';
 import { useGjeldData } from '@/features/gjeld/useGjeldData';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
@@ -233,10 +233,11 @@ function LoanCalculatorPage() {
   };
 
   // Calculate interest as percentage of total paid
-  const interestPercentage =
+  const interestPercentageValue =
     result.totalPaid > 0
-      ? ((result.totalInterest / result.totalPaid) * 100).toFixed(1)
-      : '0';
+      ? (result.totalInterest / result.totalPaid) * 100
+      : 0;
+  const interestPercentage = formatPercentage(interestPercentageValue / 100, 1);
 
   return (
     <main className="calculator-page">
@@ -322,7 +323,7 @@ function LoanCalculatorPage() {
               <div className="result-item">
                 <span className="result-item__label">Rente av total</span>
                 <span className="result-item__value text-negative">
-                  {interestPercentage}%
+                  {interestPercentage}
                 </span>
               </div>
             </div>

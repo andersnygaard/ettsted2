@@ -6,7 +6,7 @@
  * Based on Nordic Minimal design from draft-1-gjeld.html
  */
 
-import { formatCurrency } from '@finans/components';
+import { formatCurrency, formatNumber } from '@finans/components';
 
 export interface Loan {
   id: string;
@@ -29,7 +29,7 @@ export function LoansList({ loans }: LoansListProps) {
           <div>
             <div className="loan-name">{loan.name}</div>
             <div className="loan-details">
-              {loan.interestRate.toFixed(1).replace('.', ',')}% rente · {loan.yearsRemaining} år gjenstående
+              {formatNumber(loan.interestRate, 1)}% rente · {loan.yearsRemaining} år gjenstående
             </div>
           </div>
           <div className="loan-amount">{formatCurrency(loan.balance)}</div>

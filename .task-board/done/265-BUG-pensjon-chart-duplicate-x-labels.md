@@ -13,11 +13,11 @@ StackedAreaChart x-axis generates labels that may show duplicate years when data
 `getXAxisLabels` function in `StackedAreaChart.tsx` (lines 197-220) uses evenly-spaced sampling which can create duplicate labels when multiple data points share the same year.
 
 ## Acceptance Criteria
-- [ ] X-axis labels show unique values only
-- [ ] Labels evenly distributed across chart width
-- [ ] First and last data points always labeled
-- [ ] Maximum 5 labels shown (current behavior)
-- [ ] No visual overlap of labels
+- [x] X-axis labels show unique values only
+- [x] Labels evenly distributed across chart width
+- [x] First and last data points always labeled
+- [x] Maximum 5 labels shown (current behavior)
+- [x] No visual overlap of labels
 
 ## Files to Change
 - `components/src/charts/StackedAreaChart/StackedAreaChart.tsx`
@@ -68,3 +68,35 @@ Or use D3's tick generation for time scales.
 - Test with single data point
 - Verify labels don't overlap
 - Verify visual spacing is even
+
+## Resolution
+
+### Implementation Details
+Fixed the `getXAxisLabels` function in `components/src/charts/StackedAreaChart/StackedAreaChart.tsx` to deduplicate labels using a Set-based approach.
+
+**Key changes:**
+1. First, extract all unique labels using `new Set(allLabels)`
+2. If unique labels fit within maxLabels, return them directly
+3. Otherwise, sample evenly from unique labels while ensuring:
+   - First label always included (index 0)
+   - Last label always included (index length-1)
+   - Even distribution across middle labels
+4. Final deduplication pass with Set to prevent edge-case duplicates
+
+**Algorithm:**
+- Build unique label set from all data points
+- Use proportional step calculation: `step = (length - 1) / (maxLabels - 1)`
+- Sample indices using `Math.round(i * step)` for smooth distribution
+- Return only unique values via Set
+
+### Build Status
+✓ ESLint: No errors or warnings
+✓ Full pnpm build: Successful (5.33s)
+✓ No TypeScript errors
+
+### Testing Notes
+The fix handles:
+- Single data point (returns that point's label)
+- Data with fewer unique labels than maxLabels (returns all)
+- Data with duplicate consecutive dates (e.g., multiple entries same year)
+- Multiple years spanning data (even distribution across years)

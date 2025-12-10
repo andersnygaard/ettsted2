@@ -242,3 +242,49 @@ export const KeyboardFocus: Story = {
     },
   },
 };
+
+export const MobileCardView: Story = {
+  args: {
+    columnGroups,
+    data: mockData,
+    dateKey: 'date',
+    rowIdKey: 'id',
+    onCellChange: (event) => console.log('Cell changed:', event),
+    onRowDelete: (row) => console.log('Row deleted:', row),
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+    docs: {
+      description: {
+        story: 'Mobile card view shown on viewports below 768px. Each month is displayed as a card with category groups. Tap values to edit, tap delete button to remove months. Milestone cards have gold borders.',
+      },
+    },
+  },
+};
+
+export const MobileCardViewWithMilestones: Story = {
+  args: {
+    columnGroups,
+    data: mockData,
+    dateKey: 'date',
+    rowIdKey: 'id',
+    milestones: {
+      'snap-2024-11-nordnet': [450000],
+      'snap-2024-11-sparing_total': [750000],
+    },
+    onCellChange: (event) => console.log('Cell changed:', event),
+    onRowDelete: (row) => console.log('Row deleted:', row),
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+    docs: {
+      description: {
+        story: 'Mobile card view with milestone highlighting. Cards with milestones have gold borders and starred values.',
+      },
+    },
+  },
+};

@@ -1,5 +1,5 @@
 import { useAuth } from '../auth/useAuth';
-import { formatCurrency } from '@finans/components';
+import { formatCurrency, formatPercentage } from '@finans/components';
 import { useNavigate } from 'react-router-dom';
 import { useDashboardData } from './useDashboardData';
 import { PageSkeleton, StatCard, SectionLink } from '@finans/components';
@@ -103,7 +103,7 @@ function DashboardPage() {
           <div className="dashboard-hero__label">{heroLabel}</div>
           <div className="dashboard-hero__value">{formatCurrency(heroValue)}</div>
           <div className={`dashboard-hero__change ${heroChange >= 0 ? 'dashboard-hero__change--positive' : 'dashboard-hero__change--negative'}`}>
-            {heroChange >= 0 ? '+' : ''}{heroChange.toFixed(2).replace('.', ',')}% denne måneden
+            {heroChange >= 0 ? '+' : ''}{formatPercentage(heroChange / 100)} denne måneden
           </div>
         </div>
 
@@ -125,7 +125,7 @@ function DashboardPage() {
             onClick={() => navigate('/portefolje')}
           />
           <StatCard
-            value={`${sparerate.toFixed(2).replace('.', ',')}%`}
+            value={formatPercentage(sparerate / 100)}
             label="Sparerate"
             onClick={() => navigate('/portefolje')}
           />

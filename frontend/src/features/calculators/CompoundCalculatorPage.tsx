@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart, formatCurrency, formatNumber } from '@finans/components';
+import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart, formatCurrency, formatNumber, formatPercentage } from '@finans/components';
 import type { StackedDataPoint, Series } from '@finans/components';
 import { useSparingData } from '@/features/sparing/useSparingData';
 import { useUser } from '@/shared/hooks/useUser';
@@ -132,9 +132,10 @@ function CompoundCalculatorPage() {
   };
 
   // Calculate interest as percentage of final amount
-  const interestPercentage = result.finalAmount > 0
-    ? ((result.totalInterest / result.finalAmount) * 100).toFixed(1)
-    : '0';
+  const interestPercentageValue = result.finalAmount > 0
+    ? (result.totalInterest / result.finalAmount) * 100
+    : 0;
+  const interestPercentage = formatPercentage(interestPercentageValue / 100, 1);
 
   // Chart series configuration
   const chartSeries: Series[] = [
@@ -230,7 +231,7 @@ function CompoundCalculatorPage() {
               <div className="result-item">
                 <span className="result-item__label">Avkastning av total</span>
                 <span className="result-item__value text-positive">
-                  {interestPercentage}%
+                  {interestPercentage}
                 </span>
               </div>
             </div>

@@ -7,9 +7,12 @@
  * Based on Nordic Minimal design from draft-1-pensjon.html
  */
 
-import { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import * as d3 from 'd3';
 import './StackedAreaChart.css';
+import { formatCurrency, formatDate } from '@finans/components';
+
+const isDevelopment = import.meta.env.DEV;
 
 export interface Series {
   key: string;
@@ -30,7 +33,7 @@ export interface StackedAreaChartProps {
   xAxisFormat?: (date: Date) => string;
 }
 
-export function StackedAreaChart({
+function StackedAreaChartComponent({
   data,
   series,
   title,
@@ -56,22 +59,20 @@ export function StackedAreaChart({
     return () => resizeObserver.disconnect();
   }, [height]);
 
-  // Render chart
-  useEffect(() => {
-    if (!svgRef.current || !data.length || dimensions.width === 0) return;
+  // Memoize D3 scales and generators - only recalculate when data, series, or dimensions change
+  const { scales, generators, stackedData, yMax } = useMemo(() => {
+    if (!data.length || dimensions.width === 0) {
+      return { scales: null, generators: null, stackedData: null, yMax: 0 };
+    }
 
-    const svg = d3.select(svgRef.current);
-    svg.selectAll('*').remove();
+    const keys = series.map((s) => s.key);
+    const stack = d3.stack<StackedDataPoint>().keys(keys).order(d3.stackOrderNone);
+    const stacked = stack(data);
+    const yMaxValue = d3.max(stacked, (layer) => d3.max(layer, (d) => d[1])) || 0;
 
     const margin = { top: 10, right: 10, bottom: 5, left: 10 };
     const width = dimensions.width - margin.left - margin.right;
     const chartHeight = dimensions.height - margin.top - margin.bottom;
-
-    const g = svg
-      .attr('width', dimensions.width)
-      .attr('height', dimensions.height)
-      .append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
 
     // Create scales
     const xScale = d3
@@ -79,15 +80,7 @@ export function StackedAreaChart({
       .domain(d3.extent(data, (d) => d.date) as [Date, Date])
       .range([0, width]);
 
-    // Stack the data
-    const keys = series.map((s) => s.key);
-    const stack = d3.stack<StackedDataPoint>().keys(keys).order(d3.stackOrderNone);
-    const stackedData = stack(data);
-
-    // Find max y value
-    const yMax = d3.max(stackedData, (layer) => d3.max(layer, (d) => d[1])) || 0;
-
-    const yScale = d3.scaleLinear().domain([0, yMax]).range([chartHeight, 0]);
+    const yScale = d3.scaleLinear().domain([0, yMaxValue]).range([chartHeight, 0]);
 
     // Create area generator
     const area = d3
@@ -96,6 +89,72 @@ export function StackedAreaChart({
       .y0((d) => yScale(d[0]))
       .y1((d) => yScale(d[1]))
       .curve(d3.curveMonotoneX);
+
+    // Create line generator for top edge of each area
+    const lineGenerator = d3
+      .line<d3.SeriesPoint<StackedDataPoint>>()
+      .x((d) => xScale(d.data.date))
+      .y((d) => yScale(d[1]))
+      .curve(d3.curveMonotoneX);
+
+    return {
+      scales: { x: xScale, y: yScale, width, chartHeight },
+      generators: { area, lineGenerator },
+      stackedData: stacked,
+      yMax: yMaxValue
+    };
+  }, [data, series, dimensions]);
+
+  // Render chart
+  useEffect(() => {
+    if (!data.length) {
+      if (isDevelopment) console.log('[StackedAreaChart] No data to render');
+      return;
+    }
+    if (!svgRef.current || dimensions.width === 0) {
+      if (isDevelopment) console.log('[StackedAreaChart] Waiting for container dimensions:', dimensions.width);
+      return;
+    }
+    if (!scales || !generators || !stackedData) {
+      return;
+    }
+
+    // Calculate statistics for accessibility labels
+    const minDate = formatDate(data[0].date);
+    const maxDate = formatDate(data[data.length - 1].date);
+
+    if (isDevelopment) {
+      console.log('[StackedAreaChart] Rendering chart with data:', {
+        dataPoints: data.length,
+        series: series.map(s => s.key),
+        width: dimensions.width,
+        dateRange: [data[0]?.date, data[data.length - 1]?.date]
+      });
+    }
+
+    const svg = d3.select(svgRef.current);
+    svg.selectAll('*').remove();
+
+    // Add SVG title and description for accessibility
+    svg
+      .append('title')
+      .text(title || 'Stacked Area Chart');
+
+    svg
+      .append('desc')
+      .text(
+        `Stacked area chart showing ${series.length} data series (${series.map(s => s.label).join(', ')}) ` +
+        `with ${data.length} data points from ${minDate} to ${maxDate}. ` +
+        `Total values range up to ${formatCurrency(yMax)}.`
+      );
+
+    const margin = { top: 10, right: 10, bottom: 5, left: 10 };
+
+    const g = svg
+      .attr('width', dimensions.width)
+      .attr('height', dimensions.height)
+      .append('g')
+      .attr('transform', `translate(${margin.left},${margin.top})`);
 
     // Create color mapping
     const colorMap = new Map(series.map((s) => [s.key, s.color]));
@@ -110,7 +169,7 @@ export function StackedAreaChart({
       const areaPath = g
         .append('path')
         .attr('class', 'stacked-area__fill')
-        .attr('d', area(layerData))
+        .attr('d', generators.area(layerData))
         .attr('fill', colorMap.get(layerData.key) || '#ccc');
 
       if (prefersReducedMotion) {
@@ -119,7 +178,7 @@ export function StackedAreaChart({
         // Stagger animations - each layer animates slightly after the previous
         areaPath
           .attr('opacity', 0)
-          .attr('transform', `translate(0, ${chartHeight}) scale(1, 0)`)
+          .attr('transform', `translate(0, ${scales.chartHeight}) scale(1, 0)`)
           .transition()
           .duration(800)
           .delay(200 + index * 100)
@@ -129,19 +188,12 @@ export function StackedAreaChart({
       }
     });
 
-    // Create line generator for top edge of each area
-    const lineGenerator = d3
-      .line<d3.SeriesPoint<StackedDataPoint>>()
-      .x((d) => xScale(d.data.date))
-      .y((d) => yScale(d[1]))
-      .curve(d3.curveMonotoneX);
-
     // Draw lines on top of areas (in reverse order to match areas)
     reversedData.forEach((layerData, index) => {
       const linePath = g
         .append('path')
         .attr('class', 'stacked-area__line')
-        .attr('d', lineGenerator(layerData))
+        .attr('d', generators.lineGenerator(layerData))
         .attr('fill', 'none')
         .attr('stroke', colorMap.get(layerData.key) || '#ccc')
         .attr('stroke-width', 2)
@@ -159,13 +211,26 @@ export function StackedAreaChart({
           .attr('stroke-dashoffset', 0);
       }
     });
-  }, [data, series, dimensions]);
+  }, [data, series, dimensions, scales, generators, stackedData, yMax]);
 
   // Generate x-axis labels
   const xAxisLabels = data.length > 0 ? getXAxisLabels(data, xAxisFormat) : [];
 
+  // Build aria-label for the chart
+  const getAriaLabel = () => {
+    if (!data.length) return 'Empty stacked area chart';
+    const minDate = formatDate(data[0].date);
+    const maxDate = formatDate(data[data.length - 1].date);
+    const seriesNames = series.map(s => s.label).join(', ');
+    return `${title || 'Stacked Area Chart'}: Chart with ${series.length} data series (${seriesNames}) from ${minDate} to ${maxDate}`;
+  };
+
   return (
-    <section className="stacked-area-chart">
+    <section
+      className="stacked-area-chart"
+      role="img"
+      aria-label={getAriaLabel()}
+    >
       {title && (
         <div className="stacked-area-chart__header">
           <span className="stacked-area-chart__title">{title}</span>
@@ -190,9 +255,48 @@ export function StackedAreaChart({
           </span>
         ))}
       </div>
+
+      {/* Screen reader accessible data table */}
+      <table className="sr-only" aria-label={`${title || 'Stacked Area Chart'} data table`}>
+        <caption className="sr-only">{title} - Detailed data values by series</caption>
+        <thead>
+          <tr>
+            <th>Date</th>
+            {series.map((s) => (
+              <th key={s.key}>{s.label}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((d, idx) => (
+            <tr key={idx}>
+              <td>{formatDate(d.date)}</td>
+              {series.map((s) => (
+                <td key={s.key}>
+                  {formatCurrency((d[s.key as keyof StackedDataPoint] as number) || 0)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </section>
   );
 }
+
+/**
+ * Memoized StackedAreaChart with custom comparison
+ * Only re-renders when data, series, or title change
+ */
+export const StackedAreaChart = React.memo(StackedAreaChartComponent, (prev, next) => {
+  return (
+    prev.data === next.data &&
+    prev.series === next.series &&
+    prev.title === next.title &&
+    prev.height === next.height &&
+    prev.xAxisFormat === next.xAxisFormat
+  );
+});
 
 function getXAxisLabels(
   data: StackedDataPoint[],
@@ -200,21 +304,25 @@ function getXAxisLabels(
   maxLabels = 5
 ): string[] {
   if (data.length === 0) return [];
-  if (data.length <= maxLabels) {
-    return data.map((d) => format(d.date));
+
+  // Get all unique labels
+  const allLabels = data.map((d) => format(d.date));
+  const uniqueLabels = [...new Set(allLabels)];
+
+  if (uniqueLabels.length <= maxLabels) {
+    return uniqueLabels;
   }
 
-  const step = Math.floor(data.length / (maxLabels - 1));
-  const labels: string[] = [];
+  // Sample evenly from unique labels
+  const result: string[] = [uniqueLabels[0]]; // Always include first
+  const step = (uniqueLabels.length - 1) / (maxLabels - 1);
 
-  for (let i = 0; i < data.length; i += step) {
-    labels.push(format(data[i].date));
+  for (let i = 1; i < maxLabels - 1; i++) {
+    const index = Math.round(i * step);
+    result.push(uniqueLabels[index]);
   }
 
-  // Always include the last label
-  if (labels.length < maxLabels) {
-    labels.push(format(data[data.length - 1].date));
-  }
+  result.push(uniqueLabels[uniqueLabels.length - 1]); // Always include last
 
-  return labels.slice(0, maxLabels);
+  return [...new Set(result)]; // Final deduplication
 }

@@ -14,8 +14,7 @@
    ======================================== */
 
 .spreadsheet-wrapper {
-  overflow-x: auto;
-  overflow-y: visible;
+  /* No overflow - let table expand naturally */
 }
 
 .spreadsheet {
@@ -448,37 +447,261 @@
    Responsive Behavior
    ======================================== */
 
-/* Ensure horizontal scrolling on small screens */
-@media (max-width: 1280px) {
-  .spreadsheet-wrapper {
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+/* Mobile: Hide table, show cards */
+.spreadsheet--mobile {
+  display: none;
+}
+
+/* Desktop: Show table, hide cards */
+.spreadsheet--desktop {
+  display: table;
+}
+
+
+/* Mobile card view */
+@media (max-width: 768px) {
+  /* Hide table on mobile */
+  .spreadsheet--desktop {
+    display: none;
+  }
+
+  /* Show cards on mobile */
+  .spreadsheet--mobile {
+    display: block;
   }
 }
 
-/* Adjust font sizes and hide actions on mobile */
-@media (max-width: 768px) {
-  .spreadsheet {
-    font-size: 11px;
-  }
+/* ========================================
+   Mobile Card View Styles
+   ======================================== */
 
-  .spreadsheet th {
-    font-size: 8px;
-    padding: var(--space-sm) var(--space-sm);
-  }
+.portfolio-cards {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 var(--space-md);
+}
 
-  .spreadsheet td {
-    font-size: 10px;
-    padding: var(--space-xs);
-  }
+.portfolio-card {
+  flex: 0 0 85%;
+  min-width: 280px;
+  max-width: 360px;
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: box-shadow var(--transition-fast);
+  scroll-snap-align: start;
+}
 
-  .spreadsheet .group-header-row th {
-    font-size: 9px;
-    padding: var(--space-xs) var(--space-sm);
-  }
+.portfolio-card--milestone {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold);
+}
 
-  /* Hide action column on mobile - use swipe gestures or long-press instead */
-  .action-header,
-  .action-cell {
-    display: none;
-  }
+/* Card Header */
+.portfolio-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md);
+  background: var(--bone);
+  border-bottom: 1px solid var(--border);
+}
+
+.portfolio-card__date {
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  color: var(--charcoal);
+  margin: 0;
+}
+
+.portfolio-card__delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-xs);
+  font-size: 18px;
+  line-height: 1;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast), opacity var(--transition-fast);
+  opacity: 0.6;
+  color: var(--negative);
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.portfolio-card__delete:hover,
+.portfolio-card__delete:active {
+  opacity: 1;
+  background: var(--negative-light);
+}
+
+/* Card Body */
+.portfolio-card__body {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* Category Groups */
+.portfolio-card__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.portfolio-card__group-title {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wider);
+  margin: 0 0 var(--space-xs) 0;
+  padding: var(--space-sm);
+  background: var(--charcoal);
+  color: var(--warm-white);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--transition-fast);
+  min-height: var(--touch-target-min);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.portfolio-card__group-title:active {
+  background: var(--charcoal-light);
+}
+
+/* Group-specific colors */
+.portfolio-card__group--sparing .portfolio-card__group-title {
+  background: var(--category-sparing);
+}
+
+.portfolio-card__group--gjeld .portfolio-card__group-title {
+  background: var(--category-gjeld);
+}
+
+.portfolio-card__group--pensjon .portfolio-card__group-title {
+  background: var(--category-pensjon);
+}
+
+.portfolio-card__group-toggle {
+  display: inline-block;
+  margin-left: var(--space-xs);
+  font-size: 10px;
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+}
+
+.portfolio-card__group--collapsed .portfolio-card__group-toggle {
+  transform: rotate(-90deg);
+}
+
+.portfolio-card__group--collapsed .portfolio-card__accounts {
+  display: none;
+}
+
+/* Account Rows */
+.portfolio-card__accounts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.portfolio-card__account {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-sm) 0;
+  min-height: var(--touch-target-min);
+}
+
+.portfolio-card__account--total {
+  border-top: 2px solid var(--border-strong);
+  padding-top: var(--space-md);
+  margin-top: var(--space-xs);
+  font-weight: 600;
+}
+
+.portfolio-card__account-label {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.portfolio-card__account--total .portfolio-card__account-label {
+  color: var(--charcoal);
+  font-weight: 600;
+}
+
+.portfolio-card__account-value {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--charcoal);
+  text-align: right;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: var(--touch-target-min);
+  transition: background var(--transition-fast);
+}
+
+.portfolio-card__account-value--editable {
+  cursor: pointer;
+  background: var(--pale-blue-light);
+}
+
+.portfolio-card__account-value--editable:hover,
+.portfolio-card__account-value--editable:active {
+  background: var(--pale-blue-light-2);
+  outline: 1px solid var(--pale-blue);
+  outline-offset: -1px;
+}
+
+/* Input in card view */
+.portfolio-card__input {
+  width: 100%;
+  padding: var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  text-align: right;
+  border: 1px solid var(--pale-blue);
+  border-radius: var(--radius-sm);
+  background: var(--warm-white);
+  color: var(--charcoal);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.portfolio-card__input:focus {
+  border-color: var(--focus-color);
+  box-shadow: 0 0 0 2px var(--charcoal-light-dark);
+}
+
+/* Remove number input spinners */
+.portfolio-card__input::-webkit-outer-spin-button,
+.portfolio-card__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.portfolio-card__input[type='number'] {
+  -moz-appearance: textfield;
 }

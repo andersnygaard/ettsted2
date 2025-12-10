@@ -1,4 +1,4 @@
-import { ProgressBar, formatCurrency, formatNumber } from '@finans/components';
+import { ProgressBar, formatCurrency, formatNumber, formatPercentage } from '@finans/components';
 import './FireSection.css';
 
 export interface FireSectionProps {
@@ -44,7 +44,7 @@ export function FireSection({
           value={percentage}
           variant="default"
           height={20}
-          leftLabel={`${percentage.toFixed(2).replace('.', ',')}% oppnådd`}
+          leftLabel={`${formatPercentage(percentage / 100)} oppnådd`}
           rightLabel={`${formatNumber(current)} / ${formatCurrency(fireNumber)}`}
         />
       </div>
@@ -52,19 +52,19 @@ export function FireSection({
       <div className="fire-stats">
         <div className="fire-stat">
           <div className="fire-stat__value fire-stat__value--highlight">
-            {fireNumberInMillions.toFixed(1).replace('.', ',')}M
+            {formatNumber(fireNumberInMillions, 1)}M
           </div>
           <div className="fire-stat__label">Firetall</div>
         </div>
         <div className="fire-stat">
           <div className="fire-stat__value">
-            {minRetireAge.toFixed(1).replace('.', ',')}
+            {formatNumber(minRetireAge, 1)}
           </div>
           <div className="fire-stat__label">Min. pensjonsalder</div>
         </div>
         <div className="fire-stat">
           <div className="fire-stat__value">
-            {yearsToSalary.toFixed(1).replace('.', ',')}
+            {formatNumber(yearsToSalary, 1)}
           </div>
           <div className="fire-stat__label">År til årslønn</div>
         </div>

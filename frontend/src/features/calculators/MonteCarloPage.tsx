@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Breadcrumb, PageHeader, Card, NumberInput, formatCurrency, formatNumber } from '@finans/components';
+import { Breadcrumb, PageHeader, Card, NumberInput, formatCurrency, formatNumber, formatPercentage } from '@finans/components';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import MonteCarloChart from './MonteCarloChart';
 import './CompoundCalculatorPage.css'; // Reuse shared calculator styles
@@ -156,10 +156,11 @@ function MonteCarloPage() {
   };
 
   // Calculate withdrawal rate as percentage of portfolio
-  const withdrawalRate =
+  const withdrawalRateValue =
     inputs.portfolioValue > 0
-      ? ((inputs.annualWithdrawal / inputs.portfolioValue) * 100).toFixed(2)
-      : '0';
+      ? (inputs.annualWithdrawal / inputs.portfolioValue) * 100
+      : 0;
+  const withdrawalRate = formatPercentage(withdrawalRateValue / 100, 2);
 
   return (
     <main className="calculator-page">
@@ -224,7 +225,7 @@ function MonteCarloPage() {
               <div className="result-breakdown">
                 <div className="result-item">
                   <span className="result-item__label">Uttaksrate</span>
-                  <span className="result-item__value">{withdrawalRate}%</span>
+                  <span className="result-item__value">{withdrawalRate}</span>
                 </div>
                 <div className="result-item">
                   <span className="result-item__label">10. persentil</span>

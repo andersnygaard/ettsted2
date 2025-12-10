@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Breadcrumb, PageHeader, Card, NumberInput, AreaChart, ProgressBar, Modal, Button, formatCurrency, formatNumber } from '@finans/components';
+import { Breadcrumb, PageHeader, Card, NumberInput, AreaChart, ProgressBar, Modal, Button, formatCurrency, formatNumber, formatPercentage } from '@finans/components';
 import type { DataPoint } from '@finans/components';
 import { userApi } from '@/shared/api/services';
 import { useSparingData } from '@/features/sparing/useSparingData';
@@ -291,7 +291,7 @@ function FireCalculatorPage() {
                 <div className="fire-result__label">Pensjonsalder</div>
               </div>
               <div className="fire-result">
-                <div className="fire-result__value">{(result.savingsRate * 100).toFixed(0)}%</div>
+                <div className="fire-result__value">{formatPercentage(result.savingsRate, 0)}</div>
                 <div className="fire-result__label">Sparerate</div>
               </div>
             </div>
@@ -299,7 +299,7 @@ function FireCalculatorPage() {
             <div className="fire-progress">
               <div className="fire-progress__header">
                 <span>Fremgang mot F.I.R.E.</span>
-                <span>{result.currentProgress.toFixed(1)}%</span>
+                <span>{formatPercentage(result.currentProgress / 100, 1)}</span>
               </div>
               <ProgressBar
                 value={result.currentProgress}
@@ -353,7 +353,7 @@ function FireCalculatorPage() {
             årlige utgifter for å være økonomisk uavhengig.
           </p>
           <p>
-            Med en sparerate på {(result.savingsRate * 100).toFixed(0)}% og{' '}
+            Med en sparerate på {formatPercentage(result.savingsRate, 0)} og{' '}
             {formatCurrency(result.annualSavings)} i årlig sparing, kan du nå
             F.I.R.E. om {formatYears(result.yearsToFire)}.
           </p>

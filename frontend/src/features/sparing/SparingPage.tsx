@@ -1,4 +1,4 @@
-import { PageSkeleton, HeroNumber, StatsRow, AreaChart, formatCurrency } from '@finans/components';
+import { PageSkeleton, HeroNumber, StatsRow, AreaChart, formatCurrency, formatPercentage } from '@finans/components';
 import { useSparingData } from './useSparingData';
 import { FireSection } from './FireSection';
 import { SparingSkeleton } from '@/shared/components/skeletons';
@@ -89,8 +89,8 @@ function SparingPage() {
 
         <StatsRow
           stats={[
-            { value: `${sparingData.savingsRate.toFixed(2).replace('.', ',')}%`, label: 'Sparerate' },
-            { value: `${sparingData.monthlyChange >= 0 ? '+' : ''}${sparingData.monthlyChange.toFixed(2).replace('.', ',')}%`, label: 'Siste måned' },
+            { value: formatPercentage(sparingData.savingsRate / 100), label: 'Sparerate' },
+            { value: `${sparingData.monthlyChange >= 0 ? '+' : ''}${formatPercentage(sparingData.monthlyChange / 100)}`, label: 'Siste måned' },
             { value: String(sparingData.monthsFree), label: 'Måneder fri' },
           ]}
         />

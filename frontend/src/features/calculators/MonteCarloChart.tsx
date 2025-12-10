@@ -98,7 +98,9 @@ function MonteCarloChart({ scenarios, percentiles, years, height = 320 }: MonteC
       .ticks(6)
       .tickFormat((d) => {
         const millions = Number(d) / 1000000;
-        return millions >= 1 ? `${millions.toFixed(1)}M kr` : `${(Number(d) / 1000).toFixed(0)}k kr`;
+        return millions >= 1
+          ? `${millions.toLocaleString('nb-NO', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}M kr`
+          : `${Math.round(Number(d) / 1000)}k kr`;
       });
 
     g.append('g')

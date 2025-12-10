@@ -1,6 +1,9 @@
-import { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import * as d3 from 'd3';
 import './AreaChart.css';
+import { formatCurrency, formatDate } from '@finans/components';
+
+const isDevelopment = import.meta.env.DEV;
 
 export interface DataPoint {
   date: Date;
@@ -23,9 +26,12 @@ export interface AreaChartProps {
  * D3.js-based area chart for displaying value trends over time.
  * Used on Sparing, Gjeld, and Pensjon pages.
  *
+ * Memoized to prevent unnecessary re-renders when parent updates.
+ * D3 scales and generators are cached via useMemo.
+ *
  * Based on Nordic Minimal design system.
  */
-export function AreaChart({
+function AreaChartComponent({
   data,
   color = 'var(--muted-sage)',
   title,
@@ -38,60 +44,115 @@ export function AreaChart({
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0 });
 
-  // Handle resize
+  // Handle resize with ResizeObserver for reliable width detection
   useEffect(() => {
-    const updateDimensions = () => {
-      if (containerRef.current) {
-        setDimensions({ width: containerRef.current.clientWidth });
-      }
-    };
+    if (!containerRef.current) return;
 
-    updateDimensions();
-    window.addEventListener('resize', updateDimensions);
-    return () => window.removeEventListener('resize', updateDimensions);
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width } = entry.contentRect;
+        setDimensions({ width });
+      }
+    });
+
+    resizeObserver.observe(containerRef.current);
+    return () => resizeObserver.disconnect();
   }, []);
 
-  // Draw chart
-  useEffect(() => {
-    if (!svgRef.current || !data.length || dimensions.width === 0) return;
-
-    const svg = d3.select(svgRef.current);
-    svg.selectAll('*').remove();
+  // Memoize D3 scales and generators - only recalculate when data or dimensions change
+  const { scales, generators } = useMemo(() => {
+    if (!data.length || dimensions.width === 0) {
+      return { scales: null, generators: null };
+    }
 
     const { width } = dimensions;
     const margin = { top: 10, right: 10, bottom: 10, left: 10 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
-    const g = svg
-      .append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
-
-    // Scales
-    const x = d3
+    // Create scales
+    const xScale = d3
       .scaleTime()
       .domain(d3.extent(data, (d) => d.date) as [Date, Date])
       .range([0, innerWidth]);
 
-    const y = d3
+    const yScale = d3
       .scaleLinear()
       .domain([0, (d3.max(data, (d) => d.value) || 0) * 1.1])
       .range([innerHeight, 0]);
 
-    // Area generator
+    // Create generators
     const area = d3
       .area<DataPoint>()
-      .x((d) => x(d.date))
+      .x((d) => xScale(d.date))
       .y0(innerHeight)
-      .y1((d) => y(d.value))
+      .y1((d) => yScale(d.value))
       .curve(d3.curveMonotoneX);
 
-    // Line generator
     const line = d3
       .line<DataPoint>()
-      .x((d) => x(d.date))
-      .y((d) => y(d.value))
+      .x((d) => xScale(d.date))
+      .y((d) => yScale(d.value))
       .curve(d3.curveMonotoneX);
+
+    return {
+      scales: { x: xScale, y: yScale, innerWidth, innerHeight },
+      generators: { area, line }
+    };
+  }, [data, dimensions, height]);
+
+  // Draw chart
+  useEffect(() => {
+    if (!data.length) {
+      if (isDevelopment) console.log('[AreaChart] No data to render');
+      return;
+    }
+    if (!svgRef.current || dimensions.width === 0) {
+      if (isDevelopment) console.log('[AreaChart] Waiting for container dimensions:', dimensions.width);
+      return;
+    }
+    if (!scales || !generators) {
+      return;
+    }
+
+    // Calculate min/max for accessibility labels
+    const values = data.map(d => d.value);
+    const minValue = Math.min(...values);
+    const maxValue = Math.max(...values);
+    const minDate = formatDate(data[0].date);
+    const maxDate = formatDate(data[data.length - 1].date);
+    const trend = maxValue >= minValue ? 'increasing' : 'decreasing';
+
+    if (isDevelopment) {
+      console.log('[AreaChart] Rendering chart with data:', {
+        dataPoints: data.length,
+        width: dimensions.width,
+        dateRange: [data[0]?.date, data[data.length - 1]?.date],
+        valueRange: [minValue, maxValue]
+      });
+    }
+
+    const svg = d3.select(svgRef.current);
+    svg.selectAll('*').remove();
+
+    // Add SVG title and description for accessibility
+    svg
+      .append('title')
+      .text(title || 'Chart');
+
+    svg
+      .append('desc')
+      .text(
+        `Line chart showing ${data.length} data points from ${minDate} to ${maxDate}. ` +
+        `Values range from ${formatCurrency(minValue)} to ${formatCurrency(maxValue)}. ` +
+        `Overall trend is ${trend}.`
+      );
+
+    const margin = { top: 10, right: 10, bottom: 10, left: 10 };
+
+    const g = svg
+      .append('g')
+      .attr('transform', `translate(${margin.left},${margin.top})`);
 
     // Check for reduced motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -102,7 +163,7 @@ export function AreaChart({
       .datum(data)
       .attr('class', 'area-chart__fill')
       .attr('fill', color)
-      .attr('d', area);
+      .attr('d', generators.area);
 
     if (prefersReducedMotion) {
       areaPath.attr('fill-opacity', 0.1);
@@ -125,7 +186,7 @@ export function AreaChart({
       .attr('stroke', color)
       .attr('stroke-width', 2)
       .attr('stroke-linecap', 'round')
-      .attr('d', line);
+      .attr('d', generators.line);
 
     if (!prefersReducedMotion) {
       const totalLength = (linePath.node() as SVGPathElement).getTotalLength();
@@ -138,7 +199,7 @@ export function AreaChart({
         .ease(d3.easeCubicOut)
         .attr('stroke-dashoffset', 0);
     }
-  }, [data, color, height, dimensions]);
+  }, [data, color, height, dimensions, scales, generators]);
 
   // Generate x-axis labels
   const getXAxisLabels = () => {
@@ -170,8 +231,24 @@ export function AreaChart({
     );
   };
 
+  // Build aria-label for the chart
+  const getAriaLabel = () => {
+    if (!data.length) return 'Empty chart';
+    const values = data.map(d => d.value);
+    const minValue = Math.min(...values);
+    const maxValue = Math.max(...values);
+    const minDate = formatDate(data[0].date);
+    const maxDate = formatDate(data[data.length - 1].date);
+    return `${title || 'Chart'}: Line chart showing values from ${minDate} to ${maxDate}, ranging from ${formatCurrency(minValue)} to ${formatCurrency(maxValue)}`;
+  };
+
   return (
-    <section className="area-chart" ref={containerRef}>
+    <section
+      className="area-chart"
+      ref={containerRef}
+      role="img"
+      aria-label={getAriaLabel()}
+    >
       {(title || subtitle) && (
         <div className="area-chart__header">
           {title && <span className="area-chart__title">{title}</span>}
@@ -188,6 +265,41 @@ export function AreaChart({
         />
       </div>
       {getXAxisLabels()}
+
+      {/* Screen reader accessible data table */}
+      <table className="sr-only" aria-label={`${title || 'Chart'} data table`}>
+        <caption className="sr-only">{title} - Detailed data values</caption>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((d, idx) => (
+            <tr key={idx}>
+              <td>{formatDate(d.date)}</td>
+              <td>{formatCurrency(d.value)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </section>
   );
 }
+
+/**
+ * Memoized AreaChart with custom comparison
+ * Only re-renders when data, color, or height change
+ */
+export const AreaChart = React.memo(AreaChartComponent, (prev, next) => {
+  return (
+    prev.data === next.data &&
+    prev.color === next.color &&
+    prev.height === next.height &&
+    prev.title === next.title &&
+    prev.subtitle === next.subtitle &&
+    prev.showXAxis === next.showXAxis &&
+    prev.xAxisFormat === next.xAxisFormat
+  );
+});

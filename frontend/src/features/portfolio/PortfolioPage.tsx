@@ -305,9 +305,12 @@ export default function PortfolioPage() {
       const values: string[] = [date];
       columnIds.forEach((colId) => {
         const value = row[colId];
-        // Format numbers: replace . with , for Norwegian Excel
+        // Format numbers with Norwegian locale for CSV export
         if (typeof value === 'number') {
-          values.push(value.toString().replace('.', ','));
+          values.push(value.toLocaleString('nb-NO', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }));
         } else {
           values.push(value?.toString() ?? '');
         }

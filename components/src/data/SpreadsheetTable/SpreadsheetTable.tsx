@@ -273,12 +273,126 @@ export function SpreadsheetTable({
     }
   };
 
+  /**
+   * Render mobile card view
+   */
+  const renderCardView = () => {
+    return (
+      <div className="portfolio-cards">
+        {data.map((row, rowIndex) => {
+          const dateValue = String(row[dateKey] ?? '-');
+
+          // Check if any cell in this row has a milestone
+          const hasMilestone = Object.keys(milestones).some(key => {
+            const milestoneArray = milestones[key];
+            return milestoneArray && milestoneArray.length > 0;
+          });
+
+          return (
+            <div
+              key={rowIndex}
+              className={`portfolio-card ${hasMilestone ? 'portfolio-card--milestone' : ''}`}
+            >
+              {/* Card Header */}
+              <div className="portfolio-card__header">
+                <h3 className="portfolio-card__date">{dateValue}</h3>
+                {onRowDelete && (
+                  <button
+                    className="portfolio-card__delete"
+                    onClick={() => onRowDelete(row)}
+                    aria-label="Slett måned"
+                    title="Slett måned"
+                    type="button"
+                  >
+                    🗑️
+                  </button>
+                )}
+              </div>
+
+              {/* Card Body - Category Groups */}
+              <div className="portfolio-card__body">
+                {columnGroups.map((group) => {
+                  const isCollapsed = collapsedGroups.has(group.id);
+
+                  return (
+                    <div
+                      key={group.id}
+                      className={`portfolio-card__group portfolio-card__group--${group.id} ${isCollapsed ? 'portfolio-card__group--collapsed' : ''}`}
+                    >
+                      <h4
+                        className="portfolio-card__group-title"
+                        onClick={() => toggleGroup(group.id)}
+                        role="button"
+                        tabIndex={0}
+                        aria-expanded={!isCollapsed}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            toggleGroup(group.id);
+                          }
+                        }}
+                      >
+                        <span>{group.label}</span>
+                        <span className="portfolio-card__group-toggle" aria-hidden="true">▼</span>
+                      </h4>
+                      {!isCollapsed && (
+                        <div className="portfolio-card__accounts">
+                          {group.columns.map((col) => {
+                            const value = row[col.id];
+                            const cellMilestones = milestones[col.id];
+                            const isEditing = editingCell?.rowIndex === rowIndex && editingCell?.columnId === col.id;
+                            const isEditable = !col.isTotal && onCellChange && !editingDisabled;
+
+                            return (
+                              <div
+                                key={col.id}
+                                className={`portfolio-card__account ${col.isTotal ? 'portfolio-card__account--total' : ''}`}
+                              >
+                                <span className="portfolio-card__account-label">
+                                  {col.label}
+                                </span>
+                                <span
+                                  className={`portfolio-card__account-value ${isEditable ? 'portfolio-card__account-value--editable' : ''}`}
+                                  onClick={() => isEditable && startEditing(rowIndex, col.id, value)}
+                                >
+                                  {isEditing ? (
+                                    <input
+                                      ref={inputRef}
+                                      type="number"
+                                      className="portfolio-card__input"
+                                      value={editValue}
+                                      onChange={(e) => setEditValue(e.target.value)}
+                                      onBlur={saveEdit}
+                                      onKeyDown={handleKeyDown}
+                                    />
+                                  ) : (
+                                    formatCell(value, cellMilestones)
+                                  )}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <div className="spreadsheet-wrapper">
       <div aria-live="polite" className="sr-only">
         {editAnnouncement}
       </div>
-      <table className="spreadsheet">
+
+      {/* Desktop: Table view */}
+      <table className="spreadsheet spreadsheet--desktop">
         <caption className="sr-only">
           {caption || 'Monthly portfolio snapshots with account values and totals'}
         </caption>
@@ -449,6 +563,11 @@ export function SpreadsheetTable({
           ))}
         </tbody>
       </table>
+
+      {/* Mobile: Card view */}
+      <div className="spreadsheet--mobile">
+        {renderCardView()}
+      </div>
     </div>
   );
 }
