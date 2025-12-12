@@ -101,7 +101,19 @@
       "Bash(pnpm --filter @finans/components build:*)",
       "Bash(pnpm --filter components build:*)",
       "Bash(pnpm list:*)",
-      "Bash(pnpm --filter components lint:*)"
+      "Bash(pnpm --filter components lint:*)",
+      "Skill(rule-making-skill)",
+      "Bash(\"c:/code/ettsted2/components/src/cards/CalculatorCard/CalculatorCard.css\" )",
+      "Bash(\"c:/code/ettsted2/components/src/charts/StackedAreaChart/StackedAreaChart.css\" )",
+      "Bash(\"c:/code/ettsted2/components/src/data/SpreadsheetTable/SpreadsheetTable.css\" )",
+      "Bash(\"c:/code/ettsted2/components/src/data/StatsRow/StatsRow.css\" )",
+      "Bash(\"c:/code/ettsted2/components/src/data/TableHeader/TableHeader.css\" )",
+      "Bash(\"c:/code/ettsted2/components/src/data/TableFooter/TableFooter.css\" )",
+      "Bash(\"c:/code/ettsted2/components/src/forms/DateInput/DateInput.css\" )",
+      "Bash(\"c:/code/ettsted2/components/src/forms/NumberInput/NumberInput.css\" )",
+      "Bash(\"c:/code/ettsted2/components/src/layout/PageHeader/PageHeader.css\" )",
+      "Bash(\"c:/code/ettsted2/components/src/system/Toast/Toast.css\" )",
+      "Bash(\"c:/code/ettsted2/frontend/src/features/auth/LoginModal.css\")"
     ],
     "deny": [],
     "ask": [
