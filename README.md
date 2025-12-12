@@ -91,6 +91,67 @@ pnpm --filter components storybook
 /e2e               - Playwright E2E tests
 ```
 
+## Architecture
+
+### Monorepo Structure
+
+The project is organized as a pnpm workspace with four packages:
+
+```mermaid
+graph TB
+    subgraph Monorepo
+        FE[frontend<br/>React SPA]
+        BE[backend<br/>Express API]
+        COMP[components<br/>Shared Library]
+        E2E[e2e<br/>Playwright Tests]
+    end
+
+    COMP -->|consumed by| FE
+    FE -->|requests| BE
+    E2E -->|tests| FE
+    E2E -->|tests| BE
+```
+
+### Runtime Architecture
+
+The application runs on Azure with EasyAuth for authentication and CosmosDB for data persistence:
+
+```mermaid
+graph LR
+    subgraph Client
+        Browser["🌐 Browser<br/>React SPA"]
+    end
+
+    subgraph Azure
+        subgraph "App Services"
+            FE_App["📦 Frontend<br/>Static Web App"]
+            BE_App["⚙️ Backend<br/>Express API"]
+        end
+        EasyAuth["🔐 EasyAuth<br/>Google/Facebook"]
+        CosmosDB["💾 CosmosDB<br/>NoSQL Database"]
+    end
+
+    subgraph External
+        OpenAI["🤖 OpenAI<br/>GPT-4 Turbo"]
+        Langfuse["📊 Langfuse<br/>LLM Observability"]
+    end
+
+    Browser -->|GET/static| FE_App
+    Browser -->|OAuth login| EasyAuth
+    EasyAuth -->|validates| BE_App
+    BE_App -->|REST API| Browser
+    BE_App -->|reads/writes| CosmosDB
+    BE_App -->|import analysis| OpenAI
+    OpenAI -->|traces| Langfuse
+```
+
+### Data Flow
+
+1. **Authentication**: User logs in via OAuth (Google/Facebook) through Azure EasyAuth
+2. **API Requests**: Frontend makes REST API calls to backend with EasyAuth token
+3. **Data Access**: Backend validates token, queries/updates CosmosDB
+4. **LLM Features**: Import agent uses OpenAI to analyze portfolio data, with traces sent to Langfuse
+
 ## Available Scripts
 
 | Command | Description |
