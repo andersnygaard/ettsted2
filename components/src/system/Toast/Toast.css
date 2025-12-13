@@ -102,11 +102,26 @@
   outline-offset: 2px;
 }
 
-@media (max-width: 640px) {
+/* Mobile-first: full-width with margins */
+.toast-container {
+  position: fixed;
+  left: var(--space-md);
+  right: var(--space-md);
+  bottom: var(--space-md);
+  z-index: 9999;
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* Tablet and up: fixed width in bottom-right corner */
+@media (min-width: 641px) {
   .toast-container {
-    left: var(--space-md);
-    right: var(--space-md);
-    bottom: var(--space-md);
-    max-width: none;
+    left: auto;
+    right: var(--space-xl);
+    bottom: var(--space-xl);
+    max-width: 400px;
+    width: 100%;
   }
 }

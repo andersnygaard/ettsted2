@@ -1,3 +1,8 @@
+---
+paths:
+  - backend/**/*
+---
+
 # Seed Rules
 
 ## Stack

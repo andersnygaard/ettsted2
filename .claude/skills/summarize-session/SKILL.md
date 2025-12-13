@@ -58,41 +58,85 @@ Review the current conversation and identify:
 
 ---
 
-### Phase 2: CLAUDE.md Update Evaluation
+### Phase 2: Rule Files Update Evaluation
 
-Read the current [CLAUDE.md](../../CLAUDE.md) and evaluate if any learnings should be added.
+Rule files in `.claude/rules/` are domain-specific and have a **lower threshold** than CLAUDE.md. They should capture patterns, gotchas, and decisions for specific domains.
+
+**Rule File Locations:**
+- `rules/frontend/` - auth, styling, api, routing, state, onboarding, errors
+- `rules/backend/` - auth, data, api, validation, services, calculations, llm, errors, middleware, utils, seed
+- `rules/components/` - components, styling, charts, forms, storybook, errors
+- `rules/e2e/` - testing, auth
+
+**Threshold for Rules: Add if it meets TWO criteria:**
+
+1. **Reusable** - Will apply to future work in that domain
+2. **Domain-specific** - Belongs to a specific subsystem (not global)
+
+**Examples that SHOULD go in rule files:**
+- "AreaChart requires data sorted by date ascending" → `rules/components/charts.md`
+- "Zod schemas strip unknown fields by default" → `rules/backend/validation.md`
+- "Modal close button uses absolute positioning top-right" → `rules/components/components.md`
+- "Demo login seeds data on every call" → `rules/backend/auth.md`
+- "Use formatCurrency from @finans/components for NOK" → `rules/frontend/styling.md`
+
+**Examples that should NOT go in rule files:**
+- "Fixed a typo" - not reusable
+- "React uses JSX" - too generic
+
+**Rule File Sections:**
+Each rule file follows this structure:
+- **Stack** - Technologies/libraries used
+- **Structure** - File/folder organization
+- **Patterns** - Code patterns with examples
+- **Decisions** - Architectural choices made
+- **Gotchas** - Common pitfalls, edge cases
+
+Add learnings to the appropriate section. If a section doesn't exist, create it.
+
+---
+
+### Phase 3: CLAUDE.md Update Evaluation
+
+CLAUDE.md has a **higher threshold** - only global, project-wide learnings.
 
 **Threshold: Only add if it meets ALL THREE criteria:**
 
 1. **Reusable** - Will apply to future work (not a one-time fix)
 2. **Non-obvious** - Not something a senior dev would assume
-3. **Project-specific** - Unique to this codebase, not general knowledge
+3. **Project-wide** - Applies globally, not to a specific domain
 
 **Examples that PASS the threshold:**
-- "PageHeader must always be centered" - reusable, non-obvious, project-specific
-- "Rate limit is 10 req/min for calculators" - reusable, non-obvious, project-specific
-- "Use numeral.js nb locale for Norwegian formatting" - reusable, non-obvious, project-specific
+- "All pages must use usePageTitle hook" - project-wide convention
+- "Never use max-width media queries" - affects all styling
+- "API base path is /api/v1" - affects all endpoints
 
-**Examples that FAIL the threshold:**
-- "Fixed a typo in LoginPage" - not reusable
-- "Use async/await in Express" - obvious to senior devs
-- "React components use JSX" - not project-specific
-- "Added error handling to API call" - standard practice
+**Examples that FAIL (should go in rules instead):**
+- "AreaChart needs sorted data" - domain-specific (charts.md)
+- "Zod strips unknown fields" - domain-specific (validation.md)
+- "Modal uses absolute close button" - domain-specific (components.md)
 
-**When in doubt, don't add.** CLAUDE.md should stay lean and high-signal.
+**When in doubt, put it in a rule file.** CLAUDE.md is for global conventions only.
 
 ---
 
-### Phase 3: Update CLAUDE.md
+### Phase 4: Update Files
 
-If learnings warrant documentation:
+**Step 1: Update Rule Files**
 
+For each domain-specific learning:
+1. Identify the correct rule file based on the domain
+2. Read the rule file to find the appropriate section
+3. Add the learning in the matching section (Stack, Patterns, Decisions, or Gotchas)
+4. Keep additions concise and match existing style
+
+**Step 2: Update CLAUDE.md (if warranted)**
+
+For global learnings that pass the higher threshold:
 1. Read CLAUDE.md to find the appropriate section
 2. Add the learning in the correct location
-3. Keep additions concise and consistent with existing style
-4. Use the same formatting patterns already in the file
 
-**Placement Guidelines**:
+**CLAUDE.md Placement Guidelines**:
 
 | Learning Type | Where to Add |
 |---------------|--------------|
@@ -106,7 +150,7 @@ If learnings warrant documentation:
 
 ---
 
-### Phase 4: Context Summary
+### Phase 5: Context Summary
 
 Produce a compact summary with this structure:
 
@@ -125,8 +169,11 @@ Produce a compact summary with this structure:
 ### Open Items
 - [Anything left incomplete or for next session]
 
+### Rule Updates
+- [Rule file → what was added]
+
 ### CLAUDE.md Updates
-- [What was added, if anything]
+- [What was added, if anything, or "None"]
 ```
 
 ---
@@ -134,8 +181,9 @@ Produce a compact summary with this structure:
 ## Output
 
 The skill produces:
-1. **Updates to CLAUDE.md** (if warranted)
-2. **Session summary** (displayed to user)
+1. **Updates to rule files** (lower threshold, domain-specific)
+2. **Updates to CLAUDE.md** (higher threshold, global only)
+3. **Session summary** (displayed to user)
 
 The summary becomes the new context for continuing work, replacing the long conversation history.
 
@@ -166,9 +214,13 @@ The summary becomes the new context for continuing work, replacing the long conv
 ### Open Items
 - E2E test for rate limiting
 
+### Rule Updates
+- rules/backend/middleware.md → Added rate limiter configuration pattern
+- rules/backend/validation.md → Added profile update validation schema
+- rules/frontend/styling.md → Added numeral.js locale setup
+
 ### CLAUDE.md Updates
-- Added rate limiting values to Security section
-- Added numeral.js to Tech Stack
+- None (domain-specific learnings went to rule files)
 ```
 
 ---
@@ -177,10 +229,12 @@ The summary becomes the new context for continuing work, replacing the long conv
 
 1. **Be concise** - Summaries should be short, not verbose
 2. **Preserve essential info** - Don't lose important context
-3. **Update CLAUDE.md sparingly** - Only add truly reusable learnings
-4. **Match existing style** - Follow CLAUDE.md formatting conventions
-5. **Focus on actionable** - Summaries should help future work
-6. **Don't duplicate** - Don't add what's already documented
+3. **Prefer rule files over CLAUDE.md** - Domain-specific goes to rules
+4. **Update CLAUDE.md sparingly** - Only global, project-wide learnings
+5. **Match existing style** - Follow the file's formatting conventions
+6. **Focus on actionable** - Learnings should help future work
+7. **Don't duplicate** - Don't add what's already documented
+8. **Add to correct section** - Stack, Patterns, Decisions, or Gotchas
 
 ---
 

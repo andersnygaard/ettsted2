@@ -28,9 +28,10 @@ interface MonteCarloChartProps {
   };
   years: number;
   height?: number;
+  isRealValues?: boolean;
 }
 
-function MonteCarloChart({ scenarios, percentiles, years, height = 320 }: MonteCarloChartProps) {
+function MonteCarloChart({ scenarios, percentiles, years, height = 320, isRealValues = false }: MonteCarloChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -52,7 +53,20 @@ function MonteCarloChart({ scenarios, percentiles, years, height = 320 }: MonteC
       .attr('width', containerWidth)
       .attr('height', height);
 
+    // Create clip path to contain lines within chart area
+    const clipId = `monte-carlo-clip-${Math.random().toString(36).substr(2, 9)}`;
+    svg.append('defs')
+      .append('clipPath')
+      .attr('id', clipId)
+      .append('rect')
+      .attr('width', width)
+      .attr('height', chartHeight);
+
+    // Main group for axes (unclipped)
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+    // Clipped group for chart content (lines, areas)
+    const chartArea = g.append('g').attr('clip-path', `url(#${clipId})`);
 
     // Prepare data for percentile lines
     const maxLength = Math.max(...scenarios.map((s) => s.length));
@@ -88,8 +102,11 @@ function MonteCarloChart({ scenarios, percentiles, years, height = 320 }: MonteC
     const xScale = d3.scaleLinear().domain([0, years]).range([0, width]);
 
     const allValues = scenarios.flat();
-    const yMax = d3.max(allValues) || 0;
-    const yScale = d3.scaleLinear().domain([0, yMax * 1.1]).range([chartHeight, 0]).nice();
+    // Use 75th percentile for Y-axis max instead of 90th (prevents stretching)
+    const sorted75 = [...allValues].sort((a, b) => a - b);
+    const percentile75Value = sorted75[Math.floor(sorted75.length * 0.75)] || 0;
+    const yMax = Math.max(percentile75Value * 1.25, percentile75Value + 500000); // Add padding
+    const yScale = d3.scaleLinear().domain([0, yMax]).range([chartHeight, 0]).nice();
 
     // Axes
     const xAxis = d3.axisBottom(xScale).ticks(Math.min(years, 10)).tickFormat((d) => `År ${d}`);
@@ -139,7 +156,7 @@ function MonteCarloChart({ scenarios, percentiles, years, height = 320 }: MonteC
       .y1((d) => yScale(d.p75))
       .curve(d3.curveMonotoneX);
 
-    g.append('path')
+    chartArea.append('path')
       .datum(percentileBands)
       .attr('class', 'percentile-band-core')
       .attr('d', area25to75)
@@ -154,7 +171,7 @@ function MonteCarloChart({ scenarios, percentiles, years, height = 320 }: MonteC
       .y1((d) => yScale(d.p90))
       .curve(d3.curveMonotoneX);
 
-    g.append('path')
+    chartArea.append('path')
       .datum(percentileBands)
       .attr('class', 'percentile-band-outer')
       .attr('d', area10to90)
@@ -164,7 +181,7 @@ function MonteCarloChart({ scenarios, percentiles, years, height = 320 }: MonteC
     // Draw sample scenario paths (first 20 scenarios)
     const sampleScenarios = scenarios.slice(0, 20);
     sampleScenarios.forEach((scenario) => {
-      g.append('path')
+      chartArea.append('path')
         .datum(scenario)
         .attr('class', 'scenario-path')
         .attr('d', line)
@@ -181,7 +198,7 @@ function MonteCarloChart({ scenarios, percentiles, years, height = 320 }: MonteC
       .y((d) => yScale(d.p50))
       .curve(d3.curveMonotoneX);
 
-    g.append('path')
+    chartArea.append('path')
       .datum(percentileBands)
       .attr('class', 'median-line')
       .attr('d', medianLine)
@@ -200,7 +217,7 @@ function MonteCarloChart({ scenarios, percentiles, years, height = 320 }: MonteC
       .style('font-size', '18px')
       .style('fill', 'var(--charcoal)')
       .style('font-weight', '300')
-      .text('Simuleringsscenarioer');
+      .text(isRealValues ? 'Simuleringsscenarioer (reelle verdier)' : 'Simuleringsscenarioer');
 
     // Legend
     const legend = svg
@@ -244,7 +261,7 @@ function MonteCarloChart({ scenarios, percentiles, years, height = 320 }: MonteC
         .style('fill', 'var(--text-secondary)')
         .text(item.label);
     });
-  }, [scenarios, percentiles, years, height]);
+  }, [scenarios, percentiles, years, height, isRealValues]);
 
   return (
     <div ref={containerRef} className="monte-carlo-chart">

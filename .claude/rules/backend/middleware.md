@@ -1,3 +1,8 @@
+---
+paths:
+  - backend/**/*
+---
+
 # Middleware Rules
 
 ## Stack

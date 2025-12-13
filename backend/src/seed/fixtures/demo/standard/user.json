@@ -5,8 +5,8 @@
   "createdAt": "2024-01-01T00:00:00.000Z",
   "updatedAt": "2024-01-01T00:00:00.000Z",
   "profile": {
-    "monthlySalary": 55000,
-    "monthlySavings": 21667,
+    "monthlySalary": 60000,
+    "monthlySavings": 18000,
     "birthYear": 1990,
     "plannedRetirementAge": 60,
     "fireNumber": 10000000
@@ -48,6 +48,27 @@
         "remainingYears": 25,
         "originalAmount": 3000000
       }
+    },
+    {
+      "id": "demo-acc-studielan",
+      "name": "Studielån",
+      "category": "gjeld",
+      "isActive": true,
+      "sortOrder": 2,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "loanDetails": {
+        "interestRate": 2.5,
+        "remainingYears": 12,
+        "originalAmount": 300000
+      }
+    },
+    {
+      "id": "demo-acc-boligverdi",
+      "name": "Boligverdi",
+      "category": "sparing",
+      "isActive": true,
+      "sortOrder": 4,
+      "createdAt": "2024-01-01T00:00:00.000Z"
     },
     {
       "id": "demo-acc-arbeidsgiver",

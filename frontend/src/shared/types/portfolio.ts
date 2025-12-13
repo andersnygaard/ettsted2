@@ -95,7 +95,7 @@ export type AssetCategory = 'sparing' | 'gjeld' | 'pensjon';
  * Mapping of categories to asset class strings
  */
 export const ASSET_CLASS_CATEGORIES: Record<AssetCategory, string[]> = {
-  sparing: ['aksjer', 'fond', 'krypto', 'bankkonto'],
+  sparing: ['aksjer', 'fond', 'krypto', 'bankkonto', 'eiendom', 'bolig'],
   gjeld: ['gjeld', 'lån', 'loan', 'debt'],
   pensjon: ['pensjon', 'pension']
 };
@@ -108,5 +108,5 @@ export function getAccountCategory(assetClass: string): AssetCategory {
 
   if (ASSET_CLASS_CATEGORIES.gjeld.includes(classLower)) return 'gjeld';
   if (ASSET_CLASS_CATEGORIES.pensjon.includes(classLower)) return 'pensjon';
-  return 'sparing'; // Default
+  return 'sparing'; // Default (includes eiendom/bolig)
 }

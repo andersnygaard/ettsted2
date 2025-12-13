@@ -52,8 +52,6 @@ const CATEGORY_SUM_IDS: Record<string, string> = {
   pensjon: 'sumPensjon',
 };
 
-const ITEMS_PER_PAGE = 12;
-
 export default function PortfolioPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -82,6 +80,9 @@ export default function PortfolioPage() {
     snapshotId: null,
     snapshotDate: null,
   });
+
+  // Items per page: 24 for "Alle år", 12 for specific year
+  const itemsPerPage = selectedYear === null ? 24 : 12;
 
   /**
    * Open delete confirmation modal
@@ -245,11 +246,11 @@ export default function PortfolioPage() {
   }, [tableData, selectedYear]);
 
   // Pagination
-  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [filteredData, currentPage]);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredData.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredData, currentPage, itemsPerPage]);
 
   // Reset to page 1 when filters change
   const handleYearChange = (year: number | null) => {

@@ -1,3 +1,8 @@
+---
+paths:
+  - frontend/**/*
+---
+
 # Routing Rules
 
 ## Stack

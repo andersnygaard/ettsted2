@@ -22,6 +22,8 @@ export interface SparingData {
   annualWithdrawal: number;
   totalGrowth: number;
   history: { date: Date; value: number }[];
+  accountHistory: Array<{ date: Date; [accountId: string]: Date | number }>;
+  accounts: Array<{ id: string; name: string }>;
 }
 
 /**
@@ -40,7 +42,9 @@ function getEmptySparingData(): SparingData {
     yearsToSalary: 0,
     annualWithdrawal: 0,
     totalGrowth: 0,
-    history: []
+    history: [],
+    accountHistory: [],
+    accounts: []
   };
 }
 
@@ -257,6 +261,46 @@ async function fetchSparingData(): Promise<SparingData> {
       );
     }
 
+    // Build per-account history for ChartWithTabs
+    // Collect unique active saving accounts from latest snapshot
+    const uniqueAccounts = new Map<string, { id: string; name: string }>();
+    if (snapshots && snapshots.length > 0) {
+      const latest = [...snapshots].sort((a, b) => {
+        const dateA = parseDate(a.date);
+        const dateB = parseDate(b.date);
+        return dateB.getTime() - dateA.getTime();
+      })[0];
+
+      latest.accounts.forEach(account => {
+        if (getAccountCategory(account.assetClass) === 'sparing') {
+          uniqueAccounts.set(account.id, { id: account.id, name: account.name });
+        }
+      });
+    }
+
+    const accounts = Array.from(uniqueAccounts.values());
+
+    // Build history with per-account breakdown
+    const accountHistory = (snapshots || [])
+      .sort((a, b) => {
+        const dateA = parseDate(a.date);
+        const dateB = parseDate(b.date);
+        return dateA.getTime() - dateB.getTime();
+      })
+      .map((snapshot) => {
+        const point: { date: Date; [accountId: string]: Date | number } = {
+          date: parseDate(snapshot.date)
+        };
+
+        // Add value for each account
+        accounts.forEach(account => {
+          const acc = snapshot.accounts.find(a => a.id === account.id);
+          point[account.id] = acc && getAccountCategory(acc.assetClass) === 'sparing' ? acc.value : 0;
+        });
+
+        return point;
+      });
+
     return {
       sumSavings: sparingData.sumSavings ?? 0,
       yearlyChange,
@@ -269,7 +313,9 @@ async function fetchSparingData(): Promise<SparingData> {
       yearsToSalary,
       annualWithdrawal: (sparingData.sumSavings ?? 0) * FIRE.SAFE_WITHDRAWAL_RATE,
       totalGrowth,
-      history: parsedHistory
+      history: parsedHistory,
+      accountHistory,
+      accounts
     };
   } catch (error) {
     console.error('Error fetching sparing data:', error);

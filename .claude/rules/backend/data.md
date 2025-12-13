@@ -1,3 +1,8 @@
+---
+paths:
+  - backend/**/*
+---
+
 # Data Rules
 
 ## Stack

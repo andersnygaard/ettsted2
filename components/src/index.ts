@@ -29,6 +29,12 @@ export type { BreadcrumbProps, BreadcrumbItem } from './ui/Breadcrumb'
 export { Placeholder } from './ui/Placeholder'
 export type { PlaceholderProps } from './ui/Placeholder'
 
+export { Tooltip } from './ui/Tooltip'
+export type { TooltipProps } from './ui/Tooltip'
+
+export { Tabs } from './ui/Tabs'
+export type { TabsProps, Tab } from './ui/Tabs'
+
 // Form Components
 export { NumberInput } from './forms/NumberInput'
 export type { NumberInputProps } from './forms/NumberInput'
@@ -77,6 +83,12 @@ export type { TableHeaderProps } from './data/TableHeader'
 export { TableFooter } from './data/TableFooter'
 export type { TableFooterProps, ColumnToggle } from './data/TableFooter'
 
+export { ChartWithTabs } from './data/ChartWithTabs'
+export type { ChartWithTabsProps, ChartAccount } from './data/ChartWithTabs'
+
+export { TimeRangeSelector } from './data/TimeRangeSelector'
+export type { TimeRangeSelectorProps, TimeRange, TimeRangeOption } from './data/TimeRangeSelector'
+
 // Chart Components
 export { AreaChart } from './charts/AreaChart'
 export type { AreaChartProps, DataPoint } from './charts/AreaChart'
@@ -90,6 +102,9 @@ export type {
 
 export { DonutChart } from './charts/DonutChart'
 export type { DonutChartProps } from './charts/DonutChart'
+
+export { ChartTooltip } from './charts/ChartTooltip'
+export type { ChartTooltipProps, TooltipValue } from './charts/ChartTooltip'
 
 // Layout Components
 export { SectionLink } from './layout/SectionLink'

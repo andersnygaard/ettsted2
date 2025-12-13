@@ -107,10 +107,5 @@
   opacity: var(--opacity-subtle);
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .number-input__field {
-    font-size: var(--font-size-lg);
-    width: 100%;
-  }
-}
+/* Mobile-first base: responsive is handled by base styles */
+/* Desktop adjustments would go in @media (min-width: 769px) if needed */

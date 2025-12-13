@@ -1,5 +1,4 @@
-import { PageSkeleton, HeroNumber, StackedAreaChart, BreakdownCard, formatCurrency } from '@finans/components';
-import type { StackedDataPoint, Series } from '@finans/components';
+import { PageSkeleton, HeroNumber, ChartWithTabs, BreakdownCard, formatCurrency } from '@finans/components';
 import { PensjonSkeleton } from '@/shared/components';
 import { usePensjonData } from './usePensjonData';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
@@ -68,18 +67,6 @@ function PensjonPage() {
   const publicPension = publicItem?.amount || 0;
   const privatePension = privateItems.reduce((sum, item) => sum + item.amount, 0);
 
-  // Chart data from history
-  const chartData: StackedDataPoint[] = pensjonData.history.map(h => ({
-    date: h.date,
-    privatePension: h.privatePension,
-    publicPension: h.publicPension,
-  }));
-
-  const chartSeries: Series[] = [
-    { key: 'privatePension', color: 'var(--pale-blue)', label: 'Privat pensjon' },
-    { key: 'publicPension', color: 'var(--orange, #D4956A)', label: 'Offentlig pensjon' },
-  ];
-
   return (
     <PageSkeleton
       breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Pensjon' }]}
@@ -115,11 +102,12 @@ function PensjonPage() {
 
         <OtpSection percentage={Math.round(pensjonData.privatePercent)} trend="up" />
 
-      <StackedAreaChart
-        data={chartData}
-        series={chartSeries}
+      <ChartWithTabs
+        data={pensjonData.accountHistory}
+        accounts={pensjonData.accounts}
         title="Pensjonsutvikling"
         height={200}
+        totalColor="var(--muted-sage)"
       />
     </PageSkeleton>
   );

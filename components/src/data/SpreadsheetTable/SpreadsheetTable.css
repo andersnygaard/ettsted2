@@ -163,6 +163,7 @@
   border-bottom: 2px solid var(--border-strong);
   white-space: nowrap;
   z-index: 10;
+  min-width: 80px;
 }
 
 .spreadsheet th:first-child {
@@ -201,6 +202,7 @@
   height: 32px;
   vertical-align: middle;
   box-sizing: border-box;
+  min-width: 80px;
 }
 
 .spreadsheet td:first-child {
@@ -359,6 +361,19 @@
 }
 
 /* ========================================
+   Cell Value with Tooltip
+   ======================================== */
+
+.cell-value-tooltip-trigger {
+  display: inline-block;
+  cursor: default;
+}
+
+.tooltip-trigger {
+  display: inline-block;
+}
+
+/* ========================================
    Hidden Columns
    ======================================== */
 
@@ -447,27 +462,26 @@
    Responsive Behavior
    ======================================== */
 
-/* Mobile: Hide table, show cards */
-.spreadsheet--mobile {
+/* Base: mobile card view */
+.spreadsheet--desktop {
   display: none;
 }
 
-/* Desktop: Show table, hide cards */
-.spreadsheet--desktop {
-  display: table;
+/* Base: show cards on mobile */
+.spreadsheet--mobile {
+  display: block;
 }
 
-
-/* Mobile card view */
-@media (max-width: 768px) {
-  /* Hide table on mobile */
+/* Desktop: show table, hide cards */
+@media (min-width: 769px) {
+  /* Show table on desktop */
   .spreadsheet--desktop {
-    display: none;
+    display: table;
   }
 
-  /* Show cards on mobile */
+  /* Hide cards on desktop */
   .spreadsheet--mobile {
-    display: block;
+    display: none;
   }
 }
 

@@ -48,6 +48,7 @@ export function StepGjeld({
         onRemoveAccount={onRemoveAccount}
         onAddAccount={onAddAccount}
         showLoanDetails={true}
+        showPrimaryResidenceRadio={true}
       />
     </div>
   );

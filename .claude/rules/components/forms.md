@@ -1,3 +1,8 @@
+---
+paths:
+  - components/**/*
+---
+
 # Forms Rules
 
 ## Stack

@@ -1,6 +1,6 @@
 # BUG: LoansList Double Border Between Last Row and Sum
 
-**Status**: Backlog
+**Status**: Done
 **Created**: 2025-12-12
 **Priority**: Low
 **Labels**: frontend, css, gjeld

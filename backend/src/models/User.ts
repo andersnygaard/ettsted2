@@ -113,6 +113,13 @@ export interface AccountConfig {
    * Only relevant for category 'pensjon'
    */
   isPublicPension?: boolean;
+
+  /**
+   * Whether this is the primary residence loan
+   * Only one gjeld account can be marked as primary residence
+   * Only relevant for category 'gjeld'
+   */
+  isPrimaryResidence?: boolean;
 }
 
 /**

@@ -33,11 +33,21 @@
   opacity: 0.6;
 }
 
+/* Mobile: wrap header items, radio on own row */
 .accounts-list__item-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-sm);
+  gap: var(--space-xs) var(--space-sm);
   margin-bottom: var(--space-sm);
+}
+
+/* Tablet and up: single row */
+@media (min-width: 640px) {
+  .accounts-list__item-header {
+    flex-wrap: nowrap;
+    gap: var(--space-sm);
+  }
 }
 
 /* Account Name Input */
@@ -108,6 +118,19 @@
   font-size: 12px;
   color: var(--text-secondary);
   user-select: none;
+  /* Mobile: force to new row */
+  flex-basis: 100%;
+  order: 10;
+  margin-top: var(--space-xs);
+}
+
+/* Tablet and up: inline with other items */
+@media (min-width: 640px) {
+  .accounts-list__radio {
+    flex-basis: auto;
+    order: 0;
+    margin-top: 0;
+  }
 }
 
 .accounts-list__radio input[type="radio"] {
@@ -159,9 +182,19 @@
   border-top: 1px solid var(--border);
 }
 
+/* Mobile: stack loan fields */
 .accounts-list__loan-row {
   display: flex;
-  gap: var(--space-md);
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* Tablet and up: row layout */
+@media (min-width: 640px) {
+  .accounts-list__loan-row {
+    flex-direction: row;
+    gap: var(--space-md);
+  }
 }
 
 .accounts-list__loan-field {
@@ -186,10 +219,11 @@
   gap: var(--space-xs);
 }
 
+/* Mobile: smaller font for loan inputs */
 .accounts-list__loan-input {
   width: 100%;
   font-family: var(--font-mono);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-light);
   padding: var(--space-sm);
   border: none;
@@ -198,6 +232,13 @@
   background-color: transparent;
   color: var(--charcoal);
   transition: border-color 0.2s ease;
+}
+
+/* Tablet and up: larger font */
+@media (min-width: 640px) {
+  .accounts-list__loan-input {
+    font-size: var(--font-size-xl);
+  }
 }
 
 .accounts-list__loan-input:focus {
@@ -269,21 +310,18 @@
   letter-spacing: 0.5px;
 }
 
+/* Mobile: smaller total value */
 .accounts-list__total-value {
   font-family: var(--font-mono);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-light);
   color: var(--charcoal);
 }
 
-/* Responsive */
-@media (max-width: 640px) {
-  .accounts-list__item-header {
-    flex-wrap: wrap;
-  }
-
-  .accounts-list__loan-row {
-    flex-direction: column;
-    gap: var(--space-sm);
+/* Tablet and up: larger total value */
+@media (min-width: 640px) {
+  .accounts-list__total-value {
+    font-size: var(--font-size-xl);
   }
 }
+

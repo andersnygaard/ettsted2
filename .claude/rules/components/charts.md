@@ -1,3 +1,8 @@
+---
+paths:
+  - components/**/*
+---
+
 # Charts Rules
 
 ## Stack

@@ -13,6 +13,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { formatNumber } from '../../utils/numberFormat';
+import { Tooltip } from '../../ui/Tooltip';
 import './SpreadsheetTable.css';
 
 export interface Column {
@@ -50,11 +51,11 @@ export interface SpreadsheetTableProps {
 }
 
 /**
- * Format a cell value with optional milestone highlighting
+ * Format a cell value with optional milestone highlighting and tooltip
  *
  * @param value - The value to format
  * @param milestones - Array of milestone thresholds crossed in this cell
- * @returns Formatted value with optional milestone star
+ * @returns Formatted value with optional milestone star and tooltip
  */
 function formatCell(value: string | number | null | undefined, milestones?: number[]): JSX.Element | string {
   // Handle null, undefined, or empty values
@@ -69,15 +70,22 @@ function formatCell(value: string | number | null | undefined, milestones?: numb
     // Check if this value crossed a milestone threshold
     const hasMilestone = milestones && milestones.length > 0;
 
-    if (hasMilestone) {
-      return (
-        <span className="value-milestone">
-          {formatted}
-        </span>
-      );
-    }
+    const valueElement = hasMilestone ? (
+      <span className="value-milestone">
+        {formatted}
+      </span>
+    ) : (
+      <span>{formatted}</span>
+    );
 
-    return formatted;
+    // Show tooltip with raw value on hover for better readability on small columns
+    return (
+      <Tooltip content={formatted} side="auto">
+        <span className="cell-value-tooltip-trigger">
+          {valueElement}
+        </span>
+      </Tooltip>
+    );
   }
 
   // Return string values as-is

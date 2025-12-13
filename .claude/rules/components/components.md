@@ -1,3 +1,8 @@
+---
+paths:
+  - components/**/*
+---
+
 # Components Rules
 
 ## Stack

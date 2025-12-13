@@ -1,0 +1,82 @@
+/**
+ * TimeRangeSelector Component Styles
+ *
+ * Minimal text-based time range selector for charts
+ * Inspired by Robinhood's chart controls
+ * Right-aligned, text-only links with subtle active state
+ * Mobile-first responsive design following Nordic Minimal tokens
+ */
+
+.time-range-selector {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  padding: var(--space-xs) 0;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+/* Individual button - minimal text styling */
+.time-range-selector__button {
+  padding: var(--space-xs) var(--space-sm);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+
+  /* Focus styles */
+  outline: none;
+}
+
+.time-range-selector__button:hover {
+  color: var(--charcoal);
+  background: var(--charcoal-light-4);
+}
+
+.time-range-selector__button:focus-visible {
+  outline: 2px solid var(--focus-color);
+  outline-offset: 2px;
+}
+
+/* Active button - bold text with subtle background */
+.time-range-selector__button--active {
+  color: var(--charcoal);
+  font-weight: var(--font-weight-semibold);
+  background: var(--charcoal-light-4);
+}
+
+.time-range-selector__button--active:hover {
+  background: var(--charcoal-light-5);
+}
+
+/* Tablet and up: Maintain spacing */
+@media (min-width: 768px) {
+  .time-range-selector {
+    gap: var(--space-sm);
+    padding: var(--space-xs) 0;
+  }
+
+  .time-range-selector__button {
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Desktop: Maintain spacing */
+@media (min-width: 1024px) {
+  .time-range-selector {
+    gap: var(--space-sm);
+    padding: var(--space-xs) 0;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .time-range-selector__button {
+    transition: none;
+  }
+}

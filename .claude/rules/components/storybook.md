@@ -1,3 +1,8 @@
+---
+paths:
+  - components/**/*
+---
+
 # Storybook Rules
 
 ## Stack

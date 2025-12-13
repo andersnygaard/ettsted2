@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState, useMemo } from 'react';
 import * as d3 from 'd3';
 import './AreaChart.css';
 import { formatCurrency, formatDate } from '@finans/components';
+import { ChartTooltip } from '../ChartTooltip';
 
 const isDevelopment = import.meta.env.DEV;
 
@@ -44,6 +45,15 @@ function AreaChartComponent({
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0 });
 
+  // Tooltip state
+  const [tooltip, setTooltip] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+    date: new Date(),
+    value: 0,
+  });
+
   // Handle resize with ResizeObserver for reliable width detection
   useEffect(() => {
     if (!containerRef.current) return;
@@ -79,7 +89,8 @@ function AreaChartComponent({
     const yScale = d3
       .scaleLinear()
       .domain([0, (d3.max(data, (d) => d.value) || 0) * 1.1])
-      .range([innerHeight, 0]);
+      .range([innerHeight, 0])
+      .nice(); // Round to nice values
 
     // Create generators
     const area = d3
@@ -199,6 +210,83 @@ function AreaChartComponent({
         .ease(d3.easeCubicOut)
         .attr('stroke-dashoffset', 0);
     }
+
+    // Add hover interaction elements
+    const hoverLineGroup = g.append('g').attr('class', 'area-chart__hover-elements').style('opacity', 0);
+
+    // Vertical hover line
+    const hoverLine = hoverLineGroup
+      .append('line')
+      .attr('class', 'area-chart__hover-line')
+      .attr('y1', 0)
+      .attr('y2', scales.innerHeight)
+      .attr('stroke', 'var(--charcoal)')
+      .attr('stroke-width', 1)
+      .attr('stroke-opacity', 0.3);
+
+    // Hover dot
+    const hoverDot = hoverLineGroup
+      .append('circle')
+      .attr('class', 'area-chart__hover-dot')
+      .attr('r', 4)
+      .attr('fill', color)
+      .attr('stroke', 'var(--warm-white)')
+      .attr('stroke-width', 2);
+
+    // Bisector for finding nearest data point
+    const bisect = d3.bisector((d: DataPoint) => d.date).left;
+
+    // Invisible overlay for mouse tracking
+    const overlay = g
+      .append('rect')
+      .attr('class', 'area-chart__overlay')
+      .attr('width', scales.innerWidth)
+      .attr('height', scales.innerHeight)
+      .attr('fill', 'transparent')
+      .attr('cursor', 'crosshair');
+
+    // Mouse event handlers
+    const handleMouseMove = (event: MouseEvent) => {
+      const [mx] = d3.pointer(event);
+      const x0 = scales.x.invert(mx);
+      const i = bisect(data, x0, 1);
+      const d0 = data[i - 1];
+      const d1 = data[i];
+
+      if (!d0 && !d1) return;
+
+      // Find closest data point
+      const d = d1 && d0 ? (x0.getTime() - d0.date.getTime() > d1.date.getTime() - x0.getTime() ? d1 : d0) : d0 || d1;
+
+      const xPos = scales.x(d.date);
+      const yPos = scales.y(d.value);
+
+      // Update hover elements
+      hoverLineGroup.style('opacity', 1);
+      hoverLine.attr('x1', xPos).attr('x2', xPos);
+      hoverDot.attr('cx', xPos).attr('cy', yPos);
+
+      // Update tooltip state
+      setTooltip({
+        visible: true,
+        x: xPos + margin.left,
+        y: yPos + margin.top,
+        date: d.date,
+        value: d.value,
+      });
+    };
+
+    const handleMouseLeave = () => {
+      hoverLineGroup.style('opacity', 0);
+      setTooltip((prev) => ({ ...prev, visible: false }));
+    };
+
+    // Attach event listeners
+    overlay.on('mousemove', handleMouseMove);
+    overlay.on('mouseleave', handleMouseLeave);
+    overlay.on('touchstart', handleMouseMove);
+    overlay.on('touchmove', handleMouseMove);
+    overlay.on('touchend', handleMouseLeave);
   }, [data, color, height, dimensions, scales, generators]);
 
   // Generate x-axis labels
@@ -262,6 +350,14 @@ function AreaChartComponent({
           height={height}
           preserveAspectRatio="none"
           className="area-chart__svg"
+        />
+        <ChartTooltip
+          visible={tooltip.visible}
+          x={tooltip.x}
+          y={tooltip.y}
+          date={tooltip.date}
+          values={[{ label: title || '', value: tooltip.value, color }]}
+          containerRef={containerRef}
         />
       </div>
       {getXAxisLabels()}

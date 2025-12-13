@@ -1,5 +1,5 @@
 import { useAuth } from '../auth/useAuth';
-import { formatCurrency, formatPercentage } from '@finans/components';
+import { formatCurrency, formatPercentage, AreaChart } from '@finans/components';
 import { useNavigate } from 'react-router-dom';
 import { useDashboardData } from './useDashboardData';
 import { PageSkeleton, StatCard, SectionLink } from '@finans/components';
@@ -31,7 +31,8 @@ function DashboardPage() {
     savingsRate: 0,
     nextMilestone: MILESTONES[0],
     currentTowardsMilestone: 0,
-    sparingMonthlyChange: 0
+    sparingMonthlyChange: 0,
+    netWorthHistory: []
   };
 
   // Get current month/year in Norwegian
@@ -148,6 +149,18 @@ function DashboardPage() {
             </div>
           </div>
         </div>
+
+        {/* Net Worth History Chart */}
+        {data.netWorthHistory.length >= 2 && (
+          <div className="dashboard-chart">
+            <AreaChart
+              data={data.netWorthHistory}
+              title="Netto formue"
+              height={160}
+              color="var(--charcoal)"
+            />
+          </div>
+        )}
 
         {/* Section Links */}
         <div className="dashboard-links">

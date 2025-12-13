@@ -11,10 +11,12 @@
   border-radius: 2px;
   padding: 24px;
   margin-top: 32px;
+  overflow: hidden;
 }
 
 .monte-carlo-chart svg {
-  overflow: visible;
+  display: block;
+  max-width: 100%;
 }
 
 /* Chart elements */

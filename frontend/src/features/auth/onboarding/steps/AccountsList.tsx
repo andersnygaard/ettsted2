@@ -27,6 +27,8 @@ interface AccountsListProps {
   showLoanDetails?: boolean;
   /** Whether this is the pensjon category (shows public pension radio) */
   showPublicPensionRadio?: boolean;
+  /** Whether this is the gjeld category (shows primary residence radio) */
+  showPrimaryResidenceRadio?: boolean;
 }
 
 export function AccountsList({
@@ -38,6 +40,7 @@ export function AccountsList({
   onAddAccount,
   showLoanDetails = false,
   showPublicPensionRadio = false,
+  showPrimaryResidenceRadio = false,
 }: AccountsListProps) {
   // Calculate category total
   const total = accounts.reduce((sum, acc) => sum + (acc.value || 0), 0);
@@ -112,6 +115,27 @@ export function AccountsList({
                       }}
                     />
                     <span className="accounts-list__radio-label">Folketrygden</span>
+                  </label>
+                )}
+
+                {/* Primary Residence Radio (for gjeld only) */}
+                {showPrimaryResidenceRadio && (
+                  <label className="accounts-list__radio">
+                    <input
+                      type="radio"
+                      name="primaryResidence"
+                      checked={account.isPrimaryResidence === true}
+                      onChange={() => {
+                        // Clear isPrimaryResidence from all accounts, then set on this one
+                        accounts.forEach(acc => {
+                          if (acc.isPrimaryResidence) {
+                            onUpdateAccount(acc.tempId, { isPrimaryResidence: false });
+                          }
+                        });
+                        onUpdateAccount(account.tempId, { isPrimaryResidence: true });
+                      }}
+                    />
+                    <span className="accounts-list__radio-label">Primærbolig</span>
                   </label>
                 )}
 

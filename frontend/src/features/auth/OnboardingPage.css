@@ -12,7 +12,7 @@
 }
 
 .onboarding-page__header {
-  padding: 1.5rem 2rem;
+  padding: 1rem;
   border-bottom: 1px solid var(--border);
 }
 
@@ -38,9 +38,9 @@
   padding: var(--space-md) 0;
 }
 
-/* Responsive */
-@media (max-width: 640px) {
+/* Mobile-first: base is mobile, tablet and up */
+@media (min-width: 640px) {
   .onboarding-page__header {
-    padding: 1rem;
+    padding: 1.5rem 2rem;
   }
 }

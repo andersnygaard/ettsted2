@@ -360,6 +360,129 @@ describe('usePensjonData', () => {
     });
   });
 
+  describe('chart data aggregation for Totalt/Per Konto tabs', () => {
+    it('includes privatePension and publicPension aggregated keys in accountHistory', async () => {
+      const snapshots = createMockSnapshots(2).map((snap, i) => ({
+        ...snap,
+        accounts: [
+          { id: 'acc-1', name: 'OTP', assetClass: 'pensjon', value: 100000 * (i + 1), isPublicPension: false },
+          { id: 'acc-2', name: 'IPS', assetClass: 'pensjon', value: 50000 * (i + 1), isPublicPension: false },
+          { id: 'acc-3', name: 'NAV', assetClass: 'pensjon', value: 30000 * (i + 1), isPublicPension: true },
+        ],
+      }));
+
+      mockGetAll.mockResolvedValue(snapshots);
+
+      const { result } = renderHookWithQueryClient(() => usePensjonData());
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+      const accountHistory = result.current.data?.accountHistory;
+      expect(accountHistory).toBeDefined();
+      expect(accountHistory?.length).toBe(2);
+
+      // First data point should have individual account values plus aggregated values
+      const firstPoint = accountHistory?.[0];
+      expect(firstPoint?.['acc-1']).toBe(100000); // First OTP
+      expect(firstPoint?.['acc-2']).toBe(50000);  // First IPS
+      expect(firstPoint?.['acc-3']).toBe(30000);  // First NAV
+      expect(firstPoint?.['privatePension']).toBe(150000); // OTP + IPS
+      expect(firstPoint?.['publicPension']).toBe(30000);   // NAV
+
+      // Second data point
+      const secondPoint = accountHistory?.[1];
+      expect(secondPoint?.['privatePension']).toBe(300000); // (100k + 50k) * 2
+      expect(secondPoint?.['publicPension']).toBe(60000);   // 30k * 2
+    });
+
+    it('correctly separates private and public pensions across snapshots', async () => {
+      const snapshots = [
+        createMockSnapshot({
+          id: 'snap-1',
+          date: '01.01.2024',
+          accounts: [
+            { id: 'acc-1', name: 'OTP', assetClass: 'pensjon', value: 200000, isPublicPension: false },
+            { id: 'acc-2', name: 'NAV', assetClass: 'pensjon', value: 100000, isPublicPension: true },
+          ],
+        }),
+        createMockSnapshot({
+          id: 'snap-2',
+          date: '01.02.2024',
+          accounts: [
+            { id: 'acc-1', name: 'OTP', assetClass: 'pensjon', value: 250000, isPublicPension: false },
+            { id: 'acc-2', name: 'NAV', assetClass: 'pensjon', value: 120000, isPublicPension: true },
+            { id: 'acc-3', name: 'IPS', assetClass: 'pensjon', value: 50000, isPublicPension: false },
+          ],
+        }),
+      ];
+
+      mockGetAll.mockResolvedValue(snapshots);
+
+      const { result } = renderHookWithQueryClient(() => usePensjonData());
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+      const accountHistory = result.current.data?.accountHistory;
+      expect(accountHistory?.length).toBe(2);
+
+      // January: 200k private (OTP) + 100k public (NAV)
+      expect(accountHistory?.[0]?.['privatePension']).toBe(200000);
+      expect(accountHistory?.[0]?.['publicPension']).toBe(100000);
+
+      // February: 300k private (OTP + IPS) + 120k public (NAV)
+      expect(accountHistory?.[1]?.['privatePension']).toBe(300000);
+      expect(accountHistory?.[1]?.['publicPension']).toBe(120000);
+    });
+
+    it('handles new accounts added over time - aggregation only counts existing accounts', async () => {
+      const snapshots = [
+        createMockSnapshot({
+          id: 'snap-1',
+          date: '01.01.2024',
+          accounts: [
+            { id: 'acc-1', name: 'OTP', assetClass: 'pensjon', value: 100000, isPublicPension: false },
+            { id: 'acc-2', name: 'NAV', assetClass: 'pensjon', value: 50000, isPublicPension: true },
+            // acc-3 not added yet
+          ],
+        }),
+        createMockSnapshot({
+          id: 'snap-2',
+          date: '01.02.2024',
+          accounts: [
+            { id: 'acc-1', name: 'OTP', assetClass: 'pensjon', value: 120000, isPublicPension: false },
+            { id: 'acc-2', name: 'NAV', assetClass: 'pensjon', value: 60000, isPublicPension: true },
+            { id: 'acc-3', name: 'IPS', assetClass: 'pensjon', value: 40000, isPublicPension: false }, // NEW in Feb
+          ],
+        }),
+      ];
+
+      mockGetAll.mockResolvedValue(snapshots);
+
+      const { result } = renderHookWithQueryClient(() => usePensjonData());
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+      const accountHistory = result.current.data?.accountHistory;
+      expect(accountHistory?.length).toBe(2);
+
+      // After fix: accounts from ALL snapshots appear in legend (acc-1, acc-2, acc-3)
+      // But aggregation only counts accounts that exist in that specific snapshot
+      expect(accountHistory?.[0]?.['acc-1']).toBe(100000);
+      expect(accountHistory?.[0]?.['acc-2']).toBe(50000);
+      expect(accountHistory?.[0]?.['acc-3']).toBe(0); // Didn't exist yet - appears for Per Konto legend
+
+      // Aggregation now only counts existing accounts:
+      // January: only acc-1 (100k private) + acc-2 (50k public)
+      // No longer counts the 0 from acc-3
+      expect(accountHistory?.[0]?.['privatePension']).toBe(100000);
+      expect(accountHistory?.[0]?.['publicPension']).toBe(50000);
+
+      // February: all accounts exist
+      expect(accountHistory?.[1]?.['privatePension']).toBe(160000); // 120k + 40k
+      expect(accountHistory?.[1]?.['publicPension']).toBe(60000);
+    });
+  });
+
   describe('loading and error states', () => {
     it('returns loading state initially', () => {
       mockGetAll.mockImplementation(

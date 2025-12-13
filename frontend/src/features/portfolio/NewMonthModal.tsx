@@ -70,18 +70,35 @@ export function NewMonthModal({ isOpen, onClose, onSuccess, latestSnapshot }: Ne
   const [formData, setFormData] = useState<Record<string, number | undefined>>({});
   const [errors, setErrors] = useState<FormErrors>({});
 
-  // Generate available years (2020 to current year)
+  // Generate available years (2020 to current year + 1)
+  // Include next year to allow users to create snapshots for future months in advance
   const availableYears = useMemo(() => {
     const currentYear = new Date().getFullYear();
-    return Array.from({ length: currentYear - 2019 }, (_, i) => 2020 + i);
+    const nextYear = currentYear + 1;
+    return Array.from({ length: nextYear - 2019 }, (_, i) => 2020 + i);
   }, []);
 
   // Check if a month/year combination is in the future
+  // Allow selecting months up to next year to enable advance entry
   const isMonthDisabled = useMemo(() => {
     return (monthIndex: number, year: number) => {
       const now = new Date();
-      return year > now.getFullYear() ||
-             (year === now.getFullYear() && monthIndex > now.getMonth());
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+      const nextYear = currentYear + 1;
+
+      // Allow current year and next year only
+      if (year < currentYear || year > nextYear) {
+        return true;
+      }
+
+      // In current year: allow up to current month
+      if (year === currentYear) {
+        return monthIndex > currentMonth;
+      }
+
+      // In next year: allow all months
+      return false;
     };
   }, []);
 

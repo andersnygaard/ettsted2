@@ -1,5 +1,4 @@
-import { PageSkeleton, HeroNumber, AreaChart, formatCurrency } from '@finans/components';
-import type { DataPoint } from '@finans/components';
+import { PageSkeleton, HeroNumber, ChartWithTabs, formatCurrency } from '@finans/components';
 import { useGjeldData } from './useGjeldData';
 import { useAuth } from '../auth/useAuth';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
@@ -60,7 +59,9 @@ function GjeldPage() {
     coverage: 100,
     remaining: 0,
     loans: [],
-    history: []
+    history: [],
+    accountHistory: [],
+    accounts: []
   };
 
   // Merge loan info with user account details for interest rate and years
@@ -77,9 +78,6 @@ function GjeldPage() {
       yearsRemaining: accountConfig?.loanDetails?.remainingYears ?? 0
     };
   });
-
-  // Use history directly (already in DataPoint format)
-  const debtHistory: DataPoint[] = data.history;
 
   // Calculate change percentage (handle division by zero)
   const changePercentage = data.totalDebt > 0 ? (data.monthlyChange / data.totalDebt) * 100 : 0;
@@ -111,11 +109,12 @@ function GjeldPage() {
 
         <LoansList loans={loans} />
 
-      <AreaChart
-        data={debtHistory}
+      <ChartWithTabs
+        data={data.accountHistory}
+        accounts={data.accounts}
         title="Gjeldsutvikling"
         subtitle="Nedgang over tid"
-        color="var(--pale-blue)"
+        totalColor="var(--pale-blue)"
         height={180}
       />
     </PageSkeleton>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import './Modal.css'
 
 /**
@@ -27,6 +27,7 @@ export function Modal({
   closeOnOverlay = true
 }: ModalProps) {
   const [isClosing, setIsClosing] = useState(false)
+  const titleId = `modal-title-${useId()}`
 
   // Handle close with exit animation
   const handleClose = () => {
@@ -126,9 +127,12 @@ export function Modal({
       <div
         className={`modal ${!isClosing ? 'open' : ''}`}
         onClick={handleModalClick}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
       >
         <div className="modal__header">
-          <h2 className="modal__title">{title}</h2>
+          <h2 id={titleId} className="modal__title">{title}</h2>
           <button
             className="modal__close"
             onClick={handleClose}

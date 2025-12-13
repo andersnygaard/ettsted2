@@ -19,27 +19,6 @@
   }
 }
 
-/* Skip-to-content link - hidden by default, visible on focus */
-.skip-link {
-  position: absolute;
-  left: -9999px;
-  background: var(--warm-white);
-  color: var(--charcoal);
-  padding: 8px 16px;
-  border-radius: 4px;
-  text-decoration: none;
-  font-family: var(--font-body);
-  z-index: 9998;
-}
-
-.skip-link:focus {
-  left: 16px;
-  top: 16px;
-  z-index: 9999;
-  outline: 2px solid var(--focus-color);
-  outline-offset: 2px;
-}
-
 .page-skeleton {
   /* Page entrance animation - applied on mount */
   /* Using 'both' fill-mode to avoid race condition with lazy-loaded chunks */

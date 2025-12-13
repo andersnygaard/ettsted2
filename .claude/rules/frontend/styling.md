@@ -1,3 +1,8 @@
+---
+paths:
+  - frontend/**/*
+---
+
 # Styling Rules
 
 ## Stack

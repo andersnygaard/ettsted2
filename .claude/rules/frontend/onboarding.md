@@ -1,3 +1,8 @@
+---
+paths:
+  - frontend/**/*
+---
+
 # Onboarding Rules
 
 ## Stack

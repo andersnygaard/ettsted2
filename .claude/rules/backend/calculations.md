@@ -1,3 +1,8 @@
+---
+paths:
+  - backend/**/*
+---
+
 # Calculations Rules
 
 ## Stack

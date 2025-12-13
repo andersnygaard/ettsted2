@@ -1,3 +1,8 @@
+---
+paths:
+  - frontend/**/*
+---
+
 # State Rules
 
 ## Stack

@@ -1,3 +1,8 @@
+---
+paths:
+  - e2e/**/*
+---
+
 # Auth Rules
 
 ## Stack

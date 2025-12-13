@@ -1,3 +1,8 @@
+---
+paths:
+  - frontend/**/*
+---
+
 # Error Handling Rules
 
 ## Stack

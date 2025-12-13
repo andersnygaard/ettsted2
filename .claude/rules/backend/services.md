@@ -1,3 +1,8 @@
+---
+paths:
+  - backend/**/*
+---
+
 # Services Rules
 
 ## Stack

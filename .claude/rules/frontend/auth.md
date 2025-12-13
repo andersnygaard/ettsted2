@@ -1,3 +1,8 @@
+---
+paths:
+  - frontend/**/*
+---
+
 # Auth Rules
 
 ## Stack

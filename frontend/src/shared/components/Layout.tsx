@@ -5,6 +5,11 @@ import './Layout.css';
 function Layout() {
   return (
     <div className="app-layout">
+      {/* Skip link for keyboard navigation */}
+      <a href="#main-content" className="skip-link">
+        Hopp til hovedinnhold
+      </a>
+
       {/* App Header with Navigation */}
       <AppHeader />
 

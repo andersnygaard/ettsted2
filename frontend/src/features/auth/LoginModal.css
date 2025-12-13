@@ -66,14 +66,15 @@
   color: var(--charcoal);
 }
 
+/* Mobile-first: compact padding and smaller title */
 .login-modal__content {
-  padding: 2.5rem 1.5rem 2rem;
+  padding: 2rem 1.5rem 1.5rem;
   text-align: center;
 }
 
 .login-modal__title {
   font-family: var(--font-heading);
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 400;
   color: var(--charcoal);
   margin: 0 0 0.5rem 0;
@@ -92,14 +93,15 @@
   gap: var(--space-sm);
 }
 
+/* Mobile-first: smaller padding and text size */
 .login-modal__btn {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-xl);
+  padding: 0.75rem 1rem;
   font-family: var(--font-body);
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 500;
   border-radius: 4px;
   cursor: pointer;
@@ -248,18 +250,18 @@
   }
 }
 
-/* Responsive */
-@media (max-width: 640px) {
+/* Tablet and up: larger padding and text */
+@media (min-width: 641px) {
   .login-modal__content {
-    padding: 2rem 1.5rem 1.5rem;
+    padding: 2.5rem 1.5rem 2rem;
   }
 
   .login-modal__title {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
 
   .login-modal__btn {
-    padding: 0.75rem 1rem;
-    font-size: 0.875rem;
+    padding: var(--space-sm) var(--space-xl);
+    font-size: 0.9375rem;
   }
 }

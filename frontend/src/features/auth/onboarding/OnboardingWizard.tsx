@@ -328,19 +328,22 @@ export function OnboardingWizard({ mode = 'create', initialState, onComplete }: 
     return Object.keys(errors).length === 0;
   }, [state]);
 
+  // Max step is always 4 (3 categories + profile)
+  const maxStep = 4;
+
   // Handle next button click
   const handleNext = useCallback(() => {
     if (!validateCurrentStep()) {
       return;
     }
 
-    if (state.currentStep < 4) {
+    if (state.currentStep < maxStep) {
       dispatch({ type: 'SET_STEP', step: (state.currentStep + 1) as WizardStep });
     } else {
       // Final step - submit
       handleSubmit();
     }
-  }, [state.currentStep, validateCurrentStep]);
+  }, [state.currentStep, maxStep, validateCurrentStep]);
 
   // Handle back button click
   const handleBack = useCallback(() => {
@@ -507,7 +510,7 @@ export function OnboardingWizard({ mode = 'create', initialState, onComplete }: 
               <span className="onboarding-wizard__spinner" />
               <span>Lagrer...</span>
             </>
-          ) : state.currentStep === 4 ? (
+          ) : state.currentStep === maxStep ? (
             <>
               <Icon name="check" size={18} />
               <span>Fullfør</span>

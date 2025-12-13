@@ -1,0 +1,79 @@
+/**
+ * Tabs Component Styles
+ *
+ * Reusable tabs with underline active indicator.
+ * Mobile-first responsive design following Nordic Minimal tokens.
+ */
+
+.tabs {
+  display: flex;
+  gap: var(--space-xs);
+  border-bottom: 1px solid var(--border);
+  padding: 0 var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+
+/* Individual tab button */
+.tabs__tab {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-height: var(--touch-target-min);
+  outline: none;
+}
+
+.tabs__tab:hover {
+  color: var(--charcoal);
+}
+
+.tabs__tab:focus-visible {
+  outline: 2px solid var(--focus-color);
+  outline-offset: -2px;
+}
+
+/* Active tab */
+.tabs__tab--active {
+  color: var(--charcoal);
+  border-bottom-color: var(--charcoal);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Tablet and up: Center tabs, increase padding */
+@media (min-width: 768px) {
+  .tabs {
+    justify-content: center;
+    gap: var(--space-lg);
+    padding: 0 var(--space-md);
+  }
+
+  .tabs__tab {
+    flex: 0 0 auto;
+    min-width: 140px;
+    font-size: var(--font-size-base);
+  }
+}
+
+/* Desktop: Larger spacing */
+@media (min-width: 1024px) {
+  .tabs__tab {
+    min-width: 160px;
+    padding: var(--space-md) var(--space-lg);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .tabs__tab {
+    transition: none;
+  }
+}

@@ -10,7 +10,8 @@ import {
   runMonteCarloSimulation,
   calculateCompoundInterest,
   calculateFire,
-  calculateLoan
+  calculateLoan,
+  calculateFlexiLoan
 } from '../services/calculatorService';
 import { asyncHandler } from '../middleware/errorHandler';
 import { logger } from '../utils/logger';
@@ -30,7 +31,9 @@ export const monteCarloSimulation = asyncHandler(async (req: Request, res: Respo
     years,
     expectedReturn = 7,
     volatility = 15,
-    simulations = 1000
+    simulations = 1000,
+    inflation = 2,
+    showRealValues = false
   } = req.body;
 
   // Cap simulations at 10,000
@@ -43,7 +46,9 @@ export const monteCarloSimulation = asyncHandler(async (req: Request, res: Respo
     years,
     expectedReturn: expectedReturn / 100,
     volatility: volatility / 100,
-    simulations: cappedSimulations
+    simulations: cappedSimulations,
+    inflation: inflation / 100,
+    showRealValues
   });
 
   logger.info('Monte Carlo simulation completed', {
@@ -51,6 +56,8 @@ export const monteCarloSimulation = asyncHandler(async (req: Request, res: Respo
     annualWithdrawal,
     years,
     simulations: cappedSimulations,
+    inflation,
+    showRealValues,
     successRate: result.successRate
   });
 
@@ -169,6 +176,42 @@ export const loanCalculation = asyncHandler(async (req: Request, res: Response) 
     years,
     monthlyPayment: result.monthlyPayment,
     effectiveYears: result.effectiveYears
+  });
+
+  res.json({
+    data: result,
+    success: true
+  });
+});
+
+/**
+ * POST /api/v1/calculators/flexi-loan
+ * Calculate flexible loan payoff schedule
+ *
+ * @param req - Express request with validated body
+ * @param res - Express response
+ * @returns 200 with flexible loan calculation results
+ */
+export const flexiLoanCalculation = asyncHandler(async (req: Request, res: Response) => {
+  const {
+    outstandingBalance,
+    annualRate,
+    monthlyPayment,
+    creditLimit
+  } = req.body;
+
+  const result = calculateFlexiLoan({
+    outstandingBalance,
+    annualRate: annualRate / 100, // Convert percentage to decimal
+    monthlyPayment,
+    creditLimit
+  });
+
+  logger.info('Flexible loan calculation completed', {
+    outstandingBalance,
+    annualRate,
+    monthlyPayment,
+    monthsToPayoff: result.monthsToPayoff
   });
 
   res.json({

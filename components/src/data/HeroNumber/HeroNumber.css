@@ -33,8 +33,7 @@
   color: var(--charcoal);
   line-height: 1;
   letter-spacing: var(--letter-spacing-tight);
-  text-overflow: ellipsis;
-  overflow: hidden;
+  /* Prevent mid-number wrapping without truncation */
   white-space: nowrap;
 }
 

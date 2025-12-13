@@ -96,7 +96,10 @@ export function getDefaultAccounts(): {
  * Create a new empty account for a category
  */
 export function createNewAccount(category: Category): OnboardingAccount {
-  const baseName = category === 'sparing' ? 'Ny konto' : category === 'gjeld' ? 'Nytt lån' : 'Ny pensjon';
+  const baseName =
+    category === 'sparing' ? 'Ny konto' :
+    category === 'gjeld' ? 'Nytt lån' :
+    'Ny pensjon';
   return createDefaultAccount(
     baseName,
     category,

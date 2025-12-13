@@ -15,7 +15,8 @@ import {
   monteCarloSimulation,
   compoundCalculation,
   fireCalculation,
-  loanCalculation
+  loanCalculation,
+  flexiLoanCalculation
 } from '../controllers/calculatorController';
 import { calculatorRateLimiter } from '../middleware/rateLimiter';
 import { validateBody } from '../middleware/validate';
@@ -23,7 +24,8 @@ import {
   monteCarloSchema,
   compoundSchema,
   fireSchema,
-  loanSchema
+  loanSchema,
+  flexiLoanSchema
 } from '../validators/schemas';
 
 const router: IRouter = Router();
@@ -134,6 +136,33 @@ router.post(
   calculatorRateLimiter,
   validateBody(loanSchema),
   loanCalculation
+);
+
+/**
+ * POST /api/v1/kalkulatorer/fleksilan
+ * Calculate flexible loan (fleksilån) payoff schedule
+ *
+ * Body: {
+ *   outstandingBalance: number (required) - Current debt amount in NOK
+ *   annualRate: number (required) - Annual interest rate as percentage (e.g., 5 for 5%)
+ *   monthlyPayment: number (required) - User's planned monthly payment in NOK
+ *   creditLimit?: number - Optional credit limit for context
+ * }
+ *
+ * Returns: 200 with flexible loan calculation results including:
+ * - monthsToPayoff: Number of months to pay off
+ * - yearsToPayoff: Formatted as "X år, Y måneder"
+ * - totalInterestPaid: Total interest over payoff period
+ * - totalPaid: Total amount paid (principal + interest)
+ * - payoffDate: Estimated payoff date (dd.MM.yyyy)
+ * - warning: Optional warning if payment barely covers interest
+ * - amortizationSchedule: Monthly breakdown
+ */
+router.post(
+  '/fleksilan',
+  calculatorRateLimiter,
+  validateBody(flexiLoanSchema),
+  flexiLoanCalculation
 );
 
 export default router;

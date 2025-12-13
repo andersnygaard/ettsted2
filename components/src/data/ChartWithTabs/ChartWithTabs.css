@@ -1,0 +1,47 @@
+/**
+ * ChartWithTabs Component Styles
+ *
+ * Tab switching for historical charts (Totalt vs Per Konto)
+ * Mobile-first responsive design following Nordic Minimal tokens
+ *
+ * Note: Tab button styles have been moved to Tabs component
+ */
+
+.chart-with-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* Tab content area */
+.chart-with-tabs__content {
+  position: relative;
+}
+
+.chart-with-tabs__panel {
+  animation: fadeIn var(--transition-fast);
+}
+
+/* Fade in animation for tab switching */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Desktop: Larger spacing */
+@media (min-width: 1024px) {
+  .chart-with-tabs {
+    gap: var(--space-lg);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .chart-with-tabs__panel {
+    animation: none;
+  }
+}

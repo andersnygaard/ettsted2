@@ -1,17 +1,253 @@
 [
   {
+    "id": "demo-snap-2022-12",
+    "userId": "demo-user-001",
+    "date": "01.12.2022",
+    "accounts": [
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 145000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 225000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 75000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4000000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2300000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -280000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 220000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 160000 }
+    ],
+    "totalNetWorth": 1845000,
+    "createdAt": "2022-12-01T00:00:00.000Z",
+    "updatedAt": "2022-12-01T00:00:00.000Z"
+  },
+  {
+    "id": "demo-snap-2023-01",
+    "userId": "demo-user-001",
+    "date": "01.01.2023",
+    "accounts": [
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 152000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 238000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 78000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4016000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2296000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -276000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 228000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 165000 }
+    ],
+    "totalNetWorth": 1909000,
+    "createdAt": "2023-01-01T00:00:00.000Z",
+    "updatedAt": "2023-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "demo-snap-2023-02",
+    "userId": "demo-user-001",
+    "date": "01.02.2023",
+    "accounts": [
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 165000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 258000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 80000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4032000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2292000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -272000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 237000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 170000 }
+    ],
+    "totalNetWorth": 1978000,
+    "createdAt": "2023-02-01T00:00:00.000Z",
+    "updatedAt": "2023-02-01T00:00:00.000Z"
+  },
+  {
+    "id": "demo-snap-2023-03",
+    "userId": "demo-user-001",
+    "date": "01.03.2023",
+    "accounts": [
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 178000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 280000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 82000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4048000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2288000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -268000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 246000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 175000 }
+    ],
+    "totalNetWorth": 2053000,
+    "createdAt": "2023-03-01T00:00:00.000Z",
+    "updatedAt": "2023-03-01T00:00:00.000Z"
+  },
+  {
+    "id": "demo-snap-2023-04",
+    "userId": "demo-user-001",
+    "date": "01.04.2023",
+    "accounts": [
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 195000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 305000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 85000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4064000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2284000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -264000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 256000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 180000 }
+    ],
+    "totalNetWorth": 2141000,
+    "createdAt": "2023-04-01T00:00:00.000Z",
+    "updatedAt": "2023-04-01T00:00:00.000Z"
+  },
+  {
+    "id": "demo-snap-2023-05",
+    "userId": "demo-user-001",
+    "date": "01.05.2023",
+    "accounts": [
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 213000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 333000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 88000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4080000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2280000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -260000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 266000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 185000 }
+    ],
+    "totalNetWorth": 2233000,
+    "createdAt": "2023-05-01T00:00:00.000Z",
+    "updatedAt": "2023-05-01T00:00:00.000Z"
+  },
+  {
+    "id": "demo-snap-2023-06",
+    "userId": "demo-user-001",
+    "date": "01.06.2023",
+    "accounts": [
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 232000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 362000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 91000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4096000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2276000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -256000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 276000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 190000 }
+    ],
+    "totalNetWorth": 2313000,
+    "createdAt": "2023-06-01T00:00:00.000Z",
+    "updatedAt": "2023-06-01T00:00:00.000Z"
+  },
+  {
+    "id": "demo-snap-2023-07",
+    "userId": "demo-user-001",
+    "date": "01.07.2023",
+    "accounts": [
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 247000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 387000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 93000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4112000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2272000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -252000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 286000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 195000 }
+    ],
+    "totalNetWorth": 2396000,
+    "createdAt": "2023-07-01T00:00:00.000Z",
+    "updatedAt": "2023-07-01T00:00:00.000Z"
+  },
+  {
+    "id": "demo-snap-2023-08",
+    "userId": "demo-user-001",
+    "date": "01.08.2023",
+    "accounts": [
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 261000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 410000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 96000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4128000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2268000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -248000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 296000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 200000 }
+    ],
+    "totalNetWorth": 2485000,
+    "createdAt": "2023-08-01T00:00:00.000Z",
+    "updatedAt": "2023-08-01T00:00:00.000Z"
+  },
+  {
+    "id": "demo-snap-2023-09",
+    "userId": "demo-user-001",
+    "date": "01.09.2023",
+    "accounts": [
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 275000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 433000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 98000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4144000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2264000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -244000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 307000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 206000 }
+    ],
+    "totalNetWorth": 2578000,
+    "createdAt": "2023-09-01T00:00:00.000Z",
+    "updatedAt": "2023-09-01T00:00:00.000Z"
+  },
+  {
+    "id": "demo-snap-2023-10",
+    "userId": "demo-user-001",
+    "date": "01.10.2023",
+    "accounts": [
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 290000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 456000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 101000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4160000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2260000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -240000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 317000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 211000 }
+    ],
+    "totalNetWorth": 2675000,
+    "createdAt": "2023-10-01T00:00:00.000Z",
+    "updatedAt": "2023-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "demo-snap-2023-11",
+    "userId": "demo-user-001",
+    "date": "01.11.2023",
+    "accounts": [
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 305000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 480000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 103000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4176000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2256000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -236000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 327000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 216000 }
+    ],
+    "totalNetWorth": 2772000,
+    "createdAt": "2023-11-01T00:00:00.000Z",
+    "updatedAt": "2023-11-01T00:00:00.000Z"
+  },
+  {
+    "id": "demo-snap-2023-12",
+    "userId": "demo-user-001",
+    "date": "01.12.2023",
+    "accounts": [
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 320000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 505000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 106000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4192000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2252000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -232000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 337000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 221000 }
+    ],
+    "totalNetWorth": 2877000,
+    "createdAt": "2023-12-01T00:00:00.000Z",
+    "updatedAt": "2023-12-01T00:00:00.000Z"
+  },
+  {
     "id": "demo-snap-2024-01",
     "userId": "demo-user-001",
     "date": "01.01.2024",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 280000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 520000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 95000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2400000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 450000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 380000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 328000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 518000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 108000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4208000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2248000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -228000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 347000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 226000 }
     ],
-    "totalNetWorth": -675000,
+    "totalNetWorth": 2967000,
     "createdAt": "2024-01-01T00:00:00.000Z",
     "updatedAt": "2024-01-01T00:00:00.000Z"
   },
@@ -20,14 +256,16 @@
     "userId": "demo-user-001",
     "date": "01.02.2024",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 285000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 528000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 97000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2396000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 455000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 382000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 336000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 530000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 110000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4224000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2244000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -224000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 357000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 231000 }
     ],
-    "totalNetWorth": -649000,
+    "totalNetWorth": 3060000,
     "createdAt": "2024-02-01T00:00:00.000Z",
     "updatedAt": "2024-02-01T00:00:00.000Z"
   },
@@ -36,14 +274,16 @@
     "userId": "demo-user-001",
     "date": "01.03.2024",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 292000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 535000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 99000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2392000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 460000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 384000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 345000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 543000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 113000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4240000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2240000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -220000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 367000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 236000 }
     ],
-    "totalNetWorth": -622000,
+    "totalNetWorth": 3156000,
     "createdAt": "2024-03-01T00:00:00.000Z",
     "updatedAt": "2024-03-01T00:00:00.000Z"
   },
@@ -52,14 +292,16 @@
     "userId": "demo-user-001",
     "date": "01.04.2024",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 298000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 542000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 101000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2388000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 466000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 386000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 354000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 557000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 115000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4256000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2236000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -216000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 377000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 241000 }
     ],
-    "totalNetWorth": -595000,
+    "totalNetWorth": 3255000,
     "createdAt": "2024-04-01T00:00:00.000Z",
     "updatedAt": "2024-04-01T00:00:00.000Z"
   },
@@ -68,14 +310,16 @@
     "userId": "demo-user-001",
     "date": "01.05.2024",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 305000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 550000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 103000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2384000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 472000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 388000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 363000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 571000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 118000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4272000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2232000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -212000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 387000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 246000 }
     ],
-    "totalNetWorth": -566000,
+    "totalNetWorth": 3358000,
     "createdAt": "2024-05-01T00:00:00.000Z",
     "updatedAt": "2024-05-01T00:00:00.000Z"
   },
@@ -84,14 +328,16 @@
     "userId": "demo-user-001",
     "date": "01.06.2024",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 310000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 558000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 106000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2380000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 478000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 390000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 372000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 585000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 121000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4288000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2228000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -208000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 397000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 251000 }
     ],
-    "totalNetWorth": -538000,
+    "totalNetWorth": 3464000,
     "createdAt": "2024-06-01T00:00:00.000Z",
     "updatedAt": "2024-06-01T00:00:00.000Z"
   },
@@ -100,14 +346,16 @@
     "userId": "demo-user-001",
     "date": "01.07.2024",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 318000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 565000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 108000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2376000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 484000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 392000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 381000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 599000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 124000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4304000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2224000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -204000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 407000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 256000 }
     ],
-    "totalNetWorth": -509000,
+    "totalNetWorth": 3574000,
     "createdAt": "2024-07-01T00:00:00.000Z",
     "updatedAt": "2024-07-01T00:00:00.000Z"
   },
@@ -116,14 +364,16 @@
     "userId": "demo-user-001",
     "date": "01.08.2024",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 325000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 573000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 110000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2372000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 490000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 394000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 390000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 613000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 127000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4320000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2220000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -200000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 417000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 261000 }
     ],
-    "totalNetWorth": -480000,
+    "totalNetWorth": 3688000,
     "createdAt": "2024-08-01T00:00:00.000Z",
     "updatedAt": "2024-08-01T00:00:00.000Z"
   },
@@ -132,14 +382,16 @@
     "userId": "demo-user-001",
     "date": "01.09.2024",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 332000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 582000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 112000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2368000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 496000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 396000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 399000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 627000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 129000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4336000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2216000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -196000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 427000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 266000 }
     ],
-    "totalNetWorth": -450000,
+    "totalNetWorth": 3807000,
     "createdAt": "2024-09-01T00:00:00.000Z",
     "updatedAt": "2024-09-01T00:00:00.000Z"
   },
@@ -148,14 +400,16 @@
     "userId": "demo-user-001",
     "date": "01.10.2024",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 340000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 590000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 115000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2364000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 502000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 398000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 408000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 641000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 132000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4352000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2212000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -192000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 437000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 271000 }
     ],
-    "totalNetWorth": -419000,
+    "totalNetWorth": 3931000,
     "createdAt": "2024-10-01T00:00:00.000Z",
     "updatedAt": "2024-10-01T00:00:00.000Z"
   },
@@ -164,14 +418,16 @@
     "userId": "demo-user-001",
     "date": "01.11.2024",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 348000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 598000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 117000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2360000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 508000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 400000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 417000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 655000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 135000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4368000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2208000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -188000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 447000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 276000 }
     ],
-    "totalNetWorth": -389000,
+    "totalNetWorth": 4059000,
     "createdAt": "2024-11-01T00:00:00.000Z",
     "updatedAt": "2024-11-01T00:00:00.000Z"
   },
@@ -180,14 +436,16 @@
     "userId": "demo-user-001",
     "date": "01.12.2024",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 355000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 608000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 120000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2356000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 515000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 402000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 426000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 669000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 138000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4384000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2204000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -184000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 457000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 281000 }
     ],
-    "totalNetWorth": -356000,
+    "totalNetWorth": 4192000,
     "createdAt": "2024-12-01T00:00:00.000Z",
     "updatedAt": "2024-12-01T00:00:00.000Z"
   },
@@ -196,14 +454,16 @@
     "userId": "demo-user-001",
     "date": "01.01.2025",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 362000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 618000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 122000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2352000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 522000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 404000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 435000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 683000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 141000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4400000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2200000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -180000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 467000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 286000 }
     ],
-    "totalNetWorth": -324000,
+    "totalNetWorth": 4330000,
     "createdAt": "2025-01-01T00:00:00.000Z",
     "updatedAt": "2025-01-01T00:00:00.000Z"
   },
@@ -212,14 +472,16 @@
     "userId": "demo-user-001",
     "date": "01.02.2025",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 370000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 628000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 125000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2348000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 529000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 406000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 444000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 697000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 144000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4416000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2196000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -176000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 477000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 291000 }
     ],
-    "totalNetWorth": -290000,
+    "totalNetWorth": 4473000,
     "createdAt": "2025-02-01T00:00:00.000Z",
     "updatedAt": "2025-02-01T00:00:00.000Z"
   },
@@ -228,14 +490,16 @@
     "userId": "demo-user-001",
     "date": "01.03.2025",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 378000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 638000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 127000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2344000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 536000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 408000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 453000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 711000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 147000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4432000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2192000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -172000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 487000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 296000 }
     ],
-    "totalNetWorth": -257000,
+    "totalNetWorth": 4621000,
     "createdAt": "2025-03-01T00:00:00.000Z",
     "updatedAt": "2025-03-01T00:00:00.000Z"
   },
@@ -244,14 +508,16 @@
     "userId": "demo-user-001",
     "date": "01.04.2025",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 386000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 648000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 130000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2340000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 543000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 410000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 462000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 726000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 150000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4448000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2188000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -168000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 497000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 301000 }
     ],
-    "totalNetWorth": -223000,
+    "totalNetWorth": 4774000,
     "createdAt": "2025-04-01T00:00:00.000Z",
     "updatedAt": "2025-04-01T00:00:00.000Z"
   },
@@ -260,14 +526,16 @@
     "userId": "demo-user-001",
     "date": "01.05.2025",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 395000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 658000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 132000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2336000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 550000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 412000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 471000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 740000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 153000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4464000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2184000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -164000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 507000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 306000 }
     ],
-    "totalNetWorth": -189000,
+    "totalNetWorth": 4932000,
     "createdAt": "2025-05-01T00:00:00.000Z",
     "updatedAt": "2025-05-01T00:00:00.000Z"
   },
@@ -276,14 +544,16 @@
     "userId": "demo-user-001",
     "date": "01.06.2025",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 404000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 670000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 135000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2332000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 558000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 414000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 480000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 755000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 156000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4480000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2180000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -160000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 517000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 311000 }
     ],
-    "totalNetWorth": -151000,
+    "totalNetWorth": 5095000,
     "createdAt": "2025-06-01T00:00:00.000Z",
     "updatedAt": "2025-06-01T00:00:00.000Z"
   },
@@ -292,14 +562,16 @@
     "userId": "demo-user-001",
     "date": "01.07.2025",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 412000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 682000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 138000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2328000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 566000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 416000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 489000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 770000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 159000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4496000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2176000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -156000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 527000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 316000 }
     ],
-    "totalNetWorth": -114000,
+    "totalNetWorth": 5262000,
     "createdAt": "2025-07-01T00:00:00.000Z",
     "updatedAt": "2025-07-01T00:00:00.000Z"
   },
@@ -308,14 +580,16 @@
     "userId": "demo-user-001",
     "date": "01.08.2025",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 422000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 694000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 140000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2324000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 574000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 418000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 498000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 785000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 162000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4512000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2172000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -152000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 537000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 321000 }
     ],
-    "totalNetWorth": -76000,
+    "totalNetWorth": 5433000,
     "createdAt": "2025-08-01T00:00:00.000Z",
     "updatedAt": "2025-08-01T00:00:00.000Z"
   },
@@ -324,14 +598,16 @@
     "userId": "demo-user-001",
     "date": "01.09.2025",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 432000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 706000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 143000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2320000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 582000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 420000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 507000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 800000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 165000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4528000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2168000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -148000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 547000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 326000 }
     ],
-    "totalNetWorth": -37000,
+    "totalNetWorth": 5608000,
     "createdAt": "2025-09-01T00:00:00.000Z",
     "updatedAt": "2025-09-01T00:00:00.000Z"
   },
@@ -340,14 +616,16 @@
     "userId": "demo-user-001",
     "date": "01.10.2025",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 442000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 718000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 146000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2316000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 590000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 422000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 516000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 815000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 168000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4544000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2164000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -144000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 557000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 331000 }
     ],
-    "totalNetWorth": 2000,
+    "totalNetWorth": 5787000,
     "createdAt": "2025-10-01T00:00:00.000Z",
     "updatedAt": "2025-10-01T00:00:00.000Z"
   },
@@ -356,14 +634,16 @@
     "userId": "demo-user-001",
     "date": "01.11.2025",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 452000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 730000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 148000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2312000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 598000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 424000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 525000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 830000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 171000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4560000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2160000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -140000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 567000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 336000 }
     ],
-    "totalNetWorth": 40000,
+    "totalNetWorth": 5970000,
     "createdAt": "2025-11-01T00:00:00.000Z",
     "updatedAt": "2025-11-01T00:00:00.000Z"
   },
@@ -372,14 +652,16 @@
     "userId": "demo-user-001",
     "date": "01.12.2025",
     "accounts": [
-      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 462000 },
-      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 742000 },
-      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 150000 },
-      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2308000 },
-      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 606000 },
-      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 426000 }
+      { "id": "demo-acc-nordnet", "name": "Nordnet", "assetClass": "aksjer", "value": 534000 },
+      { "id": "demo-acc-kron", "name": "Kron", "assetClass": "fond", "value": 845000 },
+      { "id": "demo-acc-sparekonto", "name": "Sparekonto", "assetClass": "bankkonto", "value": 174000 },
+      { "id": "demo-acc-boligverdi", "name": "Boligverdi", "assetClass": "sparing", "value": 4576000 },
+      { "id": "demo-acc-huslan", "name": "Boliglån", "assetClass": "gjeld", "value": -2156000 },
+      { "id": "demo-acc-studielan", "name": "Studielån", "assetClass": "gjeld", "value": -136000 },
+      { "id": "demo-acc-arbeidsgiver", "name": "Arbeidsgiver", "assetClass": "pensjon", "value": 577000 },
+      { "id": "demo-acc-folketrygden", "name": "Folketrygden", "assetClass": "pensjon", "isPublicPension": true, "value": 341000 }
     ],
-    "totalNetWorth": 78000,
+    "totalNetWorth": 6157000,
     "createdAt": "2025-12-01T00:00:00.000Z",
     "updatedAt": "2025-12-01T00:00:00.000Z"
   }

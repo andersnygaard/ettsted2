@@ -1,3 +1,8 @@
+---
+paths:
+  - backend/**/*
+---
+
 # Utils Rules
 
 ## Stack

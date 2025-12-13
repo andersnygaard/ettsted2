@@ -19,6 +19,7 @@ export interface DashboardData {
   nextMilestone: number;
   currentTowardsMilestone: number;
   sparingMonthlyChange: number;
+  netWorthHistory: Array<{ date: Date; value: number }>;
 }
 
 /**
@@ -34,7 +35,8 @@ function getEmptyDashboardData(): DashboardData {
     savingsRate: 0,
     nextMilestone: MILESTONES[0],
     currentTowardsMilestone: 0,
-    sparingMonthlyChange: 0
+    sparingMonthlyChange: 0,
+    netWorthHistory: []
   };
 }
 
@@ -119,6 +121,15 @@ async function fetchDashboardData(): Promise<DashboardData> {
 
     const nextMilestone = findNextMilestone(sumSavings);
 
+    // Build net worth history (last 12 months)
+    const netWorthHistory = sorted
+      .slice(0, 12) // Take up to 12 most recent snapshots
+      .reverse() // Reverse to chronological order (oldest first)
+      .map(snapshot => ({
+        date: parseDate(snapshot.date),
+        value: calculateNetWorth(snapshot.accounts)
+      }));
+
     return {
       netWorth,
       monthlyChange,
@@ -128,7 +139,8 @@ async function fetchDashboardData(): Promise<DashboardData> {
       savingsRate: 0, // Calculated in DashboardPage from user profile
       nextMilestone,
       currentTowardsMilestone: sumSavings,
-      sparingMonthlyChange
+      sparingMonthlyChange,
+      netWorthHistory
     };
   } catch (error) {
     console.error('Error fetching dashboard data:', error);

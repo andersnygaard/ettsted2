@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { snapshotApi, gjeldApi } from '@/shared/api/services';
+import { snapshotApi, gjeldApi, userApi } from '@/shared/api/services';
 import { QUERY_KEYS } from '@/shared/api/queryHelpers';
 import type { Account } from '@/shared/types';
 import { getAccountCategory } from '@/shared/types';
@@ -13,6 +13,9 @@ interface LoanInfo {
   id: string;
   name: string;
   balance: number;
+  interestRate?: number;
+  remainingYears?: number;
+  isPrimaryResidence?: boolean;
 }
 
 /**
@@ -36,7 +39,10 @@ export interface GjeldData {
   coverage: number; // Coverage: sparing / gjeld * 100
   remaining: number; // How much gjeld remains uncovered
   loans: LoanInfo[];
+  primaryResidenceLoan?: LoanInfo;
   history: { date: Date; value: number }[];
+  accountHistory: Array<{ date: Date; [accountId: string]: Date | number }>;
+  accounts: Array<{ id: string; name: string }>;
 }
 
 
@@ -50,7 +56,9 @@ function getEmptyGjeldData(): GjeldData {
     coverage: 100,
     remaining: 0,
     loans: [],
-    history: []
+    history: [],
+    accountHistory: [],
+    accounts: []
   };
 }
 
@@ -65,6 +73,9 @@ async function fetchGjeldData(): Promise<GjeldData> {
     if (!gjeldData) {
       return getEmptyGjeldData();
     }
+
+    // Fetch user accounts to get loan details and primary residence
+    const user = await userApi.getMe();
 
     // Fetch snapshots separately to get monthly change
     const snapshots = await snapshotApi.getAll();
@@ -91,12 +102,64 @@ async function fetchGjeldData(): Promise<GjeldData> {
       value: item.value
     }));
 
-    // Extract loan info
-    const loans: LoanInfo[] = (gjeldData.loans || []).map((loan: { name: string; value: number }) => ({
-      id: loan.name.toLowerCase().replace(/\s+/g, '-'),
-      name: loan.name,
-      balance: Math.abs(loan.value)
-    }));
+    // Extract loan info with details from user accounts
+    const loans: LoanInfo[] = (gjeldData.loans || []).map((loan: { name: string; value: number }) => {
+      const accountConfig = user?.accounts?.find(
+        acc => acc.category === 'gjeld' && acc.name === loan.name
+      );
+
+      return {
+        id: loan.name.toLowerCase().replace(/\s+/g, '-'),
+        name: loan.name,
+        balance: Math.abs(loan.value),
+        interestRate: accountConfig?.loanDetails?.interestRate,
+        remainingYears: accountConfig?.loanDetails?.remainingYears,
+        isPrimaryResidence: accountConfig?.isPrimaryResidence
+      };
+    });
+
+    // Find primary residence loan
+    const primaryResidenceLoan = loans.find(loan => loan.isPrimaryResidence);
+
+    // Build per-account history for ChartWithTabs
+    // Collect unique debt accounts from latest snapshot
+    const uniqueAccounts = new Map<string, { id: string; name: string }>();
+    if (snapshots && snapshots.length > 0) {
+      const latest = [...snapshots].sort((a, b) => {
+        const dateA = parseDate(a.date);
+        const dateB = parseDate(b.date);
+        return dateB.getTime() - dateA.getTime();
+      })[0];
+
+      latest.accounts.forEach(account => {
+        if (getAccountCategory(account.assetClass) === 'gjeld') {
+          uniqueAccounts.set(account.id, { id: account.id, name: account.name });
+        }
+      });
+    }
+
+    const accounts = Array.from(uniqueAccounts.values());
+
+    // Build history with per-account breakdown (use absolute values for debt)
+    const accountHistory = (snapshots || [])
+      .sort((a, b) => {
+        const dateA = parseDate(a.date);
+        const dateB = parseDate(b.date);
+        return dateA.getTime() - dateB.getTime();
+      })
+      .map((snapshot) => {
+        const point: { date: Date; [accountId: string]: Date | number } = {
+          date: parseDate(snapshot.date)
+        };
+
+        // Add absolute value for each debt account
+        accounts.forEach(account => {
+          const acc = snapshot.accounts.find(a => a.id === account.id);
+          point[account.id] = acc && getAccountCategory(acc.assetClass) === 'gjeld' ? Math.abs(acc.value) : 0;
+        });
+
+        return point;
+      });
 
     return {
       totalDebt: gjeldData.totalDebt ?? 0,
@@ -104,7 +167,10 @@ async function fetchGjeldData(): Promise<GjeldData> {
       coverage: gjeldData.coverage ?? 0,
       remaining: gjeldData.remaining ?? 0,
       loans,
-      history: parsedHistory
+      primaryResidenceLoan,
+      history: parsedHistory,
+      accountHistory,
+      accounts
     };
   } catch (error) {
     console.error('Error fetching gjeld data:', error);

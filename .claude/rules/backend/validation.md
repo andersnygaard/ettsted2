@@ -1,3 +1,8 @@
+---
+paths:
+  - backend/**/*
+---
+
 # Validation Rules
 
 ## Stack

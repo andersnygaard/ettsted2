@@ -1,0 +1,89 @@
+/**
+ * Tooltip Styles
+ *
+ * Smart tooltip component with auto-positioning and accessibility.
+ * Flips to the left when near the right edge of the viewport.
+ */
+
+.tooltip-trigger {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-content {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  background: var(--charcoal);
+  color: var(--warm-white);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-body);
+  white-space: nowrap;
+  z-index: var(--z-dropdown);
+  box-shadow: var(--shadow-md);
+  animation: tooltip-fade-in var(--transition-fast) ease;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Tooltip pointing arrow (using ::after pseudo-element) */
+.tooltip-content::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  width: 0;
+  height: 0;
+  border: 4px solid transparent;
+  border-top-color: var(--charcoal);
+}
+
+/* Position variants */
+
+/* Right-positioned: arrow points down-left */
+.tooltip-content--right {
+  right: auto;
+  left: 0;
+}
+
+.tooltip-content--right::after {
+  right: auto;
+  left: 8px;
+}
+
+/* Left-positioned: arrow points down-right */
+.tooltip-content--left {
+  right: 0;
+  left: auto;
+}
+
+.tooltip-content--left::after {
+  right: 8px;
+  left: auto;
+}
+
+/* Fade-in animation */
+@keyframes tooltip-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Accessibility: high contrast mode */
+@media (prefers-contrast: more) {
+  .tooltip-content {
+    border: 1px solid var(--warm-white);
+  }
+}
+
+/* Accessibility: reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .tooltip-content {
+    animation: none;
+  }
+}

@@ -29,6 +29,8 @@ export interface OnboardingAccount {
   loanDetails?: LoanDetails;
   /** Whether this is a public pension account (Folketrygden) - only for pensjon category */
   isPublicPension?: boolean;
+  /** Whether this is the primary residence loan - only for gjeld category */
+  isPrimaryResidence?: boolean;
 }
 
 /**
@@ -127,6 +129,7 @@ export interface OnboardingRequestBody {
     isActive: boolean;
     loanDetails?: LoanDetails;
     isPublicPension?: boolean;
+    isPrimaryResidence?: boolean;
   }>;
 }
 
@@ -150,6 +153,7 @@ export interface OnboardingResponse {
         createdAt: string;
         loanDetails?: LoanDetails;
         isPublicPension?: boolean;
+        isPrimaryResidence?: boolean;
       }>;
     };
     snapshot: {

@@ -72,6 +72,7 @@ function convertUserToInitialState(
       category: acc.category as 'pensjon',
       value: getAccountValue(acc.name),
       isActive: acc.isActive,
+      isPublicPension: acc.isPublicPension,
     }));
 
   // Ensure at least one account per category with defaults if empty
@@ -103,6 +104,7 @@ function convertUserToInitialState(
       category: 'pensjon',
       value: 0,
       isActive: true,
+      isPublicPension: undefined,
     });
   }
 

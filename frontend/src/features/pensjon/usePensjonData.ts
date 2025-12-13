@@ -27,6 +27,8 @@ export interface PensjonData {
   publicPercent: number; // Public pension (Folketrygden) as % of total
   estimatedAtRetirement: number;
   history: { date: Date; value: number; privatePension: number; publicPension: number }[];
+  accountHistory: Array<{ date: Date; [accountId: string]: Date | number }>;
+  accounts: Array<{ id: string; name: string }>;
 }
 
 /**
@@ -52,7 +54,9 @@ function getEmptyPensjonData(): PensjonData {
     privatePercent: 0,
     publicPercent: 0,
     estimatedAtRetirement: 0,
-    history: []
+    history: [],
+    accountHistory: [],
+    accounts: []
   };
 }
 
@@ -142,13 +146,51 @@ async function fetchPensjonData(): Promise<PensjonData> {
       })
       .reverse();
 
+    // Build per-account history for ChartWithTabs
+    // Collect unique pension accounts from ALL snapshots (not just latest)
+    // This ensures accounts that existed historically appear in the Per Konto view
+    const uniqueAccounts = new Map<string, { id: string; name: string }>();
+    sorted.forEach(snapshot => {
+      snapshot.accounts.forEach(account => {
+        if (getAccountCategory(account.assetClass) === 'pensjon') {
+          // Use the latest name for each account ID
+          uniqueAccounts.set(account.id, { id: account.id, name: account.name });
+        }
+      });
+    });
+
+    const accounts = Array.from(uniqueAccounts.values());
+
+    // Build history with per-account breakdown
+    // For Totalt tab: ChartWithTabs will automatically sum all account values
+    // For Per Konto tab: Each account is displayed as a stacked area
+    const accountHistory = sorted
+      .map((snapshot) => {
+        const point: { date: Date; [accountId: string]: Date | number } = {
+          date: parseDate(snapshot.date)
+        };
+
+        // Add value for each pension account (from all snapshots)
+        // This ensures historical accounts appear in the legend
+        accounts.forEach(account => {
+          const acc = snapshot.accounts.find(a => a.id === account.id);
+          const value = acc && getAccountCategory(acc.assetClass) === 'pensjon' ? acc.value : 0;
+          point[account.id] = value;
+        });
+
+        return point;
+      })
+      .reverse(); // Oldest first
+
     return {
       totalPension,
       breakdown,
       privatePercent,
       publicPercent,
       estimatedAtRetirement,
-      history
+      history,
+      accountHistory,
+      accounts
     };
   } catch (error) {
     console.error('Error fetching pensjon data:', error);

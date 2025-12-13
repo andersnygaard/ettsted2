@@ -32,6 +32,8 @@ export interface User {
       remainingYears: number;
       originalAmount?: number;
     };
+    isPublicPension?: boolean;
+    isPrimaryResidence?: boolean;
   }[];
 }
 

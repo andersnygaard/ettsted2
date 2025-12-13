@@ -1,4 +1,4 @@
-import { PageSkeleton, HeroNumber, StatsRow, AreaChart, formatCurrency, formatPercentage } from '@finans/components';
+import { PageSkeleton, HeroNumber, StatsRow, ChartWithTabs, formatCurrency, formatPercentage } from '@finans/components';
 import { useSparingData } from './useSparingData';
 import { FireSection } from './FireSection';
 import { SparingSkeleton } from '@/shared/components/skeletons';
@@ -97,11 +97,12 @@ function SparingPage() {
 
         <FireSection {...fireData} />
 
-      <AreaChart
-        data={sparingData.history}
+      <ChartWithTabs
+        data={sparingData.accountHistory}
+        accounts={sparingData.accounts}
         title="Spareutvikling"
         subtitle={`+${formatCurrency(sparingData.totalGrowth)} total`}
-        color="var(--muted-sage)"
+        totalColor="var(--muted-sage)"
         height={200}
       />
     </PageSkeleton>

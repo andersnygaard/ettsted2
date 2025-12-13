@@ -131,6 +131,10 @@
   border-bottom: none;
 }
 
+.loan-item:has(+ .loan-sum-row) {
+  border-bottom: none;
+}
+
 .loan-name {
   font-weight: 500;
   margin-bottom: 4px;
@@ -145,5 +149,24 @@
   font-family: var(--font-mono);
   font-size: 18px;
   font-weight: 500;
+}
+
+/* Sum Row Styles */
+.loan-sum-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md) 0;
+  border-top: 1px solid var(--border);
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+}
+
+.loan-sum-label {
+  font-weight: 700;
+}
+
+.loan-sum-amount {
+  font-weight: 700;
 }
 

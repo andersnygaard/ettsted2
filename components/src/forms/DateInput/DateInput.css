@@ -31,7 +31,7 @@
 .date-input__field {
   width: 100%;
   font-family: var(--font-mono);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-regular);
   color: var(--charcoal);
   background: transparent;
@@ -78,9 +78,5 @@
   cursor: not-allowed;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .date-input__field {
-    font-size: var(--font-size-lg);
-  }
-}
+/* Note: Mobile styles are base (no media query needed) */
+/* Desktop styles would go in @media (min-width: 769px) if needed */

@@ -120,7 +120,9 @@ export const accountConfigSchema = z.object({
   // Value is optional - only used when updating from edit mode to sync snapshot
   value: z.number().finite('Verdi må være et gyldig tall').optional(),
   // Whether this is a public pension account (Folketrygden) - only for pensjon category
-  isPublicPension: z.boolean().optional()
+  isPublicPension: z.boolean().optional(),
+  // Whether this is the primary residence loan - only for gjeld category
+  isPrimaryResidence: z.boolean().optional()
 });
 
 /**
@@ -335,6 +337,9 @@ export const createAccountConfigSchema = z.object({
     .optional(),
   isPublicPension: z
     .boolean()
+    .optional(),
+  isPrimaryResidence: z
+    .boolean()
     .optional()
 });
 
@@ -373,6 +378,9 @@ export const updateAccountConfigSchema = z
       })
       .optional(),
     isPublicPension: z
+      .boolean()
+      .optional(),
+    isPrimaryResidence: z
       .boolean()
       .optional()
   })
@@ -420,7 +428,19 @@ export const monteCarloSchema = z.object({
     .int('Simulations must be an integer')
     .optional()
     .default(1000)
-    .describe('Number of simulations to run (default: 1000, max: 10000)')
+    .describe('Number of simulations to run (default: 1000, max: 10000)'),
+  inflation: z
+    .number()
+    .min(0, 'Inflation cannot be negative')
+    .max(100, 'Inflation cannot exceed 100%')
+    .optional()
+    .default(2)
+    .describe('Expected inflation rate as percentage (default: 2)'),
+  showRealValues: z
+    .boolean()
+    .optional()
+    .default(false)
+    .describe('Whether to return inflation-adjusted real values (default: false)')
 });
 
 /**
@@ -509,4 +529,27 @@ export const loanSchema = z.object({
     .optional()
     .default(0)
     .describe('Additional monthly payment towards principal')
+});
+
+/**
+ * Flexible loan (fleksilån) calculator request schema
+ * Calculates payoff time based on monthly payment amount
+ */
+export const flexiLoanSchema = z.object({
+  outstandingBalance: z
+    .number()
+    .positive('Outstanding balance must be greater than 0'),
+  annualRate: z
+    .number()
+    .min(0, 'Annual rate cannot be negative')
+    .max(50, 'Annual rate cannot exceed 50%')
+    .describe('Annual interest rate as percentage (e.g., 5 for 5%)'),
+  monthlyPayment: z
+    .number()
+    .positive('Monthly payment must be greater than 0'),
+  creditLimit: z
+    .number()
+    .positive('Credit limit must be greater than 0')
+    .optional()
+    .describe('Optional credit limit for context')
 });

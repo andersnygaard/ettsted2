@@ -46,7 +46,7 @@
 
 .calc-title {
   font-family: var(--font-heading);
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 400;
   margin-bottom: 8px;
   color: var(--charcoal);
@@ -58,13 +58,17 @@
   line-height: 1.6;
 }
 
+.calc-card {
+  padding: var(--space-xl);
+}
+
 /* Responsive */
-@media (max-width: 640px) {
+@media (min-width: 641px) {
   .calc-card {
-    padding: var(--space-xl);
+    padding: 40px;
   }
 
   .calc-title {
-    font-size: 20px;
+    font-size: 24px;
   }
 }

@@ -18,6 +18,7 @@ body {
   background-color: var(--bone);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 /* Grain texture overlay - Nordic Minimal aesthetic */

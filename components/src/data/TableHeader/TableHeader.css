@@ -6,11 +6,11 @@
 
 .table-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--space-xl) var(--space-2xl);
-  margin-bottom: 0;
-  gap: var(--space-lg);
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--space-lg) var(--space-xl);
+  margin-bottom: var(--space-lg);
+  gap: var(--space-md);
 }
 
 /* Title */
@@ -24,12 +24,13 @@
   flex: 0 0 auto;
 }
 
-/* Controls container - flex row with gap */
+/* Controls container - flex column on mobile */
 .table-header__controls {
   display: flex;
+  flex-direction: column;
   gap: var(--space-sm);
-  align-items: center;
-  flex: 0 1 auto;
+  align-items: flex-start;
+  width: 100%;
 }
 
 /* Year dropdown select */
@@ -48,6 +49,7 @@
   background-repeat: no-repeat;
   background-position: right 8px center;
   padding-right: 28px;
+  width: 100%;
 }
 
 .table-header__select:hover {
@@ -81,7 +83,7 @@
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   transition: all var(--transition-fast);
-  min-width: 140px;
+  width: 100%;
 }
 
 .table-header__search::placeholder {
@@ -105,41 +107,29 @@
   cursor: not-allowed;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
+/* Tablet and up: horizontal layout */
+@media (min-width: 769px) {
   .table-header {
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: var(--space-xl);
+    flex-direction: row;
+    align-items: center;
+    padding: var(--space-xl) var(--space-2xl);
+    margin-bottom: 0;
+    gap: var(--space-lg);
   }
 
   .table-header__controls {
-    width: 100%;
+    flex-direction: row;
+    gap: var(--space-sm);
+    align-items: center;
+    width: auto;
   }
 
   .table-header__select,
   .table-header__search {
-    flex: 1;
-    width: 100%;
-  }
-}
-
-@media (max-width: 640px) {
-  .table-header {
-    margin-bottom: var(--space-lg);
+    width: auto;
   }
 
-  .table-header__title {
-    font-size: 18px;
-  }
-
-  .table-header__controls {
-    width: 100%;
-    flex-direction: column;
-  }
-
-  .table-header__select,
   .table-header__search {
-    width: 100%;
+    min-width: 140px;
   }
 }

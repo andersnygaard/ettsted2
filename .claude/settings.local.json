@@ -113,7 +113,11 @@
       "Bash(\"c:/code/ettsted2/components/src/forms/NumberInput/NumberInput.css\" )",
       "Bash(\"c:/code/ettsted2/components/src/layout/PageHeader/PageHeader.css\" )",
       "Bash(\"c:/code/ettsted2/components/src/system/Toast/Toast.css\" )",
-      "Bash(\"c:/code/ettsted2/frontend/src/features/auth/LoginModal.css\")"
+      "Bash(\"c:/code/ettsted2/frontend/src/features/auth/LoginModal.css\")",
+      "Bash(if [ -f \"$f%.tsx.stories.tsx\" ])",
+      "Bash(then echo \"HAS stories\")",
+      "Bash(else echo \"NO stories\")",
+      "Bash(fi)"
     ],
     "deny": [],
     "ask": [

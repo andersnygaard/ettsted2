@@ -1,3 +1,8 @@
+---
+paths:
+  - backend/**/*
+---
+
 # Errors Rules
 
 ## Stack

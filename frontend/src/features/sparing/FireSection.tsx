@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ProgressBar, formatCurrency, formatNumber, formatPercentage } from '@finans/components';
 import './FireSection.css';
 
@@ -14,11 +15,59 @@ export interface FireSectionProps {
   annualWithdrawal: number;
 }
 
+interface StatConfig {
+  id: string;
+  value: string;
+  label: string;
+  explanation: string;
+  highlight?: boolean;
+}
+
+/**
+ * FireStat Component
+ *
+ * Individual metric card - controlled by parent for single-select behavior
+ */
+interface FireStatProps {
+  stat: StatConfig;
+  isActive: boolean;
+  onToggle: () => void;
+}
+
+function FireStat({ stat, isActive, onToggle }: FireStatProps) {
+  return (
+    <div className={`fire-stat ${isActive ? 'fire-stat--active' : ''}`}>
+      <button
+        className="fire-stat__button"
+        onClick={onToggle}
+        aria-expanded={isActive}
+        aria-label={`${stat.label}: ${stat.value}. Trykk for mer informasjon`}
+      >
+        <div className={`fire-stat__value ${stat.highlight ? 'fire-stat__value--highlight' : ''}`}>
+          {stat.value}
+        </div>
+        <div className="fire-stat__label">{stat.label}</div>
+        <svg
+          className={`fire-stat__icon ${isActive ? 'fire-stat__icon--expanded' : ''}`}
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          aria-hidden="true"
+        >
+          <path d="M6 8L2 4h8z" fill="currentColor" />
+        </svg>
+      </button>
+      {isActive && <div className="fire-stat__marker" aria-hidden="true" />}
+    </div>
+  );
+}
+
 /**
  * FireSection Component
  *
  * Displays F.I.R.E. (Financial Independence, Retire Early) progress
- * with a progress bar and 4 key metrics.
+ * with a progress bar and 4 key metrics. Only one explanation can be
+ * expanded at a time, displayed as a full-width dropdown below the stats.
  *
  * Based on Nordic Minimal design from draft-1-sparing.html
  */
@@ -29,8 +78,57 @@ export function FireSection({
   yearsToSalary,
   annualWithdrawal,
 }: FireSectionProps) {
+  const [activeStatId, setActiveStatId] = useState<string | null>(null);
+
   const percentage = fireNumber > 0 ? (current / fireNumber) * 100 : 0;
   const fireNumberInMillions = fireNumber > 0 ? fireNumber / 1000000 : 0;
+
+  // Format values with proper handling of edge cases
+  const minRetireAgeFormatted = minRetireAge >= 999 ? '—' : formatNumber(minRetireAge, 0);
+  const yearsToSalaryFormatted =
+    yearsToSalary === Infinity || yearsToSalary >= 100 ? '—' : formatNumber(yearsToSalary, 1);
+
+  const stats: StatConfig[] = [
+    {
+      id: 'firetall',
+      value: `${formatNumber(fireNumberInMillions, 1)}M`,
+      label: 'Firetall',
+      explanation:
+        '25x årlige utgifter. Ved dette beløpet kan du ta ut 4% årlig i ubegrenset tid (4%-regelen).',
+      highlight: true,
+    },
+    {
+      id: 'pensjonsalder',
+      value: minRetireAgeFormatted,
+      label: 'Min. pensjonsalder',
+      explanation:
+        minRetireAge >= 999
+          ? 'Kan ikke beregnes med nåværende sparerate. Øk månedlig sparing for å nå F.I.R.E.-målet.'
+          : `Basert på nåværende sparing (${formatCurrency(current)}), sparerate, og forventet avkastning (7% årlig). Du kan pensjonere deg når sparing dekker 25x årlige utgifter.`,
+    },
+    {
+      id: 'arslonn',
+      value: yearsToSalaryFormatted,
+      label: 'År til årslønn',
+      explanation:
+        yearsToSalary === Infinity || yearsToSalary >= 100
+          ? 'Kan ikke beregnes med nåværende sparerate. Øk månedlig sparing for å nå målet.'
+          : 'Basert på nåværende sparing, månedlig sparing, og forventet avkastning (7% årlig). Dette er en milepæl på veien mot F.I.R.E.',
+    },
+    {
+      id: 'uttak',
+      value: formatNumber(annualWithdrawal),
+      label: 'Årlig uttak (4%)',
+      explanation:
+        'Beløpet du kan ta ut årlig fra nåværende sparing ved 4%-regelen. Dette er en bærekraftig uttaksrate basert på historiske markedsdata.',
+    },
+  ];
+
+  const activeStat = stats.find((s) => s.id === activeStatId);
+
+  const handleToggle = (id: string) => {
+    setActiveStatId((prev) => (prev === id ? null : id));
+  };
 
   return (
     <section className="fire-section">
@@ -50,29 +148,21 @@ export function FireSection({
       </div>
 
       <div className="fire-stats">
-        <div className="fire-stat">
-          <div className="fire-stat__value fire-stat__value--highlight">
-            {formatNumber(fireNumberInMillions, 1)}M
-          </div>
-          <div className="fire-stat__label">Firetall</div>
-        </div>
-        <div className="fire-stat">
-          <div className="fire-stat__value">
-            {formatNumber(minRetireAge, 1)}
-          </div>
-          <div className="fire-stat__label">Min. pensjonsalder</div>
-        </div>
-        <div className="fire-stat">
-          <div className="fire-stat__value">
-            {formatNumber(yearsToSalary, 1)}
-          </div>
-          <div className="fire-stat__label">År til årslønn</div>
-        </div>
-        <div className="fire-stat">
-          <div className="fire-stat__value">{formatNumber(annualWithdrawal)}</div>
-          <div className="fire-stat__label">Årlig uttak (4%)</div>
-        </div>
+        {stats.map((stat) => (
+          <FireStat
+            key={stat.id}
+            stat={stat}
+            isActive={activeStatId === stat.id}
+            onToggle={() => handleToggle(stat.id)}
+          />
+        ))}
       </div>
+
+      {activeStat && (
+        <div className="fire-explanation" role="region" aria-live="polite">
+          <div className="fire-explanation__content">{activeStat.explanation}</div>
+        </div>
+      )}
     </section>
   );
 }

@@ -11,6 +11,8 @@ import React, { useRef, useEffect, useState, useMemo } from 'react';
 import * as d3 from 'd3';
 import './StackedAreaChart.css';
 import { formatCurrency, formatDate } from '@finans/components';
+import { ChartTooltip } from '../ChartTooltip';
+import type { TooltipValue } from '../ChartTooltip';
 
 const isDevelopment = import.meta.env.DEV;
 
@@ -43,6 +45,16 @@ function StackedAreaChartComponent({
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height });
+
+  // Tooltip state
+  const [tooltip, setTooltip] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+    date: new Date(),
+    values: [] as TooltipValue[],
+    total: 0,
+  });
 
   // Handle resize
   useEffect(() => {
@@ -80,7 +92,7 @@ function StackedAreaChartComponent({
       .domain(d3.extent(data, (d) => d.date) as [Date, Date])
       .range([0, width]);
 
-    const yScale = d3.scaleLinear().domain([0, yMaxValue]).range([chartHeight, 0]);
+    const yScale = d3.scaleLinear().domain([0, yMaxValue]).range([chartHeight, 0]).nice();
 
     // Create area generator
     const area = d3
@@ -211,6 +223,108 @@ function StackedAreaChartComponent({
           .attr('stroke-dashoffset', 0);
       }
     });
+
+    // Add hover interaction elements
+    const hoverLineGroup = g.append('g').attr('class', 'stacked-area-chart__hover-elements').style('opacity', 0);
+
+    // Vertical hover line
+    const hoverLine = hoverLineGroup
+      .append('line')
+      .attr('class', 'stacked-area-chart__hover-line')
+      .attr('y1', 0)
+      .attr('y2', scales.chartHeight)
+      .attr('stroke', 'var(--charcoal)')
+      .attr('stroke-width', 1)
+      .attr('stroke-opacity', 0.3);
+
+    // Hover dots for each series
+    const hoverDots = hoverLineGroup
+      .selectAll('.stacked-area-chart__hover-dot')
+      .data(series)
+      .enter()
+      .append('circle')
+      .attr('class', 'stacked-area-chart__hover-dot')
+      .attr('r', 4)
+      .attr('fill', (d) => colorMap.get(d.key) || '#ccc')
+      .attr('stroke', 'var(--warm-white)')
+      .attr('stroke-width', 2);
+
+    // Bisector for finding nearest data point
+    const bisect = d3.bisector((d: StackedDataPoint) => d.date).left;
+
+    // Invisible overlay for mouse tracking
+    const overlay = g
+      .append('rect')
+      .attr('class', 'stacked-area-chart__overlay')
+      .attr('width', scales.width)
+      .attr('height', scales.chartHeight)
+      .attr('fill', 'transparent')
+      .attr('cursor', 'crosshair');
+
+    // Mouse event handlers
+    const handleMouseMove = (event: MouseEvent) => {
+      const [mx] = d3.pointer(event);
+      const x0 = scales.x.invert(mx);
+      const i = bisect(data, x0, 1);
+      const d0 = data[i - 1];
+      const d1 = data[i];
+
+      if (!d0 && !d1) return;
+
+      // Find closest data point
+      const d = d1 && d0 ? (x0.getTime() - d0.date.getTime() > d1.date.getTime() - x0.getTime() ? d1 : d0) : d0 || d1;
+
+      const xPos = scales.x(d.date);
+
+      // Calculate total and values for tooltip
+      let total = 0;
+      const tooltipValues: TooltipValue[] = [];
+
+      // Get values for each series at this data point
+      series.forEach((s) => {
+        const value = (d[s.key as keyof StackedDataPoint] as number) || 0;
+        total += value;
+        tooltipValues.push({
+          label: s.label,
+          value,
+          color: s.color,
+        });
+      });
+
+      // Update hover elements
+      hoverLineGroup.style('opacity', 1);
+      hoverLine.attr('x1', xPos).attr('x2', xPos);
+
+      // Position dots at their respective y-positions in the stack
+      let cumulativeY = 0;
+      hoverDots.attr('cx', xPos).attr('cy', (s) => {
+        const value = (d[s.key as keyof StackedDataPoint] as number) || 0;
+        cumulativeY += value;
+        return scales.y(cumulativeY);
+      });
+
+      // Update tooltip state
+      setTooltip({
+        visible: true,
+        x: xPos + margin.left,
+        y: margin.top + scales.chartHeight / 2,
+        date: d.date,
+        values: tooltipValues,
+        total,
+      });
+    };
+
+    const handleMouseLeave = () => {
+      hoverLineGroup.style('opacity', 0);
+      setTooltip((prev) => ({ ...prev, visible: false }));
+    };
+
+    // Attach event listeners
+    overlay.on('mousemove', handleMouseMove);
+    overlay.on('mouseleave', handleMouseLeave);
+    overlay.on('touchstart', handleMouseMove);
+    overlay.on('touchmove', handleMouseMove);
+    overlay.on('touchend', handleMouseLeave);
   }, [data, series, dimensions, scales, generators, stackedData, yMax]);
 
   // Generate x-axis labels
@@ -238,6 +352,15 @@ function StackedAreaChartComponent({
       )}
       <div ref={containerRef} className="stacked-area-chart__container">
         <svg ref={svgRef} className="stacked-area-chart__svg" />
+        <ChartTooltip
+          visible={tooltip.visible}
+          x={tooltip.x}
+          y={tooltip.y}
+          date={tooltip.date}
+          values={tooltip.values}
+          total={tooltip.total}
+          containerRef={containerRef}
+        />
       </div>
       <div className="stacked-area-chart__x-axis">
         {xAxisLabels.map((label, i) => (

@@ -6,7 +6,7 @@
 .stacked-area-chart {
   background: var(--card-bg);
   border: var(--border-subtle);
-  padding: var(--space-lg);
+  padding: var(--space-md);
   border-radius: 2px;
   animation: fadeUp 0.6s ease both;
 }
@@ -86,9 +86,9 @@
   }
 }
 
-/* Mobile: reduce padding */
-@media (max-width: 768px) {
+/* Tablet and up: increase padding */
+@media (min-width: 769px) {
   .stacked-area-chart {
-    padding: var(--space-md);
+    padding: var(--space-lg);
   }
 }

@@ -5,11 +5,11 @@
   "createdAt": "2024-01-01T00:00:00.000Z",
   "updatedAt": "2024-01-01T00:00:00.000Z",
   "profile": {
-    "monthlySalary": 85000,
-    "monthlySavings": 55000,
+    "monthlySalary": 80000,
+    "monthlySavings": 50000,
     "birthYear": 1975,
     "plannedRetirementAge": 50,
-    "fireNumber": 9000000
+    "fireNumber": 10000000
   },
   "accounts": [
     {

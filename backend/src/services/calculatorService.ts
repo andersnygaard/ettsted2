@@ -18,6 +18,8 @@ export interface MonteCarloParams {
   expectedReturn: number;      // Expected annual return (decimal, e.g., 0.07 for 7%)
   volatility: number;          // Return volatility (decimal, e.g., 0.15 for 15%)
   simulations: number;         // Number of simulations to run
+  inflation?: number;          // Expected inflation rate (decimal, e.g., 0.02 for 2%, optional)
+  showRealValues?: boolean;    // Whether to calculate inflation-adjusted real values
 }
 
 /**
@@ -25,13 +27,20 @@ export interface MonteCarloParams {
  */
 export interface MonteCarloResult {
   successRate: number;         // Percentage of simulations that didn't run out of money
-  percentile10: number;        // Final balance at 10th percentile
-  percentile25: number;        // Final balance at 25th percentile
-  percentile50: number;        // Final balance at 50th percentile (median)
-  percentile75: number;        // Final balance at 75th percentile
-  percentile90: number;        // Final balance at 90th percentile
-  scenarios: number[][];       // Array of sample scenario paths (up to 100 scenarios)
+  percentile10: number;        // Final balance at 10th percentile (nominal)
+  percentile25: number;        // Final balance at 25th percentile (nominal)
+  percentile50: number;        // Final balance at 50th percentile (median, nominal)
+  percentile75: number;        // Final balance at 75th percentile (nominal)
+  percentile90: number;        // Final balance at 90th percentile (nominal)
+  percentile10Real?: number;   // Real (inflation-adjusted) 10th percentile
+  percentile25Real?: number;   // Real (inflation-adjusted) 25th percentile
+  percentile50Real?: number;   // Real (inflation-adjusted) 50th percentile (median)
+  percentile75Real?: number;   // Real (inflation-adjusted) 75th percentile
+  percentile90Real?: number;   // Real (inflation-adjusted) 90th percentile
+  scenarios: number[][];       // Array of sample scenario paths (up to 100 scenarios, nominal)
+  scenariosReal?: number[][];  // Array of sample scenario paths in real values
   simulationsRun: number;      // Number of simulations actually run
+  inflation?: number;          // Inflation rate used for real value calculations
 }
 
 /**
@@ -55,20 +64,32 @@ function randomNormal(mean: number, stdDev: number): number {
  * - Annual returns follow a normal distribution
  * - Fixed annual withdrawal amount
  * - Portfolio stops growing once depleted
+ * - Optional inflation adjustment for real value calculations
  *
  * @param params - Simulation parameters
  * @returns Simulation results with success rate and percentile bands
  */
 export function runMonteCarloSimulation(params: MonteCarloParams): MonteCarloResult {
-  const { portfolioValue, annualWithdrawal, years, expectedReturn, volatility, simulations } = params;
+  const {
+    portfolioValue,
+    annualWithdrawal,
+    years,
+    expectedReturn,
+    volatility,
+    simulations,
+    inflation = 0.02,
+    showRealValues = false
+  } = params;
 
   const results: number[] = [];
   const scenarios: number[][] = [];
+  const scenariosReal: number[][] = [];
 
   // Run each simulation
   for (let sim = 0; sim < simulations; sim++) {
     let balance = portfolioValue;
     const yearlyBalances: number[] = [balance];
+    const yearlyBalancesReal: number[] = [balance]; // Real values always start at original value
 
     // Simulate each year
     for (let year = 0; year < years; year++) {
@@ -88,6 +109,10 @@ export function runMonteCarloSimulation(params: MonteCarloParams): MonteCarloRes
 
       yearlyBalances.push(balance);
 
+      // Calculate real (inflation-adjusted) value
+      const realValue = balance / Math.pow(1 + inflation, year + 1);
+      yearlyBalancesReal.push(realValue);
+
       // Stop simulation if balance depleted
       if (balance <= 0) {
         break;
@@ -100,6 +125,9 @@ export function runMonteCarloSimulation(params: MonteCarloParams): MonteCarloRes
     // Keep sample of scenarios (first 100) for frontend visualization
     if (sim < 100) {
       scenarios.push(yearlyBalances);
+      if (showRealValues) {
+        scenariosReal.push(yearlyBalancesReal);
+      }
     }
   }
 
@@ -110,14 +138,14 @@ export function runMonteCarloSimulation(params: MonteCarloParams): MonteCarloRes
   // Sort results for percentile calculation
   const sorted = [...results].sort((a, b) => a - b);
 
-  // Calculate percentiles
+  // Calculate nominal percentiles
   const percentile10 = sorted[Math.floor(simulations * 0.1)] || 0;
   const percentile25 = sorted[Math.floor(simulations * 0.25)] || 0;
   const percentile50 = sorted[Math.floor(simulations * 0.5)] || 0;
   const percentile75 = sorted[Math.floor(simulations * 0.75)] || 0;
   const percentile90 = sorted[Math.floor(simulations * 0.9)] || 0;
 
-  return {
+  const result: MonteCarloResult = {
     successRate: Math.round(successRate * 100) / 100, // Round to 2 decimal places
     percentile10,
     percentile25,
@@ -125,8 +153,25 @@ export function runMonteCarloSimulation(params: MonteCarloParams): MonteCarloRes
     percentile75,
     percentile90,
     scenarios,
-    simulationsRun: simulations
+    simulationsRun: simulations,
+    inflation: showRealValues ? inflation : undefined
   };
+
+  // Add real value percentiles if requested
+  if (showRealValues && inflation > 0) {
+    // Calculate real values for all final balances
+    const resultsReal = results.map(balance => balance / Math.pow(1 + inflation, years));
+    const sortedReal = [...resultsReal].sort((a, b) => a - b);
+
+    result.percentile10Real = sortedReal[Math.floor(simulations * 0.1)] || 0;
+    result.percentile25Real = sortedReal[Math.floor(simulations * 0.25)] || 0;
+    result.percentile50Real = sortedReal[Math.floor(simulations * 0.5)] || 0;
+    result.percentile75Real = sortedReal[Math.floor(simulations * 0.75)] || 0;
+    result.percentile90Real = sortedReal[Math.floor(simulations * 0.9)] || 0;
+    result.scenariosReal = scenariosReal;
+  }
+
+  return result;
 }
 
 // ============================================================================
@@ -425,5 +470,131 @@ export function calculateLoan(params: LoanParams): LoanResult {
     effectiveYears,
     amortizationSchedule,
     yearlySummary
+  };
+}
+
+// ============================================================================
+// FLEXIBLE LOAN (FLEKSILÅN) CALCULATOR
+// ============================================================================
+
+/**
+ * Parameters for flexible loan calculation
+ */
+export interface FlexiLoanParams {
+  outstandingBalance: number;  // Current debt amount in NOK
+  annualRate: number;          // Annual interest rate (decimal, e.g., 0.05)
+  monthlyPayment: number;      // User's planned monthly payment in NOK
+  creditLimit?: number;        // Optional credit limit for context
+}
+
+/**
+ * Result of flexible loan calculation
+ */
+export interface FlexiLoanResult {
+  monthsToPayoff: number;      // Number of months to pay off
+  yearsToPayoff: string;       // Formatted as "X år, Y måneder"
+  totalInterestPaid: number;   // Total interest paid over payoff period
+  totalPaid: number;           // Total amount paid (principal + interest)
+  payoffDate: string;          // Estimated payoff date (dd.MM.yyyy)
+  warning?: string;            // Warning if payment barely covers interest
+  amortizationSchedule: {      // Monthly breakdown
+    month: number;
+    payment: number;
+    principal: number;
+    interest: number;
+    balance: number;
+  }[];
+}
+
+/**
+ * Calculate flexible loan payoff schedule
+ * Formula: N = -log(1 - (r * P) / M) / log(1 + r)
+ * Where:
+ * - N = number of months
+ * - r = monthly interest rate
+ * - P = principal (outstanding balance)
+ * - M = monthly payment
+ */
+export function calculateFlexiLoan(params: FlexiLoanParams): FlexiLoanResult {
+  const { outstandingBalance, annualRate, monthlyPayment } = params;
+
+  const monthlyRate = annualRate / 12;
+  const monthlyInterest = outstandingBalance * monthlyRate;
+
+  // Check if payment covers interest
+  if (monthlyPayment <= monthlyInterest) {
+    throw new Error(
+      `Månedlig betaling (${Math.round(monthlyPayment)} kr) må være høyere enn månedlig rente (${Math.round(monthlyInterest)} kr) for å nedbetale lånet`
+    );
+  }
+
+  // Warning if payment barely covers interest (less than 1.5x)
+  let warning: string | undefined;
+  if (monthlyPayment < monthlyInterest * 1.5) {
+    warning = 'Betalingen dekker knapt rentene. Nedbetalingen vil ta svært lang tid.';
+  }
+
+  // Calculate number of months using logarithmic formula
+  // N = -log(1 - (r * P) / M) / log(1 + r)
+  const monthsToPayoff = monthlyRate > 0
+    ? Math.ceil(-Math.log(1 - (monthlyRate * outstandingBalance) / monthlyPayment) / Math.log(1 + monthlyRate))
+    : Math.ceil(outstandingBalance / monthlyPayment);
+
+  // Generate amortization schedule
+  const amortizationSchedule: FlexiLoanResult['amortizationSchedule'] = [];
+  let balance = outstandingBalance;
+  let totalInterestPaid = 0;
+
+  for (let month = 1; month <= monthsToPayoff; month++) {
+    const interestPayment = balance * monthlyRate;
+    const actualPayment = Math.min(monthlyPayment, balance + interestPayment);
+    const principalPayment = actualPayment - interestPayment;
+
+    balance -= principalPayment;
+    if (balance < 0) balance = 0;
+
+    totalInterestPaid += interestPayment;
+
+    amortizationSchedule.push({
+      month,
+      payment: Math.round(actualPayment * 100) / 100,
+      principal: Math.round(principalPayment * 100) / 100,
+      interest: Math.round(interestPayment * 100) / 100,
+      balance: Math.round(balance * 100) / 100
+    });
+
+    if (balance <= 0.01) break;
+  }
+
+  const totalPaid = outstandingBalance + totalInterestPaid;
+
+  // Format years and months
+  const years = Math.floor(monthsToPayoff / 12);
+  const months = monthsToPayoff % 12;
+  let yearsToPayoff = '';
+  if (years > 0) {
+    yearsToPayoff += `${years} år`;
+  }
+  if (months > 0) {
+    if (years > 0) yearsToPayoff += ', ';
+    yearsToPayoff += `${months} ${months === 1 ? 'måned' : 'måneder'}`;
+  }
+  if (yearsToPayoff === '') {
+    yearsToPayoff = '0 måneder';
+  }
+
+  // Calculate payoff date
+  const today = new Date();
+  const payoffDateObj = new Date(today.getFullYear(), today.getMonth() + monthsToPayoff, today.getDate());
+  const payoffDate = `${String(payoffDateObj.getDate()).padStart(2, '0')}.${String(payoffDateObj.getMonth() + 1).padStart(2, '0')}.${payoffDateObj.getFullYear()}`;
+
+  return {
+    monthsToPayoff,
+    yearsToPayoff,
+    totalInterestPaid: Math.round(totalInterestPaid * 100) / 100,
+    totalPaid: Math.round(totalPaid * 100) / 100,
+    payoffDate,
+    warning,
+    amortizationSchedule
   };
 }

@@ -1,3 +1,8 @@
+---
+paths:
+  - backend/**/*
+---
+
 # LLM Rules
 
 ## Stack

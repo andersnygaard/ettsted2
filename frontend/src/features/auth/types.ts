@@ -22,6 +22,8 @@ export interface AccountConfig {
   loanDetails?: LoanDetails;
   /** Whether this is a public pension account (Folketrygden) - only for pensjon category */
   isPublicPension?: boolean;
+  /** Whether this is the primary residence loan - only for gjeld category */
+  isPrimaryResidence?: boolean;
 }
 
 export interface User {

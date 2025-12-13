@@ -299,40 +299,87 @@ async function executeUpsertSnapshot(
     const existingSnapshots = await getSnapshotsByUserId(ctx.userId);
     const existing = existingSnapshots.find((s) => s.date === args.date);
 
-    // Build accounts array
-    const accounts: Account[] = args.accounts.map((a) => ({
-      id: randomUUID(),
-      name: a.name,
-      value: a.value,
-      assetClass: a.assetClass,
-    }));
-
-    const totalNetWorth = accounts.reduce((sum, a) => sum + a.value, 0);
-
-    let result: { success: boolean; action: 'created' | 'updated'; snapshotId: string; date: string; totalNetWorth: number };
+    let accounts: Account[];
 
     if (existing) {
-      // Update existing snapshot
+      // MERGE: Update existing snapshot with smart merge logic
+      // Only overwrite accounts that are explicitly provided in args.accounts
+      // Preserve all other existing accounts
+
+      const incomingAccountsMap = new Map(
+        args.accounts.map((a) => [a.name.toLowerCase().trim(), a])
+      );
+
+      accounts = existing.accounts.map((existingAccount) => {
+        const incomingMatch = incomingAccountsMap.get(existingAccount.name.toLowerCase().trim());
+
+        if (incomingMatch) {
+          // Account is being updated - use new values but preserve ID
+          return {
+            id: existingAccount.id,
+            name: incomingMatch.name,
+            value: incomingMatch.value,
+            assetClass: incomingMatch.assetClass,
+          };
+        } else {
+          // Account not mentioned - preserve existing values
+          return existingAccount;
+        }
+      });
+
+      // Add any new accounts that don't exist yet
+      const existingNames = new Set(
+        existing.accounts.map((a) => a.name.toLowerCase().trim())
+      );
+
+      args.accounts.forEach((incomingAccount) => {
+        const normalizedName = incomingAccount.name.toLowerCase().trim();
+        if (!existingNames.has(normalizedName)) {
+          accounts.push({
+            id: randomUUID(),
+            name: incomingAccount.name,
+            value: incomingAccount.value,
+            assetClass: incomingAccount.assetClass,
+          });
+        }
+      });
+
+      const totalNetWorth = accounts.reduce((sum, a) => sum + a.value, 0);
+
       const updated = await updateSnapshot(ctx.userId, existing.id, {
         accounts,
         totalNetWorth,
       });
 
-      result = {
+      const result = {
         success: true,
-        action: 'updated',
+        action: 'updated' as const,
         snapshotId: updated.id,
         date: updated.date,
         totalNetWorth: updated.totalNetWorth,
       };
 
-      logger.info('Snapshot updated via agent', {
+      logger.info('Snapshot updated via agent (merged)', {
         userId: ctx.userId,
         snapshotId: updated.id,
         date: args.date,
+        accountsUpdated: incomingAccountsMap.size,
+        accountsPreserved: accounts.length - incomingAccountsMap.size,
       });
+
+      endSpan(span, result);
+      return result;
     } else {
-      // Create new snapshot
+      // CREATE: New snapshot - use provided accounts directly
+      accounts = args.accounts.map((a) => ({
+        id: randomUUID(),
+        name: a.name,
+        value: a.value,
+        assetClass: a.assetClass,
+      }));
+
+      const totalNetWorth = accounts.reduce((sum, a) => sum + a.value, 0);
+
       const snapshot: MonthlySnapshot = {
         id: randomUUID(),
         userId: ctx.userId,
@@ -345,9 +392,9 @@ async function executeUpsertSnapshot(
 
       const created = await createSnapshot(snapshot);
 
-      result = {
+      const result = {
         success: true,
-        action: 'created',
+        action: 'created' as const,
         snapshotId: created.id,
         date: created.date,
         totalNetWorth: created.totalNetWorth,
@@ -358,10 +405,10 @@ async function executeUpsertSnapshot(
         snapshotId: created.id,
         date: args.date,
       });
-    }
 
-    endSpan(span, result);
-    return result;
+      endSpan(span, result);
+      return result;
+    }
   } catch (error) {
     endSpan(span, { error: String(error) }, 'ERROR');
     throw error;
