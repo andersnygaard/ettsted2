@@ -111,7 +111,7 @@ function SparingPage() {
   const fireData = {
     fireNumber: sparingData.fireNumber,
     current: sparingData.sumSavings,
-    minRetireAge: sparingData.minRetireAge,
+    monthsCovered: sparingData.monthsCovered,
     yearsToSalary: sparingData.yearsToSalary,
     annualWithdrawal: sparingData.annualWithdrawal,
   };

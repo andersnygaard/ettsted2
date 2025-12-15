@@ -60,16 +60,14 @@ describe('useSparingData', () => {
     });
   });
 
-  describe('retirement age calculations', () => {
-    it('calculates minimum retirement age correctly', async () => {
+  describe('months covered calculations', () => {
+    it('calculates months covered correctly', async () => {
       const userData = {
         ...mockUserData,
         profile: {
           ...mockUserData.profile,
-          birthYear: 1990,
           monthlySalary: 50000,
           monthlySavings: 10000,
-          annualExpenses: 480000,
         },
       };
 
@@ -87,27 +85,26 @@ describe('useSparingData', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-      // Should calculate years to FIRE and add to current age
-      expect(result.current.data?.minRetireAge).toBeGreaterThan(0);
-      expect(result.current.data?.minRetireAge).toBeLessThan(999);
+      // 1000000 * 0.04 = 40000 annual withdrawal
+      // 50000 - 10000 = 40000 monthly expenses
+      // 40000 / 40000 = 1 month covered
+      expect(result.current.data?.monthsCovered).toBeGreaterThan(0);
     });
 
-    it('handles cases where FIRE is already reached', async () => {
+    it('handles zero monthly expenses gracefully', async () => {
       const userData = {
         ...mockUserData,
         profile: {
           ...mockUserData.profile,
-          birthYear: 1980,
           monthlySalary: 50000,
-          monthlySavings: 10000,
-          annualExpenses: 200000,
+          monthlySavings: 50000, // All income is savings, zero expenses
         },
       };
 
       const sparingData = {
         ...mockSparingData,
-        sumSavings: 6000000,
-        fireNumber: 5000000,
+        sumSavings: 1000000,
+        fireNumber: 12000000,
       };
 
       mockSparingSummary.mockResolvedValue(sparingData);
@@ -118,9 +115,8 @@ describe('useSparingData', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-      // Should be current age or close to it
-      const currentAge = new Date().getFullYear() - 1980;
-      expect(result.current.data?.minRetireAge).toBeLessThanOrEqual(currentAge + 1);
+      // Should be 0 when monthly expenses are zero
+      expect(result.current.data?.monthsCovered).toBe(0);
     });
 
     it('calculates years to salary correctly', async () => {
@@ -266,7 +262,7 @@ describe('useSparingData', () => {
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
       // Should use defaults when user data is missing
-      expect(result.current.data?.minRetireAge).toBe(999);
+      expect(result.current.data?.monthsCovered).toBe(0);
       expect(result.current.data?.yearsToSalary).toBe(0);
     });
 

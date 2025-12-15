@@ -7,8 +7,8 @@ export interface FireSectionProps {
   fireNumber: number;
   /** Current savings toward F.I.R.E. goal */
   current: number;
-  /** Minimum age user can retire based on projections */
-  minRetireAge: number;
+  /** Months of expenses covered by 4% annual withdrawal */
+  monthsCovered: number;
   /** Years until savings equals one year's salary */
   yearsToSalary: number;
   /** Annual withdrawal amount at 4% rule */
@@ -74,7 +74,7 @@ function FireStat({ stat, isActive, onToggle }: FireStatProps) {
 export function FireSection({
   fireNumber,
   current,
-  minRetireAge,
+  monthsCovered,
   yearsToSalary,
   annualWithdrawal,
 }: FireSectionProps) {
@@ -84,7 +84,7 @@ export function FireSection({
   const fireNumberInMillions = fireNumber > 0 ? fireNumber / 1000000 : 0;
 
   // Format values with proper handling of edge cases
-  const minRetireAgeFormatted = minRetireAge >= 999 ? '—' : formatNumber(minRetireAge, 0);
+  const monthsCoveredFormatted = monthsCovered === 0 ? '—' : formatNumber(monthsCovered, 1);
   const yearsToSalaryFormatted =
     yearsToSalary === Infinity || yearsToSalary >= 100 ? '—' : formatNumber(yearsToSalary, 1);
 
@@ -98,13 +98,11 @@ export function FireSection({
       highlight: true,
     },
     {
-      id: 'pensjonsalder',
-      value: minRetireAgeFormatted,
-      label: 'Min. pensjonsalder',
+      id: 'maneder-dekket',
+      value: monthsCoveredFormatted,
+      label: 'Måneder dekket/år',
       explanation:
-        minRetireAge >= 999
-          ? 'Kan ikke beregnes med nåværende sparerate. Øk månedlig sparing for å nå F.I.R.E.-målet.'
-          : `Basert på nåværende sparing (${formatCurrency(current)}), sparerate, og forventet avkastning (7% årlig). Du kan pensjonere deg når sparing dekker 25x årlige utgifter.`,
+        'Antall måneder av utgifter dekket av årlig 4%-uttak. Ved 12 måneder er du økonomisk uavhengig.',
     },
     {
       id: 'arslonn',
@@ -113,7 +111,7 @@ export function FireSection({
       explanation:
         yearsToSalary === Infinity || yearsToSalary >= 100
           ? 'Kan ikke beregnes med nåværende sparerate. Øk månedlig sparing for å nå målet.'
-          : 'Basert på nåværende sparing, månedlig sparing, og forventet avkastning (7% årlig). Dette er en milepæl på veien mot F.I.R.E.',
+          : 'Antall år det tar å spare én årslønn med din sparerate. Formel: 1 / sparerate.',
     },
     {
       id: 'uttak',

@@ -10,7 +10,13 @@ _No tasks in queue. Use `/discover-tasks` or `/new-task` to add work._
 
 ---
 
-## Recently Completed (2025-12-14)
+## Recently Completed (2025-12-15)
+
+### Session 9 - Sparing KPI Fixes (2 tasks)
+- **#328** BUG: År til årslønn wrong formula - Fixed to use 1/savingsRate instead of compound growth
+- **#329** FEATURE: Replace pensjonsalder with måneder dekket - Shows months covered by 4% withdrawal
+
+## Previously Completed (2025-12-14)
 
 ### Session 8 - Skeleton Vertical Slicing (8 tasks)
 - **#320** REFACTOR: Rename PageSkeleton → PageLayout - Component renamed, 12 page files updated
@@ -112,8 +118,8 @@ Added dedicated rate limiter (5 req/15min) to `/auth/demo-login` endpoint with N
 
 | Status | Count |
 |--------|-------|
-| Done | 327 |
+| Done | 329 |
 | Backlog | 0 |
 | In Progress | 0 |
 
-**Last Updated**: 2025-12-14
+**Last Updated**: 2025-12-15

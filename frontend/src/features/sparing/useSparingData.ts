@@ -4,7 +4,7 @@ import { QUERY_KEYS } from '@/shared/api/queryHelpers';
 import type { MonthlySnapshot, Account } from '@/shared/types';
 import { getAccountCategory } from '@/shared/types';
 import { parseDate } from '@finans/components';
-import { GROWTH_RATES, FIRE, QUERY_CONFIG } from '@/config/constants';
+import { FIRE, QUERY_CONFIG } from '@/config/constants';
 
 /**
  * F.I.R.E. metrics and historical data for Sparing page
@@ -17,7 +17,7 @@ export interface SparingData {
   monthsFree: number;
   fireNumber: number;
   fireProgress: number;
-  minRetireAge: number;
+  monthsCovered: number;
   yearsToSalary: number;
   annualWithdrawal: number;
   totalGrowth: number;
@@ -38,7 +38,7 @@ function getEmptySparingData(): SparingData {
     monthsFree: 0,
     fireNumber: 0,
     fireProgress: 0,
-    minRetireAge: 0,
+    monthsCovered: 0,
     yearsToSalary: 0,
     annualWithdrawal: 0,
     totalGrowth: 0,
@@ -113,61 +113,11 @@ function calculateMonthlyChange(snapshots: MonthlySnapshot[]): number {
 }
 
 /**
- * Calculate years to reach a target value using compound growth
- *
- * Formula: FV = PV * (1 + r)^n + PMT * (((1 + r)^n - 1) / r)
- * Where:
- * - FV = Future value (target)
- * - PV = Present value (current savings)
- * - r = Annual growth rate (as decimal)
- * - PMT = Annual payment (savings per year)
- * - n = Number of years
- *
- * We solve for n iteratively
- */
-function calculateYearsToValue(
-  currentValue: number,
-  targetValue: number,
-  annualSavings: number,
-  growthRate: number = GROWTH_RATES.DEFAULT
-): number {
-  if (currentValue >= targetValue) {
-    return 0;
-  }
-
-  if (annualSavings === 0) {
-    // No contributions, only growth
-    if (growthRate === 0 || currentValue <= 0) {
-      return Infinity;
-    }
-    if (1 + growthRate <= 0) {
-      return Infinity;
-    }
-    const logResult = Math.log(1 + growthRate);
-    if (logResult === 0) {
-      return Infinity;
-    }
-    return Math.log(targetValue / currentValue) / logResult;
-  }
-
-  // Iterative approach for compound growth with contributions
-  let value = currentValue;
-  let years = 0;
-
-  while (value < targetValue && years < 100) {
-    value = value * (1 + growthRate) + annualSavings;
-    years += 1;
-  }
-
-  return years >= 100 ? Infinity : years;
-}
-
-/**
  * Fetch and calculate sparing data from API
  *
  * Uses the aggregated /api/v1/sparing endpoint which calculates
  * F.I.R.E. metrics from user profile settings.
- * Also fetches user profile to calculate retirement age projections.
+ * Also fetches user profile to calculate months covered by 4% withdrawal.
  */
 async function fetchSparingData(): Promise<SparingData> {
   try {
@@ -230,35 +180,27 @@ async function fetchSparingData(): Promise<SparingData> {
       totalGrowth = currentValue - firstValue;
     }
 
-    // Calculate retirement age projection using user profile data
-    let minRetireAge = 999;
+    // Calculate annual withdrawal at 4% rule
+    const annualWithdrawalCalculated = (sparingData.sumSavings ?? 0) * FIRE.SAFE_WITHDRAWAL_RATE;
+
+    // Calculate months of expenses covered by 4% withdrawal and years to salary
+    let monthsCovered = 0;
     let yearsToSalary = 0;
 
     if (userData && userData.profile) {
       const profile = userData.profile;
-      const currentYear = new Date().getFullYear();
-      const currentAge = profile.birthYear ? currentYear - profile.birthYear : 35;
-      const annualIncome = (profile.monthlySalary || 0) * 12;
-      const annualExpenses = profile.annualExpenses || 0;
-      const annualSavings = annualIncome - annualExpenses;
-      const annualGrowthRate = GROWTH_RATES.DEFAULT;
+      const monthlyExpenses = (profile.monthlySalary || 0) - (profile.monthlySavings || 0);
 
-      // Calculate years until F.I.R.E. target is reached
-      const yearsToFire = calculateYearsToValue(
-        sparingData.sumSavings,
-        sparingData.fireNumber,
-        annualSavings,
-        annualGrowthRate
-      );
-      minRetireAge = yearsToFire === Infinity ? 999 : currentAge + yearsToFire;
+      // Calculate months covered: annual 4% withdrawal / monthly expenses
+      monthsCovered = monthlyExpenses > 0
+        ? annualWithdrawalCalculated / monthlyExpenses
+        : 0;
 
-      // Calculate years until savings equals annual income
-      yearsToSalary = calculateYearsToValue(
-        sparingData.sumSavings,
-        annualIncome,
-        annualSavings,
-        annualGrowthRate
-      );
+      // Calculate years until savings equals annual income using simple savings rate formula
+      // Formula: yearsToSalary = 1 / (savingsRate / 100)
+      // Where savingsRate is the percentage from API
+      const savingsRateDecimal = sparingData.savingsRate / 100;
+      yearsToSalary = savingsRateDecimal > 0 ? 1 / savingsRateDecimal : Infinity;
     }
 
     // Build per-account history for ChartWithTabs
@@ -309,9 +251,9 @@ async function fetchSparingData(): Promise<SparingData> {
       monthsFree: sparingData.monthsFree ?? 0,
       fireNumber: sparingData.fireNumber ?? 0,
       fireProgress: sparingData.fireProgress ?? 0,
-      minRetireAge,
+      monthsCovered,
       yearsToSalary,
-      annualWithdrawal: (sparingData.sumSavings ?? 0) * FIRE.SAFE_WITHDRAWAL_RATE,
+      annualWithdrawal: annualWithdrawalCalculated,
       totalGrowth,
       history: parsedHistory,
       accountHistory,
@@ -330,7 +272,7 @@ async function fetchSparingData(): Promise<SparingData> {
  * - Total savings (sparing)
  * - Yearly and monthly change percentages
  * - F.I.R.E. number and progress toward it
- * - Minimum retirement age
+ * - Months of expenses covered by 4% withdrawal
  * - Years until savings equals annual income
  * - Annual withdrawal at 4% rule
  * - Historical data for charting
