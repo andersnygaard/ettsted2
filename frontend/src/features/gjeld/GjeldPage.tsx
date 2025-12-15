@@ -1,10 +1,11 @@
-import { PageSkeleton, HeroNumber, ChartWithTabs, formatCurrency } from '@finans/components';
+import { PageLayout, HeroNumber, ChartWithTabs, formatCurrency, Skeleton } from '@finans/components';
 import { useGjeldData } from './useGjeldData';
 import { useAuth } from '../auth/useAuth';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { DekningSection } from './DekningSection';
 import { LoansList, Loan } from './LoansList';
-import { GjeldSkeleton } from '@/shared/components/skeletons';
+import '@finans/components/styles/tokens.css';
+import '@/shared/styles/PageSkeletons.css';
 import './GjeldPage.css';
 
 /**
@@ -23,7 +24,7 @@ function GjeldPage() {
   // Handle loading state
   if (isLoading) {
     return (
-      <PageSkeleton
+      <PageLayout
         breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Gjeld' }]}
         title="Gjeld"
         subtitle="Oversikt over lån og nedbetaling"
@@ -33,22 +34,67 @@ function GjeldPage() {
         <div role="status" aria-live="polite" className="sr-only">
           Laster gjelddata...
         </div>
-        <GjeldSkeleton />
-      </PageSkeleton>
+        <div className="skeleton-container">
+          {/* Page Header */}
+          <div className="skeleton-page-header">
+            <Skeleton width={150} height={36} />
+            <Skeleton width={220} height={14} style={{ marginTop: '8px' }} />
+          </div>
+
+          {/* Hero Section */}
+          <div className="skeleton-hero-section">
+            <Skeleton width={100} height={14} />
+            <Skeleton width={260} height={72} style={{ marginTop: '16px' }} />
+            <Skeleton width={180} height={24} style={{ marginTop: '12px' }} />
+          </div>
+
+          {/* Dekning Section */}
+          <div className="skeleton-dekning-section">
+            <div style={{ display: 'flex', gap: '32px' }}>
+              {/* Donut placeholder */}
+              <Skeleton width={120} height={120} variant="circular" />
+              {/* Info section */}
+              <div style={{ flex: 1 }}>
+                <Skeleton width={100} height={14} style={{ marginBottom: '8px' }} />
+                <Skeleton width={150} height={20} style={{ marginBottom: '16px' }} />
+                <Skeleton height={12} style={{ marginBottom: '8px' }} />
+                <Skeleton width={90} height={12} />
+              </div>
+            </div>
+          </div>
+
+          {/* Loans List */}
+          <div className="skeleton-loans-list">
+            <Skeleton width={120} height={16} style={{ marginBottom: '16px' }} />
+            {[1, 2].map((i) => (
+              <div key={i} className="skeleton-loan-item">
+                <Skeleton height={14} style={{ marginBottom: '8px' }} />
+                <Skeleton width={200} height={12} />
+              </div>
+            ))}
+          </div>
+
+          {/* Chart Area */}
+          <div className="skeleton-chart-section">
+            <Skeleton width={180} height={16} style={{ marginBottom: '8px' }} />
+            <Skeleton height={200} style={{ marginTop: '12px' }} />
+          </div>
+        </div>
+      </PageLayout>
     );
   }
 
   // Handle error state
   if (error) {
     return (
-      <PageSkeleton
+      <PageLayout
         breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Gjeld' }]}
         title="Gjeld"
         subtitle="Feil ved lasting av data"
         className="gjeld-page"
       >
         <></>
-      </PageSkeleton>
+      </PageLayout>
     );
   }
 
@@ -88,7 +134,7 @@ function GjeldPage() {
   const sumSavings = (data.coverage / 100) * data.totalDebt;
 
   return (
-    <PageSkeleton
+    <PageLayout
       breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Gjeld' }]}
       title="Gjeld"
       subtitle="Oversikt over lån og nedbetaling"
@@ -117,7 +163,7 @@ function GjeldPage() {
         totalColor="var(--pale-blue)"
         height={180}
       />
-    </PageSkeleton>
+    </PageLayout>
   );
 }
 

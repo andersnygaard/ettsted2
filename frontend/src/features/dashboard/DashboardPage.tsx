@@ -1,12 +1,12 @@
 import { useAuth } from '../auth/useAuth';
-import { formatCurrency, formatPercentage, AreaChart } from '@finans/components';
+import { formatCurrency, formatPercentage, AreaChart, Skeleton } from '@finans/components';
 import { useNavigate } from 'react-router-dom';
 import { useDashboardData } from './useDashboardData';
-import { PageSkeleton, StatCard, SectionLink } from '@finans/components';
-import { DashboardSkeleton } from '@/shared/components/skeletons';
+import { PageLayout, StatCard, SectionLink } from '@finans/components';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { MILESTONES } from '@/config/constants';
 import './DashboardPage.css';
+import '@/shared/styles/PageSkeletons.css';
 
 function DashboardPage() {
   const navigate = useNavigate();
@@ -63,7 +63,7 @@ function DashboardPage() {
   // Handle loading and error states
   if (isLoading) {
     return (
-      <PageSkeleton
+      <PageLayout
         breadcrumb={[{ label: 'Oversikt' }]}
         title={`God morgen, ${firstName}`}
         subtitle={monthYear}
@@ -73,26 +73,74 @@ function DashboardPage() {
         <div role="status" aria-live="polite" className="sr-only">
           Laster dashboarddata...
         </div>
-        <DashboardSkeleton />
-      </PageSkeleton>
+        {/* Dashboard Skeleton Loader */}
+        <div className="skeleton-container">
+          {/* Page Header */}
+          <div className="skeleton-page-header">
+            <Skeleton width={250} height={36} />
+            <Skeleton width={180} height={20} />
+          </div>
+
+          {/* Hero Section */}
+          <div className="skeleton-hero-section">
+            <Skeleton width={120} height={14} />
+            <Skeleton width={300} height={72} style={{ marginTop: '16px' }} />
+            <Skeleton width={200} height={28} style={{ marginTop: '12px' }} />
+          </div>
+
+          {/* Quick Stats Grid */}
+          <div className="skeleton-quick-stats">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="skeleton-stat-card">
+                <Skeleton height={40} />
+                <Skeleton height={12} style={{ marginTop: '8px' }} />
+              </div>
+            ))}
+          </div>
+
+          {/* Milestone Section */}
+          <div className="skeleton-milestone-section">
+            <Skeleton width={150} height={14} style={{ marginBottom: '8px' }} />
+            <Skeleton width={200} height={48} style={{ marginBottom: '16px' }} />
+            <Skeleton height={12} style={{ marginBottom: '8px' }} />
+            <div style={{ display: 'flex', gap: '16px' }}>
+              <Skeleton width={200} height={14} />
+              <Skeleton width={50} height={14} />
+            </div>
+          </div>
+
+          {/* Section Links */}
+          <div className="skeleton-section-links">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="skeleton-section-link">
+                <div>
+                  <Skeleton width={120} height={16} style={{ marginBottom: '8px' }} />
+                  <Skeleton width={180} height={14} />
+                </div>
+                <Skeleton width={20} height={20} variant="rectangular" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </PageLayout>
     );
   }
 
   if (error) {
     return (
-      <PageSkeleton
+      <PageLayout
         breadcrumb={[{ label: 'Oversikt' }]}
         title={`God morgen, ${firstName}`}
         subtitle="Feil ved lasting av data"
         className="dashboard-page"
       >
         <></>
-      </PageSkeleton>
+      </PageLayout>
     );
   }
 
   return (
-    <PageSkeleton
+    <PageLayout
       breadcrumb={[{ label: 'Oversikt' }]}
       title={`God morgen, ${firstName}`}
       subtitle={monthYear}
@@ -180,7 +228,7 @@ function DashboardPage() {
             href="/kalkulatorer"
           />
         </div>
-    </PageSkeleton>
+    </PageLayout>
   );
 }
 

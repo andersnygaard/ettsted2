@@ -1,9 +1,5 @@
 /* Dashboard Page - Nordic Minimal Design - Mobile-First */
 
-.dashboard-page {
-  background: var(--bone);
-}
-
 .dashboard-page .container {
   max-width: 1200px;
   padding: var(--space-lg) var(--space-md) 0;
@@ -80,6 +76,7 @@
 
 /* Milestone Section - Mobile: Stack layout, black background */
 .dashboard-milestone {
+  box-sizing: border-box;
   max-width: 900px;
   margin: 0 auto var(--space-5xl);
   background: var(--charcoal);

@@ -3,11 +3,6 @@
  * Based on Nordic Minimal design from draft-1-kalkulatorer.html
  */
 
-.calculators-page {
-  background: var(--bone);
-  padding-top: var(--space-xl);
-}
-
 /* Calculator Grid - 2x2 layout */
 .calc-grid {
   display: grid;

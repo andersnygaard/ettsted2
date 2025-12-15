@@ -1,27 +1,30 @@
 /**
  * Import Page - Modern AI Assistant Interface
  * Nordic Minimal with sharp, airy aesthetic
+ *
+ * Uses PageSkeleton wrapper with custom chat layout
  */
 
+/* ============================================
+   PAGE SKELETON OVERRIDES
+   ============================================ */
+/* Override PageSkeleton container padding to allow chat full control */
+.import-page .container {
+  padding: 0;
+}
+
+/* Page needs full height for chat layout */
 .import-page {
+  min-height: calc(100vh - var(--space-xl) - var(--space-2xl));
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  background: var(--bone);
 }
 
-/* ============================================
-   HEADER
-   ============================================ */
-.import-page__header {
-  padding: var(--space-4xl) var(--space-md) var(--space-xl);
-  max-width: 720px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.import-page__header nav {
-  margin-bottom: var(--space-lg);
+/* Content area needs to expand to fill available space */
+.import-page .page-skeleton__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ============================================
@@ -273,10 +276,6 @@
    RESPONSIVE
    ============================================ */
 @media (max-width: 640px) {
-  .import-page__header {
-    padding: var(--space-2xl) var(--space-md) var(--space-lg);
-  }
-
   .chatbot {
     padding: 0 var(--space-sm);
   }

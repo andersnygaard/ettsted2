@@ -51,3 +51,17 @@ export function compareDatesDesc(a: string, b: string): number {
 export function compareDatesAsc(a: string, b: string): number {
   return parseDate(a).getTime() - parseDate(b).getTime();
 }
+
+/**
+ * Get the first day of the current month in dd.MM.yyyy format
+ *
+ * @returns Date string in dd.MM.yyyy format (e.g., "01.12.2024")
+ */
+export function getCurrentMonthFirstDay(): string {
+  const now = new Date();
+  const day = '01';
+  const month = String(now.getMonth() + 1).padStart(2, '0'); // JS months are 0-indexed
+  const year = String(now.getFullYear());
+
+  return `${day}.${month}.${year}`;
+}

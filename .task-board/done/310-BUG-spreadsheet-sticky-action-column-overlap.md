@@ -59,11 +59,11 @@ On the Portfolio page, when narrowing the viewport (769px-1024px range), the sti
 ```
 
 ## Acceptance Criteria
-- [ ] Action column stays 44px (minimum touch target)
-- [ ] Table scrolls horizontally when content exceeds viewport
-- [ ] No column overlap at any viewport width
-- [ ] Delete button remains accessible (44x44px)
-- [ ] Lint + build pass
+- [x] Action column stays 44px (minimum touch target)
+- [x] Table scrolls horizontally when content exceeds viewport
+- [x] No column overlap at any viewport width
+- [x] Delete button remains accessible (44x44px)
+- [x] Lint + build pass
 
 ## Files to Modify
 - `components/src/data/SpreadsheetTable/SpreadsheetTable.css`

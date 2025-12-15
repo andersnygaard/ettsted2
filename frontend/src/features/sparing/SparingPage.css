@@ -3,12 +3,6 @@
  * Based on Nordic Minimal design from draft-1-sparing.html
  */
 
-.sparing-page {
-  background: var(--bone);
-  padding-top: var(--space-xl);
-  padding-bottom: var(--space-2xl);
-}
-
 /* Stats Row - 3 column grid */
 .stats-row {
   display: grid;

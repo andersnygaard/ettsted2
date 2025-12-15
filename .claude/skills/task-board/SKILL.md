@@ -23,6 +23,7 @@ This skill provides specialized workflows for creating and managing implementati
 - Simple changes with obvious implementation
 - Active code implementation (skill is planning-only)
 - Trivial updates that don't need planning
+- AI scaffolding (CLAUDE.md, rules, skills, commands) - update directly, no task
 
 ## Core Planning Principles
 

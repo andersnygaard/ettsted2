@@ -3,12 +3,6 @@
  * Based on Nordic Minimal design from draft-1-gjeld.html
  */
 
-.gjeld-page {
-  background: var(--bone);
-  padding-top: var(--space-xl);
-  padding-bottom: var(--space-2xl);
-}
-
 /* Dekning Section */
 .dekning-section {
   background: var(--warm-white);

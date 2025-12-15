@@ -1,17 +1,17 @@
 import { PageHeader } from '../PageHeader/PageHeader';
 import { Breadcrumb } from '../../ui/Breadcrumb';
 import type { BreadcrumbItem } from '../../ui/Breadcrumb';
-import './PageSkeleton.css';
+import './PageLayout.css';
 
 /**
- * PageSkeleton Component
+ * PageLayout Component
  *
  * Provides consistent page structure across the application.
  * Wraps page content with standard container, breadcrumb, and header layout.
  *
  * Based on Nordic Minimal design system.
  */
-export interface PageSkeletonProps {
+export interface PageLayoutProps {
   children: React.ReactNode;
   breadcrumb?: BreadcrumbItem[];
   title: string;
@@ -21,7 +21,7 @@ export interface PageSkeletonProps {
   'aria-busy'?: boolean;
 }
 
-export function PageSkeleton({
+export function PageLayout({
   children,
   breadcrumb,
   title,
@@ -29,11 +29,11 @@ export function PageSkeleton({
   className = '',
   width = 'narrow',
   'aria-busy': ariaBusy
-}: PageSkeletonProps) {
+}: PageLayoutProps) {
   const containerClass = `container container--${width}`;
 
   return (
-    <div className={`page-skeleton ${className}`} aria-busy={ariaBusy}>
+    <div className={`page-layout ${className}`} aria-busy={ariaBusy}>
       <div className={containerClass}>
         {breadcrumb && breadcrumb.length > 0 && (
           <Breadcrumb items={breadcrumb} />
@@ -44,7 +44,7 @@ export function PageSkeleton({
           subtitle={subtitle}
         />
 
-        <div className="page-skeleton__content">
+        <div className="page-layout__content">
           {children}
         </div>
       </div>

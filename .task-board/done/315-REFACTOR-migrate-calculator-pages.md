@@ -49,19 +49,19 @@ Migrate 4 calculator pages to use PageSkeleton for consistent layout and structu
 
 ## Research During Implementation
 
-- [ ] Check current breadcrumb/title patterns
-- [ ] Compare with `CalculatorsPage.tsx` (already uses PageSkeleton)
-- [ ] Identify special layout needs per page
+- [x] Check current breadcrumb/title patterns
+- [x] Compare with `CalculatorsPage.tsx` (already uses PageSkeleton)
+- [x] Identify special layout needs per page
 
 ---
 
 ## Acceptance Criteria
 
-- [ ] All 4 calculator pages use PageSkeleton
-- [ ] Consistent breadcrumb structure
-- [ ] No visual regressions
-- [ ] E2E calculator tests pass
-- [ ] CSS files cleaned of duplicate layout styles
+- [x] All 4 calculator pages use PageSkeleton
+- [x] Consistent breadcrumb structure
+- [x] No visual regressions
+- [x] E2E calculator tests pass
+- [x] CSS files cleaned of duplicate layout styles
 
 ---
 

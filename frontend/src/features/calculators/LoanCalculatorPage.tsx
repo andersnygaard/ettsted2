@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart, Tabs, formatCurrency, formatNumber, formatPercentage } from '@finans/components';
+import { PageLayout, Card, NumberInput, StackedAreaChart, Tabs, formatCurrency, formatNumber, formatPercentage } from '@finans/components';
 import type { StackedDataPoint } from '@finans/components';
 import { useGjeldData } from '@/features/gjeld/useGjeldData';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
@@ -367,21 +367,14 @@ function LoanCalculatorPage() {
   const interestPercentage = formatPercentage(interestPercentageValue / 100, 1);
 
   return (
-    <main className="calculator-page">
-      <div className="container container--narrow">
-        <Breadcrumb
-          items={[
-            { label: 'Kalkulatorer', path: '/kalkulatorer' },
-            { label: 'Lånekalkulator' },
-          ]}
-        />
-
-        <PageHeader
-          title="Lånekalkulator"
-          subtitle="Beregn månedlige avdrag og total rentekostnad"
-        />
-
-        <div className="animate-fade-up">
+    <PageLayout
+      title="Lånekalkulator"
+      breadcrumb={[
+        { label: 'Kalkulatorer', path: '/kalkulatorer' },
+        { label: 'Lånekalkulator' }
+      ]}
+    >
+      <div className="animate-fade-up">
           <Tabs
             tabs={[
               { id: 'annuity', label: 'Annuitetslån' },
@@ -555,8 +548,7 @@ function LoanCalculatorPage() {
             </>
           )}
         </div>
-      </div>
-    </main>
+    </PageLayout>
   );
 }
 

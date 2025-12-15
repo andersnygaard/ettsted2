@@ -32,6 +32,8 @@ import {
 } from './portfolioService';
 import { MonthlySnapshot, Account } from '../models/Portfolio';
 import { AccountConfig } from '../models/User';
+import { fuzzyMatchAccounts } from '../utils/fuzzyMatch';
+import { getCurrentMonthFirstDay } from '../utils/dateUtils';
 
 /**
  * OpenAI client
@@ -89,12 +91,30 @@ WORKFLOW - ALWAYS FOLLOW THIS ORDER:
 1. When user pastes data, FIRST analyze it WITHOUT importing:
    - Parse the data to identify: dates, account columns, values
    - Try to match columns to configured accounts using fuzzy matching rules above
-   - Present a summary to the user in Norwegian:
-     "Jeg fant følgende i dataene dine:
-      📅 Datoer: [first] til [last] ([count] måneder)
-      📊 Kontoer: [list account names found with matching results]
+   - Present a summary to the user in Norwegian with this EXACT format:
+     SINGLE DATE (one snapshot):
+       "Jeg fant følgende i dataene dine:
+        📅 Dato: 01.12.2025
+        💰 [AccountName]: 1 000 kr
+        (more accounts with 💰 emoji if multiple)
 
-      Vil du importere alle disse? Skriv 'ja' for å fortsette, eller fortell meg hvilke kontoer du vil ha med."
+        Vil du importere dette?"
+
+     MULTIPLE DATES (multiple snapshots):
+       "Jeg fant følgende i dataene dine:
+        📅 Datoer: 01.11.2025 til 01.12.2025 (2 måneder)
+        💰 [AccountName]: 150 000 kr, 155 000 kr
+        💰 [OtherAccount]: 1 000 kr, 1 200 kr
+        (more accounts if needed)
+
+        Vil du importere alle disse?"
+
+   CRITICAL FORMATTING RULES:
+   - Use 💰 emoji (money bag) for accounts with amounts, NOT 📊
+   - Show amounts in Norwegian format: spaces as thousands separators, comma as decimal (e.g., "150 000,50 kr")
+   - Single date: "Dato:" (singular), "Vil du importere dette?" (singular)
+   - Multiple dates: "Datoer: X til Y (N måneder)" and "Vil du importere alle disse?" (plural)
+   - List account values as comma-separated if multiple snapshots for same account
 
 2. WAIT for user confirmation before importing anything!
 
@@ -104,6 +124,21 @@ WORKFLOW - ALWAYS FOLLOW THIS ORDER:
    - Give a brief summary: "Ferdig! Importerte X nye måneder, oppdaterte Y eksisterende."
 
 4. If user wants specific accounts only, filter and import only those.
+
+SINGLE ACCOUNT UPDATES:
+- When user mentions ONE account with a value (e.g., "jeg har 1000 i kron", "nordnet er 50000 nå"):
+  * Use update_single_account tool (NOT upsert_snapshot)
+  * Tool will fuzzy match the account name and return current values
+  * If multiple matches, present numbered list: "Fant flere kontoer: 1) Kron, 2) Kronbank. Hvilken?"
+  * Always confirm with user before updating: "Oppdaterer [account] til [value] kr for [date]. Er dette riktig?"
+  * On "ja" / "ok" confirmation, call update_single_account again with confirmed=true and confirmedAccountId
+  * Report success: "Ferdig! Oppdaterte [account] fra [old] kr til [new] kr."
+
+DATE HANDLING:
+- No date specified → defaults to first of current month (01.12.2024, etc.)
+- "denne måneden" / "nå" / "i dag" → current month (handled automatically by tool)
+- "forrige måned" → calculate previous month as "01.MM.yyyy"
+- Always normalize dates to 1st of the month
 
 IMPORTANT: Never import without asking first. Always present what you found and wait for confirmation.`;
 }
@@ -151,7 +186,7 @@ const TOOLS: OpenAI.ChatCompletionTool[] = [
         properties: {
           date: {
             type: 'string',
-            description: 'Date in dd.MM.yyyy format (e.g., "01.09.2022")',
+            description: 'Date in dd.MM.yyyy format (e.g., "01.09.2022"). Optional - defaults to first of current month.',
           },
           accounts: {
             type: 'array',
@@ -177,7 +212,40 @@ const TOOLS: OpenAI.ChatCompletionTool[] = [
             },
           },
         },
-        required: ['date', 'accounts'],
+        required: ['accounts'],
+      },
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'update_single_account',
+      description: 'Update a single account value using fuzzy name matching. Returns matches for confirmation before updating.',
+      parameters: {
+        type: 'object',
+        properties: {
+          searchTerm: {
+            type: 'string',
+            description: 'Account name or partial name (e.g., "kron", "nord")',
+          },
+          value: {
+            type: 'number',
+            description: 'New account value in NOK',
+          },
+          date: {
+            type: 'string',
+            description: 'Optional date in dd.MM.yyyy format. Defaults to first of current month if not provided.',
+          },
+          confirmed: {
+            type: 'boolean',
+            description: 'True when user has confirmed the update. Must be true to actually save changes.',
+          },
+          confirmedAccountId: {
+            type: 'string',
+            description: 'Account ID to update (from matches). Required when confirmed=true.',
+          },
+        },
+        required: ['searchTerm', 'value'],
       },
     },
   },
@@ -286,18 +354,21 @@ async function executeGetExistingSnapshots(
  */
 async function executeUpsertSnapshot(
   ctx: ToolContext,
-  args: { date: string; accounts: { name: string; value: number; assetClass: string }[] }
+  args: { date?: string; accounts: { name: string; value: number; assetClass: string }[] }
 ): Promise<{ success: boolean; action: 'created' | 'updated'; snapshotId: string; date: string; totalNetWorth: number }> {
+  // Default to current month if date not provided
+  const date = args.date || getCurrentMonthFirstDay();
+
   const span = createSpan(ctx.trace, 'tool-upsert-snapshot', {
     userId: ctx.userId,
-    date: args.date,
+    date,
     accountCount: args.accounts.length,
   });
 
   try {
     // Check if snapshot exists for this date
     const existingSnapshots = await getSnapshotsByUserId(ctx.userId);
-    const existing = existingSnapshots.find((s) => s.date === args.date);
+    const existing = existingSnapshots.find((s) => s.date === date);
 
     let accounts: Account[];
 
@@ -362,7 +433,7 @@ async function executeUpsertSnapshot(
       logger.info('Snapshot updated via agent (merged)', {
         userId: ctx.userId,
         snapshotId: updated.id,
-        date: args.date,
+        date,
         accountsUpdated: incomingAccountsMap.size,
         accountsPreserved: accounts.length - incomingAccountsMap.size,
       });
@@ -383,7 +454,7 @@ async function executeUpsertSnapshot(
       const snapshot: MonthlySnapshot = {
         id: randomUUID(),
         userId: ctx.userId,
-        date: args.date,
+        date,
         accounts,
         totalNetWorth,
         createdAt: new Date(),
@@ -403,12 +474,193 @@ async function executeUpsertSnapshot(
       logger.info('Snapshot created via agent', {
         userId: ctx.userId,
         snapshotId: created.id,
-        date: args.date,
+        date,
       });
 
       endSpan(span, result);
       return result;
     }
+  } catch (error) {
+    endSpan(span, { error: String(error) }, 'ERROR');
+    throw error;
+  }
+}
+
+/**
+ * Execute update_single_account tool
+ *
+ * Two-phase flow:
+ * 1. Discovery (confirmed=false): Fuzzy match and return matches for confirmation
+ * 2. Execution (confirmed=true): Update the account value
+ */
+async function executeUpdateSingleAccount(
+  ctx: ToolContext,
+  args: {
+    searchTerm: string;
+    value: number;
+    date?: string;
+    confirmed?: boolean;
+    confirmedAccountId?: string;
+  }
+): Promise<{
+  status: 'needs_confirmation' | 'updated' | 'no_matches';
+  matches?: Array<{
+    accountId: string;
+    accountName: string;
+    category: string;
+    currentValue: number | null;
+    score: number;
+  }>;
+  updatedAccount?: {
+    accountId: string;
+    accountName: string;
+    oldValue: number | null;
+    newValue: number;
+    date: string;
+    snapshotId: string;
+  };
+  message: string;
+  availableAccounts?: string[];
+}> {
+  const span = createSpan(ctx.trace, 'tool-update-single-account', {
+    userId: ctx.userId,
+    searchTerm: args.searchTerm,
+    value: args.value,
+    confirmed: args.confirmed || false,
+  });
+
+  try {
+    // Default to current month if date not provided
+    const date = args.date || getCurrentMonthFirstDay();
+
+    // Get user accounts for fuzzy matching
+    const user = await getUserById(ctx.userId);
+    const userAccounts = user?.accounts || [];
+
+    // Phase 2: Execution (user confirmed)
+    if (args.confirmed && args.confirmedAccountId) {
+      // Find the account config
+      const accountConfig = userAccounts.find((a) => a.id === args.confirmedAccountId);
+
+      if (!accountConfig) {
+        const result = {
+          status: 'no_matches' as const,
+          message: 'Kontoen ble ikke funnet.',
+          availableAccounts: userAccounts.map((a) => a.name),
+        };
+        endSpan(span, result);
+        return result;
+      }
+
+      // Get existing snapshots
+      const existingSnapshots = await getSnapshotsByUserId(ctx.userId);
+      const existingSnapshot = existingSnapshots.find((s) => s.date === date);
+
+      // Find current value in snapshot
+      const currentAccount = existingSnapshot?.accounts.find(
+        (a) => a.name.toLowerCase().trim() === accountConfig.name.toLowerCase().trim()
+      );
+      const oldValue = currentAccount?.value ?? null;
+
+      // Determine asset class from category
+      let assetClass: string;
+      switch (accountConfig.category) {
+        case 'sparing':
+          assetClass = 'aksjer'; // Default for sparing
+          break;
+        case 'gjeld':
+          assetClass = 'lån';
+          break;
+        case 'pensjon':
+          assetClass = 'pensjon';
+          break;
+        default:
+          assetClass = 'aksjer';
+      }
+
+      // Use upsert_snapshot to update this single account
+      const upsertResult = await executeUpsertSnapshot(ctx, {
+        date,
+        accounts: [
+          {
+            name: accountConfig.name,
+            value: args.value,
+            assetClass,
+          },
+        ],
+      });
+
+      const result = {
+        status: 'updated' as const,
+        updatedAccount: {
+          accountId: args.confirmedAccountId,
+          accountName: accountConfig.name,
+          oldValue,
+          newValue: args.value,
+          date,
+          snapshotId: upsertResult.snapshotId,
+        },
+        message: `Oppdaterte ${accountConfig.name} fra ${oldValue ?? 0} kr til ${args.value.toLocaleString('nb-NO')} kr for ${date}.`,
+      };
+
+      logger.info('Single account updated via agent', {
+        userId: ctx.userId,
+        accountId: args.confirmedAccountId,
+        accountName: accountConfig.name,
+        oldValue,
+        newValue: args.value,
+        date,
+      });
+
+      endSpan(span, result);
+      return result;
+    }
+
+    // Phase 1: Discovery (fuzzy match)
+    const matches = fuzzyMatchAccounts(args.searchTerm, userAccounts);
+
+    if (matches.length === 0) {
+      // No matches found
+      const result = {
+        status: 'no_matches' as const,
+        message: `Fant ingen kontoer som matcher "${args.searchTerm}".`,
+        availableAccounts: userAccounts.map((a) => a.name),
+      };
+
+      endSpan(span, result);
+      return result;
+    }
+
+    // Get existing snapshot to find current values
+    const existingSnapshots = await getSnapshotsByUserId(ctx.userId);
+    const existingSnapshot = existingSnapshots.find((s) => s.date === date);
+
+    // Build matches with current values
+    const matchesWithValues = matches.map((match) => {
+      const currentAccount = existingSnapshot?.accounts.find(
+        (a) => a.name.toLowerCase().trim() === match.accountName.toLowerCase().trim()
+      );
+
+      return {
+        accountId: match.accountId,
+        accountName: match.accountName,
+        category: match.category,
+        currentValue: currentAccount?.value ?? null,
+        score: match.score,
+      };
+    });
+
+    const result = {
+      status: 'needs_confirmation' as const,
+      matches: matchesWithValues,
+      message:
+        matches.length === 1
+          ? `Fant kontoen '${matches[0].accountName}' (nåværende verdi: ${matchesWithValues[0].currentValue?.toLocaleString('nb-NO') ?? 0} kr).`
+          : `Fant ${matches.length} mulige kontoer: ${matches.map((m) => m.accountName).join(', ')}.`,
+    };
+
+    endSpan(span, result);
+    return result;
   } catch (error) {
     endSpan(span, { error: String(error) }, 'ERROR');
     throw error;
@@ -445,7 +697,19 @@ async function executeTool(
     case 'upsert_snapshot':
       result = await executeUpsertSnapshot(
         ctx,
-        args as { date: string; accounts: { name: string; value: number; assetClass: string }[] }
+        args as { date?: string; accounts: { name: string; value: number; assetClass: string }[] }
+      );
+      break;
+    case 'update_single_account':
+      result = await executeUpdateSingleAccount(
+        ctx,
+        args as {
+          searchTerm: string;
+          value: number;
+          date?: string;
+          confirmed?: boolean;
+          confirmedAccountId?: string;
+        }
       );
       break;
     default:

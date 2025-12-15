@@ -361,6 +361,15 @@ Organize by feature (vertical slicing):
 /frontend/src/shared/{components,hooks,utils}
 ```
 
+**Vertical Slicing Rule**: Feature-specific code stays in feature folder.
+
+| Location | What Belongs |
+|----------|--------------|
+| `features/{name}/` | Page components, page-specific hooks/CSS, loading states, components used by ONE feature |
+| `shared/` | Components used by 2+ features, generic utilities, app-wide hooks, app-wide layout |
+
+**Test**: "Is this used by multiple unrelated features?" → Yes = `shared/`, No = `features/`
+
 ### State Management
 - **TanStack Query**: Server state (API data)
 - **React Context**: Auth state

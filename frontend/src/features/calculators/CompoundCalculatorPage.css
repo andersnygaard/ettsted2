@@ -3,12 +3,6 @@
  * Based on Nordic Minimal design system
  */
 
-/* Shared calculator page styles */
-.calculator-page {
-  background: var(--bone);
-  padding-top: var(--space-md);
-}
-
 /* Two-column layout for inputs and results */
 .calculator-layout {
   display: grid;
@@ -25,12 +19,6 @@
 @media (max-width: 768px) {
   .calculator-layout {
     grid-template-columns: 1fr;
-  }
-
-  .calculator-inputs,
-  .calculator-results,
-  .calculator-info {
-    padding: var(--space-lg);
   }
 }
 

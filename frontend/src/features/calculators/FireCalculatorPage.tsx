@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Breadcrumb, PageHeader, Card, NumberInput, AreaChart, ProgressBar, Modal, Button, formatCurrency, formatNumber, formatPercentage } from '@finans/components';
+import { PageLayout, Card, NumberInput, AreaChart, ProgressBar, Modal, Button, formatCurrency, formatNumber, formatPercentage } from '@finans/components';
 import type { DataPoint } from '@finans/components';
 import { userApi } from '@/shared/api/services';
 import { useSparingData } from '@/features/sparing/useSparingData';
@@ -215,21 +215,14 @@ function FireCalculatorPage() {
   };
 
   return (
-    <main className="calculator-page">
-      <div className="container container--narrow">
-        <Breadcrumb
-          items={[
-            { label: 'Kalkulatorer', path: '/kalkulatorer' },
-            { label: 'F.I.R.E. kalkulator' },
-          ]}
-        />
-
-        <PageHeader
-          title="F.I.R.E. kalkulator"
-          subtitle="Beregn din vei til økonomisk uavhengighet"
-        />
-
-        <div className="calculator-layout">
+    <PageLayout
+      title="F.I.R.E. kalkulator"
+      breadcrumb={[
+        { label: 'Kalkulatorer', path: '/kalkulatorer' },
+        { label: 'F.I.R.E. kalkulator' }
+      ]}
+    >
+      <div className="calculator-layout">
           <Card className="calculator-inputs animate-fade-up animate-delay-1">
             <NumberInput
               label="Nåværende sparing"
@@ -358,7 +351,6 @@ function FireCalculatorPage() {
             F.I.R.E. om {formatYears(result.yearsToFire)}.
           </p>
         </div>
-      </div>
 
       <Modal
         isOpen={showConfirmDialog}
@@ -383,7 +375,7 @@ function FireCalculatorPage() {
           på tvers av appen.
         </p>
       </Modal>
-    </main>
+    </PageLayout>
   );
 }
 

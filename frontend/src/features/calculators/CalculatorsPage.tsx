@@ -1,4 +1,4 @@
-import { PageSkeleton, CalculatorCard, Icon } from '@finans/components';
+import { PageLayout, CalculatorCard, Icon } from '@finans/components';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import './CalculatorsPage.css';
 
@@ -48,7 +48,7 @@ const calculators = [
 function CalculatorsPage() {
   usePageTitle('Kalkulatorer');
   return (
-    <PageSkeleton
+    <PageLayout
       breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Kalkulatorer' }]}
       title="Kalkulatorer"
       subtitle="Verktøy for å planlegge din økonomi"
@@ -67,7 +67,7 @@ function CalculatorsPage() {
             />
           ))}
       </div>
-    </PageSkeleton>
+    </PageLayout>
   );
 }
 

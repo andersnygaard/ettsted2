@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { PageSkeleton } from './PageSkeleton';
+import { PageLayout } from './PageLayout';
 
-const meta: Meta<typeof PageSkeleton> = {
-  title: 'Layout/PageSkeleton',
-  component: PageSkeleton,
+const meta: Meta<typeof PageLayout> = {
+  title: 'Layout/PageLayout',
+  component: PageLayout,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
@@ -31,7 +31,7 @@ const meta: Meta<typeof PageSkeleton> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof PageSkeleton>;
+type Story = StoryObj<typeof PageLayout>;
 
 const SampleContent = () => (
   <div style={{ padding: '24px', background: 'var(--warm-white)', borderRadius: '2px' }}>

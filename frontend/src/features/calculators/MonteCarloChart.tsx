@@ -222,7 +222,7 @@ function MonteCarloChart({ scenarios, percentiles, years, height = 320, isRealVa
     // Legend
     const legend = svg
       .append('g')
-      .attr('transform', `translate(${containerWidth - margin.right - 200}, 20)`);
+      .attr('transform', 'translate(720, 200)');
 
     const legendItems = [
       { label: '10-90 persentil', color: 'var(--pale-blue)', opacity: 0.3 },

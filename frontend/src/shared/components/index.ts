@@ -69,4 +69,3 @@ export { default as LoadingSpinner } from './LoadingSpinner';
 export { default as FeatureErrorFallback } from './FeatureErrorFallback';
 export { AvatarMenu } from './AvatarMenu';
 export type { AvatarMenuProps } from './AvatarMenu';
-export { DashboardSkeleton, PortfolioSkeleton, SparingSkeleton, GjeldSkeleton, PensjonSkeleton } from './skeletons';

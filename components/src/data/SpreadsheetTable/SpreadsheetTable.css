@@ -14,7 +14,8 @@
    ======================================== */
 
 .spreadsheet-wrapper {
-  /* No overflow - let table expand naturally */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .spreadsheet {
@@ -242,6 +243,15 @@
   background: var(--bone);
 }
 
+/* Override zebra on hover for even rows */
+.spreadsheet tbody tr:nth-child(even):hover td {
+  background: var(--warm-white);
+}
+
+.spreadsheet tbody tr:nth-child(even):hover td:first-child {
+  background: var(--muted-sage-light-5);
+}
+
 /* Column group backgrounds */
 .spreadsheet td.col-sparing {
   background: var(--pale-blue-light);
@@ -387,14 +397,17 @@
 
 .action-header {
   text-align: center;
-  width: 50px;
+  width: 44px;
+  min-width: 44px;
+  padding: 0;
   border-right: 2px solid var(--border-strong);
 }
 
 .action-cell {
   text-align: center;
-  width: 50px;
-  padding: var(--space-xs);
+  width: 44px;
+  min-width: 44px;
+  padding: 0;
   background: var(--warm-white);
   position: sticky;
   right: 0;
@@ -411,7 +424,10 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 14px;
+  padding: 0;
+  margin: 0;
+  width: 44px;
+  height: 44px;
   font-size: 16px;
   line-height: 1;
   border-radius: 2px;
@@ -419,12 +435,9 @@
   opacity: 0.3;
   visibility: hidden;
   color: var(--negative);
-  min-width: 44px;
-  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: -14px;
 }
 
 .delete-button:hover {

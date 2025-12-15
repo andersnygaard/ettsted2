@@ -40,9 +40,9 @@ Page height matches content. No excessive scrollable whitespace below content.
 
 ## Acceptance Criteria
 
-- [ ] Sparing, Gjeld, Pensjon pages have no excess scroll area
-- [ ] Layout still fills viewport when content is short
-- [ ] No visual regression on other pages
+- [x] Sparing, Gjeld, Pensjon pages have no excess scroll area
+- [x] Layout still fills viewport when content is short
+- [x] No visual regression on other pages
 
 ## Affected Components
 
@@ -87,11 +87,11 @@ Page height matches content. No excessive scrollable whitespace below content.
 
 ## Verification
 
-- [ ] Navigate to /sparing - no excess scroll
-- [ ] Navigate to /gjeld - no excess scroll
-- [ ] Navigate to /pensjon - no excess scroll
-- [ ] Navigate to /oversikt - layout still fills viewport
-- [ ] Navigate to /portefolje - no regression
+- [x] Navigate to /sparing - no excess scroll
+- [x] Navigate to /gjeld - no excess scroll
+- [x] Navigate to /pensjon - no excess scroll
+- [x] Navigate to /oversikt - layout still fills viewport
+- [x] Navigate to /portefolje - no regression
 
 ---
 

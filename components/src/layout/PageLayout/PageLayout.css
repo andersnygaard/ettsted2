@@ -1,5 +1,5 @@
 /**
- * PageSkeleton Component Styles
+ * PageLayout Component Styles
  *
  * Minimal styling - relies on existing container and PageHeader classes.
  * This component is primarily a structural wrapper.
@@ -19,41 +19,44 @@
   }
 }
 
-.page-skeleton {
+.page-layout {
   /* Page entrance animation - applied on mount */
   /* Using 'both' fill-mode to avoid race condition with lazy-loaded chunks */
   animation: fadeUp 0.35s ease-out both;
+  background: var(--bone);
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-2xl);
 }
 
-.page-skeleton__content {
+.page-layout__content {
   /* Content area - children render here */
   /* No additional spacing needed - components handle their own margins */
 }
 
 /* Breadcrumb staggered entry */
-.page-skeleton :is(.breadcrumb) {
+.page-layout :is(.breadcrumb) {
   animation: fadeUp 0.35s ease-out both;
   animation-delay: 0.05s;
 }
 
 /* PageHeader staggered entry */
-.page-skeleton :is(.page-header) {
+.page-layout :is(.page-header) {
   animation: fadeUp 0.35s ease-out both;
   animation-delay: 0.1s;
 }
 
 /* Content staggered entry */
-.page-skeleton__content {
+.page-layout__content {
   animation: fadeUp 0.35s ease-out both;
   animation-delay: 0.15s;
 }
 
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
-  .page-skeleton,
-  .page-skeleton :is(.breadcrumb),
-  .page-skeleton :is(.page-header),
-  .page-skeleton__content {
+  .page-layout,
+  .page-layout :is(.breadcrumb),
+  .page-layout :is(.page-header),
+  .page-layout__content {
     opacity: 1;
     animation: none;
   }

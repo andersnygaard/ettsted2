@@ -5,7 +5,6 @@
  */
 
 .portfolio-page {
-  background: var(--bone);
   padding: var(--space-4xl) 0;
   min-height: calc(100vh - 120px);
 }

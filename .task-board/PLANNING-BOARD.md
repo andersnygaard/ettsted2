@@ -1,16 +1,40 @@
 # Planning Board - Finans
 
-**Current Focus**: All backlog tasks completed!
+**Current Focus**: Backlog empty - ready for new tasks
 
 ---
 
 ## Top Priorities
 
-*Backlog is empty - all tasks completed.*
+_No tasks in queue. Use `/discover-tasks` or `/new-task` to add work._
 
 ---
 
-## Recently Completed (2025-12-13)
+## Recently Completed (2025-12-14)
+
+### Session 8 - Skeleton Vertical Slicing (8 tasks)
+- **#320** REFACTOR: Rename PageSkeleton → PageLayout - Component renamed, 12 page files updated
+- **#321** REFACTOR: Inline dashboard skeleton - Skeleton JSX inlined into DashboardPage
+- **#322** REFACTOR: Inline portfolio skeleton - Skeleton JSX inlined into PortfolioPage
+- **#323** REFACTOR: Inline sparing skeleton - Skeleton JSX inlined into SparingPage
+- **#324** REFACTOR: Inline gjeld skeleton - Skeleton JSX inlined into GjeldPage
+- **#325** REFACTOR: Inline pensjon skeleton - Skeleton JSX inlined into PensjonPage
+- **#326** REFACTOR: Delete skeletons folder - Moved CSS to shared/styles, deleted 5 skeleton components
+- **#327** BUG: Dashboard milestone box sizing - Added box-sizing: border-box
+
+### Session 7 - Bug Fixes, Features, Refactoring (10 tasks)
+- **#310** BUG: Sticky action column overlap - Added overflow-x: auto, 44px min-width
+- **#311** FEATURE: Import agent fuzzy matching - Levenshtein-based account matching with two-phase confirmation
+- **#312** BUG: Duplicate min-height 100vh - Replaced with flex: 1 in Layout.css
+- **#313** REFACTOR: PageSkeleton base styles - Added background/padding to component
+- **#314** REFACTOR: Cleanup PageSkeleton users - Removed duplicate CSS from 6 pages
+- **#315** REFACTOR: Migrate calculator pages - 4 calculator pages now use PageSkeleton
+- **#316** REFACTOR: Migrate EconomyPage - Settings page now uses PageSkeleton
+- **#317** REFACTOR: Migrate ImportPage - Chat interface migrated with layout overrides
+- **#318** BUG: Spreadsheet hover/zebra conflict - Added combined selectors for even row hover
+- **#319** FEATURE: Import agent better summary - Shows amounts, singular/plural dates, 💰 emoji
+
+## Previously Completed (2025-12-13)
 
 ### Session 6 - Bug Fixes, Tests, Features (9 tasks)
 - **#301** BUG: Economy page mobile number overflow - Already fixed (verified CSS was correct)
@@ -88,8 +112,8 @@ Added dedicated rate limiter (5 req/15min) to `/auth/demo-login` endpoint with N
 
 | Status | Count |
 |--------|-------|
-| Done | 309 |
+| Done | 327 |
 | Backlog | 0 |
 | In Progress | 0 |
 
-**Last Updated**: 2025-12-13
+**Last Updated**: 2025-12-14

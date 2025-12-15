@@ -117,7 +117,8 @@
       "Bash(if [ -f \"$f%.tsx.stories.tsx\" ])",
       "Bash(then echo \"HAS stories\")",
       "Bash(else echo \"NO stories\")",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Skill(feature-planning)"
     ],
     "deny": [],
     "ask": [

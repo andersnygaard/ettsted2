@@ -113,8 +113,8 @@ export type { SectionLinkProps } from './layout/SectionLink'
 export { PageHeader } from './layout/PageHeader/PageHeader'
 export type { PageHeaderProps } from './layout/PageHeader/PageHeader'
 
-export { PageSkeleton } from './layout/PageSkeleton'
-export type { PageSkeletonProps } from './layout/PageSkeleton'
+export { PageLayout } from './layout/PageLayout/PageLayout'
+export type { PageLayoutProps } from './layout/PageLayout/PageLayout'
 
 // System Components
 export { ToastProvider, useToast } from './system/Toast'

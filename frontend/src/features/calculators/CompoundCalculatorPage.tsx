@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Breadcrumb, PageHeader, Card, NumberInput, StackedAreaChart, formatCurrency, formatNumber, formatPercentage } from '@finans/components';
+import { PageLayout, Card, NumberInput, StackedAreaChart, formatCurrency, formatNumber, formatPercentage } from '@finans/components';
 import type { StackedDataPoint, Series } from '@finans/components';
 import { useSparingData } from '@/features/sparing/useSparingData';
 import { useUser } from '@/shared/hooks/useUser';
@@ -144,21 +144,14 @@ function CompoundCalculatorPage() {
   ];
 
   return (
-    <main className="calculator-page">
-      <div className="container container--narrow">
-        <Breadcrumb
-          items={[
-            { label: 'Kalkulatorer', path: '/kalkulatorer' },
-            { label: 'Renters rente' },
-          ]}
-        />
-
-        <PageHeader
-          title="Renters rente"
-          subtitle="Se hvordan sparingen din vokser over tid"
-        />
-
-        <div className="calculator-layout">
+    <PageLayout
+      title="Renters rente"
+      breadcrumb={[
+        { label: 'Kalkulatorer', path: '/kalkulatorer' },
+        { label: 'Renters rente' }
+      ]}
+    >
+      <div className="calculator-layout">
           <Card className="calculator-inputs animate-fade-up animate-delay-1">
             <NumberInput
               label="Startbeløp"
@@ -266,8 +259,7 @@ function CompoundCalculatorPage() {
             {inputs.years} år ha {formatCurrency(result.finalAmount)} totalt.
           </p>
         </div>
-      </div>
-    </main>
+    </PageLayout>
   );
 }
 

@@ -13,9 +13,8 @@ import { OnboardingWizard } from './onboarding/OnboardingWizard';
 import { OnboardingState } from './onboarding/types';
 import { generateTempId } from './onboarding/defaultAccounts';
 import { LoadingSpinner } from '../../shared/components';
-import { PageHeader } from '@finans/components';
+import { PageLayout } from '@finans/components';
 import { snapshotApi } from '@/shared/api/services';
-import './OnboardingPage.css';
 
 /**
  * Convert existing user data to OnboardingWizard initial state
@@ -159,19 +158,17 @@ export default function EconomyPage() {
   const initialState = convertUserToInitialState(user, latestSnapshot);
 
   return (
-    <div className="onboarding-page">
-      <main className="onboarding-page__main">
-        <PageHeader
-          title="Min økonomi"
-          subtitle="Oppdater din profil og kontoer"
-        />
-
-        <OnboardingWizard
-          mode="edit"
-          initialState={initialState}
-          onComplete={() => navigate('/oversikt')}
-        />
-      </main>
-    </div>
+    <PageLayout
+      title="Min Økonomi"
+      subtitle="Oppdater din profil og kontoer"
+      breadcrumb={[{ label: 'Min Økonomi' }]}
+      width="narrow"
+    >
+      <OnboardingWizard
+        mode="edit"
+        initialState={initialState}
+        onComplete={() => navigate('/oversikt')}
+      />
+    </PageLayout>
   );
 }

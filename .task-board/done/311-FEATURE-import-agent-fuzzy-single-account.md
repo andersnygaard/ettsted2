@@ -35,14 +35,14 @@ Currently the agent relies purely on LLM interpretation for account matching (no
 
 ## Acceptance Criteria
 
-- [ ] User can say "jeg har 1000 i kron" and agent matches to "Kron" account
-- [ ] Agent presents fuzzy matches with current values for confirmation
-- [ ] User must confirm before any changes are saved
-- [ ] Date defaults to first of current month if not specified
-- [ ] Multiple fuzzy matches are presented as numbered options
-- [ ] No matches returns helpful error with list of user's accounts
-- [ ] `upsert_snapshot` accepts optional date (defaults to current month)
-- [ ] All existing import functionality continues to work
+- [x] User can say "jeg har 1000 i kron" and agent matches to "Kron" account
+- [x] Agent presents fuzzy matches with current values for confirmation
+- [x] User must confirm before any changes are saved
+- [x] Date defaults to first of current month if not specified
+- [x] Multiple fuzzy matches are presented as numbered options
+- [x] No matches returns helpful error with list of user's accounts
+- [x] `upsert_snapshot` accepts optional date (defaults to current month)
+- [x] All existing import functionality continues to work
 
 ## Affected Components
 

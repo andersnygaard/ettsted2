@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Breadcrumb, PageHeader, Button } from '@finans/components';
+import { PageLayout, Button } from '@finans/components';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { useImportChat } from './useImportChat';
 import { ChatMessage } from './ChatMessage';
@@ -65,20 +65,16 @@ export default function ImportPage() {
   };
 
   return (
-    <main className="import-page">
-      <div className="import-page__header">
-        <Breadcrumb
-          items={[
-            { label: 'Portefølje', path: '/portefolje' },
-            { label: 'Importer data' },
-          ]}
-        />
-        <PageHeader
-          title="Importer data"
-          subtitle="Lim inn data fra Excel eller skriv det selv"
-        />
-      </div>
-
+    <PageLayout
+      breadcrumb={[
+        { label: 'Portefølje', path: '/portefolje' },
+        { label: 'Importer data' },
+      ]}
+      title="Importer data"
+      subtitle="Lim inn data fra Excel eller skriv det selv"
+      width="narrow"
+      className="import-page"
+    >
       {/* Chat window */}
       <div className="chatbot">
         {/* Messages area */}
@@ -135,6 +131,6 @@ export default function ImportPage() {
           </Button>
         )}
       </div>
-    </main>
+    </PageLayout>
   );
 }

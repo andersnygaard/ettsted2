@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Breadcrumb, PageHeader, Card, NumberInput, formatCurrency, formatNumber, formatPercentage } from '@finans/components';
+import { PageLayout, Card, NumberInput, formatCurrency, formatNumber, formatPercentage } from '@finans/components';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import MonteCarloChart from './MonteCarloChart';
 import './CompoundCalculatorPage.css'; // Reuse shared calculator styles
@@ -207,21 +207,14 @@ function MonteCarloPage() {
   const withdrawalRate = formatPercentage(withdrawalRateValue / 100, 2);
 
   return (
-    <main className="calculator-page">
-      <div className="container container--narrow">
-        <Breadcrumb
-          items={[
-            { label: 'Kalkulatorer', path: '/kalkulatorer' },
-            { label: 'Monte Carlo' },
-          ]}
-        />
-
-        <PageHeader
-          title="Monte Carlo"
-          subtitle="Simuler tusenvis av scenarioer for å teste pensjonsplanen din"
-        />
-
-        {/* Tabs for simple vs advanced mode */}
+    <PageLayout
+      title="Monte Carlo"
+      breadcrumb={[
+        { label: 'Kalkulatorer', path: '/kalkulatorer' },
+        { label: 'Monte Carlo' }
+      ]}
+    >
+      {/* Tabs for simple vs advanced mode */}
         <div style={{ marginBottom: '32px', borderBottom: '1px solid var(--border)' }}>
           <div style={{ display: 'flex', gap: '24px' }}>
             <button
@@ -428,8 +421,7 @@ function MonteCarloPage() {
             </a>
           </p>
         </div>
-      </div>
-    </main>
+    </PageLayout>
   );
 }
 
