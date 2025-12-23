@@ -10,7 +10,8 @@
     "type-check": "pnpm --filter frontend type-check && pnpm --filter backend type-check",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "test:e2e": "pnpm --filter e2e test",
-    "test:integration": "pnpm --filter backend test"
+    "test:integration": "pnpm --filter backend test",
+    "prepare": "husky"
   },
   "keywords": [
     "portfolio",
@@ -22,6 +23,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "husky": "^9.1.7",
     "playwright": "^1.57.0",
     "prettier": "^3.1.0"
   },
@@ -32,7 +34,8 @@
   "pnpm": {
     "overrides": {
       "jws": "^3.2.3",
-      "esbuild": ">=0.25.0"
+      "esbuild": ">=0.25.0",
+      "eslint": "^8.57.1"
     }
   }
 }
