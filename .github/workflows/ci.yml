@@ -87,20 +87,9 @@ jobs:
             sleep 5
             counter=$((counter + 5))
           done
-          echo "Certificate available, waiting for database services..."
-
-          # Wait for database to respond with HTTP 200 on the dbs endpoint
-          counter=0
-          until curl -sk -o /dev/null -w "%{http_code}" https://localhost:8081/dbs | grep -q "200"; do
-            if [ $counter -ge 120 ]; then
-              echo "Timeout waiting for CosmosDB database services"
-              exit 1
-            fi
-            echo "Waiting for database... ($counter seconds)"
-            sleep 5
-            counter=$((counter + 5))
-          done
-          echo "CosmosDB emulator is ready!"
+          echo "Certificate available, allowing time for database services to initialize..."
+          sleep 30
+          echo "CosmosDB emulator should be ready!"
 
       - name: Seed database
         run: pnpm --filter backend db:seed
