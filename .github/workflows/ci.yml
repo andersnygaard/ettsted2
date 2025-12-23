@@ -75,15 +75,28 @@ jobs:
 
       - name: Wait for CosmosDB emulator
         run: |
-          echo "Waiting for CosmosDB emulator to be ready..."
+          echo "Waiting for CosmosDB emulator certificate..."
           timeout=300
           counter=0
           until curl -sk https://localhost:8081/_explorer/emulator.pem > /dev/null 2>&1; do
             if [ $counter -ge $timeout ]; then
-              echo "Timeout waiting for CosmosDB emulator"
+              echo "Timeout waiting for CosmosDB emulator certificate"
               exit 1
             fi
-            echo "Waiting... ($counter seconds)"
+            echo "Waiting for cert... ($counter seconds)"
+            sleep 5
+            counter=$((counter + 5))
+          done
+          echo "Certificate available, waiting for database services..."
+
+          # Wait for the database to actually respond to API calls
+          counter=0
+          until curl -sk https://localhost:8081/ | grep -q "Microsoft Azure Cosmos DB"; do
+            if [ $counter -ge 120 ]; then
+              echo "Timeout waiting for CosmosDB database services"
+              exit 1
+            fi
+            echo "Waiting for database... ($counter seconds)"
             sleep 5
             counter=$((counter + 5))
           done
