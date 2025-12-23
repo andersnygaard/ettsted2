@@ -6,13 +6,17 @@ test.describe('Sanity Checks', () => {
     await clearAuthState(page);
   });
 
-  test('home page loads when logged out', async ({ page }) => {
+  test('home page loads when logged out', async ({ page, pageErrors }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
     // Should see the landing page with login button
     await expect(page.getByText('Ta kontroll over')).toBeVisible();
     await expect(page.getByRole('button', { name: /logg inn/i })).toBeVisible();
+
+    // Check for console errors (excluding expected non-issues)
+    const errors = await checkPageHealth(page);
+    expect([...errors, ...pageErrors]).toEqual([]);
   });
 
   test('can login via dev mode', async ({ page }) => {

@@ -106,6 +106,7 @@ jobs:
         env:
           CI: true
           NODE_ENV: development
+          VITE_APP_ENV: development
           COSMOS_DB_ENDPOINT: https://localhost:8081
           COSMOS_DB_KEY: C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
           NODE_TLS_REJECT_UNAUTHORIZED: '0'
