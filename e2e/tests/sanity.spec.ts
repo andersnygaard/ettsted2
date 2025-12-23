@@ -14,7 +14,7 @@ test.describe('Sanity Checks', () => {
     await expect(page.getByText('Ta kontroll over')).toBeVisible();
     await expect(page.getByRole('button', { name: /logg inn/i })).toBeVisible();
 
-    // Check for errors
+    // Check for console errors (excluding expected non-issues)
     const errors = await checkPageHealth(page);
     expect([...errors, ...pageErrors]).toEqual([]);
   });

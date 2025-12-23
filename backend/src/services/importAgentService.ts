@@ -36,11 +36,21 @@ import { fuzzyMatchAccounts } from '../utils/fuzzyMatch';
 import { getCurrentMonthFirstDay } from '../utils/dateUtils';
 
 /**
- * OpenAI client
+ * OpenAI client - lazy initialized to avoid startup crash when API key is missing
  */
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+let openaiClient: OpenAI | null = null;
+
+function getOpenAIClient(): OpenAI {
+  if (!openaiClient) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY environment variable is required for import feature');
+    }
+    openaiClient = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return openaiClient;
+}
 
 /**
  * Maximum agent loop iterations to prevent infinite loops
@@ -835,7 +845,7 @@ export async function runImportAgent(
       const startTime = Date.now();
 
       // Call OpenAI
-      const response = await openai.chat.completions.create({
+      const response = await getOpenAIClient().chat.completions.create({
         model: 'gpt-5-nano',
         messages,
         tools: TOOLS,
