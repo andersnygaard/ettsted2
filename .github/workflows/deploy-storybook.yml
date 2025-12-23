@@ -1,63 +1,40 @@
 name: Deploy Storybook
 
 on:
-  workflow_run:
-    workflows: ["CI"]
-    types: [completed]
+  push:
     branches: [main]
+    paths:
+      - 'components/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/deploy-storybook.yml'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: >
-      github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.head_branch == 'main'
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check if components files changed
-        id: changes
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            components:
-              - 'components/**'
-              - 'pnpm-lock.yaml'
-              - '.github/workflows/deploy-storybook.yml'
-          base: ${{ github.event.workflow_run.head_sha }}~1
-          ref: ${{ github.event.workflow_run.head_sha }}
-
-      - name: Skip if no components changes
-        if: steps.changes.outputs.components != 'true'
-        run: echo "No components changes, skipping deployment"
-
       - uses: pnpm/action-setup@v2
-        if: steps.changes.outputs.components == 'true'
         with:
           version: 8
 
       - uses: actions/setup-node@v4
-        if: steps.changes.outputs.components == 'true'
         with:
           node-version: '20'
           cache: 'pnpm'
 
       - name: Install dependencies
-        if: steps.changes.outputs.components == 'true'
         run: pnpm install
 
       - name: Build Storybook
-        if: steps.changes.outputs.components == 'true'
         run: pnpm --filter components build-storybook
 
       - name: Login to Azure
-        if: steps.changes.outputs.components == 'true'
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy to Azure
-        if: steps.changes.outputs.components == 'true'
         uses: azure/webapps-deploy@v2
         with:
           app-name: finans-components

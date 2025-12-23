@@ -168,21 +168,8 @@ async function fetchAuthToken(): Promise<CachedAuthData | null> {
       return null;
     }
 
-    // Check Content-Type to avoid parsing HTML as JSON (e.g., Vite SPA fallback)
-    const contentType = response.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
-      console.debug('EasyAuth: Response is not JSON (likely not on Azure)');
-      return null;
-    }
-
     // EasyAuth returns an array of identities
-    let identities: EasyAuthIdentity[];
-    try {
-      identities = await response.json();
-    } catch {
-      console.debug('EasyAuth: Failed to parse response as JSON');
-      return null;
-    }
+    const identities: EasyAuthIdentity[] = await response.json();
 
     if (!Array.isArray(identities) || identities.length === 0) {
       console.debug('EasyAuth: No identities in response');
@@ -249,8 +236,7 @@ async function fetchAuthToken(): Promise<CachedAuthData | null> {
     );
     return cachedAuthData;
   } catch (error) {
-    // Network errors are expected when not running on Azure EasyAuth
-    console.debug('EasyAuth: Failed to fetch token', error);
+    console.error('EasyAuth: Failed to fetch token', error);
     return null;
   }
 }

@@ -42,18 +42,10 @@ async function seed() {
   });
 
   try {
-    // Create database and containers if they don't exist
-    const { database } = await client.databases.createIfNotExists({ id: DATABASE_ID });
-
-    const { container: usersContainer } = await database.containers.createIfNotExists({
-      id: USERS_CONTAINER,
-      partitionKey: { paths: ['/id'] },
-    });
-
-    const { container: portfoliosContainer } = await database.containers.createIfNotExists({
-      id: PORTFOLIOS_CONTAINER,
-      partitionKey: { paths: ['/userId'] },
-    });
+    // Get database and containers
+    const database = client.database(DATABASE_ID);
+    const usersContainer = database.container(USERS_CONTAINER);
+    const portfoliosContainer = database.container(PORTFOLIOS_CONTAINER);
 
     // Load fixtures
     const fixturesPath = path.join(__dirname, 'fixtures');

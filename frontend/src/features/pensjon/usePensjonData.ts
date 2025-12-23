@@ -178,18 +178,6 @@ async function fetchPensjonData(): Promise<PensjonData> {
           point[account.id] = value;
         });
 
-        // Add aggregated privatePension and publicPension values
-        // Only count accounts that actually exist in this snapshot
-        const pensionAccountsInSnapshot = snapshot.accounts.filter(
-          acc => getAccountCategory(acc.assetClass) === 'pensjon'
-        );
-        point['privatePension'] = pensionAccountsInSnapshot
-          .filter(acc => !acc.isPublicPension)
-          .reduce((sum, acc) => sum + acc.value, 0);
-        point['publicPension'] = pensionAccountsInSnapshot
-          .filter(acc => acc.isPublicPension === true)
-          .reduce((sum, acc) => sum + acc.value, 0);
-
         return point;
       })
       .reverse(); // Oldest first

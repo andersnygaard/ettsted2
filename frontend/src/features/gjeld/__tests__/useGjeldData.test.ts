@@ -5,10 +5,9 @@ import { renderHookWithQueryClient } from '@/test/utils';
 import { mockGjeldData, createMockSnapshot } from '@/test/fixtures';
 
 // Create hoisted mock functions that survive vi.mock hoisting
-const { mockGetSummary: mockGjeldSummary, mockGetAll, mockGetMe } = vi.hoisted(() => ({
+const { mockGetSummary: mockGjeldSummary, mockGetAll } = vi.hoisted(() => ({
   mockGetSummary: vi.fn(),
   mockGetAll: vi.fn(),
-  mockGetMe: vi.fn(),
 }));
 
 // Mock the services modules
@@ -19,22 +18,11 @@ vi.mock('@/shared/api/services', () => ({
   snapshotApi: {
     getAll: mockGetAll,
   },
-  userApi: {
-    getMe: mockGetMe,
-  },
 }));
 
 describe('useGjeldData', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Default mock for userApi.getMe - returns user with accounts
-    mockGetMe.mockResolvedValue({
-      id: 'test-user',
-      accounts: [
-        { id: 'acc-1', name: 'Boliglån', category: 'gjeld', loanDetails: { interestRate: 4.5, remainingYears: 20 } },
-        { id: 'acc-2', name: 'Studielån', category: 'gjeld', loanDetails: { interestRate: 2.5, remainingYears: 10 } },
-      ],
-    });
   });
 
   describe('basic data fetching', () => {
