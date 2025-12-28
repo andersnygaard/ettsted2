@@ -14,7 +14,7 @@ import { config } from './config/environment';
 import { logger } from './utils/logger';
 import { errorHandler } from './middleware/errorHandler';
 import { requestLogger } from './middleware/requestLogger';
-import { generalRateLimiter } from './middleware/rateLimiter';
+import { rateLimiter } from './middleware/rateLimiter';
 import routes from './routes';
 
 /**
@@ -93,7 +93,7 @@ export function createApp(): Application {
   app.use(requestLogger);
 
   // Rate limiting middleware (general)
-  app.use(generalRateLimiter);
+  app.use(rateLimiter);
 
   // Mount API routes under /api/v1
   app.use('/api/v1', routes);

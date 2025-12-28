@@ -11,6 +11,12 @@ test.describe('Mobile Responsive', () => {
       test.use({ viewport: { width: viewport.width, height: viewport.height } });
 
       test.beforeEach(async ({ page }) => {
+        // Clear auth state first to ensure clean start, then login
+        await page.goto('/');
+        await page.evaluate(() => {
+          localStorage.removeItem('finans_demo_token');
+          localStorage.setItem('finans_dev_logout', 'true');
+        });
         await login(page);
       });
 
@@ -185,8 +191,8 @@ test.describe('Mobile Responsive', () => {
         if (isMenuVisible) {
           await hamburger.click();
 
-          // Menu should appear (check for mobile-specific nav classes or aria-attributes)
-          const mobileMenu = page.locator('[role="navigation"]').first();
+          // Menu should appear (mobile menu uses role="dialog")
+          const mobileMenu = page.locator('[role="dialog"][aria-label="Navigasjonsmeny"]');
           await expect(mobileMenu).toBeVisible({ timeout: 5000 });
         }
       });
@@ -204,8 +210,8 @@ test.describe('Mobile Responsive', () => {
           // Wait for menu to appear
           await page.waitForTimeout(300);
 
-          // Check navigation items size
-          const navItems = page.locator('[role="navigation"] button, [role="navigation"] a');
+          // Check navigation items size (mobile menu uses role="dialog")
+          const navItems = page.locator('[role="dialog"] .app-header__mobile-nav-item');
           const itemCount = await navItems.count();
 
           for (let i = 0; i < itemCount; i++) {

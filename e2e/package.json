@@ -5,6 +5,8 @@
   "private": true,
   "scripts": {
     "test": "playwright test",
+    "test:smoke": "playwright test --project=smoke",
+    "test:full": "playwright test --project=full",
     "test:watch": "playwright test --headed --timeout=0",
     "test:screenshots": "npx cross-env SCREENSHOTS=1 playwright test",
     "test:ui": "playwright test --ui",

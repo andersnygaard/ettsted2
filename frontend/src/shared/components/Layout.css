@@ -35,3 +35,8 @@
   outline: 2px solid var(--focus-color);
   outline-offset: 2px;
 }
+
+/* Focus style for main content when skip link is used */
+main#main-content:focus {
+  outline: none;
+}

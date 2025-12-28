@@ -71,12 +71,20 @@ export const test = base.extend<{ pageErrors: string[] }>({...});
 
 ## Commands
 ```bash
-pnpm test              # Headless run
+pnpm test              # Headless run (all projects)
+pnpm test:smoke        # Fast sanity checks only (PR validation)
+pnpm test:full         # Complete test suite (nightly/background)
 pnpm test:watch        # Headed, no timeout
 pnpm test:screenshots  # Capture screenshots + video
 pnpm test:ui           # Playwright interactive UI
 pnpm report            # Open HTML report
 ```
+
+## Projects
+| Project | Tests | Use Case |
+|---------|-------|----------|
+| smoke | sanity.spec.ts | PR checks, quick validation (~30s) |
+| full | all specs | Nightly, pre-release (~5-10min) |
 
 ## Test Suites
 

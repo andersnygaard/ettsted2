@@ -39,11 +39,6 @@ interface EnvironmentConfig {
 
   // CORS
   allowedOrigins: string[];
-
-  // Rate Limiting
-  rateLimitGeneral: number;
-  rateLimitCalculator: number;
-  rateLimitLLM: number;
 }
 
 /**
@@ -101,12 +96,7 @@ export const config: EnvironmentConfig = {
   // CORS configuration
   allowedOrigins: parseAllowedOrigins(
     getOptionalEnv('ALLOWED_ORIGINS', 'http://localhost:5173')
-  ),
-
-  // Rate limiting configuration
-  rateLimitGeneral: parseInt(getOptionalEnv('RATE_LIMIT_REQUESTS', '100'), 10),
-  rateLimitCalculator: parseInt(getOptionalEnv('RATE_LIMIT_CALCULATOR', '10'), 10),
-  rateLimitLLM: parseInt(getOptionalEnv('RATE_LIMIT_LLM', '20'), 10)
+  )
 };
 
 // Validate configuration
@@ -123,10 +113,5 @@ console.log('Environment configuration loaded:', {
   port: config.port,
   nodeEnv: config.nodeEnv,
   cosmosDbEndpoint: config.cosmosDbEndpoint,
-  allowedOrigins: config.allowedOrigins,
-  rateLimits: {
-    general: config.rateLimitGeneral,
-    calculator: config.rateLimitCalculator,
-    llm: config.rateLimitLLM
-  }
+  allowedOrigins: config.allowedOrigins
 });

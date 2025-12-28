@@ -6,7 +6,9 @@
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-xs);
+  min-height: var(--touch-target-min);
   padding: var(--space-sm) var(--space-lg);
   font-size: 11px;
   font-family: var(--font-body);

@@ -338,7 +338,8 @@ pnpm --filter frontend dev        # Frontend only
 pnpm --filter backend dev         # Backend only
 pnpm --filter components storybook # Storybook
 pnpm build                        # Build all
-pnpm test:e2e                     # Playwright tests
+pnpm --filter e2e test:smoke      # Fast sanity tests (PR checks)
+pnpm --filter e2e test:full       # Full E2E suite (nightly)
 ```
 
 ### Environment Variables

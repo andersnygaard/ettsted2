@@ -20,25 +20,22 @@ Express, Helmet, CORS, express-rate-limit
 2. CORS
 3. Body parser (JSON)
 4. Request logger
-5. Rate limiters (applied per-route)
+5. Rate limiter (global)
 6. Routes
 7. Error handler (last)
 
-## Rate Limiters
-| Name | Limit | Window | Key |
-|------|-------|--------|-----|
-| generalLimiter | 100 req | 1 min | IP |
-| calculatorLimiter | 10 req | 1 min | userId |
-| llmLimiter | 20 req | 1 min | IP |
-| demoLoginLimiter | 5 req | 15 min | IP |
+## Rate Limiter
+Single global rate limiter:
+- 1000 requests per hour per IP
+- Only active in production (`skip: () => !isProduction`)
+- Standard RateLimit-* headers
 
 ## Decisions
 - Trust proxy enabled (Azure App Service behind reverse proxy)
 - Helmet CSP: explicit directives for fonts, images, scripts
 - CORS: rejects no-Origin requests in production
+- Rate limiting disabled in development/test for easier testing
 
 ## Gotchas
-- Calculator rate limiter uses `req.user?.userId` as key (per-user)
-- Demo login rate limiter is aggressive (5 req/15min)
 - CORS allows no-origin in development/test only
-- Rate limit headers included in response (X-RateLimit-*)
+- Rate limit headers included in response (RateLimit-*)

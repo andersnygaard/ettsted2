@@ -1,8 +1,28 @@
 import { test, expect, login } from './fixtures';
+import { Page } from '@playwright/test';
+
+/**
+ * Wait for calculator results to update after input change.
+ * Waits for network idle first, then checks for result elements.
+ */
+async function waitForResultUpdate(page: Page, timeout = 10000): Promise<void> {
+  // Wait for page to be fully loaded first
+  await page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => {});
+
+  // Wait for any result value to exist and be non-empty
+  // Different calculators use different classes: .result-value, .fire-result__value
+  const resultValue = page.locator('.result-value, .fire-result__value').first();
+  await expect(resultValue).toBeVisible({ timeout });
+}
 
 test.describe('Calculator E2E Tests', () => {
   test.beforeEach(async ({ page }) => {
-    // Login before each test
+    // Clear auth state first to ensure clean start, then login
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.removeItem('finans_demo_token');
+      localStorage.setItem('finans_dev_logout', 'true');
+    });
     await login(page);
   });
 
@@ -15,10 +35,10 @@ test.describe('Calculator E2E Tests', () => {
     await page.waitForLoadState('networkidle');
 
     // Verify page loaded
-    await expect(page.locator('text=Renters rente')).toBeVisible();
+    await expect(page.getByRole('heading', { name: /renters rente/i, level: 1 })).toBeVisible();
 
     // Default result should be displayed
-    await expect(page.locator('text=Sluttverdi')).toBeVisible();
+    await expect(page.getByText('Sluttverdi').first()).toBeVisible();
   });
 
   test('compound calculator updates result on input change', async ({ page }) => {
@@ -27,28 +47,28 @@ test.describe('Calculator E2E Tests', () => {
 
     // Fill in known values
     // Starting amount: 100,000 kr, Monthly: 5,000 kr, Rate: 7%, Years: 10
-    const startAmountInput = page.locator('input[aria-label*="Startbeløp"]').first();
-    const monthlyInput = page.locator('input[aria-label*="Månedlig"]').first();
-    const rateSlider = page.locator('input[type="range"]').nth(0);
-    const yearsSlider = page.locator('input[type="range"]').nth(1);
+    // Note: NumberInput labels aren't properly associated, use container-based locators
+    const startAmountInput = page.locator('.number-input').filter({ hasText: 'Startbeløp' }).locator('input');
+    const monthlyInput = page.locator('.number-input').filter({ hasText: 'Månedlig sparing' }).locator('input');
+    const rateSlider = page.locator('.slider-input').filter({ hasText: 'Årlig avkastning' }).locator('input[type="range"]');
+    const yearsSlider = page.locator('.slider-input').filter({ hasText: 'Antall år' }).locator('input[type="range"]');
 
     // Clear and fill starting amount
     await startAmountInput.fill('100000');
-    await page.waitForTimeout(300);
 
     // Fill monthly deposit
     await monthlyInput.fill('5000');
-    await page.waitForTimeout(300);
 
     // Set rate to 7%
     await rateSlider.evaluate((el: HTMLInputElement) => el.value = '7');
     await rateSlider.dispatchEvent('change');
-    await page.waitForTimeout(300);
 
     // Set years to 10
     await yearsSlider.evaluate((el: HTMLInputElement) => el.value = '10');
     await yearsSlider.dispatchEvent('change');
-    await page.waitForTimeout(300);
+
+    // Wait for calculation to complete
+    await waitForResultUpdate(page);
 
     // Result should be visible and contain numbers
     const resultValue = page.locator('.result-value').first();
@@ -62,20 +82,18 @@ test.describe('Calculator E2E Tests', () => {
     await page.goto('/kalkulatorer/rentes-rente');
     await page.waitForLoadState('networkidle');
 
-    const startAmountInput = page.locator('input[aria-label*="Startbeløp"]').first();
-    const monthlyInput = page.locator('input[aria-label*="Månedlig"]').first();
-    const yearsSlider = page.locator('input[type="range"]').nth(1);
+    const startAmountInput = page.locator('.number-input').filter({ hasText: 'Startbeløp' }).locator('input');
+    const monthlyInput = page.locator('.number-input').filter({ hasText: 'Månedlig sparing' }).locator('input');
+    const yearsSlider = page.locator('.slider-input').filter({ hasText: 'Antall år' }).locator('input[type="range"]');
 
     // Set values with 0 starting amount
     await startAmountInput.fill('0');
-    await page.waitForTimeout(300);
-
     await monthlyInput.fill('10000');
-    await page.waitForTimeout(300);
-
     await yearsSlider.evaluate((el: HTMLInputElement) => el.value = '10');
     await yearsSlider.dispatchEvent('change');
-    await page.waitForTimeout(300);
+
+    // Wait for calculation to complete
+    await waitForResultUpdate(page);
 
     // Should still calculate result
     const resultValue = page.locator('.result-value').first();
@@ -88,9 +106,9 @@ test.describe('Calculator E2E Tests', () => {
     await page.waitForLoadState('networkidle');
 
     // Should show breakdown sections
-    await expect(page.locator('text=Total innskudd')).toBeVisible();
-    await expect(page.locator('text=Renteinntekt')).toBeVisible();
-    await expect(page.locator('text=Avkastning av total')).toBeVisible();
+    await expect(page.getByText('Total innskudd').first()).toBeVisible();
+    await expect(page.getByText('Renteinntekt').first()).toBeVisible();
+    await expect(page.getByText('Avkastning av total').first()).toBeVisible();
   });
 
   // ====================
@@ -102,35 +120,31 @@ test.describe('Calculator E2E Tests', () => {
     await page.waitForLoadState('networkidle');
 
     // Verify page loaded
-    await expect(page.locator('text=F.I.R.E. kalkulator')).toBeVisible();
+    await expect(page.getByRole('heading', { name: /f\.i\.r\.e\. kalkulator/i, level: 1 })).toBeVisible();
 
     // Result sections should be visible
-    await expect(page.locator('text=F.I.R.E. tall')).toBeVisible();
-    await expect(page.locator('text=Tid til F.I.R.E.')).toBeVisible();
+    await expect(page.getByText('F.I.R.E. tall').first()).toBeVisible();
+    await expect(page.getByText('Tid til F.I.R.E.').first()).toBeVisible();
   });
 
   test('F.I.R.E. calculator calculates fire number as 25x expenses', async ({ page }) => {
     await page.goto('/kalkulatorer/fire');
     await page.waitForLoadState('networkidle');
 
-    // Get input fields
-    const savingsInput = page.locator('input[aria-label*="Nåværende"]').first();
-    const incomeInput = page.locator('input[aria-label*="Årlig inntekt"]').first();
-    const expensesInput = page.locator('input[aria-label*="Årlige utgifter"]').first();
-    const ageInput = page.locator('input[aria-label*="alder"]').first();
+    // Get input fields (use container-based locators since labels aren't properly associated)
+    const savingsInput = page.locator('.number-input').filter({ hasText: 'Nåværende sparing' }).locator('input');
+    const incomeInput = page.locator('.number-input').filter({ hasText: 'Årlig inntekt' }).locator('input');
+    const expensesInput = page.locator('.number-input').filter({ hasText: 'Årlige utgifter' }).locator('input');
+    const ageInput = page.locator('.number-input').filter({ hasText: 'Din alder' }).locator('input');
 
     // Set values: income 600k, expenses 300k, savings 1M, age 30
     await savingsInput.fill('1000000');
-    await page.waitForTimeout(300);
-
     await incomeInput.fill('600000');
-    await page.waitForTimeout(300);
-
     await expensesInput.fill('300000');
-    await page.waitForTimeout(300);
-
     await ageInput.fill('30');
-    await page.waitForTimeout(300);
+
+    // Wait for calculation to complete
+    await waitForResultUpdate(page);
 
     // F.I.R.E. number should be 300k * 25 = 7.5M
     const fireNumberText = page.locator('.fire-result__value').first();
@@ -145,18 +159,20 @@ test.describe('Calculator E2E Tests', () => {
     await page.waitForLoadState('networkidle');
 
     // Progress bar should be visible
-    await expect(page.locator('text=Fremgang mot F.I.R.E.')).toBeVisible();
+    await expect(page.getByText('Fremgang mot F.I.R.E.').first()).toBeVisible();
   });
 
   test('F.I.R.E. calculator handles zero expenses', async ({ page }) => {
     await page.goto('/kalkulatorer/fire');
     await page.waitForLoadState('networkidle');
 
-    const expensesInput = page.locator('input[aria-label*="Årlige utgifter"]').first();
+    const expensesInput = page.locator('.number-input').filter({ hasText: 'Årlige utgifter' }).locator('input');
 
     // Set expenses to 0
     await expensesInput.fill('0');
-    await page.waitForTimeout(300);
+
+    // Wait for calculation to complete
+    await waitForResultUpdate(page);
 
     // Should show F.I.R.E. number as 0
     const fireNumberText = page.locator('.fire-result__value').first();
@@ -167,6 +183,11 @@ test.describe('Calculator E2E Tests', () => {
   test('F.I.R.E. calculator has save button', async ({ page }) => {
     await page.goto('/kalkulatorer/fire');
     await page.waitForLoadState('networkidle');
+
+    // Verify we're on the calculator page (not redirected to login)
+    await expect(page.getByRole('heading', { name: /F\.I\.R\.E\. kalkulator/i, level: 1 })).toBeVisible({ timeout: 10000 });
+
+    await waitForResultUpdate(page);
 
     // Button to save F.I.R.E. number should exist
     const saveButton = page.getByRole('button', { name: /lagre som mitt F\.I\.R\.E\. mål/i });
@@ -182,10 +203,10 @@ test.describe('Calculator E2E Tests', () => {
     await page.waitForLoadState('networkidle');
 
     // Verify page loaded
-    await expect(page.locator('text=Lånekalkulator')).toBeVisible();
+    await expect(page.getByRole('heading', { name: /lånekalkulator/i, level: 1 })).toBeVisible();
 
     // Should show loan type tabs
-    const annuityTab = page.locator('text=Annuitetslån');
+    const annuityTab = page.getByText('Annuitetslån').first();
     await expect(annuityTab).toBeVisible();
   });
 
@@ -193,23 +214,20 @@ test.describe('Calculator E2E Tests', () => {
     await page.goto('/kalkulatorer/lan');
     await page.waitForLoadState('networkidle');
 
-    // Get input fields
-    const amountInput = page.locator('input[aria-label*="Lånebeløp"]').first();
-    const rateInput = page.locator('input[aria-label*="Årlig rente"]').first();
-    const yearsInput = page.locator('input[aria-label*="Nedbetalingstid"]').first();
+    // Get input fields (use container-based locators since labels aren't properly associated)
+    const amountInput = page.locator('.number-input').filter({ hasText: 'Lånebeløp' }).locator('input');
+    const rateInput = page.locator('.number-input').filter({ hasText: 'Årlig rente' }).locator('input');
+    const yearsInput = page.locator('.number-input').filter({ hasText: 'Nedbetalingstid' }).locator('input');
 
     // Set loan: 1M at 4.5% for 20 years
     await amountInput.fill('1000000');
-    await page.waitForTimeout(300);
-
     await rateInput.fill('4.5');
-    await page.waitForTimeout(300);
-
     await yearsInput.fill('20');
-    await page.waitForTimeout(300);
+
+    // Wait for calculation to complete
+    await waitForResultUpdate(page);
 
     // Results should be displayed
-    const monthlyPayment = page.locator('.result-label').first();
     const monthlyValue = page.locator('.result-value').first();
 
     await expect(monthlyValue).toBeVisible();
@@ -222,40 +240,39 @@ test.describe('Calculator E2E Tests', () => {
     await page.goto('/kalkulatorer/lan');
     await page.waitForLoadState('networkidle');
 
-    // Click serial loan tab
-    const serialTab = page.getByRole('button', { name: /Serielån/i });
+    // Click serial loan tab (Tabs component uses role="tab")
+    const serialTab = page.getByRole('tab', { name: /Serielån/i });
     await serialTab.click();
-    await page.waitForTimeout(300);
+
+    // Wait for tab switch to complete
+    await waitForResultUpdate(page);
 
     // Should show serial loan results format
-    await expect(page.locator('text=Første betaling')).toBeVisible();
-    await expect(page.locator('text=Siste betaling')).toBeVisible();
+    await expect(page.getByText('Første betaling').first()).toBeVisible();
+    await expect(page.getByText('Siste betaling').first()).toBeVisible();
   });
 
   test('loan calculator serial loan shows varying payments', async ({ page }) => {
     await page.goto('/kalkulatorer/lan');
     await page.waitForLoadState('networkidle');
 
-    // Switch to serial
-    const serialTab = page.getByRole('button', { name: /Serielån/i });
+    // Switch to serial (Tabs component uses role="tab")
+    const serialTab = page.getByRole('tab', { name: /Serielån/i });
     await serialTab.click();
-    await page.waitForTimeout(300);
 
-    // Set loan: 1M at 4.5% for 20 years
-    const amountInput = page.locator('input[aria-label*="Lånebeløp"]').first();
-    const rateInput = page.locator('input[aria-label*="Årlig rente"]').first();
-    const yearsInput = page.locator('input[aria-label*="Nedbetalingstid"]').first();
+    // Set loan: 1M at 4.5% for 20 years (use container-based locators)
+    const amountInput = page.locator('.number-input').filter({ hasText: 'Lånebeløp' }).locator('input');
+    const rateInput = page.locator('.number-input').filter({ hasText: 'Årlig rente' }).locator('input');
+    const yearsInput = page.locator('.number-input').filter({ hasText: 'Nedbetalingstid' }).locator('input');
 
     await amountInput.fill('1000000');
-    await page.waitForTimeout(300);
-
     await rateInput.fill('4.5');
-    await page.waitForTimeout(300);
-
     await yearsInput.fill('20');
-    await page.waitForTimeout(300);
 
-    // First and last payments should be visible and different
+    // Wait for calculation to complete
+    await waitForResultUpdate(page);
+
+    // First and last payments should be visible and different (serial uses result-value--small)
     const firstPaymentValue = page.locator('.result-value--small').first();
     const lastPaymentValue = page.locator('.result-value--small').nth(1);
 
@@ -268,18 +285,20 @@ test.describe('Calculator E2E Tests', () => {
     await page.waitForLoadState('networkidle');
 
     // Should show breakdown
-    await expect(page.locator('text=Total betalt')).toBeVisible();
-    await expect(page.locator('text=Total rente')).toBeVisible();
-    await expect(page.locator('text=Rente av total')).toBeVisible();
+    await expect(page.getByText('Total betalt').first()).toBeVisible();
+    await expect(page.getByText('Total rente').first()).toBeVisible();
+    await expect(page.getByText('Rente av total').first()).toBeVisible();
   });
 
   test('loan calculator handles zero loan amount', async ({ page }) => {
     await page.goto('/kalkulatorer/lan');
     await page.waitForLoadState('networkidle');
 
-    const amountInput = page.locator('input[aria-label*="Lånebeløp"]').first();
+    const amountInput = page.locator('.number-input').filter({ hasText: 'Lånebeløp' }).locator('input');
     await amountInput.fill('0');
-    await page.waitForTimeout(300);
+
+    // Wait for calculation to complete
+    await waitForResultUpdate(page);
 
     // Should handle gracefully
     const monthlyValue = page.locator('.result-value').first();
@@ -296,10 +315,10 @@ test.describe('Calculator E2E Tests', () => {
     await page.waitForLoadState('networkidle');
 
     // Verify page loaded
-    await expect(page.locator('text=Monte Carlo')).toBeVisible();
+    await expect(page.getByRole('heading', { name: /monte carlo/i, level: 1 })).toBeVisible();
 
     // Results should be visible
-    await expect(page.locator('text=Sannsynlighet for suksess')).toBeVisible();
+    await expect(page.getByText('Sannsynlighet for suksess').first()).toBeVisible();
   });
 
   test('Monte Carlo shows success rate', async ({ page }) => {
@@ -322,10 +341,12 @@ test.describe('Calculator E2E Tests', () => {
     const successRate = page.locator('.result-value').first();
     const initialText = await successRate.textContent();
 
-    // Change portfolio value to higher amount
-    const portfolioInput = page.locator('input[aria-label*="Porteføljeverdi"]').first();
+    // Change portfolio value to higher amount (use container-based locator)
+    const portfolioInput = page.locator('.number-input').filter({ hasText: 'Porteføljeverdi' }).locator('input');
     await portfolioInput.fill('10000000');
-    await page.waitForTimeout(500);
+
+    // Wait for calculation to complete
+    await waitForResultUpdate(page);
 
     // Success rate should update
     const updatedText = await successRate.textContent();
@@ -338,11 +359,11 @@ test.describe('Calculator E2E Tests', () => {
     await page.waitForLoadState('networkidle');
 
     // All percentile bands should be visible
-    await expect(page.locator('text=10. persentil')).toBeVisible();
-    await expect(page.locator('text=25. persentil')).toBeVisible();
-    await expect(page.locator('text=Median')).toBeVisible();
-    await expect(page.locator('text=75. persentil')).toBeVisible();
-    await expect(page.locator('text=90. persentil')).toBeVisible();
+    await expect(page.getByText('10. persentil').first()).toBeVisible();
+    await expect(page.getByText('25. persentil').first()).toBeVisible();
+    await expect(page.getByText('Median').first()).toBeVisible();
+    await expect(page.getByText('75. persentil').first()).toBeVisible();
+    await expect(page.getByText('90. persentil').first()).toBeVisible();
   });
 
   test('Monte Carlo shows withdrawal rate', async ({ page }) => {
@@ -350,21 +371,22 @@ test.describe('Calculator E2E Tests', () => {
     await page.waitForLoadState('networkidle');
 
     // Withdrawal rate should be visible
-    await expect(page.locator('text=Uttaksrate')).toBeVisible();
+    await expect(page.getByText('Uttaksrate').first()).toBeVisible();
 
-    // Set known values
-    const portfolioInput = page.locator('input[aria-label*="Porteføljeverdi"]').first();
-    const withdrawalInput = page.locator('input[aria-label*="Årlig uttak"]').first();
+    // Set known values (use container-based locators)
+    const portfolioInput = page.locator('.number-input').filter({ hasText: 'Porteføljeverdi' }).locator('input');
+    const withdrawalInput = page.locator('.number-input').filter({ hasText: 'Årlig uttak' }).locator('input');
 
     await portfolioInput.fill('5000000');
-    await page.waitForTimeout(300);
-
     await withdrawalInput.fill('200000');
-    await page.waitForTimeout(300);
+
+    // Wait for calculation to complete
+    await waitForResultUpdate(page);
 
     // Withdrawal rate should be 4% (200k / 5M)
-    const withdrawalRate = page.locator('text=Uttaksrate').locator('..').locator('.result-item__value');
-    const rateText = await withdrawalRate.first().textContent();
+    // Find the result item containing Uttaksrate text
+    const withdrawalRateItem = page.locator('.result-item').filter({ hasText: 'Uttaksrate' });
+    const rateText = await withdrawalRateItem.locator('.result-item__value').first().textContent();
     expect(rateText).toBeTruthy();
   });
 
@@ -372,9 +394,11 @@ test.describe('Calculator E2E Tests', () => {
     await page.goto('/kalkulatorer/monte-carlo');
     await page.waitForLoadState('networkidle');
 
-    const portfolioInput = page.locator('input[aria-label*="Porteføljeverdi"]').first();
+    const portfolioInput = page.locator('.number-input').filter({ hasText: 'Porteføljeverdi' }).locator('input');
     await portfolioInput.fill('0');
-    await page.waitForTimeout(300);
+
+    // Wait for calculation to complete
+    await waitForResultUpdate(page);
 
     // Should handle gracefully
     const successRate = page.locator('.result-value').first();
@@ -387,7 +411,7 @@ test.describe('Calculator E2E Tests', () => {
     await page.waitForLoadState('networkidle');
 
     // Should mention number of simulations
-    await expect(page.locator('text=simuleringer')).toBeVisible();
+    await expect(page.getByText(/simuleringer/i).first()).toBeVisible();
   });
 
   // ====================
@@ -416,19 +440,20 @@ test.describe('Calculator E2E Tests', () => {
     await page.goto('/kalkulatorer/rentes-rente');
     await page.waitForLoadState('networkidle');
 
-    const startAmountInput = page.locator('input[aria-label*="Startbeløp"]').first();
-    const monthlyInput = page.locator('input[aria-label*="Månedlig"]').first();
+    const startAmountInput = page.locator('.number-input').filter({ hasText: 'Startbeløp' }).locator('input');
+    const monthlyInput = page.locator('.number-input').filter({ hasText: 'Månedlig sparing' }).locator('input');
 
     // Rapid changes should not cause errors
     await startAmountInput.fill('50000');
     await startAmountInput.fill('100000');
     await startAmountInput.fill('150000');
-    await page.waitForTimeout(300);
 
     await monthlyInput.fill('2000');
     await monthlyInput.fill('5000');
     await monthlyInput.fill('8000');
-    await page.waitForTimeout(300);
+
+    // Wait for calculation to complete
+    await waitForResultUpdate(page);
 
     // Results should still be valid
     const resultValue = page.locator('.result-value').first();
@@ -450,7 +475,7 @@ test.describe('Calculator E2E Tests', () => {
 
       // Scroll to bottom to find info section
       await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-      await page.waitForTimeout(300);
+      await page.waitForLoadState('networkidle', { timeout: 3000 }).catch(() => {});
 
       // Info section should have heading
       const infoHeading = page.locator('h3').filter({

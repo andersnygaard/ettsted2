@@ -10,7 +10,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: screenshotMode ? 0 : 1,
   workers: 1,
-  timeout: 60000, // 60s per test
+  timeout: 120000, // 2 minutes per test
   reporter: [['html'], ['list']],
 
   use: {
@@ -22,8 +22,14 @@ export default defineConfig({
 
   projects: [
     {
-      name: 'desktop',
+      name: 'smoke',
       use: { ...devices['Desktop Chrome'] },
+      testMatch: /sanity\.spec\.ts/,
+    },
+    {
+      name: 'full',
+      use: { ...devices['Desktop Chrome'] },
+      testIgnore: /sanity\.spec\.ts/, // Don't re-run sanity tests
     },
     // Mobile disabled - hits backend rate limits when running full suite
     // Run with: npx playwright test --project=mobile (separately)

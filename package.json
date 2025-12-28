@@ -10,6 +10,8 @@
     "type-check": "pnpm --filter frontend type-check && pnpm --filter backend type-check",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "test:e2e": "pnpm --filter e2e test",
+    "test:smoke": "pnpm --filter e2e test:smoke",
+    "test:full": "pnpm --filter e2e test:full",
     "test:integration": "pnpm --filter backend test"
   },
   "keywords": [

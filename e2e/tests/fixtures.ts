@@ -53,16 +53,23 @@ export async function login(page: Page): Promise<void> {
   await page.reload();
   await page.waitForLoadState('networkidle');
 
-  // Check if already logged in (dev mode auto-login)
-  const oversiktLink = page.getByRole('link', { name: /gå til oversikt/i });
-  const alreadyLoggedIn = await oversiktLink.isVisible({ timeout: 3000 }).catch(() => false);
+  // Check if already logged in by checking for demo token AND authenticated UI
+  const hasDemoToken = await page.evaluate((key) => {
+    return localStorage.getItem(key) !== null;
+  }, STORAGE_KEYS.DEMO_TOKEN);
 
-  if (alreadyLoggedIn) {
-    // Already logged in, navigate to oversikt
-    await oversiktLink.click();
-    await page.waitForURL(/\/oversikt/, { timeout: 15000 });
-    await page.waitForLoadState('networkidle');
-    return;
+  if (hasDemoToken) {
+    // Already have a token, check if UI shows authenticated state
+    const oversiktLink = page.getByRole('link', { name: /gå til oversikt/i });
+    const isAuthenticated = await oversiktLink.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (isAuthenticated) {
+      // Already logged in, navigate to oversikt
+      await oversiktLink.click();
+      await page.waitForURL(/\/oversikt/, { timeout: 15000 });
+      await page.waitForLoadState('networkidle');
+      return;
+    }
   }
 
   // Not logged in, use demo login
@@ -70,9 +77,10 @@ export async function login(page: Page): Promise<void> {
   await expect(loginBtn).toBeVisible({ timeout: 10000 });
   await loginBtn.click();
 
-  // Wait for modal/menu with demo button
+  // Wait for modal to open
   await page.waitForLoadState('domcontentloaded');
 
+  // Find the demo button - it contains "Prøv demo" text
   const demoBtn = page.getByRole('button', { name: /prøv demo/i });
   await expect(demoBtn).toBeVisible({ timeout: 10000 });
   await demoBtn.click();
@@ -84,8 +92,12 @@ export async function login(page: Page): Promise<void> {
       await page.waitForURL('/oversikt', { timeout: 30000 });
     }
   } catch (err) {
+    // Check if we got redirected back to home (login failed)
+    const currentUrl = page.url();
+    if (currentUrl.endsWith('/') || currentUrl.includes('localhost:5173/$')) {
+      throw new Error('Demo login failed - redirected back to home page');
+    }
     // Sometimes the page navigates directly to oversikt without auth/callback
-    // Or it might still be loading
     await page.waitForTimeout(2000);
     if (!page.url().includes('oversikt')) {
       throw err;
@@ -93,15 +105,21 @@ export async function login(page: Page): Promise<void> {
   }
 
   // Ensure page is fully loaded
-  try {
-    await page.waitForLoadState('networkidle', { timeout: 30000 });
-  } catch (err) {
-    // Page might be stuck, but if we're on oversikt, that's OK
-    if (page.url().includes('oversikt')) {
-      await page.waitForTimeout(1000);
-    } else {
-      throw err;
-    }
+  await page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {});
+
+  // CRITICAL: Verify demo token was stored
+  const tokenStored = await page.evaluate((key) => {
+    return localStorage.getItem(key) !== null;
+  }, STORAGE_KEYS.DEMO_TOKEN);
+
+  if (!tokenStored) {
+    throw new Error('Demo login completed but token was not stored in localStorage');
+  }
+
+  // Verify we're actually on /oversikt and not redirected
+  const finalUrl = page.url();
+  if (!finalUrl.includes('/oversikt')) {
+    throw new Error(`Demo login failed - expected /oversikt but got ${finalUrl}`);
   }
 }
 
@@ -378,6 +396,15 @@ export async function exportPortfolioData(page: Page): Promise<void> {
 export async function navigateToEconomy(page: Page): Promise<void> {
   await page.goto('/min-okonomi');
   await page.waitForLoadState('networkidle');
+
+  // Wait for the wizard to render (not just the loading spinner)
+  // The wizard has a progress bar with steps
+  const wizardProgress = page.locator('.wizard-progress');
+  await expect(wizardProgress).toBeVisible({ timeout: 30000 });
+
+  // Also wait for wizard content to be visible
+  const wizardContent = page.locator('.onboarding-wizard__content');
+  await expect(wizardContent).toBeVisible({ timeout: 10000 });
 }
 
 /**
@@ -385,7 +412,9 @@ export async function navigateToEconomy(page: Page): Promise<void> {
  * Step 1: Bruker, Step 2: Sparing, Step 3: Gjeld, Step 4: Pensjon
  */
 export async function navigateToWizardStep(page: Page, step: 1 | 2 | 3 | 4): Promise<void> {
-  const stepNames = ['Bruker', 'Sparing', 'Gjeld', 'Pensjon'];
+  // Wait for wizard progress to be visible
+  const wizardProgress = page.locator('.wizard-progress');
+  await expect(wizardProgress).toBeVisible({ timeout: 10000 });
 
   // Check current step
   const getCurrentStep = async (): Promise<number> => {
@@ -406,8 +435,10 @@ export async function navigateToWizardStep(page: Page, step: 1 | 2 | 3 | 4): Pro
   // Navigate forward or backward to reach target step
   while (currentStep !== step) {
     if (currentStep < step) {
-      // Go forward
+      // Go forward - wait for button to be visible and enabled
       const nextBtn = page.getByRole('button', { name: /neste/i });
+      await expect(nextBtn).toBeVisible({ timeout: 5000 });
+      await expect(nextBtn).toBeEnabled({ timeout: 5000 });
       await nextBtn.click();
       await page.waitForLoadState('networkidle');
     } else {

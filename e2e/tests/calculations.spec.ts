@@ -28,7 +28,12 @@ function extractNumber(text: string): number {
 
 test.describe('Calculation Accuracy Tests', () => {
   test.beforeEach(async ({ page }) => {
-    // Login with demo user before each test
+    // Clear auth state first to ensure clean start, then login
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.removeItem('finans_demo_token');
+      localStorage.setItem('finans_dev_logout', 'true');
+    });
     await login(page);
   });
 

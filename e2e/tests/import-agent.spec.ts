@@ -2,7 +2,12 @@ import { test, expect, login } from './fixtures';
 
 test.describe('Import Agent', () => {
   test.beforeEach(async ({ page }) => {
-    // Login before each test
+    // Clear auth state first to ensure clean start, then login
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.removeItem('finans_demo_token');
+      localStorage.setItem('finans_dev_logout', 'true');
+    });
     await login(page);
   });
 
@@ -14,7 +19,7 @@ test.describe('Import Agent', () => {
     expect(page.url()).toContain('/import');
 
     // Check for page header
-    await expect(page.locator('text=Importer data')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Importer data' })).toBeVisible();
 
     // Check for initial greeting in messages area
     const messagesArea = page.locator('.chatbot__messages');
@@ -276,8 +281,8 @@ test.describe('Import Agent', () => {
     await page.goto('/import');
     await page.waitForLoadState('networkidle');
 
-    // Click on breadcrumb link to portfolio
-    const breadcrumbLink = page.getByRole('link', { name: /Portefølje/ });
+    // Click on breadcrumb link to portfolio (scope to breadcrumb to avoid header nav)
+    const breadcrumbLink = page.getByLabel('Breadcrumb').getByRole('link', { name: /Portefølje/ });
     await breadcrumbLink.click();
 
     // Should navigate to portfolio page

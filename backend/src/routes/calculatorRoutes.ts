@@ -6,8 +6,6 @@
  * - POST /api/v1/kalkulatorer/rentes-rente - Calculate compound interest
  * - POST /api/v1/kalkulatorer/fire - Calculate F.I.R.E. metrics
  * - POST /api/v1/kalkulatorer/lan - Calculate loan amortization
- *
- * Calculator endpoints are rate-limited to 10 requests/minute (expensive operations).
  */
 
 import { Router, IRouter } from 'express';
@@ -18,7 +16,6 @@ import {
   loanCalculation,
   flexiLoanCalculation
 } from '../controllers/calculatorController';
-import { calculatorRateLimiter } from '../middleware/rateLimiter';
 import { validateBody } from '../middleware/validate';
 import {
   monteCarloSchema,
@@ -48,12 +45,9 @@ const router: IRouter = Router();
  * - percentile10/25/50/75/90: Final balance at each percentile
  * - scenarios: Array of sample scenario paths for visualization
  * - simulationsRun: Number of simulations actually run
- *
- * Rate limited to 10 requests per minute per IP
  */
 router.post(
   '/monte-carlo',
-  calculatorRateLimiter,
   validateBody(monteCarloSchema),
   monteCarloSimulation
 );
@@ -78,7 +72,6 @@ router.post(
  */
 router.post(
   '/rentes-rente',
-  calculatorRateLimiter,
   validateBody(compoundSchema),
   compoundCalculation
 );
@@ -107,7 +100,6 @@ router.post(
  */
 router.post(
   '/fire',
-  calculatorRateLimiter,
   validateBody(fireSchema),
   fireCalculation
 );
@@ -133,7 +125,6 @@ router.post(
  */
 router.post(
   '/lan',
-  calculatorRateLimiter,
   validateBody(loanSchema),
   loanCalculation
 );
@@ -160,7 +151,6 @@ router.post(
  */
 router.post(
   '/fleksilan',
-  calculatorRateLimiter,
   validateBody(flexiLoanSchema),
   flexiLoanCalculation
 );

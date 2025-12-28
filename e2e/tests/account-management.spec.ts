@@ -18,6 +18,12 @@ import {
 
 test.describe('Account Management', () => {
   test.beforeEach(async ({ page }) => {
+    // Clear auth state first to ensure clean start, then login
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.removeItem('finans_demo_token');
+      localStorage.setItem('finans_dev_logout', 'true');
+    });
     await login(page);
     await navigateToEconomy(page);
   });
@@ -384,9 +390,6 @@ test.describe('Account Management', () => {
     test('changes reflect in portfolio page after save', async ({ page }) => {
       await navigateToWizardStep(page, 2); // Sparing
 
-      // Get initial account count
-      const initialCount = await getAccountCount(page);
-
       // Add unique account
       const uniqueName = 'PortfolioTest';
       await addAccount(page, { name: uniqueName, value: 123456 });
@@ -398,12 +401,14 @@ test.describe('Account Management', () => {
       await page.goto('/portefolje');
       await page.waitForLoadState('networkidle');
 
+      // Wait for the spreadsheet table to render (not just loading skeleton)
+      const table = page.locator('.spreadsheet--desktop');
+      await expect(table).toBeVisible({ timeout: 10000 });
+
       // The account should appear as a column header in the spreadsheet
-      // Look for the account name in any header cell
-      const headerCells = page.locator('th');
-      const cellTexts = await headerCells.allTextContents();
-      const hasNewAccount = cellTexts.some(text => text.includes(uniqueName));
-      expect(hasNewAccount).toBe(true);
+      // Look for the account name in the second header row (column headers, not group headers)
+      const columnHeader = page.locator('th', { hasText: uniqueName });
+      await expect(columnHeader).toBeVisible({ timeout: 5000 });
     });
 
     test('changes survive page reload', async ({ page }) => {

@@ -2,6 +2,12 @@ import { test, expect, login, createSnapshot } from './fixtures';
 
 test.describe('Portfolio Data Entry', () => {
   test.beforeEach(async ({ page }) => {
+    // Clear auth state first to ensure clean start, then login
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.removeItem('finans_demo_token');
+      localStorage.setItem('finans_dev_logout', 'true');
+    });
     await login(page);
     await page.goto('/portefolje');
     await page.waitForLoadState('networkidle');
@@ -160,17 +166,15 @@ test.describe('Portfolio Data Entry', () => {
     // Get the first row
     const firstRow = dataRows.first();
 
+    // Hover over the row to make delete button visible (CSS: visibility: hidden by default)
+    await firstRow.hover();
+
     // Find delete button in the row
     const deleteBtn = firstRow.locator('button[title*="Slett"], button[aria-label*="Slett"]').first();
+    await expect(deleteBtn).toBeVisible({ timeout: 5000 });
 
-    // Try to make the button visible by scrolling
-    await deleteBtn.scrollIntoViewIfNeeded().catch(() => {});
-
-    // Click the delete button with forced click if needed
-    await deleteBtn.click({ force: true, timeout: 5000 });
-
-    // Wait for modal to appear
-    await page.waitForTimeout(1000);
+    // Click the delete button
+    await deleteBtn.click();
 
     // Confirmation modal should appear
     const confirmHeading = page.getByRole('heading', { name: /slett/i });

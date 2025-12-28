@@ -119,9 +119,6 @@ export default function AppHeader() {
 
   return (
     <>
-      <a href="#main-content" className="skip-link">
-        Hopp til hovedinnhold
-      </a>
       <header className="app-header">
         <div className="app-header__container">
           <Link to="/" className="app-header__logo">

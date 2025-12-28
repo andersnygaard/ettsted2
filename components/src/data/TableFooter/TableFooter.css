@@ -93,6 +93,7 @@
 }
 
 .table-footer__page-btn {
+  min-height: var(--touch-target-min);
   padding: 6px 12px;
   font-size: var(--font-size-xs);
   font-family: var(--font-body);
@@ -103,6 +104,9 @@
   border-radius: var(--radius-sm);
   transition: all var(--transition-fast);
   font-weight: var(--font-weight-regular);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .table-footer__page-btn:hover:not(:disabled) {

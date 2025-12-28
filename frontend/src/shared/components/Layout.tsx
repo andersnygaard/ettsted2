@@ -13,8 +13,8 @@ function Layout() {
       {/* App Header with Navigation */}
       <AppHeader />
 
-      {/* Main Content */}
-      <main id="main-content">
+      {/* Main Content - tabindex for skip link focus */}
+      <main id="main-content" tabIndex={-1}>
         <Outlet />
       </main>
     </div>

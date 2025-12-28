@@ -3,28 +3,6 @@
  * Based on Nordic Minimal design from draft-1-nordic-minimal.html
  */
 
-/* Skip Link - Accessibility */
-.skip-link {
-  position: absolute;
-  left: -9999px;
-  top: 0;
-  z-index: 999;
-  padding: var(--space-sm) var(--space-md);
-  background: var(--charcoal);
-  color: var(--warm-white);
-  text-decoration: none;
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--letter-spacing-wide);
-  text-transform: uppercase;
-}
-
-.skip-link:focus {
-  left: 0;
-  outline: 2px solid var(--gold);
-  outline-offset: 2px;
-}
-
 .app-header {
   position: relative;
   z-index: 50;
@@ -176,8 +154,10 @@
   justify-content: center;
   align-items: center;
   gap: 5px;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   margin-left: auto;
   padding: 8px;
   border: none;
@@ -297,8 +277,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: none;
   background: none;
@@ -331,7 +311,8 @@
   align-items: center;
   gap: 12px;
   width: 100%;
-  padding: 14px 20px;
+  min-height: 44px;
+  padding: 12px 20px;
   border: none;
   background: none;
   font-family: var(--font-body);

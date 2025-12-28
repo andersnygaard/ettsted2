@@ -6,7 +6,6 @@
  * - POST /api/v1/import/batch - Batch insert validated snapshots
  *
  * All routes require authentication via validateAuth middleware (applied at parent level).
- * All routes use LLM rate limiter (20 requests/minute).
  *
  * Usage:
  * - Chat endpoint: Multi-turn conversation for data extraction with clarification
@@ -17,7 +16,6 @@ import { Router, IRouter } from 'express';
 import { chatImport, batchInsert } from '../controllers/importController';
 import { validateBody } from '../middleware/validate';
 import { chatMessageSchema, batchInsertSchema } from '../validators/importValidator';
-import { llmRateLimiter } from '../middleware/rateLimiter';
 
 const router: IRouter = Router();
 
@@ -25,7 +23,6 @@ const router: IRouter = Router();
  * POST /api/v1/import/chat
  * Process user message with LLM for data extraction
  *
- * Rate limited: 20 requests/minute per IP
  * Requires authentication
  *
  * Request body:
@@ -57,7 +54,6 @@ const router: IRouter = Router();
  */
 router.post(
   '/chat',
-  llmRateLimiter,
   validateBody(chatMessageSchema),
   chatImport
 );
@@ -66,7 +62,6 @@ router.post(
  * POST /api/v1/import/batch
  * Batch insert validated snapshots
  *
- * Rate limited: 20 requests/minute per IP
  * Requires authentication
  *
  * Request body:
@@ -99,7 +94,6 @@ router.post(
  */
 router.post(
   '/batch',
-  llmRateLimiter,
   validateBody(batchInsertSchema),
   batchInsert
 );

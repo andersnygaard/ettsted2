@@ -2,7 +2,12 @@ import { test, expect, login } from './fixtures';
 
 test.describe('Keyboard Navigation', () => {
   test.beforeEach(async ({ page }) => {
-    // Login and navigate to oversikt
+    // Clear auth state first to ensure clean start, then login
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.removeItem('finans_demo_token');
+      localStorage.setItem('finans_dev_logout', 'true');
+    });
     await login(page);
     await page.goto('/oversikt');
     await page.waitForLoadState('networkidle');
@@ -25,24 +30,24 @@ test.describe('Keyboard Navigation', () => {
   });
 
   test('can navigate header navigation items with Tab key', async ({ page }) => {
-    // Skip first tab (skip link), tab to first nav item
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
+    // Skip first tab (skip link), tab to logo, tab to first nav item
+    await page.keyboard.press('Tab'); // skip link
+    await page.keyboard.press('Tab'); // logo
+    await page.keyboard.press('Tab'); // first nav item
 
-    // Should be focusing a navigation item (app header nav)
-    const header = page.locator('.app-header');
-    const navLinks = header.getByRole('link');
+    // Should be focusing a navigation item (app header nav, not logo)
+    const navLinks = page.locator('.app-header__nav').getByRole('link');
     const navLinkCount = await navLinks.count();
 
     if (navLinkCount > 0) {
-      // Tab through first few nav items
+      // Verify a nav link is focused (first item)
       const firstLink = navLinks.first();
       await expect(firstLink).toBeFocused();
 
       // Tab to next nav item
-      await page.keyboard.press('Tab');
-      const secondLink = navLinks.nth(1);
       if (navLinkCount > 1) {
+        await page.keyboard.press('Tab');
+        const secondLink = navLinks.nth(1);
         await expect(secondLink).toBeFocused();
       }
     }
@@ -116,12 +121,12 @@ test.describe('Keyboard Navigation', () => {
 
     await nyMaanedBtn.click();
 
-    // Wait for modal to appear
-    const modal = page.locator('[role="dialog"]');
+    // Wait for modal to appear (specifically the "Ny måned" modal, not mobile menu)
+    const modal = page.getByRole('dialog', { name: 'Ny måned' });
     await expect(modal).toBeVisible({ timeout: 5000 });
 
     // Get all focusable elements within modal
-    const modalFocusable = modal.locator('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    const modalFocusable = modal.locator('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
     const focusableCount = await modalFocusable.count();
 
     expect(focusableCount).toBeGreaterThan(0);
@@ -165,8 +170,8 @@ test.describe('Keyboard Navigation', () => {
 
     await nyMaanedBtn.click();
 
-    // Wait for modal
-    const modal = page.locator('[role="dialog"]');
+    // Wait for modal (specifically the "Ny måned" modal, not mobile menu)
+    const modal = page.getByRole('dialog', { name: 'Ny måned' });
     await expect(modal).toBeVisible({ timeout: 5000 });
 
     // Press Escape
@@ -203,8 +208,8 @@ test.describe('Keyboard Navigation', () => {
   });
 
   test('can navigate with Tab and Shift+Tab', async ({ page }) => {
-    // Get all focusable elements on the page
-    const focusableElements = page.locator('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    // Get all focusable elements on the page (use a[href] not [href] to exclude <link> tags)
+    const focusableElements = page.locator('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
     const elementCount = await focusableElements.count();
 
     if (elementCount > 2) {
@@ -322,8 +327,9 @@ test.describe('Keyboard Navigation', () => {
     ];
 
     for (const item of navItems) {
-      // Navigate to the page
+      // Navigate to the page and wait for URL to stabilize
       await page.goto(item.path);
+      await page.waitForURL(`**${item.path}`, { timeout: 15000 });
       await page.waitForLoadState('networkidle');
 
       // Verify page loaded
