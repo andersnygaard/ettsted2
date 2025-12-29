@@ -12,7 +12,8 @@
     "test:e2e": "pnpm --filter e2e test",
     "test:smoke": "pnpm --filter e2e test:smoke",
     "test:full": "pnpm --filter e2e test:full",
-    "test:integration": "pnpm --filter backend test"
+    "test:integration": "pnpm --filter backend test",
+    "test:report": "pnpm --filter e2e report"
   },
   "keywords": [
     "portfolio",

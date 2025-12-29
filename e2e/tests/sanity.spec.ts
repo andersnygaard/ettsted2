@@ -1,14 +1,13 @@
 import { test, expect, login, logout, clearAuthState, checkPageHealth, ALL_PAGES } from './fixtures';
 
 test.describe('Sanity Checks', () => {
-  test.beforeEach(async ({ page }) => {
-    // Start each test logged out
-    await clearAuthState(page);
-  });
+  // Note: Most tests use storageState from global setup, so auth is pre-loaded.
+  // Tests that specifically need logged-out state call clearAuthState() explicitly.
 
   test('home page loads when logged out', async ({ page, pageErrors }) => {
+    // This test needs logged-out state
+    await clearAuthState(page);
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
 
     // Should see the landing page with login button
     await expect(page.getByText('Ta kontroll over')).toBeVisible();
@@ -20,6 +19,8 @@ test.describe('Sanity Checks', () => {
   });
 
   test('can login via dev mode', async ({ page }) => {
+    // This test needs logged-out state to test login flow
+    await clearAuthState(page);
     await login(page);
 
     // Should be on oversikt
@@ -30,23 +31,23 @@ test.describe('Sanity Checks', () => {
   });
 
   test('visit all pages after login', async ({ page, pageErrors }) => {
-    await login(page);
-
+    // Auth pre-loaded from global setup - just navigate
     for (const { path, name } of ALL_PAGES) {
       await test.step(`Visit ${name} (${path})`, async () => {
         await page.goto(path);
-        await page.waitForLoadState('networkidle');
+
+        // Wait for page content instead of networkidle
+        await expect(page.locator('.app-header')).toBeVisible();
 
         // Page should have loaded (not redirected to home/login)
         expect(page.url()).toContain(path);
 
-        // Scroll down to bottom of page
+        // Scroll down to bottom of page and wait for any lazy content
         await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-        await page.waitForTimeout(300);
+        await expect(page.locator('body')).toBeVisible();
 
         // Scroll back to top
         await page.evaluate(() => window.scrollTo(0, 0));
-        await page.waitForTimeout(200);
 
         // Check page health
         const errors = await checkPageHealth(page);
@@ -66,7 +67,9 @@ test.describe('Sanity Checks', () => {
   });
 
   test('navigation works', async ({ page }) => {
-    await login(page);
+    // Auth pre-loaded from global setup - start from oversikt
+    await page.goto('/oversikt');
+    await expect(page.locator('.app-header')).toBeVisible();
 
     const navItems = [
       { link: 'Oversikt', expectedPath: '/oversikt' },
@@ -86,6 +89,7 @@ test.describe('Sanity Checks', () => {
           // Open mobile menu
           const hamburger = page.getByRole('button', { name: /åpne meny/i });
           await hamburger.click();
+          await expect(page.getByRole('button', { name: link })).toBeVisible();
           await page.getByRole('button', { name: link }).click();
         } else {
           // Click header nav link (use exact match + first to avoid duplicates)
@@ -98,10 +102,9 @@ test.describe('Sanity Checks', () => {
   });
 
   test('can logout', async ({ page }) => {
-    await login(page);
-
-    // Verify we're logged in
-    await expect(page).toHaveURL(/\/oversikt/);
+    // Auth pre-loaded from global setup
+    await page.goto('/oversikt');
+    await expect(page.locator('.app-header')).toBeVisible();
 
     await logout(page);
 

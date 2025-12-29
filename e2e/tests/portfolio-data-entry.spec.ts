@@ -1,16 +1,10 @@
-import { test, expect, login, createSnapshot } from './fixtures';
+import { test, expect, createSnapshot } from './fixtures';
 
 test.describe('Portfolio Data Entry', () => {
   test.beforeEach(async ({ page }) => {
-    // Clear auth state first to ensure clean start, then login
-    await page.goto('/');
-    await page.evaluate(() => {
-      localStorage.removeItem('finans_demo_token');
-      localStorage.setItem('finans_dev_logout', 'true');
-    });
-    await login(page);
+    // Auth pre-loaded from global setup - just navigate
     await page.goto('/portefolje');
-    await page.waitForLoadState('networkidle');
+    await expect(page.locator('.app-header')).toBeVisible();
 
     // Create a fresh snapshot for testing
     // Use current month/year if possible, otherwise use previous month
@@ -26,39 +20,20 @@ test.describe('Portfolio Data Entry', () => {
       monthIndex = monthIndex - 1;
     }
 
-    // Create snapshot with retry logic
-    let lastError;
-    for (let i = 0; i < 2; i++) {
-      try {
-        await createSnapshot(page, {
-          monthIndex,
-          year,
-          // Use actual demo account names from standard fixture
-          accountValues: {
-            'Nordnet': 100000,
-            'Kron': 50000,
-            'Sparekonto': 25000,
-            'Boliglån': 200000,
-            'Arbeidsgiver': 150000,
-            'Folketrygden': 75000,
-          }
-        });
-        break; // Success
-      } catch (error) {
-        lastError = error;
-        if (i === 0) {
-          // If first attempt fails, reload page and try again
-          await page.reload();
-          await page.waitForLoadState('networkidle');
-          await page.goto('/portefolje');
-          await page.waitForLoadState('networkidle');
-        }
+    // Create snapshot - let errors propagate for clear failure messages
+    await createSnapshot(page, {
+      monthIndex,
+      year,
+      // Use actual demo account names from standard fixture
+      accountValues: {
+        'Nordnet': 100000,
+        'Kron': 50000,
+        'Sparekonto': 25000,
+        'Boliglån': 200000,
+        'Arbeidsgiver': 150000,
+        'Folketrygden': 75000,
       }
-    }
-
-    if (lastError) {
-      throw lastError;
-    }
+    });
   });
 
   test('can create new monthly snapshot via modal', async ({ page }) => {
@@ -71,7 +46,6 @@ test.describe('Portfolio Data Entry', () => {
     await expect(modal).toBeVisible();
 
     // Get current date to determine which month/year to select
-    const now = new Date();
     const monthSelect = page.locator('select').first();
     const yearSelect = page.locator('select').nth(1);
 
@@ -94,8 +68,8 @@ test.describe('Portfolio Data Entry', () => {
     const lagereBtn = page.getByRole('button', { name: /lagre/i });
     await lagereBtn.click();
 
-    // Wait for modal to close and data to refresh
-    await page.waitForLoadState('networkidle');
+    // Wait for modal to close
+    await expect(modal).not.toBeVisible({ timeout: 10000 });
 
     // Verify we're back on the portfolio page
     await expect(page.locator('.portfolio-page')).toBeVisible();
@@ -142,13 +116,8 @@ test.describe('Portfolio Data Entry', () => {
     // Press Enter to save
     await input.press('Enter');
 
-    // Wait for API call
-    await page.waitForLoadState('networkidle');
-
-    // The cell should no longer be in edit mode
-    // (The value persists in the table)
-    const updatedCell = cellToEdit.locator('..').first();
-    await expect(updatedCell).not.toContainText('input');
+    // Wait for input to disappear (indicates save complete)
+    await expect(input).not.toBeVisible({ timeout: 5000 });
   });
 
   test('can delete snapshot with confirmation', async ({ page }) => {
@@ -193,16 +162,14 @@ test.describe('Portfolio Data Entry', () => {
       await confirmBtn.click();
     }
 
-    // Wait for deletion to complete
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(300);
+    // Wait for modal to close
+    await expect(confirmHeading).not.toBeVisible({ timeout: 10000 });
 
     // Verify row was deleted - should have fewer or equal rows now
     const updatedRows = page.locator('tbody tr');
     const updatedRowCount = await updatedRows.count();
 
     // Row count should either decrease (if deleted) or stay same (if delete failed)
-    // We're being lenient here since the delete modal might not work perfectly
     expect(updatedRowCount).toBeLessThanOrEqual(initialRowCount);
   });
 
@@ -214,9 +181,6 @@ test.describe('Portfolio Data Entry', () => {
     // Click Eksporter button
     const eksportBtn = page.getByRole('button', { name: /eksporter/i });
     await eksportBtn.click();
-
-    // Wait for download to trigger
-    await page.waitForTimeout(500);
 
     // Verify we're still on the page after export
     const portfolioPage = page.locator('.portfolio-page');
@@ -243,20 +207,14 @@ test.describe('Portfolio Data Entry', () => {
     const firstGroupHeader = groupHeaders.first();
     await firstGroupHeader.click();
 
-    // Wait for DOM update
-    await page.waitForTimeout(200);
-
-    // Verify column count changed (collapsed groups show fewer columns)
-    // This is a visual state change, hard to verify precisely in E2E
-    // but we can check that the page is still functional
-    const spreadsheetStillVisible = page.locator('.spreadsheet');
-    await expect(spreadsheetStillVisible).toBeVisible();
+    // Verify spreadsheet still visible and functional after collapse
+    await expect(spreadsheet).toBeVisible();
 
     // Click again to expand
     await firstGroupHeader.click();
 
-    // Verify spreadsheet still visible and functional
-    await expect(spreadsheetStillVisible).toBeVisible();
+    // Verify spreadsheet still visible and functional after expand
+    await expect(spreadsheet).toBeVisible();
   });
 
   test('pagination works correctly', async ({ page }) => {
@@ -266,25 +224,23 @@ test.describe('Portfolio Data Entry', () => {
 
     // Check if pagination footer exists
     const tableFooter = page.locator('.table-footer');
-    const hasFooter = await tableFooter.isVisible().catch(() => false);
+    const hasFooter = await tableFooter.isVisible();
 
     if (hasFooter) {
       // Pagination footer exists, test pagination functionality
-      // Get initial page
       const pageInfo = page.locator('text=/side \\d+ av \\d+/i');
-      const hasPageInfo = await pageInfo.isVisible().catch(() => false);
+      const hasPageInfo = await pageInfo.isVisible();
 
       if (hasPageInfo) {
         // Find next page button
         const nextPageBtn = page.getByRole('button', { name: /neste/i });
-        const hasNextBtn = await nextPageBtn.isVisible().catch(() => false);
+        const hasNextBtn = await nextPageBtn.isVisible();
 
         if (hasNextBtn) {
           // Click next page
           await nextPageBtn.click();
-
-          // Wait for data to update
-          await page.waitForTimeout(300);
+          // Wait for table to update
+          await expect(spreadsheet).toBeVisible();
         }
       }
     }
@@ -295,12 +251,13 @@ test.describe('Portfolio Data Entry', () => {
   });
 
   test('year filter filters data correctly', async ({ page }) => {
-    // Wait for table to load and verify we're on the portfolio page
-    await page.waitForLoadState('networkidle');
+    // Wait for table to load
+    const spreadsheet = page.locator('.spreadsheet');
+    await expect(spreadsheet).toBeVisible();
 
     // Look for year filter (dropdown or select)
     const tableHeader = page.locator('.table-header');
-    const hasHeader = await tableHeader.isVisible().catch(() => false);
+    const hasHeader = await tableHeader.isVisible();
 
     if (hasHeader) {
       // Find year select if it exists
@@ -318,9 +275,8 @@ test.describe('Portfolio Data Entry', () => {
           // Select the second option
           await yearSelect.selectOption({ index: 1 });
 
-          // Wait for filter to apply
-          await page.waitForLoadState('networkidle');
-          await page.waitForTimeout(500);
+          // Wait for table to update after filter
+          await expect(spreadsheet).toBeVisible();
         }
       }
     }

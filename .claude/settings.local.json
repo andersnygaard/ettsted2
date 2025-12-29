@@ -118,7 +118,9 @@
       "Bash(then echo \"HAS stories\")",
       "Bash(else echo \"NO stories\")",
       "Bash(fi)",
-      "Skill(feature-planning)"
+      "Skill(feature-planning)",
+      "Bash(taskkill:*)",
+      "Skill(backlog-scan)"
     ],
     "deny": [],
     "ask": [

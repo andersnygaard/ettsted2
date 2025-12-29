@@ -3,21 +3,32 @@ import { defineConfig, devices } from '@playwright/test';
 // Screenshot mode: SCREENSHOTS=1 pnpm test
 const screenshotMode = process.env.SCREENSHOTS === '1';
 
+// Storage state path for cached auth (relative to this config file)
+const STORAGE_STATE = './storage/auth-state.json';
+
 export default defineConfig({
   testDir: './tests',
   testMatch: '**/*.spec.ts',
   fullyParallel: false, // Run sequentially for sanity checks
   forbidOnly: !!process.env.CI,
-  retries: screenshotMode ? 0 : 1,
+  retries: 0, // No retries - tests should be deterministic
   workers: 1,
   timeout: 120000, // 2 minutes per test
-  reporter: [['html'], ['list']],
+  reporter: [
+    ['html', { outputFolder: '../playwright-report' }],
+    ['list'],
+  ],
+
+  // Global setup: login once and cache storage state
+  globalSetup: './global-setup.ts',
 
   use: {
     baseURL: 'http://localhost:5173',
     trace: 'on-first-retry',
     screenshot: screenshotMode ? 'on' : 'only-on-failure',
     video: screenshotMode ? 'on' : 'on-first-retry',
+    // Use cached auth state for all tests
+    storageState: STORAGE_STATE,
   },
 
   projects: [
@@ -46,18 +57,22 @@ export default defineConfig({
 
   webServer: [
     {
-      command: 'pnpm --filter backend dev',
-      url: 'http://localhost:3000/api/v1/health',
-      reuseExistingServer: !process.env.CI,
+      command: 'cross-env LOG_LEVEL=warn pnpm --filter backend dev',
+      // Use deep health check to ensure DB is ready
+      url: 'http://localhost:3000/api/v1/health?deep=true',
+      // Never reuse - always start fresh to avoid stale state issues
+      reuseExistingServer: false,
       cwd: '..',
-      timeout: 30000,
+      timeout: 60000, // Increased for DB initialization
+      stdout: 'pipe',
     },
     {
       command: 'pnpm --filter frontend dev',
       url: 'http://localhost:5173',
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: false,
       cwd: '..',
       timeout: 30000,
+      stdout: 'ignore',
     },
   ],
 });

@@ -10,7 +10,7 @@
     "test:watch": "playwright test --headed --timeout=0",
     "test:screenshots": "npx cross-env SCREENSHOTS=1 playwright test",
     "test:ui": "playwright test --ui",
-    "report": "playwright show-report"
+    "report": "playwright show-report ../playwright-report"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",

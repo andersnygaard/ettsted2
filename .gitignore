@@ -43,6 +43,7 @@ coverage/
 .playwright-mcp/
 playwright-report/
 test-results/
+e2e/storage/auth-state.json
 
 # Azure
 .azure/

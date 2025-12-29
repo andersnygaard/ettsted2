@@ -1,4 +1,4 @@
-import { test, expect, login, PROTECTED_PAGES } from './fixtures';
+import { test, expect } from './fixtures';
 import { MOBILE_VIEWPORTS, MIN_TOUCH_TARGET } from '../fixtures/mobile-viewports';
 
 /**
@@ -10,21 +10,13 @@ test.describe('Mobile Responsive', () => {
     test.describe(`${viewport.description}`, () => {
       test.use({ viewport: { width: viewport.width, height: viewport.height } });
 
-      test.beforeEach(async ({ page }) => {
-        // Clear auth state first to ensure clean start, then login
-        await page.goto('/');
-        await page.evaluate(() => {
-          localStorage.removeItem('finans_demo_token');
-          localStorage.setItem('finans_dev_logout', 'true');
-        });
-        await login(page);
-      });
+      // Auth pre-loaded from global setup - no beforeEach login needed
 
       // ========== No Horizontal Scroll Tests ==========
 
       test('Dashboard (Oversikt) - no horizontal scroll', async ({ page }) => {
         await page.goto('/oversikt');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         const hasHorizontalScroll = await page.evaluate(() => {
           return document.body.scrollWidth > document.documentElement.clientWidth;
@@ -35,7 +27,7 @@ test.describe('Mobile Responsive', () => {
 
       test('Portfolio (Portefølje) - no horizontal scroll', async ({ page }) => {
         await page.goto('/portefolje');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         const hasHorizontalScroll = await page.evaluate(() => {
           return document.body.scrollWidth > document.documentElement.clientWidth;
@@ -46,7 +38,7 @@ test.describe('Mobile Responsive', () => {
 
       test('Savings (Sparing) - no horizontal scroll', async ({ page }) => {
         await page.goto('/sparing');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         const hasHorizontalScroll = await page.evaluate(() => {
           return document.body.scrollWidth > document.documentElement.clientWidth;
@@ -57,7 +49,7 @@ test.describe('Mobile Responsive', () => {
 
       test('Debt (Gjeld) - no horizontal scroll', async ({ page }) => {
         await page.goto('/gjeld');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         const hasHorizontalScroll = await page.evaluate(() => {
           return document.body.scrollWidth > document.documentElement.clientWidth;
@@ -68,7 +60,7 @@ test.describe('Mobile Responsive', () => {
 
       test('Pension (Pensjon) - no horizontal scroll', async ({ page }) => {
         await page.goto('/pensjon');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         const hasHorizontalScroll = await page.evaluate(() => {
           return document.body.scrollWidth > document.documentElement.clientWidth;
@@ -79,7 +71,7 @@ test.describe('Mobile Responsive', () => {
 
       test('Calculators (Kalkulatorer) - no horizontal scroll', async ({ page }) => {
         await page.goto('/kalkulatorer');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         const hasHorizontalScroll = await page.evaluate(() => {
           return document.body.scrollWidth > document.documentElement.clientWidth;
@@ -90,7 +82,7 @@ test.describe('Mobile Responsive', () => {
 
       test('Import (Importer data) - no horizontal scroll', async ({ page }) => {
         await page.goto('/import');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         const hasHorizontalScroll = await page.evaluate(() => {
           return document.body.scrollWidth > document.documentElement.clientWidth;
@@ -101,7 +93,7 @@ test.describe('Mobile Responsive', () => {
 
       test('Settings (Min Økonomi) - no horizontal scroll', async ({ page }) => {
         await page.goto('/min-okonomi');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         const hasHorizontalScroll = await page.evaluate(() => {
           return document.body.scrollWidth > document.documentElement.clientWidth;
@@ -114,19 +106,20 @@ test.describe('Mobile Responsive', () => {
 
       test('Dashboard - interactive elements have minimum 44px touch target', async ({ page }) => {
         await page.goto('/oversikt');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         const buttons = page.locator('button');
         const buttonCount = await buttons.count();
 
         for (let i = 0; i < buttonCount; i++) {
           const button = buttons.nth(i);
-          const isVisible = await button.isVisible().catch(() => false);
+          const isVisible = await button.isVisible();
 
           if (isVisible) {
             const box = await button.boundingBox();
             if (box) {
-              expect(box.height, `Button ${i} should have min height of ${MIN_TOUCH_TARGET}px`).toBeGreaterThanOrEqual(
+              // Use Math.round to handle subpixel rendering (43.999... should be treated as 44)
+              expect(Math.round(box.height), `Button ${i} should have min height of ${MIN_TOUCH_TARGET}px`).toBeGreaterThanOrEqual(
                 MIN_TOUCH_TARGET
               );
             }
@@ -136,19 +129,20 @@ test.describe('Mobile Responsive', () => {
 
       test('Portfolio - interactive elements have minimum 44px touch target', async ({ page }) => {
         await page.goto('/portefolje');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         const buttons = page.locator('button');
         const buttonCount = await buttons.count();
 
         for (let i = 0; i < buttonCount; i++) {
           const button = buttons.nth(i);
-          const isVisible = await button.isVisible().catch(() => false);
+          const isVisible = await button.isVisible();
 
           if (isVisible) {
             const box = await button.boundingBox();
             if (box) {
-              expect(box.height, `Button ${i} should have min height of ${MIN_TOUCH_TARGET}px`).toBeGreaterThanOrEqual(
+              // Use Math.round to handle subpixel rendering (43.999... should be treated as 44)
+              expect(Math.round(box.height), `Button ${i} should have min height of ${MIN_TOUCH_TARGET}px`).toBeGreaterThanOrEqual(
                 MIN_TOUCH_TARGET
               );
             }
@@ -158,19 +152,20 @@ test.describe('Mobile Responsive', () => {
 
       test('Import - interactive elements have minimum 44px touch target', async ({ page }) => {
         await page.goto('/import');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         const buttons = page.locator('button');
         const buttonCount = await buttons.count();
 
         for (let i = 0; i < buttonCount; i++) {
           const button = buttons.nth(i);
-          const isVisible = await button.isVisible().catch(() => false);
+          const isVisible = await button.isVisible();
 
           if (isVisible) {
             const box = await button.boundingBox();
             if (box) {
-              expect(box.height, `Button ${i} should have min height of ${MIN_TOUCH_TARGET}px`).toBeGreaterThanOrEqual(
+              // Use Math.round to handle subpixel rendering (43.999... should be treated as 44)
+              expect(Math.round(box.height), `Button ${i} should have min height of ${MIN_TOUCH_TARGET}px`).toBeGreaterThanOrEqual(
                 MIN_TOUCH_TARGET
               );
             }
@@ -182,11 +177,11 @@ test.describe('Mobile Responsive', () => {
 
       test('Mobile menu can be opened', async ({ page }) => {
         await page.goto('/oversikt');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         // Find hamburger menu button
         const hamburger = page.getByRole('button', { name: /åpne meny/i });
-        const isMenuVisible = await hamburger.isVisible().catch(() => false);
+        const isMenuVisible = await hamburger.isVisible();
 
         if (isMenuVisible) {
           await hamburger.click();
@@ -199,24 +194,25 @@ test.describe('Mobile Responsive', () => {
 
       test('Mobile menu navigation items have adequate size', async ({ page }) => {
         await page.goto('/oversikt');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         const hamburger = page.getByRole('button', { name: /åpne meny/i });
-        const isMenuVisible = await hamburger.isVisible().catch(() => false);
+        const isMenuVisible = await hamburger.isVisible();
 
         if (isMenuVisible) {
           await hamburger.click();
 
           // Wait for menu to appear
-          await page.waitForTimeout(300);
+          const mobileMenu = page.locator('[role="dialog"][aria-label="Navigasjonsmeny"]');
+          await expect(mobileMenu).toBeVisible({ timeout: 5000 });
 
-          // Check navigation items size (mobile menu uses role="dialog")
+          // Check navigation items size
           const navItems = page.locator('[role="dialog"] .app-header__mobile-nav-item');
           const itemCount = await navItems.count();
 
           for (let i = 0; i < itemCount; i++) {
             const item = navItems.nth(i);
-            const isVisible = await item.isVisible().catch(() => false);
+            const isVisible = await item.isVisible();
 
             if (isVisible) {
               const box = await item.boundingBox();
@@ -235,14 +231,14 @@ test.describe('Mobile Responsive', () => {
 
       test('Form inputs have adequate size on mobile', async ({ page }) => {
         await page.goto('/min-okonomi');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         const inputs = page.locator('input, select, textarea');
         const inputCount = await inputs.count();
 
         for (let i = 0; i < Math.min(inputCount, 10); i++) {
           const input = inputs.nth(i);
-          const isVisible = await input.isVisible().catch(() => false);
+          const isVisible = await input.isVisible();
 
           if (isVisible) {
             const box = await input.boundingBox();
@@ -260,11 +256,11 @@ test.describe('Mobile Responsive', () => {
 
       test('Page content is readable without horizontal scroll', async ({ page }) => {
         await page.goto('/oversikt');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         // Check that main content fits within viewport
         const mainContent = page.locator('main, [role="main"]').first();
-        const isVisible = await mainContent.isVisible().catch(() => false);
+        const isVisible = await mainContent.isVisible();
 
         if (isVisible) {
           const box = await mainContent.boundingBox();
@@ -283,11 +279,11 @@ test.describe('Mobile Responsive', () => {
 
       test('Portfolio table scrolls horizontally on small screens only', async ({ page }) => {
         await page.goto('/portefolje');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         // Find the spreadsheet table
         const table = page.locator('table').first();
-        const isVisible = await table.isVisible().catch(() => false);
+        const isVisible = await table.isVisible();
 
         if (isVisible) {
           // Table can scroll horizontally - that's OK for small viewports
@@ -307,18 +303,20 @@ test.describe('Mobile Responsive', () => {
 
       test('Can navigate between pages on mobile', async ({ page }) => {
         await page.goto('/oversikt');
-        await page.waitForLoadState('networkidle');
+        await expect(page.locator('.app-header')).toBeVisible();
 
         const hamburger = page.getByRole('button', { name: /åpne meny/i });
-        const hasHamburger = await hamburger.isVisible().catch(() => false);
+        const hasHamburger = await hamburger.isVisible();
 
         if (hasHamburger) {
           // Mobile: use hamburger menu
           await hamburger.click();
-          await page.waitForTimeout(300);
+          const mobileMenu = page.locator('[role="dialog"][aria-label="Navigasjonsmeny"]');
+          await expect(mobileMenu).toBeVisible({ timeout: 5000 });
 
-          const sparingLink = page.getByRole('button', { name: /sparing/i });
-          if (await sparingLink.isVisible().catch(() => false)) {
+          // Scope to the mobile menu to avoid matching stat cards on the page
+          const sparingLink = mobileMenu.getByRole('button', { name: 'Sparing', exact: true });
+          if (await sparingLink.isVisible()) {
             await sparingLink.click();
             await page.waitForURL(/\/sparing/, { timeout: 10000 });
           }
@@ -328,7 +326,7 @@ test.describe('Mobile Responsive', () => {
             name: /sparing/i,
             exact: true,
           });
-          if (await sparingLink.isVisible().catch(() => false)) {
+          if (await sparingLink.isVisible()) {
             await sparingLink.click();
             await page.waitForURL(/\/sparing/, { timeout: 10000 });
           }
@@ -343,7 +341,7 @@ test.describe('Mobile Responsive', () => {
         for (const pagePath of pages) {
           const startTime = Date.now();
           await page.goto(pagePath);
-          await page.waitForLoadState('networkidle');
+          await expect(page.locator('.app-header')).toBeVisible();
           const loadTime = Date.now() - startTime;
 
           // Page should load within 10 seconds

@@ -1,4 +1,4 @@
-import { test as base, expect, Page, Locator } from '@playwright/test';
+import { test as base, expect, Page, Locator, ConsoleMessage } from '@playwright/test';
 
 /** Pages that require authentication */
 export const PROTECTED_PAGES = [
@@ -40,101 +40,68 @@ export async function clearAuthState(page: Page): Promise<void> {
 }
 
 /**
- * Login via demo mode
+ * Ensure user is logged in and on /oversikt.
+ *
+ * Handles two scenarios:
+ * 1. Auth pre-loaded from global setup (storageState) - just verify and navigate
+ * 2. Auth cleared (tests that call clearAuthState first) - perform actual demo login
  */
 export async function login(page: Page): Promise<void> {
-  // Clear dev logout flag so we can log in
-  await page.goto('/');
+  const appHeader = page.locator('.app-header');
+  const loginButton = page.getByRole('button', { name: /logg inn/i });
+
+  // First, try the fast path - just go to /oversikt
+  await page.goto('/oversikt');
+
+  // Wait for either app-header (authenticated) or login button (not authenticated)
+  await expect(appHeader.or(loginButton)).toBeVisible({ timeout: 10000 });
+
+  // If we're already authenticated (on /oversikt with header), we're done
+  if (await appHeader.isVisible() && page.url().includes('/oversikt')) {
+    return;
+  }
+
+  // Not authenticated - need to do actual login via demo button
+  // Ensure we're on home page with login button visible
+  if (!page.url().endsWith('/')) {
+    await page.goto('/');
+    await expect(loginButton).toBeVisible({ timeout: 5000 });
+  }
+
+  // Clear DEV_LOGOUT flag so it doesn't interfere after login
   await page.evaluate((keys) => {
     localStorage.removeItem(keys.DEV_LOGOUT);
   }, STORAGE_KEYS);
 
-  // Reload to pick up the auth state change
-  await page.reload();
-  await page.waitForLoadState('networkidle');
+  // Click login to open modal
+  await loginButton.click();
 
-  // Check if already logged in by checking for demo token AND authenticated UI
-  const hasDemoToken = await page.evaluate((key) => {
-    return localStorage.getItem(key) !== null;
-  }, STORAGE_KEYS.DEMO_TOKEN);
+  // Click "Prøv demo" button in the modal
+  const demoButton = page.getByRole('button', { name: /prøv demo/i });
+  await expect(demoButton).toBeVisible({ timeout: 5000 });
+  await demoButton.click();
 
-  if (hasDemoToken) {
-    // Already have a token, check if UI shows authenticated state
-    const oversiktLink = page.getByRole('link', { name: /gå til oversikt/i });
-    const isAuthenticated = await oversiktLink.isVisible({ timeout: 5000 }).catch(() => false);
+  // Wait for redirect to /oversikt after demo login
+  // Demo login calls the backend which seeds data - can take time
+  await page.waitForURL('**/oversikt', { timeout: 60000 });
+  await expect(appHeader).toBeVisible({ timeout: 10000 });
 
-    if (isAuthenticated) {
-      // Already logged in, navigate to oversikt
-      await oversiktLink.click();
-      await page.waitForURL(/\/oversikt/, { timeout: 15000 });
-      await page.waitForLoadState('networkidle');
-      return;
-    }
-  }
-
-  // Not logged in, use demo login
-  const loginBtn = page.getByRole('button', { name: /logg inn/i });
-  await expect(loginBtn).toBeVisible({ timeout: 10000 });
-  await loginBtn.click();
-
-  // Wait for modal to open
-  await page.waitForLoadState('domcontentloaded');
-
-  // Find the demo button - it contains "Prøv demo" text
-  const demoBtn = page.getByRole('button', { name: /prøv demo/i });
-  await expect(demoBtn).toBeVisible({ timeout: 10000 });
-  await demoBtn.click();
-
-  // Wait for redirect with longer timeout - demo seeding can take time
-  try {
-    await page.waitForURL(/\/(oversikt|auth\/callback)/, { timeout: 60000 });
-    if (page.url().includes('auth/callback')) {
-      await page.waitForURL('/oversikt', { timeout: 30000 });
-    }
-  } catch (err) {
-    // Check if we got redirected back to home (login failed)
-    const currentUrl = page.url();
-    if (currentUrl.endsWith('/') || currentUrl.includes('localhost:5173/$')) {
-      throw new Error('Demo login failed - redirected back to home page');
-    }
-    // Sometimes the page navigates directly to oversikt without auth/callback
-    await page.waitForTimeout(2000);
-    if (!page.url().includes('oversikt')) {
-      throw err;
-    }
-  }
-
-  // Ensure page is fully loaded
-  await page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {});
-
-  // CRITICAL: Verify demo token was stored
-  const tokenStored = await page.evaluate((key) => {
-    return localStorage.getItem(key) !== null;
-  }, STORAGE_KEYS.DEMO_TOKEN);
-
-  if (!tokenStored) {
-    throw new Error('Demo login completed but token was not stored in localStorage');
-  }
-
-  // Verify we're actually on /oversikt and not redirected
-  const finalUrl = page.url();
-  if (!finalUrl.includes('/oversikt')) {
-    throw new Error(`Demo login failed - expected /oversikt but got ${finalUrl}`);
-  }
+  // Final verification
+  expect(page.url()).toContain('/oversikt');
 }
 
 /**
  * Logout
  */
 export async function logout(page: Page): Promise<void> {
-  // Simply set the logout flag and reload
   await page.evaluate((keys) => {
     localStorage.removeItem(keys.DEMO_TOKEN);
     localStorage.setItem(keys.DEV_LOGOUT, 'true');
   }, STORAGE_KEYS);
 
   await page.goto('/');
-  await page.waitForLoadState('networkidle');
+  // Wait for login button to be visible (confirms we're logged out)
+  await expect(page.getByRole('button', { name: /logg inn/i })).toBeVisible();
 }
 
 /**
@@ -151,8 +118,8 @@ export async function checkPageHealth(page: Page): Promise<string[]> {
   }
 
   // Check for error boundary text
-  const errorBoundary = page.locator('text=/noe gikk galt/i');
-  if (await errorBoundary.isVisible().catch(() => false)) {
+  const errorBoundaryCount = await page.getByText(/noe gikk galt/i).count();
+  if (errorBoundaryCount > 0) {
     errors.push('Error boundary displayed');
   }
 
@@ -161,7 +128,7 @@ export async function checkPageHealth(page: Page): Promise<string[]> {
   const imageCount = await images.count();
   for (let i = 0; i < Math.min(imageCount, 5); i++) {
     const img = images.nth(i);
-    const naturalWidth = await img.evaluate((el: HTMLImageElement) => el.naturalWidth).catch(() => 1);
+    const naturalWidth = await img.evaluate((el: HTMLImageElement) => el.naturalWidth);
     if (naturalWidth === 0) {
       const src = await img.getAttribute('src');
       errors.push(`Broken image: ${src}`);
@@ -176,7 +143,7 @@ export const test = base.extend<{ pageErrors: string[] }>({
   pageErrors: async ({ page }, use) => {
     const errors: string[] = [];
 
-    page.on('console', msg => {
+    const consoleHandler = (msg: ConsoleMessage) => {
       if (msg.type() === 'error') {
         const text = msg.text();
         // Ignore common non-issues
@@ -184,13 +151,20 @@ export const test = base.extend<{ pageErrors: string[] }>({
           errors.push(`Console: ${text.slice(0, 200)}`);
         }
       }
-    });
+    };
 
-    page.on('pageerror', error => {
+    const errorHandler = (error: Error) => {
       errors.push(`Page error: ${error.message.slice(0, 200)}`);
-    });
+    };
+
+    page.on('console', consoleHandler);
+    page.on('pageerror', errorHandler);
 
     await use(errors);
+
+    // Cleanup handlers after test to prevent leakage
+    page.off('console', consoleHandler);
+    page.off('pageerror', errorHandler);
   },
 });
 
@@ -202,8 +176,6 @@ export { expect };
 
 /**
  * Create a new snapshot via the NewMonthModal
- * @param page The Playwright page object
- * @param data Object with monthIndex, year, and accountValues
  */
 export async function createSnapshot(
   page: Page,
@@ -215,116 +187,51 @@ export async function createSnapshot(
 ): Promise<void> {
   const { monthIndex = new Date().getMonth(), year = new Date().getFullYear() } = data;
 
-  // Wait for page to be ready
-  await page.waitForLoadState('domcontentloaded');
-
-  // Click "Ny måned" button - try multiple selectors
+  // Wait for "Ny måned" button using Playwright auto-wait
   const nyMaanedBtn = page.getByRole('button', { name: /\+ Ny måned/i });
+  await expect(nyMaanedBtn).toBeVisible({ timeout: 10000 });
+  await nyMaanedBtn.click();
 
-  // Try to find the button with multiple attempts and waits
-  let found = false;
-  for (let i = 0; i < 5; i++) {
-    try {
-      // Wait a bit for DOM to settle
-      await page.waitForLoadState('networkidle').catch(() => {});
+  // Wait for modal heading (confirms modal opened)
+  const modalHeading = page.getByRole('heading', { name: /ny måned/i });
+  await expect(modalHeading).toBeVisible({ timeout: 5000 });
 
-      // Scroll to ensure button is visible
-      await nyMaanedBtn.scrollIntoViewIfNeeded({ timeout: 1000 }).catch(() => {});
-
-      // Check if visible
-      const isVisible = await nyMaanedBtn.isVisible({ timeout: 1000 }).catch(() => false);
-      if (isVisible) {
-        found = true;
-        break;
-      }
-    } catch {
-      // Ignore and retry
-    }
-    // Wait before retry
-    if (i < 4) {
-      await page.waitForTimeout(i === 0 ? 100 : 500);
-    }
-  }
-
-  if (!found) {
-    // As a last resort, try to find any button with "Ny" or "måned" text
-    const fallbackBtn = page.getByRole('button').filter({ hasText: /ny|måned/i }).first();
-    const fallbackVisible = await fallbackBtn.isVisible({ timeout: 2000 }).catch(() => false);
-    if (fallbackVisible) {
-      await fallbackBtn.click();
-      found = true;
-    }
-  }
-
-  if (!found) {
-    throw new Error('Could not find "Ny måned" button after 5 attempts');
-  }
-
-  // If we used the regular button, click it
-  if (found && await nyMaanedBtn.isVisible({ timeout: 1000 }).catch(() => false)) {
-    await nyMaanedBtn.click();
-  }
-
-  // Wait for modal to open
-  const modal = page.getByRole('heading', { name: /ny måned/i });
-  await expect(modal).toBeVisible({ timeout: 5000 });
-
-  // Wait for modal content to be fully rendered
-  await page.waitForLoadState('domcontentloaded');
-
-  // Select month using the first select
-  const selects = page.locator('select.new-month-modal__select');
-  const monthSelect = selects.first();
-  await expect(monthSelect).toBeVisible({ timeout: 5000 });
+  // Select month - Playwright waits for select to be ready
+  const monthSelect = page.locator('select.new-month-modal__select').first();
+  await expect(monthSelect).toBeVisible();
   await monthSelect.selectOption(String(monthIndex));
 
-  // Select year using the second select
-  const yearSelect = selects.nth(1);
-  await expect(yearSelect).toBeVisible({ timeout: 5000 });
+  // Select year
+  const yearSelect = page.locator('select.new-month-modal__select').nth(1);
+  await expect(yearSelect).toBeVisible();
   await yearSelect.selectOption(String(year));
 
-  // Fill in account values if provided
+  // Fill account values
   if (data.accountValues) {
-    // Find all NumberInput components
-    // NumberInput renders as: <div class="number-input"><label>Name</label><input type="text" ...>
-    const numberInputDivs = page.locator('.number-input');
-    const inputCount = await numberInputDivs.count();
+    for (const [accountName, value] of Object.entries(data.accountValues)) {
+      const input = page
+        .locator('.number-input')
+        .filter({ hasText: new RegExp(accountName, 'i') })
+        .locator('input');
 
-    if (inputCount > 0) {
-      // For each account value provided, find matching input by label text
-      for (const [accountName, value] of Object.entries(data.accountValues)) {
-        // Find NumberInput with label containing the account name
-        const matchingDiv = numberInputDivs.filter({
-          hasText: new RegExp(accountName, 'i')
-        }).first();
-
-        const isVisible = await matchingDiv.isVisible({ timeout: 1000 }).catch(() => false);
-        if (isVisible) {
-          // Find the input within this div
-          const input = matchingDiv.locator('input[type="text"]');
-          await input.fill(String(value));
-        }
+      const inputCount = await input.count();
+      if (inputCount > 0) {
+        await input.first().fill(String(value));
       }
     }
   }
 
-  // Click Lagre button - use the primary button which is the save button
-  const lagereBtnContainer = page.locator('.new-month-modal__actions');
-  const lagereBtn = lagereBtnContainer.getByRole('button', { name: /lagre/i });
-  await expect(lagereBtn).toBeVisible({ timeout: 5000 });
+  // Click save
+  const lagereBtn = page.locator('.new-month-modal__actions').getByRole('button', { name: /lagre/i });
+  await expect(lagereBtn).toBeVisible();
   await lagereBtn.click();
 
-  // Wait for modal to close and API response
-  await page.waitForURL(/\/portefolje/, { timeout: 10000 }).catch(() => {});
-  await page.waitForLoadState('networkidle');
+  // Wait for modal to close
+  await expect(modalHeading).not.toBeVisible({ timeout: 10000 });
 }
 
 /**
  * Edit a cell value in the spreadsheet
- * @param page The Playwright page object
- * @param rowIndex Row index (0-based)
- * @param columnIndex Column index among editable columns (0-based)
- * @param value The new value to enter
  */
 export async function editCell(
   page: Page,
@@ -344,19 +251,18 @@ export async function editCell(
 
   // Fill in the value
   const input = cell.locator('input[type="number"]');
+  await expect(input).toBeVisible();
   await input.fill(String(value));
 
   // Press Enter to save
   await input.press('Enter');
 
-  // Wait for API response
-  await page.waitForLoadState('networkidle');
+  // Wait for input to disappear (saved)
+  await expect(input).not.toBeVisible({ timeout: 5000 });
 }
 
 /**
  * Delete a snapshot
- * @param page The Playwright page object
- * @param rowIndex Row index to delete (0-based)
  */
 export async function deleteSnapshot(page: Page, rowIndex: number): Promise<void> {
   const dataRows = page.locator('tbody tr');
@@ -368,22 +274,24 @@ export async function deleteSnapshot(page: Page, rowIndex: number): Promise<void
 
   // Confirm deletion in modal
   const confirmBtn = page.getByRole('button', { name: /slett/i }).last();
+  await expect(confirmBtn).toBeVisible();
   await confirmBtn.click();
 
-  // Wait for deletion to complete
-  await page.waitForLoadState('networkidle');
+  // Wait for row to be removed
+  await expect(row).not.toBeVisible({ timeout: 5000 });
 }
 
 /**
  * Export portfolio data to CSV
- * @param page The Playwright page object
  */
 export async function exportPortfolioData(page: Page): Promise<void> {
   const eksportBtn = page.getByRole('button', { name: /eksporter/i });
-  await eksportBtn.click();
+  await expect(eksportBtn).toBeVisible();
 
-  // Wait for download to start
-  await page.waitForTimeout(500);
+  // Start waiting for download before clicking
+  const downloadPromise = page.waitForEvent('download');
+  await eksportBtn.click();
+  await downloadPromise;
 }
 
 /**
@@ -395,10 +303,8 @@ export async function exportPortfolioData(page: Page): Promise<void> {
  */
 export async function navigateToEconomy(page: Page): Promise<void> {
   await page.goto('/min-okonomi');
-  await page.waitForLoadState('networkidle');
 
   // Wait for the wizard to render (not just the loading spinner)
-  // The wizard has a progress bar with steps
   const wizardProgress = page.locator('.wizard-progress');
   await expect(wizardProgress).toBeVisible({ timeout: 30000 });
 
@@ -416,48 +322,64 @@ export async function navigateToWizardStep(page: Page, step: 1 | 2 | 3 | 4): Pro
   const wizardProgress = page.locator('.wizard-progress');
   await expect(wizardProgress).toBeVisible({ timeout: 10000 });
 
-  // Check current step
+  // Get current step
   const getCurrentStep = async (): Promise<number> => {
     const steps = page.locator('.wizard-progress__step');
     const count = await steps.count();
     for (let i = 0; i < count; i++) {
       const stepEl = steps.nth(i);
-      const isCurrent = await stepEl.evaluate(el =>
+      const isCurrent = await stepEl.evaluate((el) =>
         el.classList.contains('wizard-progress__step--current')
       );
       if (isCurrent) return i + 1;
     }
-    return 1;
+    throw new Error('Could not determine current wizard step');
   };
 
   let currentStep = await getCurrentStep();
+  let iterations = 0;
+  const maxIterations = 10;
 
   // Navigate forward or backward to reach target step
-  while (currentStep !== step) {
+  while (currentStep !== step && iterations < maxIterations) {
+    iterations++;
+
     if (currentStep < step) {
-      // Go forward - wait for button to be visible and enabled
+      // Go forward
       const nextBtn = page.getByRole('button', { name: /neste/i });
-      await expect(nextBtn).toBeVisible({ timeout: 5000 });
-      await expect(nextBtn).toBeEnabled({ timeout: 5000 });
+      await expect(nextBtn).toBeVisible();
+      await expect(nextBtn).toBeEnabled();
       await nextBtn.click();
-      await page.waitForLoadState('networkidle');
+
+      // Wait for step indicator to update
+      await expect(async () => {
+        const newStep = await getCurrentStep();
+        expect(newStep).toBeGreaterThan(currentStep);
+      }).toPass({ timeout: 5000 });
     } else {
       // Go backward - click on the step in progress bar
       const targetStepEl = page.locator('.wizard-progress__step').nth(step - 1);
       await targetStepEl.click();
-      await page.waitForLoadState('networkidle');
+
+      // Wait for step indicator to update
+      await expect(async () => {
+        const newStep = await getCurrentStep();
+        expect(newStep).toBeLessThan(currentStep);
+      }).toPass({ timeout: 5000 });
     }
+
     currentStep = await getCurrentStep();
+  }
+
+  if (currentStep !== step) {
+    throw new Error(`Failed to navigate to step ${step}, stuck at step ${currentStep}`);
   }
 }
 
 /**
  * Get an account item by its name (searches input values)
- * NOTE: This returns a locator that may match nothing if name not found.
- * For reliable lookup, use getAccountItemByName() instead.
  */
 export function getAccountItem(page: Page, name: string): Locator {
-  // Use XPath contains to match the name input value
   return page.locator(`.accounts-list__item:has(.accounts-list__name-input[value="${name}"])`);
 }
 
@@ -471,7 +393,7 @@ export async function getAccountItemByName(page: Page, name: string): Promise<Lo
   for (let i = 0; i < count; i++) {
     const item = items.nth(i);
     const nameInput = item.locator('.accounts-list__name-input');
-    const inputValue = await nameInput.inputValue().catch(() => '');
+    const inputValue = await nameInput.inputValue();
     if (inputValue === name) {
       return item;
     }
@@ -485,11 +407,14 @@ export async function getAccountItemByName(page: Page, name: string): Promise<Lo
  * Get an account item by partial name match (case-insensitive)
  */
 export function getAccountItemByPartialName(page: Page, partialName: string): Locator {
-  return page.locator('.accounts-list__item').filter({
-    has: page.locator('.accounts-list__name-input')
-  }).filter({
-    hasText: new RegExp(partialName, 'i')
-  });
+  return page
+    .locator('.accounts-list__item')
+    .filter({
+      has: page.locator('.accounts-list__name-input'),
+    })
+    .filter({
+      hasText: new RegExp(partialName, 'i'),
+    });
 }
 
 /**
@@ -504,23 +429,29 @@ export async function addAccount(
     remainingYears?: number;
   }
 ): Promise<void> {
+  // Get initial count
+  const items = page.locator('.accounts-list__item');
+  const initialCount = await items.count();
+
   // Click add button
   const addBtn = page.locator('.accounts-list__add-btn');
+  await expect(addBtn).toBeVisible();
   await addBtn.click();
 
   // Wait for new account to appear
-  await page.waitForTimeout(300);
+  await expect(items).toHaveCount(initialCount + 1, { timeout: 5000 });
 
   // Find the last account item (the newly added one)
-  const items = page.locator('.accounts-list__item');
   const lastItem = items.last();
 
   // Fill in name
   const nameInput = lastItem.locator('.accounts-list__name-input');
+  await expect(nameInput).toBeVisible();
   await nameInput.fill(data.name);
 
-  // Fill in value - NumberInput uses type="text" with aria-label="Verdi"
+  // Fill in value
   const valueInput = lastItem.locator('.accounts-list__value-row input');
+  await expect(valueInput).toBeVisible();
   await valueInput.fill(String(data.value));
 
   // Fill loan details if provided (for gjeld)
@@ -550,6 +481,7 @@ export async function editAccount(
   }
 ): Promise<void> {
   const item = await getAccountItemByName(page, currentName);
+  await expect(item).toBeVisible({ timeout: 5000 });
 
   if (updates.name !== undefined) {
     const nameInput = item.locator('.accounts-list__name-input');
@@ -557,7 +489,9 @@ export async function editAccount(
   }
 
   if (updates.value !== undefined) {
-    const valueInput = item.locator('.accounts-list__value-row input[type="text"], .accounts-list__value-row input[type="number"]');
+    const valueInput = item.locator(
+      '.accounts-list__value-row input[type="text"], .accounts-list__value-row input[type="number"]'
+    );
     await valueInput.fill(String(updates.value));
   }
 
@@ -584,11 +518,20 @@ export async function editAccount(
  * Delete an account by name
  */
 export async function deleteAccount(page: Page, accountName: string): Promise<void> {
+  // Get initial count
+  const items = page.locator('.accounts-list__item');
+  const initialCount = await items.count();
+
+  // Find and click delete on the specified account
   const item = await getAccountItemByName(page, accountName);
+  await expect(item).toBeVisible({ timeout: 5000 });
+
   const deleteBtn = item.locator('button[aria-label^="Slett"]');
+  await expect(deleteBtn).toBeVisible();
   await deleteBtn.click();
-  // Wait for UI to update
-  await page.waitForTimeout(200);
+
+  // Wait for account count to decrease (more reliable than checking specific element)
+  await expect(items).toHaveCount(initialCount - 1, { timeout: 5000 });
 }
 
 /**
@@ -596,6 +539,8 @@ export async function deleteAccount(page: Page, accountName: string): Promise<vo
  */
 export async function getCategoryTotal(page: Page): Promise<number> {
   const totalEl = page.locator('.accounts-list__total-value');
+  await expect(totalEl).toBeVisible();
+
   const text = await totalEl.textContent();
   if (!text) return 0;
 
@@ -626,11 +571,10 @@ export async function hasError(page: Page, pattern: string | RegExp): Promise<bo
 
 /**
  * Complete the wizard by clicking through remaining steps
- * Button names: "Neste" (steps 1-3), "Fullfør" (step 4)
  */
 export async function completeWizard(page: Page): Promise<void> {
-  // Keep clicking Next/Fullfør until we navigate to /oversikt
   const maxAttempts = 10;
+
   for (let i = 0; i < maxAttempts; i++) {
     // Check if we've left the wizard (navigated away)
     if (page.url().includes('/oversikt')) {
@@ -639,30 +583,26 @@ export async function completeWizard(page: Page): Promise<void> {
 
     // Check if we're still in the wizard
     const wizard = page.locator('.onboarding-wizard');
-    const isVisible = await wizard.isVisible().catch(() => false);
-    if (!isVisible) break;
+    const wizardCount = await wizard.count();
+    if (wizardCount === 0) break;
 
     // Find the primary action button in the wizard footer
     const primaryBtn = page.locator('.onboarding-wizard__btn--primary');
-    const btnText = await primaryBtn.textContent().catch(() => '');
+    const btnText = await primaryBtn.textContent();
 
     if (btnText?.includes('Fullfør')) {
       await primaryBtn.click();
-      // Wait for submission and redirect to /oversikt with longer timeout
-      await page.waitForURL('**/oversikt', { timeout: 20000 }).catch(() => {});
+      // Wait for redirect to /oversikt
+      await page.waitForURL('**/oversikt', { timeout: 20000 });
+      break;
     } else if (btnText?.includes('Neste')) {
       await primaryBtn.click();
-      // Wait for step transition
-      await page.waitForLoadState('networkidle');
-      // Small delay to ensure step has changed
-      await page.waitForTimeout(200);
+      // Wait for step to change by checking that button is enabled again
+      await expect(primaryBtn).toBeEnabled({ timeout: 5000 });
     } else {
       break;
     }
   }
-
-  // Final verification - ensure we're on oversikt page
-  await page.waitForLoadState('networkidle');
 }
 
 /**

@@ -15,6 +15,7 @@ import { getLogContext } from './loggerContext';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isDevelopment = process.env.NODE_ENV === 'development';
+const logLevel = process.env.LOG_LEVEL || (isProduction ? 'info' : 'debug');
 
 /**
  * Custom format to inject request context from AsyncLocalStorage
@@ -81,7 +82,7 @@ const consoleFormat = winston.format.combine(
 
 // Create logger instance
 export const logger = winston.createLogger({
-  level: isProduction ? 'info' : 'debug',
+  level: logLevel,
   format: logFormat,
   transports: [
     new winston.transports.Console({

@@ -1,25 +1,16 @@
-import { test, expect, login } from './fixtures';
+import { test, expect } from './fixtures';
 
 test.describe('Import Agent', () => {
-  test.beforeEach(async ({ page }) => {
-    // Clear auth state first to ensure clean start, then login
-    await page.goto('/');
-    await page.evaluate(() => {
-      localStorage.removeItem('finans_demo_token');
-      localStorage.setItem('finans_dev_logout', 'true');
-    });
-    await login(page);
-  });
+  // Auth pre-loaded from global setup - no beforeEach login needed
 
   test('displays initial greeting message', async ({ page }) => {
     await page.goto('/import');
-    await page.waitForLoadState('networkidle');
-
-    // Check that page loaded
-    expect(page.url()).toContain('/import');
 
     // Check for page header
     await expect(page.getByRole('heading', { name: 'Importer data' })).toBeVisible();
+
+    // Check that page loaded
+    expect(page.url()).toContain('/import');
 
     // Check for initial greeting in messages area
     const messagesArea = page.locator('.chatbot__messages');
@@ -31,10 +22,9 @@ test.describe('Import Agent', () => {
 
   test('user can send message and receive response', async ({ page }) => {
     await page.goto('/import');
-    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('heading', { name: 'Importer data' })).toBeVisible();
 
     // Get initial message count
-    const messagesArea = page.locator('.chatbot__messages');
     const initialMessages = page.locator('.chat-message');
     const initialCount = await initialMessages.count();
 
@@ -53,9 +43,6 @@ test.describe('Import Agent', () => {
     // Use longer timeout for LLM API call
     await expect(typingIndicator).toBeHidden({ timeout: 45000 });
 
-    // Wait for network to settle
-    await page.waitForLoadState('networkidle').catch(() => {});
-
     // Verify we have more messages now (user + response)
     const finalMessages = page.locator('.chat-message');
     const finalCount = await finalMessages.count();
@@ -68,7 +55,7 @@ test.describe('Import Agent', () => {
 
   test('multi-turn conversation works', async ({ page }) => {
     await page.goto('/import');
-    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('heading', { name: 'Importer data' })).toBeVisible();
 
     // Send first message
     const textarea = page.locator('.chatbot__input');
@@ -99,7 +86,7 @@ test.describe('Import Agent', () => {
 
   test('reset button clears conversation', async ({ page }) => {
     await page.goto('/import');
-    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('heading', { name: 'Importer data' })).toBeVisible();
 
     // Send a message to trigger the reset button
     const textarea = page.locator('.chatbot__input');
@@ -123,13 +110,11 @@ test.describe('Import Agent', () => {
     // Click reset
     await resetButton.click();
 
-    // Wait for UI to update
-    await page.waitForTimeout(300);
-
-    // Should be back to initial messages only (2: user greeting + assistant response)
-    messages = page.locator('.chat-message');
-    const countAfterReset = await messages.count();
-    expect(countAfterReset).toBeLessThanOrEqual(3); // Initial messages + maybe some render artifacts
+    // Wait for message count to decrease
+    await expect(async () => {
+      const count = await page.locator('.chat-message').count();
+      expect(count).toBeLessThanOrEqual(3);
+    }).toPass({ timeout: 5000 });
 
     // Reset button should no longer be visible (only shows when messages.length > 2)
     await expect(resetButton).not.toBeVisible();
@@ -137,21 +122,19 @@ test.describe('Import Agent', () => {
 
   test('send button is disabled while loading', async ({ page }) => {
     await page.goto('/import');
-    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('heading', { name: 'Importer data' })).toBeVisible();
 
     const textarea = page.locator('.chatbot__input');
     const sendButton = page.locator('.chatbot__send');
 
     // Initially, send button should be disabled (empty textarea)
-    let isDisabled = await sendButton.isDisabled();
-    expect(isDisabled).toBe(true);
+    await expect(sendButton).toBeDisabled();
 
     // Fill textarea
     await textarea.fill('Test message');
 
     // Now button should be enabled
-    isDisabled = await sendButton.isDisabled();
-    expect(isDisabled).toBe(false);
+    await expect(sendButton).toBeEnabled();
 
     // Click send
     await sendButton.click();
@@ -159,28 +142,23 @@ test.describe('Import Agent', () => {
     // Button should be disabled while loading
     const typingIndicator = page.locator('.chatbot__typing');
     await expect(typingIndicator).toBeVisible({ timeout: 5000 });
-
-    isDisabled = await sendButton.isDisabled();
-    expect(isDisabled).toBe(true);
+    await expect(sendButton).toBeDisabled();
 
     // Wait for response
     await expect(typingIndicator).toBeHidden({ timeout: 45000 });
 
-    // Button should be enabled again (after textarea is empty)
     // Since textarea was cleared, button will be disabled until user types again
-    isDisabled = await sendButton.isDisabled();
-    expect(isDisabled).toBe(true);
+    await expect(sendButton).toBeDisabled();
   });
 
   test('textarea is disabled while loading', async ({ page }) => {
     await page.goto('/import');
-    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('heading', { name: 'Importer data' })).toBeVisible();
 
     const textarea = page.locator('.chatbot__input');
 
     // Initially enabled
-    let isDisabled = await textarea.isDisabled();
-    expect(isDisabled).toBe(false);
+    await expect(textarea).toBeEnabled();
 
     // Type and send
     await textarea.fill('Test message');
@@ -191,20 +169,18 @@ test.describe('Import Agent', () => {
     await expect(typingIndicator).toBeVisible({ timeout: 5000 });
 
     // Should be disabled while loading
-    isDisabled = await textarea.isDisabled();
-    expect(isDisabled).toBe(true);
+    await expect(textarea).toBeDisabled();
 
     // Wait for response
     await expect(typingIndicator).toBeHidden({ timeout: 45000 });
 
     // Should be enabled again
-    isDisabled = await textarea.isDisabled();
-    expect(isDisabled).toBe(false);
+    await expect(textarea).toBeEnabled();
   });
 
   test('messages auto-scroll to bottom', async ({ page }) => {
     await page.goto('/import');
-    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('heading', { name: 'Importer data' })).toBeVisible();
 
     const textarea = page.locator('.chatbot__input');
 
@@ -217,11 +193,6 @@ test.describe('Import Agent', () => {
       const typingIndicator = page.locator('.chatbot__typing');
       await expect(typingIndicator).toBeVisible({ timeout: 5000 });
       await expect(typingIndicator).toBeHidden({ timeout: 45000 });
-
-      // Small delay between messages
-      if (i < 1) {
-        await page.waitForTimeout(500);
-      }
     }
 
     // Messages area should be scrolled to show latest message
@@ -235,10 +206,9 @@ test.describe('Import Agent', () => {
 
   test('enter key submits message (shift+enter for new line)', async ({ page }) => {
     await page.goto('/import');
-    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('heading', { name: 'Importer data' })).toBeVisible();
 
     const textarea = page.locator('.chatbot__input');
-    const sendButton = page.locator('.chatbot__send');
     const initialMessages = page.locator('.chat-message');
     const initialCount = await initialMessages.count();
 
@@ -265,7 +235,7 @@ test.describe('Import Agent', () => {
 
   test('page navigation works with back button', async ({ page }) => {
     await page.goto('/import');
-    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('heading', { name: 'Importer data' })).toBeVisible();
 
     // Click back button
     const backButton = page.getByRole('button', { name: /Tilbake til portefølje/i });
@@ -279,7 +249,7 @@ test.describe('Import Agent', () => {
 
   test('breadcrumb navigation works', async ({ page }) => {
     await page.goto('/import');
-    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('heading', { name: 'Importer data' })).toBeVisible();
 
     // Click on breadcrumb link to portfolio (scope to breadcrumb to avoid header nav)
     const breadcrumbLink = page.getByLabel('Breadcrumb').getByRole('link', { name: /Portefølje/ });
@@ -292,27 +262,24 @@ test.describe('Import Agent', () => {
 
   test('handles empty/whitespace input gracefully', async ({ page }) => {
     await page.goto('/import');
-    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('heading', { name: 'Importer data' })).toBeVisible();
 
     const textarea = page.locator('.chatbot__input');
     const sendButton = page.locator('.chatbot__send');
 
     // Send button should be disabled for empty textarea
-    let isDisabled = await sendButton.isDisabled();
-    expect(isDisabled).toBe(true);
+    await expect(sendButton).toBeDisabled();
 
     // Fill with only spaces
     await textarea.fill('   ');
 
     // Button should still be disabled (trim is empty)
-    isDisabled = await sendButton.isDisabled();
-    expect(isDisabled).toBe(true);
+    await expect(sendButton).toBeDisabled();
 
     // Fill with actual content
     await textarea.fill('Real message');
 
     // Now button should be enabled
-    isDisabled = await sendButton.isDisabled();
-    expect(isDisabled).toBe(false);
+    await expect(sendButton).toBeEnabled();
   });
 });

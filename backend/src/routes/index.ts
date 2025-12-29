@@ -1,5 +1,7 @@
 import { Router, Request, Response, IRouter } from 'express';
 import { validateAuth } from '../middleware/auth';
+import { getUsersContainer } from '../config/cosmosdb';
+import { logger } from '../utils/logger';
 import userRoutes from './userRoutes';
 import accountRoutes from './accountRoutes';
 import snapshotRoutes from './snapshotRoutes';
@@ -24,17 +26,45 @@ const router: IRouter = Router();
  * Health check endpoint
  *
  * GET /api/v1/health
+ * GET /api/v1/health?deep=true - Also verifies DB connection
+ *
  * Returns server health status, timestamp, and uptime
+ * Use deep=true to verify database connection is working (for E2E tests)
  */
-router.get('/health', (_req: Request, res: Response) => {
-  res.status(200).json({
-    data: {
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-      environment: process.env.NODE_ENV || 'development'
-    },
-    success: true
+router.get('/health', async (req: Request, res: Response) => {
+  const isDeep = req.query.deep === 'true';
+
+  const baseHealth = {
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development',
+  };
+
+  if (!isDeep) {
+    return res.status(200).json({ data: baseHealth, success: true });
+  }
+
+  // Deep check: verify database connection is working
+  try {
+    const container = getUsersContainer();
+    // Attempt to read a non-existent item - 404 is fine, other errors mean DB is down
+    await container.item('__healthcheck__', '__healthcheck__').read();
+  } catch (error: unknown) {
+    const cosmosError = error as { code?: number };
+    // 404 is expected (item doesn't exist), any other error means DB problem
+    if (cosmosError.code !== 404) {
+      logger.warn('Deep health check failed - DB unreachable', { error });
+      return res.status(503).json({
+        data: { ...baseHealth, status: 'degraded', db: 'unreachable' },
+        success: false,
+      });
+    }
+  }
+
+  return res.status(200).json({
+    data: { ...baseHealth, db: 'connected' },
+    success: true,
   });
 });
 

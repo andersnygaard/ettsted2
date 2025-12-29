@@ -1,16 +1,10 @@
-import { test, expect, login } from './fixtures';
+import { test, expect } from './fixtures';
 
 test.describe('Keyboard Navigation', () => {
   test.beforeEach(async ({ page }) => {
-    // Clear auth state first to ensure clean start, then login
-    await page.goto('/');
-    await page.evaluate(() => {
-      localStorage.removeItem('finans_demo_token');
-      localStorage.setItem('finans_dev_logout', 'true');
-    });
-    await login(page);
+    // Auth pre-loaded from global setup - just navigate
     await page.goto('/oversikt');
-    await page.waitForLoadState('networkidle');
+    await expect(page.locator('.app-header')).toBeVisible();
   });
 
   test('skip link appears on Tab and navigates to main content', async ({ page }) => {
@@ -101,19 +95,18 @@ test.describe('Keyboard Navigation', () => {
 
       // Space should activate button (we're just testing it doesn't error)
       await page.keyboard.press('Space');
-      // Brief wait to allow any action
-      await page.waitForTimeout(100);
+      // Button activation verified by no errors
     }
   });
 
   test('modal focus trapping with Tab key', async ({ page }) => {
     // Navigate to portfolio page where modal can be opened
     await page.goto('/portefolje');
-    await page.waitForLoadState('networkidle');
+    await expect(page.locator('.app-header')).toBeVisible();
 
     // Open "Ny måned" modal
     const nyMaanedBtn = page.getByRole('button', { name: /ny måned/i });
-    const btnVisible = await nyMaanedBtn.isVisible({ timeout: 3000 }).catch(() => false);
+    const btnVisible = await nyMaanedBtn.isVisible();
 
     if (!btnVisible) {
       test.skip();
@@ -121,7 +114,7 @@ test.describe('Keyboard Navigation', () => {
 
     await nyMaanedBtn.click();
 
-    // Wait for modal to appear (specifically the "Ny måned" modal, not mobile menu)
+    // Wait for modal (specifically the "Ny måned" modal, not mobile menu)
     const modal = page.getByRole('dialog', { name: 'Ny måned' });
     await expect(modal).toBeVisible({ timeout: 5000 });
 
@@ -134,7 +127,6 @@ test.describe('Keyboard Navigation', () => {
     // Tab through focusable elements and verify we can cycle through them
     if (focusableCount > 0) {
       const firstElement = modalFocusable.nth(0);
-      const lastElement = modalFocusable.nth(focusableCount - 1);
 
       // Focus first element
       await firstElement.focus();
@@ -158,11 +150,11 @@ test.describe('Keyboard Navigation', () => {
   test('Escape key closes modal', async ({ page }) => {
     // Navigate to portfolio page
     await page.goto('/portefolje');
-    await page.waitForLoadState('networkidle');
+    await expect(page.locator('.app-header')).toBeVisible();
 
     // Open modal
     const nyMaanedBtn = page.getByRole('button', { name: /ny måned/i });
-    const btnVisible = await nyMaanedBtn.isVisible({ timeout: 3000 }).catch(() => false);
+    const btnVisible = await nyMaanedBtn.isVisible();
 
     if (!btnVisible) {
       test.skip();
@@ -177,15 +169,14 @@ test.describe('Keyboard Navigation', () => {
     // Press Escape
     await page.keyboard.press('Escape');
 
-    // Modal should be hidden (allow animation time)
-    await page.waitForTimeout(300);
-    await expect(modal).not.toBeVisible();
+    // Modal should be hidden
+    await expect(modal).not.toBeVisible({ timeout: 5000 });
   });
 
   test('form inputs are keyboard accessible', async ({ page }) => {
     // Navigate to settings page which has forms
     await page.goto('/min-okonomi');
-    await page.waitForLoadState('networkidle');
+    await expect(page.locator('.app-header')).toBeVisible();
 
     // Find input fields
     const inputs = page.locator('input[type="text"], input[type="number"], input[type="email"], select');
@@ -200,8 +191,6 @@ test.describe('Keyboard Navigation', () => {
       // Tab to next input if available
       if (inputCount > 1) {
         await page.keyboard.press('Tab');
-        const secondInput = inputs.nth(1);
-        // Second focusable element might be a label or something else, but we can tab
         // Just verify we can tab without error
       }
     }
@@ -244,15 +233,9 @@ test.describe('Keyboard Navigation', () => {
       // Verify link is accessible via Enter key
       // We'll press Enter and check if navigation happens (for internal links)
       if (href && !href.startsWith('http')) {
-        const oldUrl = page.url();
         await page.keyboard.press('Enter');
-
         // Wait for potential navigation
-        await page.waitForTimeout(200);
-        const newUrl = page.url();
-
-        // Navigation may or may not have happened depending on the link
-        // Just verify no errors occurred
+        await expect(page.locator('.app-header')).toBeVisible();
       }
     }
   });
@@ -286,11 +269,11 @@ test.describe('Keyboard Navigation', () => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await expect(page.locator('.app-header')).toBeVisible();
 
     // Find hamburger menu button (mobile menu trigger)
     const hamburger = page.getByRole('button', { name: /åpne meny|menu/i });
-    const hamburgerVisible = await hamburger.isVisible({ timeout: 2000 }).catch(() => false);
+    const hamburgerVisible = await hamburger.isVisible();
 
     if (!hamburgerVisible) {
       test.skip();
@@ -302,17 +285,14 @@ test.describe('Keyboard Navigation', () => {
 
     // Press Enter to open menu
     await page.keyboard.press('Enter');
-    await page.waitForTimeout(300);
 
-    // Verify menu opened (check for nav links visibility)
-    const mobileNav = page.locator('.app-header__mobile-nav, .mobile-menu, nav');
-    const navVisible = await mobileNav.first().isVisible({ timeout: 2000 }).catch(() => false);
+    // Verify menu opened
+    const mobileMenu = page.locator('[role="dialog"][aria-label="Navigasjonsmeny"]');
+    await expect(mobileMenu).toBeVisible({ timeout: 5000 });
 
-    if (navVisible) {
-      // Tab through mobile menu items
-      await page.keyboard.press('Tab');
-      // Verify we can tab without error
-    }
+    // Tab through mobile menu items
+    await page.keyboard.press('Tab');
+    // Verify we can tab without error
   });
 
   test('all page navigation is keyboard navigable', async ({ page }) => {
@@ -330,7 +310,7 @@ test.describe('Keyboard Navigation', () => {
       // Navigate to the page and wait for URL to stabilize
       await page.goto(item.path);
       await page.waitForURL(`**${item.path}`, { timeout: 15000 });
-      await page.waitForLoadState('networkidle');
+      await expect(page.locator('.app-header')).toBeVisible();
 
       // Verify page loaded
       expect(page.url()).toContain(item.path);
@@ -341,7 +321,7 @@ test.describe('Keyboard Navigation', () => {
 
       // Verify we can focus an element in main content
       const buttons = mainContent.getByRole('button').first();
-      const hasButton = await buttons.count().catch(() => 0);
+      const hasButton = await buttons.count();
       if (hasButton > 0) {
         await buttons.focus();
         // Just verify focus works

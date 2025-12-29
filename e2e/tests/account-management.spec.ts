@@ -1,7 +1,6 @@
 import {
   test,
   expect,
-  login,
   navigateToEconomy,
   navigateToWizardStep,
   addAccount,
@@ -18,13 +17,7 @@ import {
 
 test.describe('Account Management', () => {
   test.beforeEach(async ({ page }) => {
-    // Clear auth state first to ensure clean start, then login
-    await page.goto('/');
-    await page.evaluate(() => {
-      localStorage.removeItem('finans_demo_token');
-      localStorage.setItem('finans_dev_logout', 'true');
-    });
-    await login(page);
+    // Auth pre-loaded from global setup - just navigate
     await navigateToEconomy(page);
   });
 
@@ -377,7 +370,6 @@ test.describe('Account Management', () => {
 
       // Error should be cleared after fixing and clicking next
       await nextBtn.click();
-      await page.waitForLoadState('networkidle');
 
       // Should be on next step now - verify we're on Gjeld step
       // Check that the wizard content heading shows "Gjeld"
@@ -399,7 +391,6 @@ test.describe('Account Management', () => {
 
       // Go to portfolio page
       await page.goto('/portefolje');
-      await page.waitForLoadState('networkidle');
 
       // Wait for the spreadsheet table to render (not just loading skeleton)
       const table = page.locator('.spreadsheet--desktop');
