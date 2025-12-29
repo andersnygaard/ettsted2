@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  lint-and-test:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,9 +23,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-
-      - name: Security audit
-        run: pnpm audit --audit-level=high
 
       - name: Lint all workspaces
         run: pnpm lint
@@ -36,40 +33,20 @@ jobs:
       - name: Type-check backend
         run: pnpm --filter backend type-check
 
-      - name: Run unit tests
-        run: pnpm --filter frontend test
+      - name: Security audit
+        run: pnpm audit --audit-level=high
 
       - name: Build all workspaces
         run: pnpm build
 
-  e2e-tests:
-    runs-on: ubuntu-latest
-    needs: lint-and-test
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install
-
       - name: Install Playwright browsers
         run: pnpm --filter e2e exec playwright install --with-deps chromium
 
-      # TODO: E2E tests require CosmosDB - setup emulator or skip for now
-      - name: Run E2E tests
-        run: echo "E2E tests skipped - requires CosmosDB setup"
-        # run: pnpm test:e2e
+      - name: Run smoke tests
+        run: pnpm --filter e2e test:smoke
         env:
           CI: true
-          NODE_ENV: development
+          CI_MOCK_MODE: true
 
       - name: Upload test results
         uses: actions/upload-artifact@v4

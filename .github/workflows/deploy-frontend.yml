@@ -1,17 +1,15 @@
 name: Deploy Frontend
 
 on:
-  push:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
     branches: [main]
-    paths:
-      - 'frontend/**'
-      - 'components/**'
-      - 'pnpm-lock.yaml'
-      - '.github/workflows/deploy-frontend.yml'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v4
 
