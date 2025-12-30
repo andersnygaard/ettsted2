@@ -111,6 +111,7 @@ test.describe('Calculation Accuracy Tests', () => {
 
     await page.goto('/sparing');
     await expect(page.locator('.app-header')).toBeVisible();
+    await page.waitForLoadState('networkidle');
 
     // Verify page has content
     const pageContent = page.locator('body');
@@ -122,6 +123,7 @@ test.describe('Calculation Accuracy Tests', () => {
   test('F.I.R.E. progress displays savings vs target', async ({ page }) => {
     await page.goto('/sparing');
     await expect(page.locator('.app-header')).toBeVisible();
+    await page.waitForLoadState('networkidle');
 
     // Verify page has content
     const pageContent = page.locator('body');
@@ -188,6 +190,7 @@ test.describe('Calculation Accuracy Tests', () => {
 
     await page.goto('/sparing');
     await expect(page.locator('.app-header')).toBeVisible();
+    await page.waitForLoadState('networkidle');
 
     // Verify sparing page loads with content
     const pageContent = page.locator('body');
@@ -207,6 +210,7 @@ test.describe('Calculation Accuracy Tests', () => {
     // Get sparing total
     await page.goto('/sparing');
     await expect(page.locator('.app-header')).toBeVisible();
+    await page.waitForLoadState('networkidle');
 
     const sparingTotalText = page.locator('text=/sum sparing|total sparing/i').first();
     const sparingTotalVisible = await sparingTotalText.isVisible();

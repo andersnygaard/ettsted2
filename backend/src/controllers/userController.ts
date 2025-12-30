@@ -19,6 +19,8 @@ import { deleteAllSnapshotsForUser } from '../services/portfolioService';
 import { asyncHandler } from '../middleware/errorHandler';
 import { NotFoundError, ConflictError } from '../errors';
 import { logger } from '../utils/logger';
+import { isCiMockMode } from '../config/cosmosdb';
+import { mockUser } from '../utils/mockData';
 
 /**
  * Get current user profile
@@ -34,6 +36,16 @@ import { logger } from '../utils/logger';
  * @returns 200 with user data, or 404 if user not found
  */
 export const getCurrentUser = asyncHandler(async (req: Request, res: Response) => {
+  // In CI mock mode, return mock user
+  if (isCiMockMode()) {
+    logger.debug('Returning mock user in CI mode');
+    res.json({
+      data: mockUser,
+      success: true
+    });
+    return;
+  }
+
   const userId = req.user!.userId;
 
   logger.debug('Fetching user profile', { userId });

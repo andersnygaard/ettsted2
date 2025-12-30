@@ -14,6 +14,8 @@ import * as userService from '../services/userService';
 import * as calc from '../services/calculationService';
 import { compareDatesAsc } from '../utils/dateUtils';
 import { MonthlySnapshot } from '../models/Portfolio';
+import { isCiMockMode } from '../config/cosmosdb';
+import { getMockOversikt, getMockSparing, getMockGjeld, getMockPensjon } from '../utils/mockData';
 
 const router: IRouter = Router();
 
@@ -45,6 +47,11 @@ function sortSnapshotsAsc(snapshots: MonthlySnapshot[]): MonthlySnapshot[] {
  */
 router.get('/oversikt', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // In CI mock mode, return mock data
+    if (isCiMockMode()) {
+      return res.json({ data: getMockOversikt(), success: true });
+    }
+
     const userId = req.user!.userId;
 
     const [rawSnapshots, user] = await Promise.all([
@@ -116,6 +123,11 @@ router.get('/oversikt', async (req: Request, res: Response, next: NextFunction) 
  */
 router.get('/sparing', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // In CI mock mode, return mock data
+    if (isCiMockMode()) {
+      return res.json({ data: getMockSparing(), success: true });
+    }
+
     const userId = req.user!.userId;
 
     const [rawSnapshots, user] = await Promise.all([
@@ -188,6 +200,11 @@ router.get('/sparing', async (req: Request, res: Response, next: NextFunction) =
  */
 router.get('/gjeld', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // In CI mock mode, return mock data
+    if (isCiMockMode()) {
+      return res.json({ data: getMockGjeld(), success: true });
+    }
+
     const userId = req.user!.userId;
 
     const rawSnapshots = await portfolioService.getSnapshotsByUserId(userId);
@@ -257,6 +274,11 @@ router.get('/gjeld', async (req: Request, res: Response, next: NextFunction) => 
  */
 router.get('/pensjon', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // In CI mock mode, return mock data
+    if (isCiMockMode()) {
+      return res.json({ data: getMockPensjon(), success: true });
+    }
+
     const userId = req.user!.userId;
 
     const rawSnapshots = await portfolioService.getSnapshotsByUserId(userId);
