@@ -16,10 +16,7 @@ interface EnvironmentConfig {
   port: number;
   nodeEnv: string;
 
-  // CI Mock Mode - skips database for CI testing
-  ciMockMode: boolean;
-
-  // Database (optional in CI mock mode)
+  // Database
   cosmosDbEndpoint: string;
   cosmosDbKey: string;
 
@@ -69,21 +66,15 @@ function parseAllowedOrigins(originsString: string): string[] {
   return originsString.split(',').map(origin => origin.trim()).filter(Boolean);
 }
 
-// Check CI mock mode first (before requiring DB config)
-const ciMockMode = process.env.CI_MOCK_MODE === 'true';
-
 // Validate and export configuration
 export const config: EnvironmentConfig = {
   // Server configuration
   port: parseInt(getOptionalEnv('PORT', '3000'), 10),
   nodeEnv: getOptionalEnv('NODE_ENV', 'development'),
 
-  // CI Mock Mode
-  ciMockMode,
-
-  // Database configuration (required unless in CI mock mode)
-  cosmosDbEndpoint: ciMockMode ? 'mock://localhost' : getRequiredEnv('COSMOS_DB_ENDPOINT'),
-  cosmosDbKey: ciMockMode ? 'mock-key' : getRequiredEnv('COSMOS_DB_KEY'),
+  // Database configuration (required)
+  cosmosDbEndpoint: getRequiredEnv('COSMOS_DB_ENDPOINT'),
+  cosmosDbKey: getRequiredEnv('COSMOS_DB_KEY'),
 
   // Authentication (optional - will be needed later)
   facebookAppId: process.env.FACEBOOK_APP_ID,
@@ -121,7 +112,6 @@ if (config.nodeEnv === 'production' && !process.env.DEMO_JWT_SECRET) {
 console.log('Environment configuration loaded:', {
   port: config.port,
   nodeEnv: config.nodeEnv,
-  ciMockMode: config.ciMockMode,
-  cosmosDbEndpoint: config.ciMockMode ? '(mock)' : config.cosmosDbEndpoint,
+  cosmosDbEndpoint: config.cosmosDbEndpoint,
   allowedOrigins: config.allowedOrigins
 });

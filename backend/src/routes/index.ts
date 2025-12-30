@@ -1,6 +1,6 @@
 import { Router, Request, Response, IRouter } from 'express';
 import { validateAuth } from '../middleware/auth';
-import { getUsersContainer, isCiMockMode } from '../config/cosmosdb';
+import { getUsersContainer } from '../config/cosmosdb';
 import { logger } from '../utils/logger';
 import userRoutes from './userRoutes';
 import accountRoutes from './accountRoutes';
@@ -39,19 +39,10 @@ router.get('/health', async (req: Request, res: Response) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development',
-    mockMode: isCiMockMode(),
   };
 
   if (!isDeep) {
     return res.status(200).json({ data: baseHealth, success: true });
-  }
-
-  // In CI mock mode, skip database check
-  if (isCiMockMode()) {
-    return res.status(200).json({
-      data: { ...baseHealth, db: 'mock' },
-      success: true,
-    });
   }
 
   // Deep check: verify database connection is working

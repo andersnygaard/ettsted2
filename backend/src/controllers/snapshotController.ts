@@ -26,8 +26,6 @@ import { MonthlySnapshot, Account } from '../models/Portfolio';
 import { asyncHandler } from '../middleware/errorHandler';
 import { NotFoundError } from '../errors';
 import { logger } from '../utils/logger';
-import { isCiMockMode } from '../config/cosmosdb';
-import { mockSnapshots } from '../utils/mockData';
 
 /**
  * Calculate total net worth from accounts
@@ -52,16 +50,6 @@ function calculateTotalNetWorth(accounts: Account[]): number {
  * @returns 200 with array of snapshots
  */
 export const getAllSnapshots = asyncHandler(async (req: Request, res: Response) => {
-  // In CI mock mode, return mock snapshots
-  if (isCiMockMode()) {
-    logger.debug('Returning mock snapshots in CI mode');
-    res.json({
-      data: mockSnapshots,
-      success: true
-    });
-    return;
-  }
-
   const userId = req.user!.userId;
 
   // Parse query parameters

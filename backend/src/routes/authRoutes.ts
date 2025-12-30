@@ -15,8 +15,6 @@ import {
   DEMO_PROFILE_NAMES,
   DemoProfileName,
 } from '../seed/fixtures/demo';
-import { isCiMockMode } from '../config/cosmosdb';
-import { mockUser } from '../utils/mockData';
 
 const router: IRouter = Router();
 
@@ -104,24 +102,6 @@ async function seedDemoData(profileName: DemoProfileName): Promise<void> {
  */
 router.post('/demo-login', async (req: Request, res: Response) => {
   try {
-    // In CI mock mode, return mock user without database access
-    if (isCiMockMode()) {
-      logger.info('Demo login in CI mock mode');
-      const token = createDemoToken();
-      return res.status(200).json({
-        data: {
-          token,
-          user: {
-            id: mockUser.id,
-            nickname: mockUser.nickname,
-            email: mockUser.email,
-          },
-          profile: 'mock',
-        },
-        success: true,
-      });
-    }
-
     // Get profile from query param (dev only) or default to 'standard'
     let profileName: DemoProfileName = 'standard';
     const requestedProfile = req.query.profile as string | undefined;
