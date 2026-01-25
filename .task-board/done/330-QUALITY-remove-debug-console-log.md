@@ -27,10 +27,10 @@ No debug console.log statements in production code. Error logging via `console.e
 
 ## Acceptance Criteria
 
-- [ ] Remove `console.log('handleSubmit called'...)`
-- [ ] Remove `console.log('Calling updateMutation...')`
-- [ ] Build passes
-- [ ] No other debug console.log introduced
+- [x] Remove `console.log('handleSubmit called'...)`
+- [x] Remove `console.log('Calling updateMutation...')`
+- [x] Build passes
+- [x] No other debug console.log introduced
 
 ## Files to Change
 

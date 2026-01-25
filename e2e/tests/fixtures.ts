@@ -628,3 +628,97 @@ export async function getAccountCount(page: Page): Promise<number> {
   const items = page.locator('.accounts-list__item');
   return await items.count();
 }
+
+/**
+ * Get a profile field value from Step 1 of the wizard
+ * Supports: nickname, monthlySalary, monthlySavings, birthYear, plannedRetirementAge, fireNumber
+ */
+export async function getProfileFieldValue(page: Page, fieldName: string): Promise<string> {
+  let input: Locator;
+
+  switch (fieldName.toLowerCase()) {
+    case 'nickname':
+      input = page.locator('input#nickname');
+      break;
+    case 'monthlysalary':
+      input = page
+        .locator('.number-input')
+        .filter({ hasText: /Månedlig inntekt/i })
+        .locator('input')
+        .first();
+      break;
+    case 'monthlysavings':
+      input = page
+        .locator('.number-input')
+        .filter({ hasText: /Månedlig sparing/i })
+        .locator('input')
+        .first();
+      break;
+    case 'birthyear':
+      input = page.locator('input#birthYear');
+      break;
+    case 'plannedretirementage':
+    case 'retirementage':
+      input = page.locator('input#retirementAge');
+      break;
+    case 'firenumber':
+    case 'fire':
+      input = page
+        .locator('.number-input')
+        .filter({ hasText: /F.I.R.E. tall/i })
+        .locator('input')
+        .first();
+      break;
+    default:
+      throw new Error(`Unknown profile field: ${fieldName}`);
+  }
+
+  await expect(input).toBeVisible();
+  return await input.inputValue();
+}
+
+/**
+ * Set a profile field value in Step 1 of the wizard
+ */
+export async function setProfileFieldValue(page: Page, fieldName: string, value: string): Promise<void> {
+  // Find the correct input and fill it
+  const inputToFill = await findProfileInput(page, fieldName);
+  await inputToFill.clear();
+  await inputToFill.fill(value);
+}
+
+/**
+ * Helper to find the profile input element
+ */
+async function findProfileInput(page: Page, fieldName: string): Promise<Locator> {
+  switch (fieldName.toLowerCase()) {
+    case 'nickname':
+      return page.locator('input#nickname');
+    case 'monthlysalary':
+      return page
+        .locator('.number-input')
+        .filter({ hasText: /Månedlig inntekt/i })
+        .locator('input')
+        .first();
+    case 'monthlysavings':
+      return page
+        .locator('.number-input')
+        .filter({ hasText: /Månedlig sparing/i })
+        .locator('input')
+        .first();
+    case 'birthyear':
+      return page.locator('input#birthYear');
+    case 'plannedretirementage':
+    case 'retirementage':
+      return page.locator('input#retirementAge');
+    case 'firenumber':
+    case 'fire':
+      return page
+        .locator('.number-input')
+        .filter({ hasText: /F.I.R.E. tall/i })
+        .locator('input')
+        .first();
+    default:
+      throw new Error(`Unknown profile field: ${fieldName}`);
+  }
+}

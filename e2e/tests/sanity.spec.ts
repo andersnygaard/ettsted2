@@ -115,3 +115,53 @@ test.describe('Sanity Checks', () => {
     await expect(page.getByRole('button', { name: /logg inn/i })).toBeVisible();
   });
 });
+
+test.describe('Protected Route Redirects', () => {
+  test.beforeEach(async ({ page }) => {
+    // Ensure logged out state for all tests in this suite
+    await clearAuthState(page);
+  });
+
+  test('unauthenticated access to /oversikt redirects to /', async ({ page }) => {
+    await page.goto('/oversikt');
+
+    // Should be redirected to home page
+    await expect(page).toHaveURL('/');
+
+    // Should see login button
+    await expect(page.getByRole('button', { name: /logg inn/i })).toBeVisible();
+  });
+
+  test('unauthenticated access to /portefolje redirects to /', async ({ page }) => {
+    await page.goto('/portefolje');
+
+    // Should be redirected to home page
+    await expect(page).toHaveURL('/');
+
+    // Should see login button
+    await expect(page.getByRole('button', { name: /logg inn/i })).toBeVisible();
+  });
+
+  test('unauthenticated access to /kalkulatorer redirects to /', async ({ page }) => {
+    await page.goto('/kalkulatorer');
+
+    // Should be redirected to home page
+    await expect(page).toHaveURL('/');
+
+    // Should see login button
+    await expect(page.getByRole('button', { name: /logg inn/i })).toBeVisible();
+  });
+
+  test('home page is accessible when logged out', async ({ page }) => {
+    await page.goto('/');
+
+    // Should stay on home page
+    await expect(page).toHaveURL('/');
+
+    // Should see landing page content
+    await expect(page.getByText('Ta kontroll over')).toBeVisible();
+
+    // Should see login button
+    await expect(page.getByRole('button', { name: /logg inn/i })).toBeVisible();
+  });
+});

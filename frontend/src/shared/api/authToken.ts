@@ -29,7 +29,7 @@ interface EasyAuthClaim {
 interface EasyAuthIdentity {
   access_token: string;
   expires_on: string;
-  id_token: string;
+  id_token?: string;  // Optional - Google provides, Facebook doesn't
   provider_name: string;
   user_claims: EasyAuthClaim[];
   user_id: string;
@@ -184,9 +184,11 @@ async function fetchAuthToken(): Promise<CachedAuthData | null> {
       return null;
     }
 
-    // Validate id_token exists (JWT for Bearer auth)
-    if (!identity.id_token) {
-      console.debug('EasyAuth: Missing id_token in response');
+    // Fall back to access_token if id_token not available (Facebook case)
+    const token = identity.id_token || identity.access_token;
+
+    if (!token) {
+      console.debug('EasyAuth: No token available in response');
       return null;
     }
 
@@ -219,9 +221,9 @@ async function fetchAuthToken(): Promise<CachedAuthData | null> {
 
     // Cache all tokens
     // Strip "Bearer " prefix if present (EasyAuth may return it with prefix)
-    const rawIdToken = identity.id_token.startsWith('Bearer ')
-      ? identity.id_token.slice(7)
-      : identity.id_token;
+    const rawIdToken = token.startsWith('Bearer ')
+      ? token.slice(7)
+      : token;
 
     cachedAuthData = {
       idToken: rawIdToken,                  // JWT for Bearer auth (without prefix)

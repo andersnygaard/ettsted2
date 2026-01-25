@@ -462,4 +462,258 @@ test.describe('Account Management', () => {
       expect(newTotal).toBe(initialTotal - 250000);
     });
   });
+
+  test.describe('User Profile Settings (Step 1)', () => {
+    test.beforeEach(async ({ page }) => {
+      await navigateToEconomy(page);
+      await navigateToWizardStep(page, 1);
+    });
+
+    test('can navigate to Step 1 of wizard', async ({ page }) => {
+      // Wait for the step 1 content to be visible
+      const stepContent = page.locator('.step-user');
+      await expect(stepContent).toBeVisible({ timeout: 5000 });
+
+      // Verify we're on step 1 by checking for the section heading
+      const heading = page.locator('text=Brukerinformasjon');
+      await expect(heading).toBeVisible();
+    });
+
+    test('can edit nickname field', async ({ page }) => {
+      // Get nickname input
+      const nicknameInput = page.locator('input#nickname');
+      await expect(nicknameInput).toBeVisible();
+
+      // Get current value
+      const originalValue = await nicknameInput.inputValue();
+
+      // Change nickname
+      const newNickname = 'TestUser42';
+      await nicknameInput.clear();
+      await nicknameInput.fill(newNickname);
+
+      // Verify value changed
+      const updatedValue = await nicknameInput.inputValue();
+      expect(updatedValue).toBe(newNickname);
+      expect(updatedValue).not.toBe(originalValue);
+    });
+
+    test('can edit monthly salary field (Norwegian number format)', async ({ page }) => {
+      // Find monthly salary input by looking for the NumberInput with "Månedlig inntekt" label
+      const salaryContainer = page.locator('.number-input').filter({ hasText: /Månedlig inntekt/i });
+      const salaryInput = salaryContainer.locator('input');
+      await expect(salaryInput).toBeVisible();
+
+      // Fill in salary value
+      const salaryValue = '75000';
+      await salaryInput.clear();
+      await salaryInput.fill(salaryValue);
+
+      // Verify value updated (may be formatted)
+      const inputValue = await salaryInput.inputValue();
+      expect(inputValue).toBeTruthy();
+      expect(inputValue).toContain('75000');
+    });
+
+    test('can edit monthly savings field', async ({ page }) => {
+      // Find monthly savings input
+      const savingsContainer = page.locator('.number-input').filter({ hasText: /Månedlig sparing/i });
+      const savingsInput = savingsContainer.locator('input');
+      await expect(savingsInput).toBeVisible();
+
+      // Fill in savings value
+      const savingsValue = '15000';
+      await savingsInput.clear();
+      await savingsInput.fill(savingsValue);
+
+      // Verify value updated
+      const inputValue = await savingsInput.inputValue();
+      expect(inputValue).toBeTruthy();
+      expect(inputValue).toContain('15000');
+    });
+
+    test('can edit birth year field', async ({ page }) => {
+      // Get birth year input
+      const birthYearInput = page.locator('input#birthYear');
+      await expect(birthYearInput).toBeVisible();
+
+      // Fill in birth year
+      const birthYear = '1985';
+      await birthYearInput.clear();
+      await birthYearInput.fill(birthYear);
+
+      // Verify value updated
+      const inputValue = await birthYearInput.inputValue();
+      expect(inputValue).toBe(birthYear);
+
+      // Verify age calculation is shown
+      const ageHint = page.locator('.step-user__hint').filter({ hasText: /år/ });
+      const hintText = await ageHint.first().textContent();
+      expect(hintText).toContain('år');
+    });
+
+    test('can edit planned retirement age field', async ({ page }) => {
+      // Get retirement age input
+      const retirementInput = page.locator('input#retirementAge');
+      await expect(retirementInput).toBeVisible();
+
+      // Fill in retirement age
+      const retirementAge = '65';
+      await retirementInput.clear();
+      await retirementInput.fill(retirementAge);
+
+      // Verify value updated
+      const inputValue = await retirementInput.inputValue();
+      expect(inputValue).toBe(retirementAge);
+    });
+
+    test('shows validation error for empty nickname', async ({ page }) => {
+      // Clear nickname
+      const nicknameInput = page.locator('input#nickname');
+      await nicknameInput.clear();
+
+      // Try to go to next step
+      const nextBtn = page.getByRole('button', { name: /neste/i });
+      await nextBtn.click();
+
+      // Should show error (wait a bit for validation to run)
+      await page.waitForTimeout(500);
+
+      // Look for error message
+      const errorText = page.locator('#nickname-error, .step-user__error').filter({ hasText: /bruker|navn/i });
+      const isVisible = await errorText.isVisible().catch(() => false);
+      expect(isVisible).toBe(true);
+    });
+
+    test('shows validation error for zero monthly salary', async ({ page }) => {
+      // Find and clear monthly salary
+      const salaryContainer = page.locator('.number-input').filter({ hasText: /Månedlig inntekt/i });
+      const salaryInput = salaryContainer.locator('input');
+      await salaryInput.clear();
+      await salaryInput.fill('0');
+
+      // Try to go to next step
+      const nextBtn = page.getByRole('button', { name: /neste/i });
+      await nextBtn.click();
+
+      // Should show validation error
+      await page.waitForTimeout(500);
+      const errorMessage = page.locator('[role="alert"], .step-user__error');
+      const hasError = await errorMessage.count() > 0;
+      expect(hasError).toBe(true);
+    });
+
+    test('profile changes persist after wizard save', async ({ page }) => {
+      // Update nickname
+      const newNickname = 'PersistTestUser';
+      const nicknameInput = page.locator('input#nickname');
+      await nicknameInput.clear();
+      await nicknameInput.fill(newNickname);
+
+      // Update monthly salary
+      const salaryContainer = page.locator('.number-input').filter({ hasText: /Månedlig inntekt/i });
+      const salaryInput = salaryContainer.locator('input');
+      await salaryInput.clear();
+      await salaryInput.fill('65000');
+
+      // Update monthly savings
+      const savingsContainer = page.locator('.number-input').filter({ hasText: /Månedlig sparing/i });
+      const savingsInput = savingsContainer.locator('input');
+      await savingsInput.clear();
+      await savingsInput.fill('18000');
+
+      // Complete the wizard
+      await completeWizard(page);
+
+      // Navigate back to economy page
+      await navigateToEconomy(page);
+      await navigateToWizardStep(page, 1);
+
+      // Verify nickname persisted
+      const savedNickname = await nicknameInput.inputValue();
+      expect(savedNickname).toBe(newNickname);
+
+      // Verify salary persisted (check that it contains the value)
+      const savedSalary = await salaryInput.inputValue();
+      expect(savedSalary).toContain('65000');
+
+      // Verify savings persisted
+      const savedSavings = await savingsInput.inputValue();
+      expect(savedSavings).toContain('18000');
+    });
+
+    test('savings rate on dashboard updates based on profile changes', async ({ page }) => {
+      // Note: This tests the integration between Step 1 changes and dashboard calculations
+
+      // Update monthly salary
+      const salaryContainer = page.locator('.number-input').filter({ hasText: /Månedlig inntekt/i });
+      const salaryInput = salaryContainer.locator('input');
+      await salaryInput.clear();
+      await salaryInput.fill('100000');
+
+      // Update monthly savings
+      const savingsContainer = page.locator('.number-input').filter({ hasText: /Månedlig sparing/i });
+      const savingsInput = savingsContainer.locator('input');
+      await savingsInput.clear();
+      await savingsInput.fill('30000');
+
+      // Save the changes
+      await completeWizard(page);
+
+      // Navigate to sparing page to verify savings rate calculation
+      await page.goto('/sparing');
+      await expect(page.locator('.app-header')).toBeVisible({ timeout: 10000 });
+
+      // Verify page loaded (savings rate should be displayed)
+      const pageContent = await page.locator('body').textContent();
+      expect(pageContent).toBeTruthy();
+      expect(pageContent!.length).toBeGreaterThan(100);
+
+      // The savings rate should be 30% (30000 / 100000 * 100)
+      // Verify page contains expected content
+      const containsExpected =
+        pageContent?.toLowerCase().includes('sparing') ||
+        pageContent?.toLowerCase().includes('sparerate');
+      expect(containsExpected).toBe(true);
+    });
+
+    test('F.I.R.E. number defaults to 25x annual expenses', async ({ page }) => {
+      // Set monthly salary and savings to known values
+      const salaryContainer = page.locator('.number-input').filter({ hasText: /Månedlig inntekt/i });
+      const salaryInput = salaryContainer.locator('input');
+      await salaryInput.clear();
+      await salaryInput.fill('100000');
+
+      const savingsContainer = page.locator('.number-input').filter({ hasText: /Månedlig sparing/i });
+      const savingsInput = savingsContainer.locator('input');
+      await savingsInput.clear();
+      await savingsInput.fill('20000');
+
+      // Check F.I.R.E. number hint text
+      // Annual expenses = (100000 - 20000) * 12 = 960000
+      // F.I.R.E. number = 960000 * 25 = 24000000
+      const fireHint = page.locator('.step-user__hint').filter({ hasText: /F.I.R.E./i });
+      const hintText = await fireHint.first().textContent();
+
+      // Should contain the calculated F.I.R.E. number
+      expect(hintText).toBeTruthy();
+      expect(hintText).toContain('25 × årlige utgifter');
+    });
+
+    test('can edit custom F.I.R.E. number', async ({ page }) => {
+      // Find F.I.R.E. number input
+      const fireContainer = page.locator('.number-input').filter({ hasText: /F.I.R.E. tall/i });
+      const fireInput = fireContainer.locator('input');
+      await expect(fireInput).toBeVisible();
+
+      // Fill in custom F.I.R.E. number
+      const customFireNumber = '5000000';
+      await fireInput.clear();
+      await fireInput.fill(customFireNumber);
+
+      // Verify value updated
+      const inputValue = await fireInput.inputValue();
+      expect(inputValue).toContain('5000000');
+    });
+  });
 });

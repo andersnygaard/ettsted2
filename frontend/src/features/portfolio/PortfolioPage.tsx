@@ -7,16 +7,16 @@ import {
   TableHeader,
   TableFooter,
   useToast,
-  Modal,
-  Skeleton,
 } from '@finans/components';
-import type { Column, ColumnGroup, ColumnToggle, CellChangeEvent } from '@finans/components';
+import type { ColumnToggle, CellChangeEvent } from '@finans/components';
 import { useAuth } from '@/features/auth/useAuth';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { usePortfolioData, useUpdateSnapshot, useDeleteSnapshot } from './usePortfolioData';
+import { usePortfolioColumns, usePortfolioExport } from './hooks';
 import { NewMonthModal } from './NewMonthModal';
+import { DeleteSnapshotModal } from './DeleteSnapshotModal';
+import { PortfolioPageSkeleton } from './PortfolioPageSkeleton';
 import './PortfolioPage.css';
-import '@/shared/styles/PageSkeletons.css';
 
 /**
  * Portfolio Page (Portefølje)
@@ -31,27 +31,6 @@ import '@/shared/styles/PageSkeletons.css';
  *
  * Based on Nordic Minimal design system.
  */
-
-
-// Category colors for column groups
-const CATEGORY_COLORS: Record<string, string> = {
-  sparing: '#5a6d7a',
-  gjeld: '#8a7060',
-  pensjon: '#6a7a60',
-};
-
-const CATEGORY_LABELS: Record<string, string> = {
-  sparing: 'Sparing',
-  gjeld: 'Gjeld',
-  pensjon: 'Pensjon',
-};
-
-// Map category to sum column ID (English naming)
-const CATEGORY_SUM_IDS: Record<string, string> = {
-  sparing: 'sumSavings',
-  gjeld: 'sumGjeld',
-  pensjon: 'sumPensjon',
-};
 
 export default function PortfolioPage() {
   const navigate = useNavigate();
@@ -85,80 +64,8 @@ export default function PortfolioPage() {
   // Items per page: 24 for "Alle år", 12 for specific year
   const itemsPerPage = selectedYear === null ? 24 : 12;
 
-  /**
-   * Open delete confirmation modal
-   */
-  const handleDeleteClick = useCallback((snapshotId: string, snapshotDate: string) => {
-    setDeleteConfirmModal({
-      isOpen: true,
-      snapshotId,
-      snapshotDate,
-    });
-  }, []);
-
-  /**
-   * Close delete confirmation modal
-   */
-  const handleDeleteCancel = useCallback(() => {
-    setDeleteConfirmModal({
-      isOpen: false,
-      snapshotId: null,
-      snapshotDate: null,
-    });
-  }, []);
-
-  /**
-   * Confirm delete and call mutation
-   */
-  const handleDeleteConfirm = useCallback(async () => {
-    if (!deleteConfirmModal.snapshotId) return;
-
-    deleteSnapshot.mutate(deleteConfirmModal.snapshotId, {
-      onSuccess: () => {
-        showSuccess('Måned slettet');
-        setDeleteConfirmModal({
-          isOpen: false,
-          snapshotId: null,
-          snapshotDate: null,
-        });
-      },
-      onError: () => {
-        showError('Kunne ikke slette måned');
-      },
-    });
-  }, [deleteConfirmModal.snapshotId, deleteSnapshot, showSuccess, showError]);
-
   // Generate column groups from user accounts
-  const columnGroups = useMemo((): ColumnGroup[] => {
-    if (!user?.accounts) return [];
-
-    const categories: ('sparing' | 'gjeld' | 'pensjon')[] = ['sparing', 'gjeld', 'pensjon'];
-
-    return categories.map((category) => {
-      const categoryAccounts = user.accounts!
-        .filter((acc) => acc.category === category && acc.isActive)
-        .sort((a, b) => a.sortOrder - b.sortOrder);
-
-      const columns: Column[] = categoryAccounts.map((acc) => ({
-        id: acc.id,
-        label: acc.name,
-      }));
-
-      // Add sum column
-      columns.push({
-        id: CATEGORY_SUM_IDS[category],
-        label: `Sum ${CATEGORY_LABELS[category].toLowerCase()}`,
-        isTotal: true,
-      });
-
-      return {
-        id: category,
-        label: CATEGORY_LABELS[category],
-        color: CATEGORY_COLORS[category],
-        columns,
-      };
-    });
-  }, [user?.accounts]);
+  const columnGroups = usePortfolioColumns(user?.accounts);
 
   // Transform portfolio data for table display
   const tableData = useMemo(() => {
@@ -166,18 +73,16 @@ export default function PortfolioPage() {
 
     return portfolioData.map((row) => {
       const rowData: Record<string, string | number | null | undefined> = {
-        id: row.id, // Snapshot ID for editing
+        id: row.id,
         date: row.date,
       };
 
       // Map each account value
       row.accounts.forEach((acc) => {
-        // Find matching account config by name (accounts in snapshots use name, not id)
         const accountConfig = user.accounts!.find(
           (cfg) => cfg.name.toLowerCase() === acc.name.toLowerCase()
         );
         if (accountConfig) {
-          // Display gjeld as positive (stored as negative in DB)
           rowData[accountConfig.id] = accountConfig.category === 'gjeld'
             ? Math.abs(acc.value)
             : acc.value;
@@ -191,10 +96,9 @@ export default function PortfolioPage() {
 
       return rowData;
     });
-  }, [portfolioData, user?.accounts, handleDeleteClick]);
+  }, [portfolioData, user?.accounts]);
 
-  // Transform milestone keys from "snapshotId-accountName" to "snapshotId-accountConfigId"
-  // This allows SpreadsheetTable to look up milestones using row ID and column ID
+  // Transform milestone keys
   const transformedMilestones = useMemo(() => {
     if (!user?.accounts) return {};
 
@@ -207,7 +111,6 @@ export default function PortfolioPage() {
       );
 
       if (accountConfig && snapshotId) {
-        // Key format: "snapshotId-columnId" to uniquely identify a cell
         const newKey = `${snapshotId}-${accountConfig.id}`;
         transformed[newKey] = thresholds;
       }
@@ -229,11 +132,9 @@ export default function PortfolioPage() {
     return Array.from(years).sort((a, b) => b - a);
   }, [tableData]);
 
-  // Filter data by year and search
+  // Filter data by year
   const filteredData = useMemo(() => {
     let filtered = [...tableData];
-
-    // Filter by year
     if (selectedYear !== null) {
       filtered = filtered.filter((row) => {
         const date = row.date as string;
@@ -242,7 +143,6 @@ export default function PortfolioPage() {
         return year === selectedYear;
       });
     }
-
     return filtered;
   }, [tableData, selectedYear]);
 
@@ -283,92 +183,67 @@ export default function PortfolioPage() {
     visibleGroups.has(group.id)
   );
 
-  /**
-   * Export portfolio data as CSV for Excel
-   * Uses semicolon delimiter for Norwegian Excel compatibility
-   */
-  const handleExport = useCallback(() => {
-    if (!tableData.length || !columnGroups.length) return;
+  // Export handler
+  const handleExport = usePortfolioExport(tableData, columnGroups);
 
-    // Build header row: Dato + all account columns + sum columns
-    const headers: string[] = ['Dato'];
-    const columnIds: string[] = [];
-
-    columnGroups.forEach((group) => {
-      group.columns.forEach((col) => {
-        headers.push(col.label);
-        columnIds.push(col.id);
-      });
+  // Delete modal handlers
+  const handleDeleteClick = useCallback((snapshotId: string, snapshotDate: string) => {
+    setDeleteConfirmModal({
+      isOpen: true,
+      snapshotId,
+      snapshotDate,
     });
+  }, []);
 
-    // Build data rows
-    const rows: string[][] = tableData.map((row) => {
-      const date = row.date as string;
-      const values: string[] = [date];
-      columnIds.forEach((colId) => {
-        const value = row[colId];
-        // Format numbers with Norwegian locale for CSV export
-        if (typeof value === 'number') {
-          values.push(value.toLocaleString('nb-NO', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          }));
-        } else {
-          values.push(value?.toString() ?? '');
-        }
-      });
-      return values;
+  const handleDeleteCancel = useCallback(() => {
+    setDeleteConfirmModal({
+      isOpen: false,
+      snapshotId: null,
+      snapshotDate: null,
     });
+  }, []);
 
-    // Build CSV with semicolon delimiter (Norwegian Excel)
-    const csvContent = [
-      headers.join(';'),
-      ...rows.map((row) => row.join(';')),
-    ].join('\r\n');
+  const handleDeleteConfirm = useCallback(async () => {
+    if (!deleteConfirmModal.snapshotId) return;
 
-    // Add UTF-8 BOM for Excel compatibility
-    const BOM = '\uFEFF';
-    const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
-
-    // Trigger download
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `portefolje-${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  }, [tableData, columnGroups]);
+    deleteSnapshot.mutate(deleteConfirmModal.snapshotId, {
+      onSuccess: () => {
+        showSuccess('Måned slettet');
+        setDeleteConfirmModal({
+          isOpen: false,
+          snapshotId: null,
+          snapshotDate: null,
+        });
+      },
+      onError: () => {
+        showError('Kunne ikke slette måned');
+      },
+    });
+  }, [deleteConfirmModal.snapshotId, deleteSnapshot, showSuccess, showError]);
 
   const handleAddNewMonth = () => {
     setIsNewMonthModalOpen(true);
   };
 
   const handleNewMonthSuccess = () => {
-    // Data refreshes automatically via TanStack Query invalidation
+    // Data refreshes automatically
   };
 
   /**
    * Handle inline cell edit
-   * Updates the snapshot with the new account value
    */
   const handleCellChange = useCallback(
     (event: CellChangeEvent) => {
       if (!portfolioData || !user?.accounts) return;
 
-      // Find the snapshot
       const snapshot = portfolioData.find((s) => s.id === event.rowId);
       if (!snapshot) return;
 
-      // Find the account config to get the name
       const accountConfig = user.accounts.find((acc) => acc.id === event.columnId);
       if (!accountConfig) return;
 
-      // Update the accounts array
       const updatedAccounts = snapshot.accounts.map((acc) => {
         if (acc.name.toLowerCase() === accountConfig.name.toLowerCase()) {
-          // Handle gjeld: store as negative
           const newValue = accountConfig.category === 'gjeld'
             ? -Math.abs(event.value)
             : event.value;
@@ -377,7 +252,6 @@ export default function PortfolioPage() {
         return acc;
       });
 
-      // Check if account exists, if not add it
       const accountExists = updatedAccounts.some(
         (acc) => acc.name.toLowerCase() === accountConfig.name.toLowerCase()
       );
@@ -390,10 +264,8 @@ export default function PortfolioPage() {
         });
       }
 
-      // Calculate new total
       const totalNetWorth = updatedAccounts.reduce((sum, acc) => sum + acc.value, 0);
 
-      // Update snapshot
       updateSnapshot.mutate({
         id: event.rowId,
         data: {
@@ -405,69 +277,10 @@ export default function PortfolioPage() {
     [portfolioData, user?.accounts, updateSnapshot]
   );
 
-  // Show loading state
   if (isLoading) {
-    return (
-      <PageLayout
-        breadcrumb={[{ label: 'Hjem', path: '/oversikt' }, { label: 'Portefølje' }]}
-        title="Portefølje"
-        subtitle="Laster..."
-        width="wide"
-        className="portfolio-page"
-        aria-busy={true}
-      >
-        <div role="status" aria-live="polite" className="sr-only">
-          Laster porteføljdata...
-        </div>
-
-        {/* Skeleton: Breadcrumb */}
-        <div className="skeleton-breadcrumb">
-          <Skeleton width={120} height={14} />
-        </div>
-
-        {/* Skeleton: Page Header */}
-        <div className="skeleton-page-header">
-          <Skeleton width={200} height={36} style={{ marginBottom: '8px' }} />
-          <Skeleton width={280} height={14} />
-        </div>
-
-        {/* Skeleton: Page Actions */}
-        <div className="skeleton-page-actions">
-          <Skeleton width={120} height={36} />
-          <Skeleton width={140} height={36} />
-        </div>
-
-        {/* Skeleton: Table Header */}
-        <div className="skeleton-table-header">
-          <Skeleton width={160} height={16} style={{ marginBottom: '12px' }} />
-          <div style={{ display: 'flex', gap: '16px' }}>
-            <Skeleton width={120} height={32} />
-            <Skeleton width={200} height={32} />
-          </div>
-        </div>
-
-        {/* Skeleton: Table Rows */}
-        <div className="skeleton-table-body">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="skeleton-table-row">
-              <Skeleton height={24} />
-            </div>
-          ))}
-        </div>
-
-        {/* Skeleton: Table Footer */}
-        <div className="skeleton-table-footer">
-          <Skeleton width={150} height={14} style={{ marginBottom: '12px' }} />
-          <div style={{ display: 'flex', gap: '16px', justifyContent: 'space-between' }}>
-            <Skeleton width={100} height={24} />
-            <Skeleton width={150} height={24} />
-          </div>
-        </div>
-      </PageLayout>
-    );
+    return <PortfolioPageSkeleton />;
   }
 
-  // Show error state
   if (error) {
     return (
       <PageLayout
@@ -492,67 +305,61 @@ export default function PortfolioPage() {
       width="wide"
       className="portfolio-page"
     >
+      <div className="portfolio-page__actions">
+        <Button variant="secondary" onClick={handleExport}>
+          Eksporter
+        </Button>
+        <Button variant="secondary" onClick={() => navigate('/import')}>
+          Importer data
+        </Button>
+        <Button variant="primary" onClick={handleAddNewMonth}>
+          + Ny måned
+        </Button>
+      </div>
 
-        <div className="portfolio-page__actions">
-          <Button variant="secondary" onClick={handleExport}>
-            Eksporter
-          </Button>
-          <Button variant="secondary" onClick={() => navigate('/import')}>
-            Importer data
-          </Button>
-          <Button variant="primary" onClick={handleAddNewMonth}>
-            + Ny måned
-          </Button>
-        </div>
+      <div className="table-container">
+        <TableHeader
+          title="Månedlig historikk"
+          years={availableYears}
+          selectedYear={selectedYear}
+          onYearChange={handleYearChange}
+        />
 
-        {/* Table container */}
-        <div className="table-container">
-          {/* Table header with year filter */}
-          <TableHeader
-            title="Månedlig historikk"
-            years={availableYears}
-            selectedYear={selectedYear}
-            onYearChange={handleYearChange}
+        {tableData.length > 0 ? (
+          <SpreadsheetTable
+            columnGroups={visibleColumnGroups}
+            data={paginatedData}
+            dateKey="date"
+            rowIdKey="id"
+            milestones={transformedMilestones}
+            initialCollapsedGroups={['gjeld', 'pensjon']}
+            onCellChange={handleCellChange}
+            onRowDelete={(rowData) => {
+              const snapshotId = rowData.id as string;
+              const snapshotDate = rowData.date as string;
+              handleDeleteClick(snapshotId, snapshotDate);
+            }}
           />
+        ) : (
+          <div className="portfolio-page__empty">
+            <p>Ingen data ennå. Klikk "+ Ny måned" for å legge til din første måned.</p>
+          </div>
+        )}
 
-          {/* Spreadsheet table */}
-          {tableData.length > 0 ? (
-            <SpreadsheetTable
-              columnGroups={visibleColumnGroups}
-              data={paginatedData}
-              dateKey="date"
-              rowIdKey="id"
-              milestones={transformedMilestones}
-              initialCollapsedGroups={['gjeld', 'pensjon']}
-              onCellChange={handleCellChange}
-              onRowDelete={(rowData) => {
-                const snapshotId = rowData.id as string;
-                const snapshotDate = rowData.date as string;
-                handleDeleteClick(snapshotId, snapshotDate);
-              }}
-            />
-          ) : (
-            <div className="portfolio-page__empty">
-              <p>Ingen data ennå. Klikk "+ Ny måned" for å legge til din første måned.</p>
-            </div>
-          )}
+        {tableData.length > 0 && (
+          <TableFooter
+            showing={paginatedData.length}
+            total={filteredData.length}
+            unit="måneder"
+            columnToggles={columnToggles}
+            onToggleColumn={handleToggleColumn}
+            page={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        )}
+      </div>
 
-          {/* Table footer with pagination and column toggles */}
-          {tableData.length > 0 && (
-            <TableFooter
-              showing={paginatedData.length}
-              total={filteredData.length}
-              unit="måneder"
-              columnToggles={columnToggles}
-              onToggleColumn={handleToggleColumn}
-              page={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          )}
-        </div>
-
-      {/* New month modal */}
       <NewMonthModal
         isOpen={isNewMonthModalOpen}
         onClose={() => setIsNewMonthModalOpen(false)}
@@ -560,36 +367,13 @@ export default function PortfolioPage() {
         latestSnapshot={portfolioData[0]}
       />
 
-      {/* Delete confirmation modal */}
-      <Modal
+      <DeleteSnapshotModal
         isOpen={deleteConfirmModal.isOpen}
-        onClose={handleDeleteCancel}
-        title="Slett måned"
-        footer={
-          <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
-            <Button
-              variant="secondary"
-              onClick={handleDeleteCancel}
-            >
-              Avbryt
-            </Button>
-            <Button
-              variant="primary"
-              onClick={handleDeleteConfirm}
-              disabled={deleteSnapshot.isPending}
-            >
-              {deleteSnapshot.isPending ? 'Sletter...' : 'Slett'}
-            </Button>
-          </div>
-        }
-      >
-        <p>
-          Er du sikker på at du vil slette {deleteConfirmModal.snapshotDate}?
-        </p>
-        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '12px' }}>
-          Denne handlingen kan ikke angres.
-        </p>
-      </Modal>
+        snapshotDate={deleteConfirmModal.snapshotDate}
+        isPending={deleteSnapshot.isPending}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+      />
     </PageLayout>
   );
 }

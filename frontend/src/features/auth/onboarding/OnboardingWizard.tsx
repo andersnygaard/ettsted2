@@ -16,7 +16,6 @@ import { Icon } from '@finans/components';
 import { useAuth } from '../useAuth';
 import apiClient from '@/shared/api/client';
 import { getErrorMessage } from '@/shared/utils/errorTypes';
-import { isDevelopment } from '@/shared/utils/environment';
 import { WizardProgressBar } from './WizardProgressBar';
 import { StepUser } from './steps/StepUser';
 import { StepSparing } from './steps/StepSparing';
@@ -395,16 +394,7 @@ export function OnboardingWizard({ mode = 'create', initialState, onComplete }: 
       accounts: allAccounts,
     };
 
-    if (isDevelopment) {
-      // eslint-disable-next-line no-console
-      console.log('handleSubmit called', { mode, requestBody });
-    }
-
     if (mode === 'edit') {
-      if (isDevelopment) {
-        // eslint-disable-next-line no-console
-        console.log('Calling updateMutation with accounts:', requestBody.accounts);
-      }
       updateMutation.mutate(requestBody);
     } else {
       createMutation.mutate(requestBody);

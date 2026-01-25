@@ -84,10 +84,16 @@ export const mockUserData = {
     monthlySavings: 10000,
     birthYear: 1989,
     plannedRetirementAge: 67,
-    annualExpenses: 480000,
   },
   accounts: [],
 };
+
+export function createMockUser(overrides?: any) {
+  return {
+    ...mockUserData,
+    ...overrides,
+  };
+}
 
 export const mockSparingData = {
   sumSavings: 250000,
