@@ -88,7 +88,7 @@ export const mockUserData = {
   accounts: [],
 };
 
-export function createMockUser(overrides?: any) {
+export function createMockUser(overrides?: Partial<typeof mockUserData>) {
   return {
     ...mockUserData,
     ...overrides,

@@ -86,13 +86,15 @@ describe('useAuth hook', () => {
 
   describe('function behaviors', () => {
     it('login function should accept provider parameter', () => {
-      const { result } = renderAuthHook();
+      renderAuthHook();
 
       // Should be callable
       expect(() => {
         // Mock window location to prevent actual navigation
-        delete (window as any).location;
-        window.location = { href: '' } as Location;
+        Object.defineProperty(window, 'location', {
+          value: { href: '' },
+          writable: true,
+        });
       }).not.toThrow();
     });
 
@@ -109,8 +111,10 @@ describe('useAuth hook', () => {
     it('logout function should clear session', () => {
       const { result } = renderAuthHook();
 
-      delete (window as any).location;
-      window.location = { href: '' } as Location;
+      Object.defineProperty(window, 'location', {
+        value: { href: '' },
+        writable: true,
+      });
 
       // Should not throw
       expect(() => {

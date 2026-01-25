@@ -219,8 +219,9 @@ describe('useImportChat hook', () => {
 
   describe('error handling', () => {
     it('should handle validation errors', async () => {
-      const error = new Error('Validation error');
-      (error as any).code = 'VALIDATION_ERROR';
+      const error = Object.assign(new Error('Validation error'), {
+        code: 'VALIDATION_ERROR',
+      });
 
       mockPost.mockRejectedValue(error);
 
@@ -240,8 +241,9 @@ describe('useImportChat hook', () => {
     });
 
     it('should handle 429 rate limit error', async () => {
-      const error = new Error('Too many requests');
-      (error as any).statusCode = 429;
+      const error = Object.assign(new Error('Too many requests'), {
+        statusCode: 429,
+      });
 
       mockPost.mockRejectedValue(error);
 
@@ -259,8 +261,9 @@ describe('useImportChat hook', () => {
     });
 
     it('should handle 401 authentication error', async () => {
-      const error = new Error('Unauthorized');
-      (error as any).statusCode = 401;
+      const error = Object.assign(new Error('Unauthorized'), {
+        statusCode: 401,
+      });
 
       mockPost.mockRejectedValue(error);
 
@@ -280,8 +283,9 @@ describe('useImportChat hook', () => {
     });
 
     it('should handle 500 server error', async () => {
-      const error = new Error('Internal server error');
-      (error as any).statusCode = 500;
+      const error = Object.assign(new Error('Internal server error'), {
+        statusCode: 500,
+      });
 
       mockPost.mockRejectedValue(error);
 
