@@ -161,8 +161,8 @@ async function fetchPensjonData(): Promise<PensjonData> {
 
     const accounts = Array.from(uniqueAccounts.values());
 
-    // Build history with per-account breakdown
-    // For Totalt tab: ChartWithTabs will automatically sum all account values
+    // Build history with per-account breakdown + aggregated private/public totals
+    // For Totalt tab: Uses privatePension + publicPension aggregated keys
     // For Per Konto tab: Each account is displayed as a stacked area
     const accountHistory = sorted
       .map((snapshot) => {
@@ -170,13 +170,30 @@ async function fetchPensjonData(): Promise<PensjonData> {
           date: parseDate(snapshot.date)
         };
 
+        // Track aggregated private/public pension totals
+        let privatePensionTotal = 0;
+        let publicPensionTotal = 0;
+
         // Add value for each pension account (from all snapshots)
         // This ensures historical accounts appear in the legend
         accounts.forEach(account => {
           const acc = snapshot.accounts.find(a => a.id === account.id);
           const value = acc && getAccountCategory(acc.assetClass) === 'pensjon' ? acc.value : 0;
           point[account.id] = value;
+
+          // Aggregate into private/public totals (only if account exists in this snapshot)
+          if (acc && getAccountCategory(acc.assetClass) === 'pensjon') {
+            if (acc.isPublicPension === true) {
+              publicPensionTotal += acc.value;
+            } else {
+              privatePensionTotal += acc.value;
+            }
+          }
         });
+
+        // Add aggregated keys for Totalt tab
+        point['privatePension'] = privatePensionTotal;
+        point['publicPension'] = publicPensionTotal;
 
         return point;
       })
