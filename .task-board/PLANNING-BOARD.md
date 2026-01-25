@@ -1,6 +1,6 @@
 # Planning Board - Finans
 
-**Current Focus**: E2E Testing and Bug Fixes
+**Current Focus**: Production Bug Fixes
 
 ---
 
@@ -11,6 +11,9 @@ _All planned tasks completed. Backlog is empty._
 ---
 
 ## Recently Completed (2026-01-25)
+
+### Session 13 - Production CORS Fix
+- **#339** BUG: CORS missing in production - Removed environment condition, CORS now runs in all environments
 
 ### Session 12 - Bug Fixes and E2E Testing
 - **#338** BUG: Facebook OAuth fix - Made id_token optional, falls back to access_token
@@ -50,7 +53,7 @@ _All planned tasks completed. Backlog is empty._
 
 | Status | Count |
 |--------|-------|
-| Done | 338 |
+| Done | 339 |
 | Backlog | 0 |
 | In Progress | 0 |
 

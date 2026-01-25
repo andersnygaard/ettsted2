@@ -45,42 +45,41 @@ export function createApp(): Application {
     })
   );
 
-  // CORS middleware - only in development (production uses Azure EasyAuth same-origin)
-  if (config.nodeEnv === 'development' || config.nodeEnv === 'test') {
-    app.use(
-      cors({
-        origin: (origin, callback) => {
-          // Allow no-origin requests in development/test (for supertest, Postman, curl, etc.)
-          if ((config.nodeEnv === 'development' || config.nodeEnv === 'test') && !origin) {
-            return callback(null, true);
-          }
+  // CORS middleware - required because frontend and backend are different origins
+  // (finans.ettsted.no vs finans-backend.azurewebsites.net)
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        // Allow no-origin requests in development/test (for supertest, Postman, curl, etc.)
+        if ((config.nodeEnv === 'development' || config.nodeEnv === 'test') && !origin) {
+          return callback(null, true);
+        }
 
-          // Reject no-origin requests in production
-          if (!origin) {
-            logger.warn('CORS blocked request without Origin header');
-            return callback(new Error('CORS: Origin header required'));
-          }
+        // Reject no-origin requests in production
+        if (!origin) {
+          logger.warn('CORS blocked request without Origin header');
+          return callback(new Error('CORS: Origin header required'));
+        }
 
-          // Check if origin is in allowed list
-          if (config.allowedOrigins.includes(origin)) {
-            callback(null, true);
-          } else {
-            logger.warn('CORS blocked request from origin', { origin });
-            callback(new Error('Not allowed by CORS'));
-          }
-        },
-        credentials: true,
-        allowedHeaders: [
-          'Content-Type',
-          'Authorization',
-          'X-MS-CLIENT-PRINCIPAL',
-          'X-MS-CLIENT-PRINCIPAL-ID',
-          'X-MS-CLIENT-PRINCIPAL-NAME',
-          'X-MS-CLIENT-PRINCIPAL-IDP',
-        ],
-      })
-    );
-  }
+        // Check if origin is in allowed list
+        if (config.allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          logger.warn('CORS blocked request from origin', { origin });
+          callback(new Error('Not allowed by CORS'));
+        }
+      },
+      credentials: true,
+      allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'X-MS-CLIENT-PRINCIPAL',
+        'X-MS-CLIENT-PRINCIPAL-ID',
+        'X-MS-CLIENT-PRINCIPAL-NAME',
+        'X-MS-CLIENT-PRINCIPAL-IDP',
+      ],
+    })
+  );
 
   // Body parser middleware
   app.use(express.json({ limit: '10mb' }));
